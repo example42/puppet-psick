@@ -1,7 +1,7 @@
 #
 class psick::sensu (
-  Profile::Password  $rabbitmq_password,
-  Profile::Password $api_password,
+  Psick::Password $rabbitmq_password,
+  Psick::Password $api_password,
 
   String $api_user          = 'sensu',
   String $api_host          = '127.0.0.1',

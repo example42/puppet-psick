@@ -1,1 +1,1 @@
-type Profile::Password = Variant[String,Sensitive]
+type Psick::Password = Variant[String,Sensitive]

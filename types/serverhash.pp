@@ -1,4 +1,4 @@
-type Profile::Serverhash = Struct[{
+type Psick::Serverhash = Struct[{
 
   Optional[scheme] => String,
   Optional[host] => String,
