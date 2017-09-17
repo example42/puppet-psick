@@ -42,7 +42,7 @@ class psick::lb::keepalived (
   $virtualservers.each | String $vs | {
     $vs_split=split($vs,'-')
     $app_role=$vs_split[1]
-    $server_role=getvar("::psick::settings::${app_role}_server")
+    $server_role=getvar("::psick::${app_role}_server")
     tools::keepalived::vrrp { $vs:
       ensure       => $ensure,
       vip          => $server_role['vip'],

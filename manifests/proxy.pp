@@ -8,7 +8,7 @@
 # @param configure_repo Configure proxy on package repos
 # @param force Enforce resource apply even if noop is true
 # @param proxy_server Hash with the proxy server data. Default is based on
-#   psick::settings::proxy_server
+#   psick::proxy_server
 #
 class psick::proxy (
   Enum['present','absent'] $ensure = 'present',
@@ -18,7 +18,7 @@ class psick::proxy (
   Boolean $configure_system        = true,
   Boolean $configure_repo          = true,
   Boolean $force                   = false,
-  Optional[Hash] $proxy_server     = $::psick::settings::proxy_server,
+  Optional[Hash] $proxy_server     = $::psick::proxy_server,
 ) {
 
   if $force {

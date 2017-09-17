@@ -59,7 +59,7 @@ class psick::icingaweb2 (
     augeas { 'php_date_timezone':
       context => '/files/etc/php.ini/DATE',
       changes => [
-        "set date.timezone ${::psick::settings::timezone}",
+        "set date.timezone ${::psick::timezone}",
       ],
     }
   }

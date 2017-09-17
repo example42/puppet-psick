@@ -24,7 +24,7 @@ class psick::sensu (
   String $redis_class       = '',
   String $dashboard_class   = '',
 
-  Boolean $tp_test          = $::psick::settings::tp_test,
+  Boolean $tp_test          = $::psick::tp_test,
 
   Hash $checks_hash         = {},
   Hash $checks_params_hash  = {},

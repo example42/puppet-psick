@@ -63,9 +63,9 @@ If your servers need a proxy to access the Internet you can include the ```psick
 
     profile::pre::proxy_class: 'psick::proxy'
 
-Proxy settings can be passed either to the global ```psick::settings``` class or directly in ```psick::proxy```. The ```proxy_server``` parameter is an Hash to be defines with:
+Proxy settings can be passed either to the global ```psick``` class or directly in ```psick::proxy```. The ```proxy_server``` parameter is an Hash to be defines with:
 
-    psick::settings::proxy_server:
+    psick::proxy_server:
       host: proxy.example.com
       port: 3128
       user: john    # Optional

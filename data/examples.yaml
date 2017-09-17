@@ -145,7 +145,7 @@ psick::proxy::configure_system: true
 psick::proxy::configure_repo: true
 psick::proxy::force: false
 # This is set as class param as here it fails since String is returned
-# psick::proxy::proxy_server: "%{lookup('::psick::settings::proxy_server')}"
+# psick::proxy::proxy_server: "%{lookup('::psick::proxy_server')}"
 
 # psick::puppet::pe_agent
 psick::puppet::pe_agent::test_enable: false
@@ -157,12 +157,12 @@ psick::repo::generic::yum_resource: yumrepo     # As native resource type
 psick::repo::generic::apt_resource: apt::source # As in puppetlabs-apt
 psick::repo::generic::zypper_resource: zypprepo # As in darin-zypprepo
         
-# psick::settings
-psick::settings::is_cluster: false
-psick::settings::primary_ip_address: ''
-psick::settings::mgmt_interface: "%{facts.networking.primary}"
-psick::settings::timezone: ''
-psick::settings::proxy_server: ~
+# psick
+psick::is_cluster: false
+psick::primary_ip_address: ''
+psick::mgmt_interface: "%{facts.networking.primary}"
+psick::timezone: ''
+psick::proxy_server: ~
 
 # psick::time
 psick::time::servers: []

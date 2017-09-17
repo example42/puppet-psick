@@ -10,7 +10,7 @@
 #                Note: This variable is not a class paramenter but it's looked
 #                up with hiera_hash('psick::logs::snmpd::options', {} )
 # @param serverif The primary server IP. Default value is from
-#                 $::psick::settings::primary_ip
+#                 $::psick::primary_ip
 # @param is_cluster If the server is a cluster member. If so extra configs are
 #                   added to the default template
 # @param extra_packages An array of extra snmdp related packages to install
@@ -20,7 +20,7 @@ class psick::monitor::snmpd (
   Enum['present','absent'] $ensure                     = 'present',
   Variant[String[1],Undef] $config_dir_source          = undef,
   String                   $config_file_template       = '',
-  String                   $serverif                   = $::psick::settings::primary_ip,
+  String                   $serverif                   = $::psick::primary_ip,
 ) {
 
   $options_default = {

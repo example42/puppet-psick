@@ -3,7 +3,7 @@
 class psick::time::windows (
   Array $ntp_servers      = $::psick::time::servers,
   Array $fallback_servers = [],
-  String $timezone        = $::psick::settings::timezone,
+  String $timezone        = $::psick::timezone,
 ) {
 
   $servers_ntp = inline_template('<% @ntp_servers.each do |s| -%><%= s %>,0x01 <% end -%>')

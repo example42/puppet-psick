@@ -8,7 +8,7 @@ tp::test_enable: true
 tp::puppi_enable: false
 tp::debug: false
 # Use tp::test in psicks which don't install via tp
-psick::settings::tp_test: true
+psick::tp_test: true
 
 # Default module to use for tp data:
 tp::data_module: tinydata
@@ -65,7 +65,7 @@ psick::time::servers:
   - 'pool.ntp.org'
 
 # Timezone settings
-psick::settings::timezone: 'UTC'
+psick::timezone: 'UTC'
 psick::time::windows::timezone: 'UTC'
 
 # Sample monitor settings

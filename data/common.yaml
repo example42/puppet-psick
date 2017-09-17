@@ -24,7 +24,7 @@ psick::monitor::snmpd::extra_packages: []
 
 # Special lookup options
 lookup_options:
-  psick::settings::proxy_server:
+  psick::proxy_server:
     merge:
       strategy: deep
   psick::gitlab::cli::config_hash:

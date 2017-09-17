@@ -27,8 +27,8 @@
 # @params *_class Name of the class that manages the relevant monitoring tool
 #
 class psick::monitor (
-  Boolean $manage             = $::psick::settings::monitor_manage,
-  Boolean $enable             = $::psick::settings::monitor_enable,
+  Boolean $manage             = $::psick::monitor_manage,
+  Boolean $enable             = $::psick::monitor_enable,
   String $hostname            = $facts['networking']['fqdn'],
   String $ip                  = $facts['networking']['ip'],
   String $interface           = $facts['networking']['primary'],

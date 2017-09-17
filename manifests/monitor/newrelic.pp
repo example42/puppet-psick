@@ -10,7 +10,7 @@ class psick::monitor::newrelic (
 
   $options_default = {
     license_key => 'CHANGEME',
-    proxy       => $::psick::settings::http_proxy,
+    proxy       => $::psick::http_proxy,
   }
   #
   $options_user=hiera_hash('newrelic_options', {} )

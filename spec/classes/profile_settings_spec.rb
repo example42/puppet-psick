@@ -3,7 +3,7 @@ require 'yaml'
 facts_yaml = File.dirname(__FILE__) + '/../fixtures/facts/spec.yaml'
 facts = YAML.load_file(facts_yaml)
 
-describe 'psick::settings', :type => :class do
+describe 'psick', :type => :class do
   let(:facts) { facts } 
   on_supported_os.each do |os, f|
     context "on #{os}" do
