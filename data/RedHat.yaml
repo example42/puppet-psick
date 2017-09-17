@@ -1,18 +1,5 @@
-psick::backup::legato::packages:
-  - 'lgtoclnt'
-  - 'lgtoman'
-  - 'lgtonode'
-
-psick::hardware::hp::packages:
-  - 'hpssacli'
-  - 'hpssaducli'
-  - 'hpsmh'
-  - 'hpdiags'
-  - 'hp-health'
-  - 'hp-snmp-agents'
-  - 'hp-smh-templates'
-
-profile::pre::repo_class: '::psick::repo::generic'
+psick::linux::pre_classes:
+  'repo': '::psick::repo::generic'
 
 psick::monitor::snmpd::extra_packages:
   - 'net-snmp-conf-dtnp'

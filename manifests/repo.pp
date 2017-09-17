@@ -2,15 +2,18 @@
 # Repos to create, besides default ones (when add_defaults = true)
 # are looked up via hiera_hash
 #
-class psick::repo::generic (
-  Boolean $add_defaults   = false,
+class psick::repo (
+  Boolean $auto_conf      = $::psick::auto_conf,
   String $yum_resource    = 'yumrepo',     # Native resource type
+  Hash $yum_repos         = {},
   String $apt_resource    = 'apt::source', # From puppetlabs-apt
+  Hash $apt_repos         = {},
   String $zypper_resource = 'zypprepo',    # From darin-zypprepo
+  Hash $zypper_repos      = {},
 ) {
 
   # Default repos
-  if $add_defaults {
+  if $auto_conf {
     case $::osfamily {
       'RedHat': {
         tp::install { 'epel': auto_prerequisites => true }
@@ -23,11 +26,6 @@ class psick::repo::generic (
       }
     }
   }
-
-  # User repos via hiera
-  $yum_repos = lookup('yum_repos', Hash, 'hash', {} )
-  $apt_repos = lookup('apt_repos', Hash, 'hash', {} )
-  $zypper_repos = lookup('zypper_repos', Hash, 'hash', {} )
 
   if $yum_repos != {} {
     create_resources($yum_resource, $yum_repos)

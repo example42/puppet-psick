@@ -1,6 +1,40 @@
 ---
-# psick::backup::legato
-psick::backup::legato::packages: []
+psick::manage: true
+psick::auto_conf: true
+
+psick::firstrun:
+  enable: false
+  fact_name: firstrun
+  fact_value: done
+
+psick::tp:
+  cli_enable: false
+  test_enable: false
+  puppi_enable: false
+  debug: false
+  data_module: tinydata
+  config_file_notify: true  
+  config_file_require: true  
+  config_dir_notify: true  
+  config_dir_require: true  
+
+psick::monitor:
+  manage: true
+  enable: true
+  classes: {}
+
+psick::firewall:
+  manage: false
+  enable: true
+  classes: {}
+
+psick::monitor:
+  manage: true
+  enable: true
+  hostname: "%{facts.networking.fqdn}"
+  ip: "%{facts.networking.ip}"
+  interface: "%{facts.networking.primary}"
+  classes: {}
 
 # psick::firewall::iptables
 psick::firewall::iptables::package_name: 'iptables'
@@ -24,9 +58,30 @@ psick::monitor::snmpd::extra_packages: []
 
 # Special lookup options
 lookup_options:
-  psick::proxy_server:
+  psick::firstrun:
     merge:
       strategy: deep
+      knockout_prefix: "--"
+  psick::settings:
+    merge:
+      strategy: deep
+      knockout_prefix: "--"
+  psick::servers:
+    merge:
+      strategy: deep
+      knockout_prefix: "--"
+  psick::tp:
+    merge:
+      strategy: deep
+      knockout_prefix: "--"
+  psick::firewall:
+    merge:
+      strategy: deep
+      knockout_prefix: "--"
+  psick::monitor:
+    merge:
+      strategy: deep
+      knockout_prefix: "--"
   psick::gitlab::cli::config_hash:
     merge:
       strategy: deep
@@ -58,3 +113,8 @@ lookup_options:
     merge:
       strategy: deep
       knockout_prefix: "--"
+  "^psick::repo::(.*)_repos$":
+    merge:
+      strategy: deep
+      knockout_prefix: "--"
+

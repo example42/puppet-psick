@@ -23,25 +23,63 @@
 #   scheme: http
 #
 class psick (
+
+  # General PSICK wide switches
+  Boolean $manage,
+  Boolean $auto_conf,
+
+  # Firstrun mode. Disabled by default.
+  Hash $firstrun              = {},
+
+  # General network settings
   Boolean $is_cluster         = false,
   Stdlib::Compat::Ip_address $primary_ip_address = '255.255.255.255',
   String  $mgmt_interface     = $facts['networking']['primary'],
-
   Optional[String] $timezone  = '',
-  Hash $settings              = {},
-  Optional[Profile::Serverhash] $proxy_server = {},
 
-  Boolean $tp_test            = false,
-  Boolean $firewall_enable    = false,
-  Boolean $firewall_manage    = false,
-  Boolean $monitor_enable     = true,
-  Boolean $monitor_manage     = true,
+  # PSICK wide settings
+  Hash $settings              = {},
+  Hash $servers               = {},
+  Hash $tp                    = {},
+  Hash $firewall              = {},
+  Hash $monitor               = {},
 
 ) {
 
+  # PSICK VARIABLES
   $primary_ip = $primary_ip_address ? {
     '255.255.255.255' => $facts['networking']['interfaces'][$mgmt_interface]['ip'],
     default           => $primary_ip_address,
   }
 
+  # RESOURCE DEFAULTS
+  Tp::Install {
+    cli_enable   => $tp['cli_enable'],
+    test_enable  => $tp['test_enable'],
+    puppi_enable => $tp['puppi_enable'],
+    debug        => $tp['debug'],
+    data_module  => $tp['data_module'],
+  }
+  Tp::Conf {
+    config_file_notify => $tp['config_file_notify'],
+    config_file_require => $tp['config_file_require'],
+    debug        => $tp['debug'],
+    data_module  => $tp['data_module'],
+  }
+  Tp::Dir {
+    config_dir_notify => $tp['config_dir_notify'],
+    config_dir_require => $tp['config_dir_require'],
+    debug        => $tp['debug'],
+    data_module  => $tp['data_module'],
+  }
+
+  # PSICK PROFILES
+  if $firstrun['enable'] and lookupvar($firstrun['fact_name']) == $firstrun['fact_value'] {
+    $kernel_down=downcase($::kernel)
+    contain "::psick::${kernel_down}"
+
+  } else {
+    contain "::psick::firstrun::${kernel_down}"
+    notify { "This catalog should be applied only at the first Puppen run\n": }
+  }
 }
