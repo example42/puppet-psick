@@ -3,7 +3,6 @@
 class psick::time::windows (
   Array $ntp_servers      = $::psick::time::servers,
   Array $fallback_servers = [],
-  String $timezone        = $::psick::timezone,
 ) {
 
   $servers_ntp = inline_template('<% @ntp_servers.each do |s| -%><%= s %>,0x01 <% end -%>')
@@ -31,17 +30,6 @@ class psick::time::windows (
     ensure => running,
     enable => true,
     notify => Exec['c:/Windows/System32/w32tm.exe /resync'],
-  }
-
-  if $timezone {
-    if $timezone != $facts['timezone'] {
-      exec { "tzutil.exe /s ${timezone}":
-        command => "tzutil.exe /s \"${timezone}\"",
-        unless  => "tzutil.exe /g | findstr /R /C:\"${timezone}\"",
-        path    => $::path,
-        # refreshonly => true,
-      }
-    }
   }
 
 }

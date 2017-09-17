@@ -21,25 +21,57 @@ class psick::linux (
   # General switch. If false nothing is done.
   Boolean $manage = $::psick::manage,
 
-  Hash $pre_classes,
-  Hash $base_classes,
-  Hash $profiles,
+  Variant[Hash,Array] $pre_classes,
+  Variant[Hash,Array] $base_classes,
+  Variant[Hash,Array] $profiles,
 
 ) {
 
-  if $pre_classes ! = {} and $manage {
-    $pre_classes.each |$k,$v| {
-      contain $v
+  if ::tp::is_something($pre_classes) and $manage {
+    case $pre_classes {
+      Array: {
+        $pre_classes.each |$class| {
+          contain $class
+        }
+      }
+      Hash: {
+        $pre_classes.each |$name,$class| {
+          contain $class
+        }
+      }
+      default: {}
     }
   }
-  if $base_classes ! = {} and $manage {
-    $base_classes.each |$k,$v| {
-      contain $v
+
+  if ::tp::is_something($base_classes) and $manage {
+    case $base_classes {
+      Array: {
+        $base_classes.each |$class| {
+          contain $class
+        }
+      }
+      Hash: {
+        $base_classes.each |$name,$class| {
+          contain $class
+        }
+      }
+      default: {}
     }
   }
-  if $profiles ! = {} and $manage {
-    $profiles.each |$k,$v| {
-      contain $v
+
+  if ::tp::is_something($profiles) and $manage {
+    case $profiles {
+      Array: {
+        $profiles.each |$class| {
+          contain $class
+        }
+      }
+      Hash: {
+        $profiles.each |$name,$class| {
+          contain $class
+        }
+      }
+      default: {}
     }
   }
 

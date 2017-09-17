@@ -20,7 +20,7 @@
 #   Default is autocalculated for each supported OS
 #
 class psick::timezone(
-  String $timezone             = $::psick::timezone,
+  String $timezone             = '',
   Boolean $hw_utc              = false,
   String $set_timezone_command = '',
   String $template             = "psick/timezone/timezone-${::operatingsystem}",
@@ -49,6 +49,7 @@ class psick::timezone(
       /(?i:OpenBSD)/                                      => "ln -fs /usr/share/zoneinfo/${timezone} /etc/localtime",
       /(?i:FreeBSD)/                                      => "cp /usr/share/zoneinfo/${timezone} /etc/localtime && adjkerntz -a",
       /(?i:Solaris)/                                      => "rtc -z ${timezone} && rtc -c",
+      /(?i:Windows)/                                      => "tzutil.exe /s \"${timezone}\"",
     },
     default => $set_timezone_command,
   }
@@ -59,6 +60,8 @@ class psick::timezone(
     /(?i:SLES|OpenSuSE)/                                => '/etc/sysconfig/clock',
     /(?i:FreeBSD|OpenBSD)/                              => '/etc/timezone-puppet',
     /(?i:Solaris)/                                      => '/etc/default/init',
+    /(?i:Windows)/                                      => 'c:\temp\timezone',
+    default                                             => '',
   }
 
   $config_file_group = $::operatingsystem ? {
@@ -66,7 +69,7 @@ class psick::timezone(
     default                => 'root',
   }
 
-  if $::virtual != 'docker' {
+  if $::virtual != 'docker' and $config_file != '' {
     file { 'timezone':
       ensure  => file,
       path    => $config_file,
@@ -75,11 +78,10 @@ class psick::timezone(
       group   => $config_file_group,
       content => template($template),
     }
-
     if $::hardwareisa != 'sparc' and $::kernel != 'SunOS' {
       exec { 'set-timezone':
         command     => $real_set_timezone_command,
-        path        => '/usr/bin:/usr/sbin:/bin:/sbin',
+        path        => $::path,
         require     => File['timezone'],
         subscribe   => File['timezone'],
         refreshonly => true,

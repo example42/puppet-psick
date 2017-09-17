@@ -1,6 +1,9 @@
 ---
 psick::manage: true
 psick::auto_conf: true
+psick::is_cluster: false
+psick::primary_ip_address: '255.255.255.255'
+psick::mgmt_interface: "%{facts.networking.primary}"
 
 psick::firstrun:
   enable: false
@@ -18,10 +21,8 @@ psick::tp:
   config_dir_notify: true  
   config_dir_require: true  
 
-psick::monitor:
-  manage: true
-  enable: true
-  classes: {}
+psick::settings: {}
+psick::servers: {}
 
 psick::firewall:
   manage: false

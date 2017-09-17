@@ -7,20 +7,18 @@
 #                           profiles is psick::primary_ip
 # @param mgmt_interface # The management interface of the server.
 # @param timezone The timezone to set on the system
-# @param proxy_server An hash describing the proxy server to use. This data is
-#                     used by psick::proxy and any other class which needs
-#                     proxy information
 #
 # @example Sample data for proxy server hash
-# psick::proxy_server:
-#   host: proxy.example.com
-#   port: 3128
-#   user: john    # Optional
-#   password: xxx # Optional
-#   no_proxy:
-#     - localhost
-#     - "%{::domain}"
-#   scheme: http
+# psick::servers:
+#   proxy:
+#     host: proxy.example.com
+#     port: 3128
+#     user: john    # Optional
+#     password: xxx # Optional
+#     no_proxy:
+#       - localhost
+#       - "%{::domain}"
+#     scheme: http
 #
 class psick (
 
@@ -29,20 +27,19 @@ class psick (
   Boolean $auto_conf,
 
   # Firstrun mode. Disabled by default.
-  Hash $firstrun              = {},
+  Hash $firstrun,
 
   # General network settings
-  Boolean $is_cluster         = false,
-  Stdlib::Compat::Ip_address $primary_ip_address = '255.255.255.255',
-  String  $mgmt_interface     = $facts['networking']['primary'],
-  Optional[String] $timezone  = '',
+  Boolean $is_cluster,
+  Stdlib::Compat::Ip_address $primary_ip_address,
+  String  $mgmt_interface,
 
   # PSICK wide settings
-  Hash $settings              = {},
-  Hash $servers               = {},
-  Hash $tp                    = {},
-  Hash $firewall              = {},
-  Hash $monitor               = {},
+  Hash $settings,
+  Hash $servers,
+  Hash $tp,
+  Hash $firewall,
+  Hash $monitor,
 
 ) {
 
