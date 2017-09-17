@@ -18,16 +18,21 @@
 #
 class psick::linux (
 
-  # General switch. If false nothing is done.
-  Boolean $manage = $::psick::manage,
-
+  Boolean $pre_manage = $::psick::manage,
   Variant[Hash,Array] $pre_classes,
+
+  Boolean $base_manage = $::psick::manage,
   Variant[Hash,Array] $base_classes,
+
+  Boolean $monitor_manage = $::psick::manage,
+  Variant[Hash,Array] $monitor_classes,
+
+  Boolean $profiles_manage = $::psick::manage,
   Variant[Hash,Array] $profiles,
 
 ) {
 
-  if ::tp::is_something($pre_classes) and $manage {
+  if ::tp::is_something($pre_classes) and $pre_manage {
     case $pre_classes {
       Array: {
         $pre_classes.each |$class| {
@@ -43,7 +48,7 @@ class psick::linux (
     }
   }
 
-  if ::tp::is_something($base_classes) and $manage {
+  if ::tp::is_something($base_classes) and $base_manage {
     case $base_classes {
       Array: {
         $base_classes.each |$class| {
@@ -59,7 +64,23 @@ class psick::linux (
     }
   }
 
-  if ::tp::is_something($profiles) and $manage {
+  if ::tp::is_something($monitor_classes) and $monitor_manage {
+    case $monitor_classes {
+      Array: {
+        $monitor_classes.each |$class| {
+          contain $class
+        }
+      }
+      Hash: {
+        $monitor_classes.each |$name,$class| {
+          contain $class
+        }
+      }
+      default: {}
+    }
+  }
+
+  if ::tp::is_something($profiles) and $profiles_manage {
     case $profiles {
       Array: {
         $profiles.each |$class| {

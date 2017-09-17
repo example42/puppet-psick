@@ -8,6 +8,9 @@
 # [*timezone*]
 #   The timezone to use
 #
+# [*timezone_windows*]
+#   The timezone as needed by tzutil.exe command on Windows
+#
 # [*hw_utc*]
 #   If system clock is set to UTC. Default: false
 #
@@ -49,7 +52,7 @@ class psick::timezone(
       /(?i:OpenBSD)/                                      => "ln -fs /usr/share/zoneinfo/${timezone} /etc/localtime",
       /(?i:FreeBSD)/                                      => "cp /usr/share/zoneinfo/${timezone} /etc/localtime && adjkerntz -a",
       /(?i:Solaris)/                                      => "rtc -z ${timezone} && rtc -c",
-      /(?i:Windows)/                                      => "tzutil.exe /s \"${timezone}\"",
+      /(?i:Windows)/                                      => "tzutil.exe /s \"${timezone_windows}\"",
     },
     default => $set_timezone_command,
   }
