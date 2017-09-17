@@ -7,7 +7,7 @@ tp::cli_enable: true
 tp::test_enable: true
 tp::puppi_enable: false
 tp::debug: false
-# Use tp::test in psicks which don't install via tp
+# Use tp::test in profiles which don't install via tp
 psick::tp_test: true
 
 # Default module to use for tp data:

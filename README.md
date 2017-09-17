@@ -2,7 +2,7 @@
 
 This module contains psick classes to be composed and used in different nodes according to any expected combinations.
 
-Here are the essential Hiera configurations needed to costomise the used psicks behaviour.
+Here are the essential Hiera configurations needed to costomise the used profiles behaviour.
 
 ## ::profile::base::$kernel - Base classes common to all nodes
 
@@ -40,7 +40,7 @@ Sample base psick settings for Linux servers:
     profile::base::linux::hosts_class: '::psick::hosts::file'
     profile::base::linux::update_class: '::psick::update'
   
-Similarly can be defined bbase psicks for Solaris, Darwin, Windows and other OS families (currently mostly not yet developed):
+Similarly can be defined bbase profiles for Solaris, Darwin, Windows and other OS families (currently mostly not yet developed):
 
     profile::base::solaris::timezone_class: '::psick::timezone'
   
@@ -53,7 +53,7 @@ Across the Hiera hierarchies these settings can be disabled with (listing some s
 
 ## ::profile::pre - Prerequisites class
 
-This psick class is the only one included by default on the base psicks, so you actually don't need to enable it with a configuration like what follows as this is the default setting for profile::base::linux::pre_class parameter:
+This psick class is the only one included by default on the base profiles, so you actually don't need to enable it with a configuration like what follows as this is the default setting for profile::base::linux::pre_class parameter:
 
     profile::base::linux::pre_class: '::profile::pre'
 
@@ -242,7 +242,7 @@ This class installs and configures Rsyslog using Tiny Puppet. To include it:
 
     profile::base::linux::logs_class: '::psick::logs::rsyslog'
 
-Common settings for similar psicks:
+Common settings for similar profiles:
 
     psick::logs::rsyslog::config_dir_source: 'puppet:///modules/psick/logs/rsyslog'
     psick::logs::rsyslog::config_file_template: 'psick/logs/rsyslog/rsyslog.conf.erb'
@@ -304,7 +304,7 @@ the configuration of all the prerequisites for Oracle 12 installation and, if in
 
 Main use case is the configuration for prerequisites. This can be done with:
 
-    psicks:
+    profiles:
       psick::oracle
 
     # Activate the prerequisites class that manages /etc/limits

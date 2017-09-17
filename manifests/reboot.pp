@@ -1,6 +1,6 @@
 # This psick triggers a system reboot
 #
-# This psicks uses puppetfile/reboot module to manage
+# This profiles uses puppetfile/reboot module to manage
 # system reboots. It's supposed to be used in firstrun mode.
 #
 # @example Enable firstrun mode and set reboot class on windows

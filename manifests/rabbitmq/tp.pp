@@ -6,7 +6,7 @@
 #   include psick::rabbitmq::tp
 # 
 # @example Include in PSICK via hiera (yaml)
-#   psicks:
+#   profiles:
 #     - psick::rabbitmq::tp
 # 
 # @example Manage extra configs via hiera (yaml)

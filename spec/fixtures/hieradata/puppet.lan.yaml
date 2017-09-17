@@ -1,5 +1,5 @@
 ---
-  psicks:
+  profiles:
     - psick::puppet::pe_aio_server
     - psick::gitlab::cli
     - psick::puppet::pe_code_manager

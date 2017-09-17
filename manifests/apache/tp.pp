@@ -6,7 +6,7 @@
 #   include psick::apache::tp
 # 
 # @example Include in PSICK via hiera (yaml)
-#   psicks:
+#   profiles:
 #     - psick::apache::tp
 # 
 # @example Manage extra configs via hiera (yaml)

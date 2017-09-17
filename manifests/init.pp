@@ -4,7 +4,7 @@
 # @param primary_ip_address The server primary IP address. Default value is
 #                           automatically calculated based on the mgmt_interface
 #                           address. The resulting variable, used in other
-#                           psicks is psick::primary_ip
+#                           profiles is psick::primary_ip
 # @param mgmt_interface # The management interface of the server.
 # @param timezone The timezone to set on the system
 # @param proxy_server An hash describing the proxy server to use. This data is
