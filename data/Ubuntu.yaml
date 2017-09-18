@@ -1,2 +1,3 @@
 ---
-profile::pre::repo_class: '::profile::pre::ubuntu'
+psick::linux::pre_classes:
+  'repo': '::psick::pre::ubuntu'

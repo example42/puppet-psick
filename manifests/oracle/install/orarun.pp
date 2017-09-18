@@ -24,5 +24,5 @@ class psick::oracle::install::orarun (
     content => template($psick_template),
   }
 
-  include $psick::oracle::prerequisites::users_class
+  contain $psick::oracle::prerequisites::users_class
 }

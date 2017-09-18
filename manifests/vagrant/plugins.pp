@@ -5,7 +5,7 @@ class psick::vagrant::plugins (
   String $user           = 'root',
 ) {
 
-  include ::psick::vagrant
+  contain ::psick::vagrant
 
   $all_plugins = $default_plugins + $plugins
 

@@ -53,7 +53,7 @@ class psick::sensu (
   }
 
   if $rabbitmq_class != '' {
-    include $rabbitmq_class
+    contain $rabbitmq_class
 
     # 
     rabbitmq_user { $rabbitmq_user:
@@ -71,11 +71,11 @@ class psick::sensu (
   }
 
   if $dashboard_class != '' {
-    include $dashboard_class
+    contain $dashboard_class
   }
 
   if $redis_class != '' {
-    include $redis_class
+    contain $redis_class
   }
 
   if $checks_hash != {} {

@@ -29,7 +29,7 @@ class profile::gitlab::runner (
 ) {
 
   if $use_docker {
-    include ::docker
+    contain ::docker
     # Quick and very dirty
     exec { 'usermod -a -G docker gitlab-runner':
       refreshonly => true,

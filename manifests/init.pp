@@ -69,12 +69,11 @@ class psick (
     debug        => $tp['debug'],
     data_module  => $tp['data_module'],
   }
-
   # PSICK PROFILES
-  if $firstrun['enable'] and lookupvar($firstrun['fact_name']) == $firstrun['fact_value'] {
+  if ($firstrun['enable'] and lookupvar($firstrun['fact_name']) ==  $firstrun['fact_value']) or
+  $firstrun['enable'] == false {
     $kernel_down=downcase($::kernel)
     contain "::psick::${kernel_down}"
-
   } else {
     contain "::psick::firstrun::${kernel_down}"
     notify { "This catalog should be applied only at the first Puppen run\n": }

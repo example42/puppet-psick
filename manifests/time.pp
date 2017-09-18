@@ -16,7 +16,7 @@ class psick::time (
 ) {
 
   if $timezone {
-    include ::psick::timezone
+    contain ::psick::timezone
   }
 
   if $::kernel == 'Linux' and $method == 'chrony' {
@@ -26,7 +26,7 @@ class psick::time (
   }
 
   if $::kernel == 'Linux' and $method == 'ntpdate' {
-    include ::psick::time::ntpdate
+    contain ::psick::time::ntpdate
   }
 
   if $::kernel != 'Windows' and $method == 'ntp' {
@@ -36,7 +36,7 @@ class psick::time (
   }
 
   if $::osfamily == 'Windows' {
-    include ::psick::time::windows
+    contain ::psick::time::windows
   }
 
 }

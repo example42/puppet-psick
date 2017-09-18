@@ -19,7 +19,7 @@ class psick::update (
 ) {
 
   if $::osfamily == 'RedHat' and $use_yum_cron {
-    include ::psick::yum_cron
+    contain ::psick::yum_cron
     file { '/etc/cron.d/system_update':
       ensure  => absent,
     }

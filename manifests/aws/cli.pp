@@ -10,8 +10,8 @@ class psick::aws::cli (
   Boolean $install_puppet_gems     = true,
 ) {
 
-  include ::psick::python::pip
-  include ::psick::ruby
+  contain ::psick::python::pip
+  contain ::psick::ruby
 
   tp::install { 'awscli':
     ensure => $ensure,

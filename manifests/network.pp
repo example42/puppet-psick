@@ -18,7 +18,7 @@ class psick::network (
   String $network_template = 'psick/network/network.erb',
 ) {
 
-  include ::network
+  contain ::network
 
   file { '/etc/modprobe.d/bonding.conf':
     ensure => file,

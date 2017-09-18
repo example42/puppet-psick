@@ -32,64 +32,68 @@ class psick::linux (
 
 ) {
 
-  if ::tp::is_something($pre_classes) and $pre_manage {
+  if !empty($pre_classes) and $pre_manage {
     case $pre_classes {
       Array: {
-        $pre_classes.each |$class| {
-          contain $class
+        $pre_classes.each |$c| {
+          contain $c
         }
+        notify { 'pre_array': }
       }
       Hash: {
-        $pre_classes.each |$name,$class| {
-          contain $class
+        $pre_classes.each |$n,$c| {
+          contain $c
         }
+        notify { 'pre_hash': }
       }
       default: {}
     }
   }
 
-  if ::tp::is_something($base_classes) and $base_manage {
+  if !empty($base_classes) and $base_manage {
     case $base_classes {
       Array: {
-        $base_classes.each |$class| {
-          contain $class
+        $base_classes.each |$c| {
+          contain $c
         }
+        notify { 'base_array': }
       }
       Hash: {
-        $base_classes.each |$name,$class| {
-          contain $class
+        $base_classes.each |$n,$c| {
+          contain $c
         }
+        notify { 'base_hash': }
       }
       default: {}
     }
   }
 
-  if ::tp::is_something($monitor_classes) and $monitor_manage {
+  if !empty($monitor_classes) and $monitor_manage {
     case $monitor_classes {
       Array: {
-        $monitor_classes.each |$class| {
-          contain $class
+        $monitor_classes.each |$c| {
+          contain $c
         }
       }
       Hash: {
-        $monitor_classes.each |$name,$class| {
-          contain $class
+        $monitor_classes.each |$n,$c| {
+          contain $c
         }
       }
       default: {}
     }
   }
 
-  if ::tp::is_something($profiles) and $profiles_manage {
+  if !empty($profiles) and $profiles_manage {
     case $profiles {
       Array: {
-        $profiles.each |$class| {
-          contain $class
+        $profiles.each |$c| {
+          contain $c
         }
       }
       Hash: {
-        $profiles.each |$name,$class| {
-          contain $class
+        $profiles.each |$n,$c| {
+          contain $c
         }
       }
       default: {}

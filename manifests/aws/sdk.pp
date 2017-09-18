@@ -14,7 +14,7 @@ class psick::aws::sdk (
   $install_gems.each | $gem | {
     if $facts['os']['family'] != 'windows' {
       if $install_system_gems {
-        include ::psick::ruby
+        contain ::psick::ruby
         package { $gem:
           ensure   => $ensure,
           provider => 'gem',

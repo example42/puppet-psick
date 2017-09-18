@@ -1,5 +1,5 @@
 psick::linux::pre_classes:
-  'repo': '::psick::repo::generic'
+  'repo': '::psick::repo'
 
 psick::monitor::snmpd::extra_packages:
   - 'net-snmp-conf-dtnp'

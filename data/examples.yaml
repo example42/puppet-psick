@@ -6,69 +6,6 @@
 # psick::backup::legato
 psick::backup::legato::packages: []
 
-# profile::base::linux
-profile::base::linux::manage: true
-profile::base::linux::network_class: ''
-profile::base::linux::mail_class: ''
-profile::base::linux::puppet_class: ''
-profile::base::linux::ssh_class: ''
-profile::base::linux::users_class: ''
-profile::base::linux::sudo_class: ''
-profile::base::linux::monitor_class: ''
-profile::base::linux::firewall_class: ''
-profile::base::linux::logs_class: ''
-profile::base::linux::backup_class: ''
-profile::base::linux::time_class: ''
-profile::base::linux::timezone_class: ''
-profile::base::linux::sysctl_class: ''
-profile::base::linux::dns_class: ''
-profile::base::linux::hardening_class: ''
-profile::base::linux::limits_class: ''
-profile::base::linux::hostname_class: ''
-profile::base::linux::hosts_class: ''
-profile::base::linux::update_class: ''
-profile::base::linux::motd_class: ''
-profile::base::linux::psick_class: ''
-profile::base::linux::hardware_class: ''
-profile::base::linux::multipath_class: ''
-
-# profile::base::darwin
-profile::base::darwin::manage: true
-profile::base::darwin::network_class: ''
-profile::base::darwin::mail_class: ''
-profile::base::darwin::puppet_class: ''
-profile::base::darwin::users_class: ''
-profile::base::darwin::monitor_class: ''
-profile::base::darwin::firewall_class: ''
-profile::base::darwin::logs_class: ''
-profile::base::darwin::backup_class: ''
-
-# profile::base::solaris
-profile::base::solaris::manage: true
-profile::base::solaris::network_class: ''
-profile::base::solaris::mail_class: ''
-profile::base::solaris::puppet_class: ''
-profile::base::solaris::users_class: ''
-profile::base::solaris::monitor_class: ''
-profile::base::solaris::firewall_class: ''
-profile::base::solaris::logs_class: ''
-profile::base::solaris::backup_class: ''
-
-# profile::base::windows
-profile::base::windows::manage: true
-profile::base::windows::puppet_class: ''
-profile::base::windows::features_class: ''
-profile::base::windows::registry_class: ''
-profile::base::windows::network_class: ''
-profile::base::windows::users_class: ''
-profile::base::windows::hosts_class: ''
-profile::base::windows::monitor_class: ''
-profile::base::windows::firewall_class: ''
-profile::base::windows::antivirus_class: ''
-profile::base::windows::backup_class: ''
-profile::base::windows::time_class: ''
-profile::base::windows::services_class: ''
-
 # psick::firewall::iptables
 psick::firewall::iptables::package_name: 'iptables'
 psick::firewall::iptables::service_name: 'iptables'
@@ -114,27 +51,27 @@ psick::monitor::snmpd::extra_packages: []
 # psick::packages
 psick::packages::packages_default: []
 
-# profile::pre::darwin
-profile::pre::darwin::manage: true
-profile::pre::darwin::proxy_class: ''
-profile::pre::darwin::repo_class: ''
+# psick::pre::darwin
+psick::pre::darwin::manage: true
+psick::pre::darwin::proxy_class: ''
+psick::pre::darwin::repo_class: ''
 
-# profile::pre::linux
-profile::pre::linux::manage: true
-profile::pre::linux::rpmgpg_class: ''
-profile::pre::linux::rhn_class: ''
-profile::pre::linux::repo_class: ''
-profile::pre::linux::proxy_class: ''
+# psick::pre::linux
+psick::pre::linux::manage: true
+psick::pre::linux::rpmgpg_class: ''
+psick::pre::linux::rhn_class: ''
+psick::pre::linux::repo_class: ''
+psick::pre::linux::proxy_class: ''
 
-# profile::pre::solaris
-profile::pre::solaris::manage: true
-profile::pre::solaris::proxy_class: ''
-profile::pre::solaris::repo_class: ''
+# psick::pre::solaris
+psick::pre::solaris::manage: true
+psick::pre::solaris::proxy_class: ''
+psick::pre::solaris::repo_class: ''
 
-# profile::pre::windows
-profile::pre::windows::manage: true
-profile::pre::windows::proxy_class: ''
-profile::pre::windows::repo_class: ''
+# psick::pre::windows
+psick::pre::windows::manage: true
+psick::pre::windows::proxy_class: ''
+psick::pre::windows::repo_class: ''
 
 # psick::proxy
 psick::proxy::ensure: present

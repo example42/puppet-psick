@@ -14,7 +14,7 @@ class psick::ci::danger (
   Boolean $install_system_gems = true,
   Boolean $install_puppet_gems = true,
 ) {
-  include ::psick::ruby
+  contain ::psick::ruby
 
   $all_gems = $use_gitlab ? {
     true  => ['danger-gitlab'] + $plugins,

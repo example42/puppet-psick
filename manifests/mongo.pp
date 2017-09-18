@@ -16,13 +16,13 @@ class psick::mongo (
 ) {
 
   if $disable_huge_pages_class != '' {
-    include $disable_huge_pages_class
+    contain $disable_huge_pages_class
     Class[$disable_huge_pages_class] -> Class[$mongo_class]
   }
   if $mongo_class != '' {
-    include $mongo_class
+    contain $mongo_class
   }
   if $mms_class != '' {
-    include $mms_class
+    contain $mms_class
   }
 }

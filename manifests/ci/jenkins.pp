@@ -6,7 +6,7 @@ class psick::ci::jenkins (
   Hash                  $options  = { },
 ) {
 
-  include ::psick::java
+  contain ::psick::java
 
   $options_default = {
   }

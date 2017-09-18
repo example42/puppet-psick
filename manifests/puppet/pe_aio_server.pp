@@ -3,9 +3,9 @@
 class psick::puppet::pe_aio_server (
 ) {
 
-  include ::psick::puppet::pe_console
-  include ::psick::puppet::pe_puppetdb
-  include ::psick::puppet::pe_agent
-  include ::psick::puppet::pe_server
+  contain ::psick::puppet::pe_console
+  contain ::psick::puppet::pe_puppetdb
+  contain ::psick::puppet::pe_agent
+  contain ::psick::puppet::pe_server
 
 }

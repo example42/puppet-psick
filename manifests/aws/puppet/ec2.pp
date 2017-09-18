@@ -48,7 +48,7 @@ class psick::aws::puppet::ec2 (
 ) {
 
   # Find the AMI to use if none specified
-  include ::psick::aws::ami
+  contain ::psick::aws::ami
   $calculated_image_id = getvar("::psick::aws::ami::calculated_image_id_${default_os}")
   $calculated_autoscaling_image_id =
   getvar("::psick::aws::ami::calculated_autoscaling_image_id_${default_autoscaling_os}")

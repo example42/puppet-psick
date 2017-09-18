@@ -8,5 +8,5 @@ class psick::rabbitmq (
   Hash             $options            = { },
 ) {
 
-  include ::rabbitmq
+  contain ::rabbitmq
 }
