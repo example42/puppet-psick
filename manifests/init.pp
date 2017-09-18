@@ -41,6 +41,8 @@ class psick (
   Hash $firewall,
   Hash $monitor,
 
+  Psick::Class $profiles = {},
+
 ) {
 
   # PSICK VARIABLES
@@ -69,13 +71,21 @@ class psick (
     debug        => $tp['debug'],
     data_module  => $tp['data_module'],
   }
-  # PSICK PROFILES
+
+  # PSICK PRE, BASE CLASSES AND PROFILES
   if ($firstrun['enable'] and lookupvar($firstrun['fact_name']) ==  $firstrun['fact_value']) or
   $firstrun['enable'] == false {
-    $kernel_down=downcase($::kernel)
-    contain "::psick::${kernel_down}"
+    class { 'psick::pre': }
+    -> class { 'psick::base': }
+    if !empty($profiles) {
+      $profiles.each |$n,$c| {
+        if $c != '' {
+          contain $c
+          Class['psick::base'] -> Class[$c]
+        }
+      }
+    }
   } else {
-    contain "::psick::firstrun::${kernel_down}"
     notify { "This catalog should be applied only at the first Puppen run\n": }
   }
 }

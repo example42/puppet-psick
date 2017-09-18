@@ -10,6 +10,18 @@ psick::firstrun:
   fact_name: firstrun
   fact_value: done
 
+psick::pre::linux_classes: {}
+psick::pre::windows_classes: {}
+psick::pre::darwin_classes: {}
+psick::pre::solaris_classes: {}
+
+psick::base::linux_classes: {}
+psick::base::windows_classes: {}
+psick::base::darwin_classes: {}
+psick::base::solaris_classes: {}
+
+psick::profiles: {}
+
 psick::tp:
   cli_enable: false
   test_enable: false
@@ -64,6 +76,10 @@ lookup_options:
       strategy: deep
       knockout_prefix: "--"
   psick::settings:
+    merge:
+      strategy: deep
+      knockout_prefix: "--"
+  psick::profiles:
     merge:
       strategy: deep
       knockout_prefix: "--"
