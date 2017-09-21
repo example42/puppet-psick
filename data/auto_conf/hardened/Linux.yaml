@@ -1,0 +1,23 @@
+---
+psick::pre::linux_classes:
+  dns: '::psick::dns::resolver'
+  hostname: '::psick::hostname'
+psick::base::linux_classes:
+  users: '::psick::users::static'
+  sudo: '::psick::sudo'
+  logs: '::psick::logs::rsyslog'
+  time: '::psick::time'
+  sysctl: '::psick::sysctl'
+  update: '::psick::update'
+  motd: '::psick::motd'
+  ssh: '::psick::openssh::tp'
+  hardening: '::psick::hardening'
+
+psick::hardening::class: '::psick::hardening::pam'
+psick::hardening::packages_class: '::psick::hardening::packages'
+psick::hardening::services_class: '::psick::hardening::services'
+psick::hardening::tcpwrappers_class: '::psick::hardening::tcpwrappers'
+psick::hardening::suid_class: '::psick::hardening::suid_sgid'
+psick::hardening::securetty_class: '::psick::hardening::securetty'
+psick::hardening::network_class: '::psick::hardening::network'
+

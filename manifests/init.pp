@@ -24,7 +24,8 @@ class psick (
 
   # General PSICK wide switches
   Boolean $manage,
-  Boolean $auto_conf,
+  Psick::Autoconf $auto_conf,
+  Boolean $auto_prereq,
 
   # Firstrun mode. Disabled by default.
   Hash $firstrun,
@@ -41,7 +42,7 @@ class psick (
   Hash $firewall,
   Hash $monitor,
 
-  Psick::Class $profiles = {},
+  Hash $profiles = {},
 
 ) {
 

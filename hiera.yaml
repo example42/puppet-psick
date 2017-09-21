@@ -13,4 +13,5 @@ hierarchy:
       - "%{facts.os.name}.yaml"
       - "%{facts.os.family}-%{facts.os.release.major}.yaml"
       - "%{facts.os.family}.yaml"
+      - "auto_conf/%{psick::auto_conf}/%{facts.kernel}.yaml"
       - "common.yaml"
