@@ -1,9 +1,9 @@
 {
   "name": "example42-psick",
-  "version": "0.0.3",
+  "version": "0.3.1",
   "author": "Example42",
-  "summary": "Psick module.",
-  "description": "Psick Puppet module.",
+  "summary": "Psick: the infrastructure module.",
+  "description": "Psick Puppet module. A single module to manage an extendable Puppet infrastructure",
   "license": "Apache-2.0",
   "source": "https://github.com/example42/puppet-psick",
   "project_page": "https://github.com/example42/puppet-psick",

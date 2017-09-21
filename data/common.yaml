@@ -6,10 +6,7 @@ psick::is_cluster: false
 psick::primary_ip_address: '255.255.255.255'
 psick::mgmt_interface: "%{facts.networking.primary}"
 
-psick::firstrun:
-  enable: false
-  fact_name: firstrun
-  fact_value: done
+psick::enable_firstrun: false
 
 psick::pre::linux_classes: {}
 psick::pre::windows_classes: {}

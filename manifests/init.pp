@@ -29,7 +29,7 @@ class psick (
   Boolean $auto_prereq,
 
   # Firstrun mode. Disabled by default.
-  Hash $firstrun,
+  Boolean $enable_firstrun,
 
   # General network settings
   Boolean $is_cluster,
@@ -75,8 +75,7 @@ class psick (
   }
 
   # PSICK PRE, BASE CLASSES AND PROFILES + OPTIONAL FIRSTRUN MODE
-  if ($firstrun['enable'] and lookupvar($firstrun['fact_name']) ==  $firstrun['fact_value']) or
-  $firstrun['enable'] == false {
+  if lookupvar($::firstrun) == 'done' or $enable_firstrun == false {
     contain ::psick::pre
     contain ::psick::base
     Class['psick::pre'] -> Class['psick::base']
