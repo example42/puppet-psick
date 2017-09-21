@@ -1,8 +1,8 @@
-# PSICK module
+# PSICK The Puppet Infrastructure module
 
 This is the PSICK (Puppet Systems Infrastructure Construction Kit) module.
 
-It contains an extendable set of profiles for common systems management activities and all the necessary data entry points to configure a whole infrastructure.
+It contains an extendable set of profiles for common systems management activities and all the necessary data entry points to configure a whole infrastructure via Puppet.
 
 It can be used as a strandalone module, just:
 
@@ -51,7 +51,6 @@ and configure with Hiera yaml data like:
     # Sample sysctl settings
     psick::sysctl::settings:
       net.ipv4.conf.all.forwarding: 0
-
 
 or within the PSICK [control-repo](https://github.com/example42/psick).
 
@@ -187,7 +186,7 @@ To remove these files:
     psick::motd::issue_file_ensure: 'absent'
 
 
-# Profiles not in baseline
+# Other profiles
 
 ## ::psick::oracle - Manages prerequisites and installation
 
