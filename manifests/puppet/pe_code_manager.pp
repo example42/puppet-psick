@@ -24,9 +24,9 @@ class psick::puppet::pe_code_manager (
       email        => $pe_email,
       password     => $pe_password,
       roles        => [ 'Code Deployers' ],
-      before       => Tools::Puppet::Access[$pe_user],
+      before       => Psick::Puppet::Access[$pe_user],
     }
-    tools::puppet::access { $pe_user:
+    psick::puppet::access { $pe_user:
       pe_password => $pe_password,
       run_as_user => $deploy_user,
       lifetime    => $lifetime,
@@ -44,7 +44,7 @@ class psick::puppet::pe_code_manager (
       default => "/home/${deploy_user}",
     }
 
-    tools::ssh_keygen { $deploy_user:
+    psick::ssh::keygen { $deploy_user:
       comment => $deploy_comment,
     }
 
@@ -64,7 +64,7 @@ class psick::puppet::pe_code_manager (
   }
 
   # TODO Automate Upload of ssh public key to gitlab
-  #  tools::gitlab::deploy_key { :
+  #  psick::gitlab::deploy_key { :
   #    sshkey => $deploy_ssh_public_key
   #  }
 

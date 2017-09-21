@@ -9,7 +9,7 @@
 # @param install_class Name of the class that installs Oracle (via oradb module)
 # @param resources_class Name of the class that installs extra Oracle resources
 # @param instances An hash of oracle instances to create (uses
-#                  tools::oracle::instance)
+#                  psick::oracle::instance)
 #
 class psick::oracle (
   String $prerequisites_class = '::psick::oracle::prerequisites',
@@ -33,7 +33,7 @@ class psick::oracle (
   }
 
   $instances.each |$k,$o| {
-    tools::oracle::instance { $k:
+    psick::oracle::instance { $k:
       require => Class[$install_class],
       *       => $o,
     }

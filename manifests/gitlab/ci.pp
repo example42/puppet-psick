@@ -1,8 +1,8 @@
 #
-class profile::gitlab::ci (
+class psick::gitlab::ci (
   String                $ensure           = 'present',
   String                $config_file_path = '/etc/gitlab-ci.conf',
-  Variant[Undef,String] $template         = 'profile/gitlab/runner/ci.conf.erb',
+  Variant[Undef,String] $template         = 'psick/gitlab/runner/ci.conf.erb',
   Hash                  $options          = { },
   Array                 $default_nodes    = [],
   Array                 $always_nodes     = [],
@@ -25,6 +25,6 @@ class profile::gitlab::ci (
   file { $config_file_path:
     ensure  => $ensure ,
     content => template($template),
-    require => Class['profile::gitlab::runner'],
+    require => Class['psick::gitlab::runner'],
   }
 }

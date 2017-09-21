@@ -17,10 +17,10 @@
 # @param config_hash An open hash of options you can use in your template. Note that
 #   this hash is merged with an hash of default options provided in the class
 #
-class profile::gitlab::cli (
+class psick::gitlab::cli (
   String           $ensure             = 'present',
   Boolean          $auto_prerequisites = true,
-  Optional[String] $epp                = 'profile/gitlab/cli/gitlab-cli.conf.epp',
+  Optional[String] $epp                = 'psick/gitlab/cli/gitlab-cli.conf.epp',
   Optional[String] $template           = undef,
   Hash             $config_hash        = {},
 ) {

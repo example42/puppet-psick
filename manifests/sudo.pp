@@ -7,7 +7,7 @@
 #                         the /etc/sudoers.d directory
 # @param purge_sudoers_dir If to purge all the files existing on the local node
 #                          and not present in sudoers_d_source
-# @param directives An hash of sudo directives to pass to tools::sudo::directive
+# @param directives An hash of sudo directives to pass to psick::sudo::directive
 #                   Note this is not a real class parameter but a key looked up
 #                   with hiera_hash('psick::sudo::directives', {})
 #
@@ -49,13 +49,13 @@ class psick::sudo (
 
   $directives = hiera_hash('psick::sudo::directives', {})
   $directives.each |$name,$opts| {
-    ::tools::sudo::directive { $name:
+    ::psick::sudo::directive { $name:
       * => $opts,
     }
   }
 
   if $::virtual == 'virtualbox' and $purge_sudoers_dir {
-    tools::sudo::directive { 'vagrant':
+    psick::sudo::directive { 'vagrant':
       source => 'puppet:///modules/psick/sudo/vagrant',
       order  => 30,
     }

@@ -12,7 +12,7 @@ class psick::sysctl {
   $my_sysctl_settings = hiera_hash('psick::sysctl::settings', {})
   if $my_sysctl_settings != {} {
     $my_sysctl_settings.each |$k,$v| {
-      ::tools::sysctl { $k:
+      ::psick::sysctl::set { $k:
         value => $v,
       }
     }

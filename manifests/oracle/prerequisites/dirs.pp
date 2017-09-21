@@ -38,7 +38,7 @@ class psick::oracle::prerequisites::dirs (
 ) {
 
   if $dirs != {} {
-    tools::create_dir { $base_dir:
+    psick::tools::create_dir { $base_dir:
       owner => $owner,
       group => $group,
     }
@@ -49,14 +49,14 @@ class psick::oracle::prerequisites::dirs (
           ensure  => directory,
           owner   => $owner,
           group   => $group,
-          require => Tools::Create_dir[$base_dir],
+          require => Psick::Tools::Create_dir[$base_dir],
         }
         $dbs.each | $db | {
           file { "${base_dir}/${apps}${suffix}/${db}":
             ensure  => directory,
             owner   => $owner,
             group   => $group,
-            require => Tools::Create_dir[$base_dir],
+            require => Psick::Tools::Create_dir[$base_dir],
           }
         }
       }

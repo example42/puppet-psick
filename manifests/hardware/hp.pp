@@ -22,7 +22,7 @@ class psick::hardware::hp (
     enable => true,
   }
 
-  tools::sudo::directive { 'hp':
+  psick::sudo::directive { 'hp':
     source => 'puppet:///modules/psick/sudo/hp',
   }
 

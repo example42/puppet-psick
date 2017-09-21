@@ -17,11 +17,11 @@
 #                   local Puppet cert is used (valid if server_name is not customised)
 # @param key_file_source Puppet source for the https server key. By default
 #                   local Puppet key is used (valid if server_name is not customised)
-# @param users An hash used to create tools::gitlab::user resources
-# @param groups An hash used to create tools::gitlab::group resources
-# @param projects An hash used to create tools::gitlab::project resources
+# @param users An hash used to create psick::gitlab::user resources
+# @param groups An hash used to create psick::gitlab::group resources
+# @param projects An hash used to create psick::gitlab::project resources
 #
-class profile::gitlab (
+class psick::gitlab (
   String                $ensure      = 'present',
 
   Variant[Undef,String] $template    = undef,
@@ -100,21 +100,21 @@ class profile::gitlab (
   # Create GitLab resources, if defined
   if $groups != {} {
     $groups.each |$k,$v| {
-      tools::gitlab::group { $k:
+      psick::gitlab::group { $k:
         * => $v,
       }
     }
   }
   if $users != {} {
     $users.each |$k,$v| {
-      tools::gitlab::user { $k:
+      psick::gitlab::user { $k:
         * => $v,
       }
     }
   }
   if $projects != {} {
     $projects.each |$k,$v| {
-      tools::gitlab::project { $k:
+      psick::gitlab::project { $k:
         * => $v,
       }
     }

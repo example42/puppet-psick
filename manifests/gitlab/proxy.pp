@@ -9,10 +9,10 @@
 #                 during runners registration
 # @param options An open hash of options you may use in your template
 #
-class profile::gitlab::proxy (
+class psick::gitlab::proxy (
   String                $ensure      = 'present',
   Boolean               $auto_prerequisites = false,
-  Optional[String]      $template    = 'profile/gitlab/proxy/nginx_gitlab_proxy.conf.erb',
+  Optional[String]      $template    = 'psick/gitlab/proxy/nginx_gitlab_proxy.conf.erb',
   Hash                  $options     = { },
   String                $server_name = $::fqdn,
   String                $proxy_pass  = "https://gitlab.${::domain}:443",

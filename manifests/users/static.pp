@@ -11,7 +11,7 @@
 #   root_pw is set, the root user is managed by this class.
 # @param users_hash An Hash passed to create_resources with Puppet user type
 # @param managed_users_hash An Hash passed to create_resources with the define
-#   tools::users::managed from this control-repo
+#   psick::users::managed from this control-repo
 # @param accounts_users_hash An Hash passed to create_resources with the define
 #   accounts::user from puppetlabs-accounts module
 # @param delete_unmanaged If true all non system users not managed by Puppet
@@ -35,7 +35,7 @@ class psick::users::static (
     create_resources('user',$users_hash)
   }
   if $managed_users_hash != {} {
-    create_resources('tools::user::managed',$managed_users_hash)
+    create_resources('psick::users::managed',$managed_users_hash)
   }
   if $accounts_users_hash != {} {
     create_resources('accounts::user',$accounts_users_hash)

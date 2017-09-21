@@ -66,7 +66,7 @@ class psick::proxy (
     }
   }
   if $configure_system and $proxy_server != {} {
-    tools::psick::script { 'proxy':
+    psick::profile::script { 'proxy':
       ensure  => $ensure,
       content => epp('psick/proxy/proxy.sh.epp'),
       # Template has to be evaluated here: it uses local scope vars

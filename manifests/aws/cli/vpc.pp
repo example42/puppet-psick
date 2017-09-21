@@ -27,6 +27,10 @@ class psick::aws::cli::vpc (
     autorun                 => $autorun,
   }
   if $all_aws_scripts != { } {
-    create_resources('Profile::Aws::Script',$all_aws_scripts,$aws_scripts_defaults)
+    $all_aws_scripts.each | $k,$v | {
+      psick::aws::cli::script { $k:
+        * => $aws_scripts_defaults + $v,
+      }
+    }
   }
 }

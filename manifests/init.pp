@@ -1,4 +1,5 @@
-# Class used as entry point to set general settings used by other psick profiles
+# The main psick class. From here the whole infrastructure can be built.
+# This class exposes parameters that:entry point to set general settings used by other psick profiles
 #
 # @param is_cluster Defines if the server is a cluster member
 # @param primary_ip_address The server primary IP address. Default value is
@@ -73,20 +74,22 @@ class psick (
     data_module  => $tp['data_module'],
   }
 
-  # PSICK PRE, BASE CLASSES AND PROFILES
+  # PSICK PRE, BASE CLASSES AND PROFILES + OPTIONAL FIRSTRUN MODE
   if ($firstrun['enable'] and lookupvar($firstrun['fact_name']) ==  $firstrun['fact_value']) or
   $firstrun['enable'] == false {
-    class { 'psick::pre': }
-    -> class { 'psick::base': }
+    contain ::psick::pre
+    contain ::psick::base
+    Class['psick::pre'] -> Class['psick::base']
     if !empty($profiles) {
-      $profiles.each |$n,$c| {
-        if $c != '' {
-          contain $c
-          Class['psick::base'] -> Class[$c]
+      $profiles.each |$n,$p| {
+        if $p != '' {
+          contain $p
+          Class['psick::base'] -> Class[$p]
         }
       }
     }
   } else {
+    contain ::psick::firstrun
     notify { "This catalog should be applied only at the first Puppen run\n": }
   }
 }

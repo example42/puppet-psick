@@ -46,13 +46,13 @@ class psick::mongo::tp (
     settings_hash => $all_settings,
   }
 
-  Tools::Mongo::Command {
+  Psick::Mongo::Command {
     run_command => $auto_replica_setup,
     db_host     => $::ipaddress,
     db_port     => $all_options['port'],
   }
 
-  tools::create_dir { $all_options['dbPath']:
+  psick::tools::create_dir { $all_options['dbPath']:
     owner => $all_settings['process_user'],
     group => $all_settings['process_group'],
   }
@@ -88,7 +88,7 @@ class psick::mongo::tp (
 
   if $all_options['replSetName'] != '' and $initial_master and $replset_members != [] {
     # Replica Setup
-    tools::mongo::command { 'initiate_replicaset':
+    psick::mongo::command { 'initiate_replicaset':
       template => 'psick/mongo/initiate_replicaset.js.erb',
       options  => {
         replSetName => $all_options['replSetName'],
@@ -101,7 +101,7 @@ class psick::mongo::tp (
     # Replica members add
     $additional_members=$replset_members - $replset_members[0]
     $additional_members.each |$member| {
-      tools::mongo::command { "add_member_${member}":
+      psick::mongo::command { "add_member_${member}":
         template => 'psick/mongo/add_member.js.erb',
         options  => {
           member => $member,
@@ -112,7 +112,7 @@ class psick::mongo::tp (
 
   if $all_options['replSetName'] != '' and $initial_master and $replset_arbiter != '' {
     # Arbiter add
-    tools::mongo::command { 'add_arbiter':
+    psick::mongo::command { 'add_arbiter':
       template => 'psick/mongo/add_arbiter.js.erb',
       options  => { 'arbiter' => $replset_arbiter } ,
     }
@@ -122,7 +122,7 @@ class psick::mongo::tp (
     # Replica members add
     $shards.each |String $shard| {
       $safe_shard=regsubst($shard, '/', '_', 'G')
-      tools::mongo::command { "add_shard_${safe_shard}":
+      psick::mongo::command { "add_shard_${safe_shard}":
         template => 'psick/mongo/add_shard.js.erb',
         options  => {
           shard => $shard,
