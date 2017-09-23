@@ -9,26 +9,39 @@ class psick::sysctl (
   Boolean         $manage                  = $::psick::manage,
   Hash            $settings_hash           = {},
   Hash            $settings_auto_conf_hash = {},
-  String          $module                  = 'default',
+  String          $module                  = 'psick',
+  String          $template                = 'psick/generic/inifile.erb',
 ) {
 
   $all_settings = $settings_auto_conf_hash + $settings_hash
 
   if $manage and $all_settings != {} {
-    $all_settings.each |$k,$v| {
-      case $module {
-        'duritong': {
-          sysctl::value { $k: value => $v }
-        }
-        'thias': {
-          sysctl { $k: value => $v }
-        }
-        'herculesteam': {
-          sysctl { $k: value => $v }
-        }
-        default: {
-          notify { "sysctl ${module} module not supported":
-            message => "Module ${module} not currently not supported. Feel free to contribute to its integration!",
+    if $module == 'psick' {
+      $parameters = $all_settings
+      file { '/etc/sysctl.conf':
+        content => psick::template($template,$parameters),
+        notify  => Exec['psick refresh sysctl'],
+      }
+      exec { 'psick refresh sysctl':
+        refreshonly => true,
+        command     => 'sysctl -p /etc/sysctl.conf',
+      }
+    } else {
+      $all_settings.each |$k,$v| {
+        case $module {
+          'duritong': {
+            sysctl::value { $k: value => $v }
+          }
+          'thias': {
+            sysctl { $k: value => $v }
+          }
+          'herculesteam': {
+            sysctl { $k: value => $v }
+          }
+          default: {
+            notify { "sysctl ${module} module not supported. Can't set sysctl ${k}":
+              message => "Module ${module} not currently not supported. Feel free to contribute to its integration!",
+            }
           }
         }
       }

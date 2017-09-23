@@ -1,1 +1,1 @@
-type Psick::Autoconf = Enum['none','default','hardened']
+type Psick::Autoconf = Variant[Boolean,Enum['none','default','hardened']]

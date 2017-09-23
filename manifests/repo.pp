@@ -3,13 +3,13 @@
 # are looked up via hiera_hash
 #
 class psick::repo (
-  Boolean $auto_conf      = $::psick::auto_conf,
-  String $yum_resource    = 'yumrepo',     # Native resource type
-  Hash $yum_repos         = {},
-  String $apt_resource    = 'apt::source', # From puppetlabs-apt
-  Hash $apt_repos         = {},
-  String $zypper_resource = 'zypprepo',    # From darin-zypprepo
-  Hash $zypper_repos      = {},
+  Psick::Autoconf $auto_conf = $::psick::auto_conf,
+  String $yum_resource       = 'yumrepo',     # Native resource type
+  Hash $yum_repos            = {},
+  String $apt_resource       = 'apt::source', # From puppetlabs-apt
+  Hash $apt_repos            = {},
+  String $zypper_resource    = 'zypprepo',    # From darin-zypprepo
+  Hash $zypper_repos         = {},
 ) {
 
   # Default repos

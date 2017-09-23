@@ -1,0 +1,4 @@
+File managed by Puppet
+<% $parameters.each |$k,$v| { -%>
+<%= $k %>=<%= $v %>
+<% } -%>
