@@ -1,0 +1,43 @@
+# This file is managed by Puppet
+
+[Unit]
+Description=Daemon for <%= @app %>
+After=
+Wants=
+Requires=
+
+[Service]
+Restart=on-failure
+StartLimitInterval=20
+StartLimitBurst=5
+TimeoutStartSec=0
+Environment="HOME=/root"
+ExecStartPre=-/usr/bin/docker kill <%= @app %>
+<%- if @remove_container_on_start %>ExecStartPre=-/usr/bin/docker rm <% if @remove_volume_on_start %>-v<% end %> <%= @app %>
+<% else %>ExecStartPre=-/usr/bin/docker create \
+    <%= @run_options %> \
+    --name <%= @app %> \
+    <%= @real_image %> \
+    <% if @command %> <%= @command %><% end %>
+<% end -%>
+<% if @extra_systemd_parameters -%>
+<% @extra_systemd_parameters.each do |key, value| -%><%= key %>=<%= value %>
+<% end -%>
+<% end -%>
+<%- if @pull_on_start %>ExecStartPre=-/usr/bin/docker pull <%= @real_image %>
+<% end -%>
+<%- if @remove_container_on_start %>
+ExecStart=/usr/bin/docker run \
+        <%= @run_options %> \
+        --name <%= @app %> \
+        <%= @real_image %> \
+        <%= @command %>
+<% else %>
+ExecStart=/usr/bin/docker start -a <%= @app %>
+<% end -%>
+ExecStop=-/usr/bin/docker stop <%= @app %>
+<%- if @remove_container_on_stop %>ExecStop=-/usr/bin/docker rm <% if @remove_volume_on_stop %>-v<% end %> <%= @app %>
+<% end -%>
+
+[Install]
+WantedBy=multi-user.target

@@ -76,15 +76,13 @@ class psick::pre (
       $windows_classes.each |$n,$c| {
         if $c != '' {
           contain $c
-          Class[$c] -> Class['psick::base']
         }
       }
     }
-    if !empty($darwin_classes) and $::kernel == 'Darwn' {
+    if !empty($darwin_classes) and $::kernel == 'Darwin' {
       $darwin_classes.each |$n,$c| {
         if $c != '' {
           contain $c
-          Class[$c] -> Class['psick::base']
         }
       }
     }
@@ -92,7 +90,6 @@ class psick::pre (
       $solaris_classes.each |$n,$c| {
         if $c != '' {
           contain $c
-          Class[$c] -> Class['psick::base']
         }
       }
     }

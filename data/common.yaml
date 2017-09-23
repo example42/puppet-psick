@@ -18,7 +18,10 @@ psick::base::windows_classes: {}
 psick::base::darwin_classes: {}
 psick::base::solaris_classes: {}
 
-psick::profiles: {}
+psick::profiles::linux_classes: {}
+psick::profiles::windows_classes: {}
+psick::profiles::darwin_classes: {}
+psick::profiles::solaris_classes: {}
 
 psick::tp:
   cli_enable: false

@@ -1,8 +1,8 @@
-# This class includes base classes that manage the common baseline
-# resources generally applied to any node.
+# @summary Manage profiles specific to nodes, roles or any other group
+# This class includes host/role specific profiles, they are applied after
+# the base classes.
 # Is exposes parameters that allow to define any class (from Psick,
-# public modules or local profiles) to include after the prerequisites
-# classes declared in the osich::pre class.
+# public modules or local profiles) to include as profile.
 # For each different $::kernel value a differet entrypoint is exposed.
 #
 # For each of these $::kernel_classes parameters, it's expected an Hash of key-values:
@@ -13,31 +13,27 @@
 # ones (the typical component modules from the Forge) and private
 # site profiles and modules.
 #
-# @example Manage common baseline classes for Linux and Windows:
-#     psick::base::linux_classes:
-#       users: '::psick::users::static'
-#       sudo: '::psick::sudo'
-#       logs: '::psick::logs::rsyslog'
-#       time: '::psick::time'
-#     psick::base::windows_classes:
-#       time: '::psick::time'
-#       hostname: '::psick::hostname'
+# @example Manage common profiles classes for Linux and Windows:
+#     psick::profiles::linux_classes:
+#       webserver: '::psick::apache::tp'
+#     psick::profiles::windows_classes:
+#       webserver: '::iis'
 #
 # @example Disable inclusion of a class of the given marker. Here the
 #   class marked as 'users' is set to an empty value and hence is
 #   not included. Use this to manage exceptions and variations
 #   overriding defaults set at more common Hiera layers.
-#     psick::base::linux_classes:
-#       'users': ''
+#     psick::profiles::linux_classes:
+#       'webserver': ''
 #
 # @example Disable the whole class (no resource from this class is declared)
-#     psick::base::manage: false
+#     psick::profiles::manage: false
 #
 # @param manage If to actually manage any resource. Set to false to disable
 #   any effect of this psick::base class.
 #
 # @param linux_classes Hash with the list of classes to include
-#   in the common baseline when $::kernel is Linux. Of each key-value
+#   as added profiles when $::kernel is Linux. Of each key-value
 #   of the hash, the key is used as marker to eventually override
 #   across Hiera hierarchies and the value is the name of the class
 #   to actually include. Any key name can be used, but the value
@@ -46,15 +42,15 @@
 #   is not included.
 #
 # @param windows_classes Hash with the list of classes to include
-#   in the common baseline when $::kernel is windows.
+#   as added profiles when $::kernel is windows.
 #
 # @param solaris_classes Hash with the list of classes to include
-#   in the common baseline when $::kernel is Solaris.
+#   as added profiles when $::kernel is Solaris.
 #
 # @param darwin_classes Hash with the list of classes to include
-#   in the common baseline when $::kernel is Darwin.
+#   as added profiles when $::kernel is Darwin.
 #
-class psick::base (
+class psick::profiles (
 
   Boolean $manage = $::psick::manage,
 

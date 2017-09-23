@@ -43,8 +43,6 @@ class psick (
   Hash $firewall,
   Hash $monitor,
 
-  Hash $profiles = {},
-
 ) {
 
   # PSICK VARIABLES
@@ -78,15 +76,8 @@ class psick (
   if getvar($::firstrun) == 'done' or $enable_firstrun == false {
     contain ::psick::pre
     contain ::psick::base
-    Class['psick::pre'] -> Class['psick::base']
-    if !empty($profiles) {
-      $profiles.each |$n,$p| {
-        if $p != '' {
-          contain $p
-          Class['psick::base'] -> Class[$p]
-        }
-      }
-    }
+    contain ::psick::profiles
+    Class['psick::pre'] -> Class['psick::base'] -> Class['psick::profiles']
   } else {
     contain ::psick::firstrun
     notify { "This catalog should be applied only at the first Puppen run\n": }

@@ -1,0 +1,156 @@
+#!/bin/sh
+#
+# This file is managed by Puppet
+#
+#    /etc/rc.d/init.d/<servicename>
+#
+#    Docker service for <%= @app %> container
+#
+# chkconfig: 2345 97 15
+# description: Docker container for <%= @app %>
+
+### BEGIN INIT INFO
+# Provides:       <%= @service_prefix %><%= @app %>
+# Required-Start: network docker
+# Required-Stop:  network docker
+# Should-Start:
+# Should-Stop:
+# Default-Start: 2 3 4 5
+# Default-Stop:  0 1 6
+# Short-Description: start and stop docker container for <%= @app %>
+# Description: Docker container for <%= @app %>
+### END INIT INFO
+
+if [ -e /etc/init.d/functions ]; then
+    . /etc/init.d/functions
+elif [ -e /lib/lsb/init-functions ]; then
+    . /lib/lsb/init-functions
+    failure() {
+        log_failure_msg "$@"
+        return 1
+    }
+    success() {
+        log_success_msg "$@"
+        return 0
+    }
+else
+    failure() {
+        echo "fail: $@" >&2
+        exit 1
+    }
+    success() {
+        echo "success: $@" >&2
+        exit 0
+    }
+fi
+
+export HOME=/root/
+docker="/usr/bin/docker"
+prog="<%= @service_prefix %><%= @app %>"
+if [ -d /var/lock/subsys ]; then
+    lockfile="/var/lock/subsys/$prog"
+else
+    unset lockfile
+fi
+
+start() {
+    [ -x $docker ] || exit 5
+
+    if [ "true" = "$($docker inspect --format='{{.State.Running}}' <%= @app %>)" ]; then
+       failure
+       printf "Container <%= @app %> is still running.\n"
+       exit 7
+    fi
+
+    printf "Starting $prog:\t"
+    <% if @remove_container_on_stop -%>
+        $docker rm <% if @remove_volume_on_start %>-v<% end %> <%= @app %> >/dev/null 2>&1
+    <% else %>
+        $docker create \
+        <%= @run_options %> \
+        --name <%= @app %> \
+        <%= @real_image %> \
+        <%= @command %>
+    <% end -%>
+    <% if @pull_on_start -%>
+        $docker pull <%= @real_image %>
+    <% end -%>
+    <% if @remove_container_on_stop -%>
+    $docker run \
+    <%= @run_options %> \
+    --name <%= @app %> \
+    <%= @real_image %> \
+    <%= @command %>
+    <% else %>
+    $docker start -a <%= @app %>
+    <% end -%>
+
+    retval=$?
+    echo
+    if [ $retval -eq 0 ]; then
+        success
+    else
+        failure
+    fi
+}
+
+stop() {
+    echo -n "Stopping $prog: "
+    $docker stop <%= @app %>
+    <% if @remove_container_on_stop -%>
+        $docker rm <% if @remove_volume_on_stop %>-v<% end %> <%= @app %>
+    <% end -%>
+    return $?
+}
+
+clean() {
+    if ! [ -f $cidfile ]; then
+        failure
+        echo
+        printf "$cidfile does not exist.\n"
+    else
+        cid="$(cat $cidfile)"
+        rm $cidfile
+        $docker rm -v -f $cid
+        retval=$?
+        return $retval
+    fi
+}
+
+case "$1" in
+    start)
+    start
+    ;;
+    stop)
+    stop
+    ;;
+    status)
+    if [ "true" = "$($docker inspect --format='{{.State.Running}}' <%= @app %>)" ]; then
+        echo $prog is running
+        exit 0
+    else
+        echo $prog not running
+        exit 1
+    fi
+    ;;
+    restart|reload)
+    stop
+    start
+    ;;
+    clean)
+    clean
+    ;;
+    cleanRestart)
+    stop
+    clean
+    start
+    ;;
+    condrestart)
+    [ -f /var/lock/subsys/$prog ] && restart || :
+    ;;
+    *)
+    echo "Usage: $0 [start|stop|status|reload|restart|probe|clean|cleanRestart]"
+    exit 1
+    ;;
+esac
+exit $?
