@@ -67,12 +67,8 @@ psick::monitor::ganglia::packages: []
 # psick::monitor::snmpd
 psick::monitor::snmpd::extra_packages: []
 
-# Special lookup options
+# Deep merge lookups for the following keys:
 lookup_options:
-  psick::firstrun:
-    merge:
-      strategy: deep
-      knockout_prefix: "--"
   psick::settings:
     merge:
       strategy: deep
@@ -100,31 +96,29 @@ lookup_options:
   psick::gitlab::cli::config_hash:
     merge:
       strategy: deep
+      knockout_prefix: "--"
   psick::windows::features::install:
     merge:
       strategy: deep
+      knockout_prefix: "--"
   psick::windows::features::defaults:
     merge:
       strategy: deep
+      knockout_prefix: "--"
   psick::windows::registry::keys:
     merge:
       strategy: deep
+      knockout_prefix: "--"
   psick::windows::registry::defaults:
     merge:
       strategy: deep
+      knockout_prefix: "--"
+# Regular expressions to enable deep merge on all params ending with _hash 
   "^psick::(.*)::(.*)_hash$":
     merge:
       strategy: deep
       knockout_prefix: "--"
   "^psick::(.*)::(.*)::(.*)_hash$":
-    merge:
-      strategy: deep
-      knockout_prefix: "--"
-  "^psick::(.*)::(.*)_list$":
-    merge:
-      strategy: deep
-      knockout_prefix: "--"
-  "^psick::(.*)::(.*)::(.*)_list$":
     merge:
       strategy: deep
       knockout_prefix: "--"

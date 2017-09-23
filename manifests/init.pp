@@ -75,7 +75,7 @@ class psick (
   }
 
   # PSICK PRE, BASE CLASSES AND PROFILES + OPTIONAL FIRSTRUN MODE
-  if lookupvar($::firstrun) == 'done' or $enable_firstrun == false {
+  if getvar($::firstrun) == 'done' or $enable_firstrun == false {
     contain ::psick::pre
     contain ::psick::base
     Class['psick::pre'] -> Class['psick::base']

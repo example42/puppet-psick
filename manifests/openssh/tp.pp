@@ -41,20 +41,21 @@
 #   manage the prerequistes to install openssh (other packages, repos or tp installs).
 # @param auto_conf If to automatically use default configurations for openssh.
 class psick::openssh::tp (
-  Boolean         $manage         = $::psick::manage,
-  Psick::Ensure   $ensure         = 'present',
-  Hash            $resources_hash = {},
-  Hash            $options_hash   = {},
-  Hash            $settings_hash  = {},
-  Boolean         $auto_prereq    = $::psick::auto_prereq,
-  Psick::Autoconf $auto_conf      = $::psick::auto_conf,
+  Psick::Ensure   $ensure                   = 'present',
+  Boolean         $manage                   = $::psick::manage,
+  Hash            $resources_hash           = {},
+  Hash            $resources_auto_conf_hash = {},
+  Hash            $options_hash             = {},
+  Hash            $options_auto_conf_hash   = {},
+  Hash            $settings_hash            = {},
+  Boolean         $auto_prereq              = $::psick::auto_prereq,
 ) {
 
   if $manage {
     # tp::install openssh
     $install_defaults = {
       ensure             => $ensure,
-      options_hash       => $options_hash,
+      options_hash       => $options_auto_conf_hash + $options_hash,
       settings_hash      => $settings_hash,
       auto_repo          => $auto_prereq,
       auto_prerequisites => $auto_prereq,
@@ -68,14 +69,12 @@ class psick::openssh::tp (
       'absent' => 'absent',
       default  => 'present',
     }
-    $all_options_hash = lookup("openssh::options_hash_${auto_conf}", Hash, 'deep', {}) + $options_hash 
     $conf_defaults = {
       ensure             => $file_ensure,
-      options_hash       => $all_options_hash,
+      options_hash       => $options_auto_conf_hash + $options_hash,
       settings_hash      => $settings_hash,
     }
-    $resources_auto_conf = lookup("openssh::resources_hash_${auto_conf}", Hash, 'deep', {})
-    $tp_confs = pick($resources_auto_conf['tp::conf'], {}) + pick($resources_hash['tp::conf'], {}) 
+    $tp_confs = pick($resources_auto_conf_hash['tp::conf'], {}) + pick($resources_hash['tp::conf'], {}) 
     # All the tp::conf defines declared here
     $tp_confs.each | $k,$v | {
       ::tp::conf { $k:
@@ -93,7 +92,7 @@ class psick::openssh::tp (
       settings_hash      => $settings_hash,
     }
     # All the tp::dir defines declared here
-    $tp_dirs = pick($resources_auto_dir['tp::dir'], {}) + pick($resources_hash['tp::dir'], {}) 
+    $tp_dirs = pick($resources_auto_conf_hash['tp::dir'], {}) + pick($resources_hash['tp::dir'], {}) 
     $tp_dirs.each | $k,$v | {
       ::tp::dir { $k:
         * => $dir_defaults + $v,

@@ -65,35 +65,34 @@ class psick::pre (
 ) {
 
   if $manage {
-    if !empty($linux_classes) {
+    if !empty($linux_classes) and $::kernel == 'Linux' {
       $linux_classes.each |$n,$c| {
         if $c != '' {
           contain $c
-          Class['psick::pre'] -> Class[$c] -> Class['psick::base']
         }
       }
     }
-    if !empty($windows_classes) {
+    if !empty($windows_classes) and $::kernel == 'windows' {
       $windows_classes.each |$n,$c| {
         if $c != '' {
           contain $c
-          Class['psick::pre'] -> Class[$c] -> Class['psick::base']
+          Class[$c] -> Class['psick::base']
         }
       }
     }
-    if !empty($darwin_classes) {
+    if !empty($darwin_classes) and $::kernel == 'Darwn' {
       $darwin_classes.each |$n,$c| {
         if $c != '' {
           contain $c
-          Class['psick::pre'] -> Class[$c] -> Class['psick::base']
+          Class[$c] -> Class['psick::base']
         }
       }
     }
-    if !empty($solaris_classes) {
+    if !empty($solaris_classes) and $::kernel == 'Solaris' {
       $solaris_classes.each |$n,$c| {
         if $c != '' {
           contain $c
-          Class['psick::pre'] -> Class[$c] -> Class['psick::base']
+          Class[$c] -> Class['psick::base']
         }
       }
     }

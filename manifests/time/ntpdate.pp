@@ -12,6 +12,7 @@ class psick::time::ntpdate (
   exec { "ntpdate -s ${ntp_server}":
     subscribe   => Tp::Install['ntpdate'],
     refreshonly => true,
+    path        => $::path
   }
   if $crontab != '' and $::virtual != 'docker' {
     file { '/etc/cron.d/ntpdate':
