@@ -126,7 +126,7 @@ define psick::users::managed(
 
   if $generate_ssh_keypair {
     if $id_rsa_source == '' and $id_rsa_pub_source == '' {
-      psick::ssh::keygen { $name:
+      psick::openssh::keygen { $name:
         comment => $real_comment,
         require => User[$name],
       }

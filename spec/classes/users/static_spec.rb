@@ -25,7 +25,7 @@ describe 'psick::users::static', :type => :class do
         it { is_expected.to have_user_resource_count(0) }
 
         describe 'Unmanaged users are not purged'
-        it { is_expected.to have_tools__user__managed_resource_count(0) }
+        it { is_expected.to have_psick__users__managed_resource_count(0) }
       end
 
       context 'with root_pw: set' do
@@ -79,7 +79,7 @@ describe 'psick::users::static', :type => :class do
             }}
         }
         describe
-        it { is_expected.to have_tools__user__managed_resource_count(2) }
+        it { is_expected.to have_psick__users__managed_resource_count(2) }
       }
 
       context 'with invalid parameter values' do

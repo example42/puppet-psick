@@ -54,13 +54,13 @@ class psick::docker::tp (
   if $manage {
     # tp::install docker
     $install_defaults = {
-      ensure             => $ensure,
-      options_hash       => $options_auto_conf_hash + $options_hash,
-      settings_hash      => $settings_hash,
-      auto_repo          => $auto_prereq,
-      auto_prerequisites => $auto_prereq,
+      ensure        => $ensure,
+      options_hash  => $options_auto_conf_hash + $options_hash,
+      settings_hash => $settings_hash,
+      auto_repo     => $auto_prereq,
+      auto_prereq   => $auto_prereq,
     }
-    ::tp::install { 'docker-engine':
+    ::tp::install { 'docker':
       * => $install_defaults,
     }
   
@@ -83,12 +83,8 @@ class psick::docker::tp (
     }
   
     # tp::dir iterated over $dir_hash
-    $dir_ensure = $ensure ? {
-      'absent' => 'absent',
-      default  => 'directory',
-    }
     $dir_defaults = {
-      ensure             => $dir_ensure,
+      ensure             => $file_ensure,
       settings_hash      => $settings_hash,
     }
     # All the tp::dir defines declared here

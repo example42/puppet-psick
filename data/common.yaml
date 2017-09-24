@@ -8,6 +8,11 @@ psick::mgmt_interface: "%{facts.networking.primary}"
 
 psick::enable_firstrun: false
 
+psick::firstrun::linux_classes: {}
+psick::firstrun::windows_classes: {}
+psick::firstrun::darwin_classes: {}
+psick::firstrun::solaris_classes: {}
+
 psick::pre::linux_classes: {}
 psick::pre::windows_classes: {}
 psick::pre::darwin_classes: {}
@@ -116,12 +121,20 @@ lookup_options:
     merge:
       strategy: deep
       knockout_prefix: "--"
-# Regular expressions to enable deep merge on all params ending with _hash 
+# Regular expressions to enable deep merge on all params ending with _hash and _classes
   "^psick::(.*)::(.*)_hash$":
     merge:
       strategy: deep
       knockout_prefix: "--"
   "^psick::(.*)::(.*)::(.*)_hash$":
+    merge:
+      strategy: deep
+      knockout_prefix: "--"
+  "^psick::(.*)::(.*)_classes$":
+    merge:
+      strategy: deep
+      knockout_prefix: "--"
+  "^psick::(.*)::(.*)::(.*)_classes$":
     merge:
       strategy: deep
       knockout_prefix: "--"

@@ -84,7 +84,6 @@ define psick::docker::run (
     }
   }
 
-
   if $run_mode == 'service' {
     $service_ensure = $ensure ? {
       'absent' => 'stopped',
@@ -106,7 +105,7 @@ define psick::docker::run (
       'systemd': {
         $initscript_file_path = "/etc/systemd/system/${service_prefix}${sanitised_title}.service"
         $default_template = 'psick/docker/run/systemd.erb'
-         $init_file_mode = '0644'
+        $init_file_mode = '0644'
         $service_provider = 'systemd'
       }
       'sysvinit': {

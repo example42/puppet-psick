@@ -38,3 +38,4 @@ psick::sysctl::settings_hash:
   net.ipv4.conf.all.send_redirects: 0
   net.ipv4.conf.all.secure_redirects: 0
   net.ipv4.tcp_rfc1337: 0
+

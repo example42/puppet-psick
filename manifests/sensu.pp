@@ -13,8 +13,8 @@ class psick::sensu (
   String $rabbitmq_vhost    = '/sensu',
 
   String $subscriptions     = 'base',
-  String $client_address    = $::psick::monitor::ip,
-  String $client_name       = $::psick::monitor::hostname,
+  String $client_address    = $::psick::monitor['ip'],
+  String $client_name       = $::psick::monitor['hostname'],
 
   Boolean $is_client        = true,
   Boolean $is_server        = false,
@@ -24,7 +24,7 @@ class psick::sensu (
   String $redis_class       = '',
   String $dashboard_class   = '',
 
-  Boolean $tp_test          = $::psick::tp_test,
+  Boolean $tp_test          = $::psick::tp['test_enable'],
 
   Hash $checks_hash         = {},
   Hash $checks_params_hash  = {},

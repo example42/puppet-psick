@@ -1,0 +1,12 @@
+redis
+rabbitmq
+postfix
+openssh
+docker
+apache
+elasticsearch
+foreman
+mariadb
+nginx
+postgresql
+mysql

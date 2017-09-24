@@ -1,106 +1,106 @@
 require 'spec_helper'
+require 'yaml'
+facts_yaml = File.dirname(__FILE__) + '/../../fixtures/facts/spec.yaml'
+facts = YAML.load_file(facts_yaml)
+
+default_params = {
+  'ensure'             => 'present',
+  'options_hash'       => {},
+  'settings_hash'      => {},
+  'auto_prereq'        => true,
+}
+sample_settings_hash = {
+  'package_name'     => 'my_openssh',
+  'service_name'     => 'my_openssh',
+  'config_dir_path'  => '/etc/my_openssh',
+  'config_file_path' => '/etc/my_openssh/config.yaml',
+}
+sample_resources_hash = {
+  'tp::conf' => {
+    'openssh' => {
+      'template' => 'psick/spec/sample.erb',
+    },
+    'openssh::other' => {
+      'source' => 'puppet:///psick/spec/sample',
+    },
+  },
+  'tp::dir' => {
+    'openssh' => {
+      'source'  => 'git@github.com:/example42.com/psick',
+      'vcsrepo' => 'git',
+      'path'    => '/opt/psick',
+    },
+    'openssh::other' => {
+      'source' => 'puppet:///psick/spec',
+    },
+  },
+}
+sample_options_hash = {
+  'server' => {
+    'host' => 'localhost',
+    'port' => '1',
+  },
+  'url' => 'http://sample/',
+}
 
 describe 'psick::openssh::tp' do
   on_supported_os(facterversion: '2.4').select { |k, _v| k == 'redhat-7-x86_64' || k == 'ubuntu-16.04-x86_64' }.each do |os, os_facts|
     context "on #{os}" do
-      let(:facts) { os_facts }
-
-      default_params = {
-        'ensure'             => 'present',
-        'options_hash'       => {},
-        'settings_hash'      => {},
-        'auto_repo'          => true,
-        'auto_prerequisites' => true,
-      }
+      let(:facts) { os_facts.merge(facts) }
+      let(:pre_condition) { 'include psick' }
 
       describe 'with default params' do
         it { is_expected.to compile }
-        it { is_expected.to contain_tp__install('psick::openssh').with(default_params) }
+        it { is_expected.to contain_tp__install('openssh').with(default_params) }
+      end
+
+      describe 'with manage => false' do
+        let(:params) { { 'manage' => false } }
+
+        it { is_expected.to have_resource_count(0) }
       end
 
       describe 'with ensure => absent' do
         let(:params) { { 'ensure' => 'absent' } }
 
-        it { is_expected.to contain_tp__install('psick::openssh').with(default_params.merge('ensure' => 'absent')) }
+        it { is_expected.to contain_tp__install('openssh').with(default_params.merge('ensure' => 'absent')) }
+      end
+
+      describe 'with custom conf_hash' do
+        let(:params) { { 'resources_hash' => sample_resources_hash, 'options_hash' => sample_options_hash } }
+
+        it { is_expected.to contain_tp__install('openssh').with(default_params.merge('options_hash' => sample_options_hash)) }
+        it { is_expected.to contain_tp__conf('openssh').with('ensure' => 'present', 'template' => 'psick/spec/sample.erb', 'options_hash' => sample_options_hash) }
+        it { is_expected.to contain_tp__conf('openssh::other').with('ensure' => 'present', 'source' => 'puppet:///psick/spec/sample') }
+        it { is_expected.to contain_tp__dir('openssh').with('ensure' => 'present', 'path' => '/opt/psick', 'vcsrepo' => 'git', 'source' => 'git@github.com:/example42.com/psick') }
+        it { is_expected.to contain_tp__dir('openssh::other').with('ensure' => 'present', 'source' => 'puppet:///psick/spec') }
+      end
+
+      describe 'with custom settings_hash' do
+        let(:params) do
+          {
+            'settings_hash' => sample_settings_hash,
+            'resources_hash' => sample_resources_hash,
+            'options_hash' => sample_options_hash,
+          }
+        end
+
+        it { is_expected.to contain_tp__install('openssh').with(default_params.merge('options_hash' => sample_options_hash, 'settings_hash' => sample_settings_hash)) }
+        it { is_expected.to contain_tp__conf('openssh').with('ensure' => 'present', 'template' => 'psick/spec/sample.erb') }
+        it { is_expected.to contain_tp__conf('openssh::other').with('ensure' => 'present', 'source' => 'puppet:///psick/spec/sample') }
+        it { is_expected.to contain_tp__dir('openssh').with('ensure' => 'present', 'source' => 'git@github.com:/example42.com/psick') }
+        it { is_expected.to contain_package('my_openssh').with('ensure' => 'present') }
+        it { is_expected.to contain_service('my_openssh').with('ensure' => 'running', 'enable' => true) }
+        it { is_expected.to contain_file('/etc/my_openssh/config.yaml').with('ensure' => 'present') }
+        it { is_expected.to contain_file('/etc/my_openssh').with('ensure' => 'directory') }
       end
 
       describe 'with auto_prereq => false' do
         let(:params) { { 'auto_prereq' => false } }
 
-        it { is_expected.to contain_tp__install('psick::openssh').with(default_params.merge('auto_repo' => false, 'auto_prerequisites' => false)) }
+        it { is_expected.to contain_tp__install('openssh').with(default_params.merge('auto_repo' => false, 'auto_prereq' => false)) }
       end
 
-      describe 'with custom conf_hash' do
-        sample_conf_hash = {
-          'main' => {
-            'template' => 'profile/spec/sample.erb',
-          },
-          'other' => {
-            'source' => 'puppet:///profile/spec/sample',
-          },
-        }
-        sample_options_hash = {
-          'server' => {
-            'host' => 'localhost',
-            'port' => '1',
-          },
-          'url' => 'http://sample/',
-        }
-        let(:params) { { 'conf_hash' => sample_conf_hash, 'options_hash' => sample_options_hash } }
-
-        it { is_expected.to contain_tp__install('psick::openssh').with(default_params.merge('options_hash' => sample_options_hash)) }
-        it { is_expected.to contain_tp__conf('psick::openssh::main').with('ensure' => 'present', 'template' => 'profile/spec/sample.erb', 'options_hash' => sample_options_hash) }
-        it { is_expected.to contain_tp__conf('psick::openssh::other').with('ensure' => 'present', 'source' => 'puppet:///profile/spec/sample') }
-      end
-
-      describe 'with custom dir_hash' do
-        sample_dir_hash = {
-          'psick' => {
-            'source'  => 'git@github.com:/example42.com/psick',
-            'vcsrepo' => 'git',
-            'path'    => '/opt/psick',
-          },
-          'sample' => {
-            'source' => 'puppet:///profile/spec',
-          },
-        }
-        let(:params) { { 'dir_hash' => sample_dir_hash } }
-
-        it { is_expected.to contain_tp__install('psick::openssh').with(default_params.merge('options_hash' => sample_options_hash)) }
-        it { is_expected.to contain_tp__dir('psick::openssh::psick').with('ensure' => 'present', 'path' => '/opt/psick', 'vcsrepo' => 'git', 'source' => 'git@github.com:/example42.com/psick') }
-        it { is_expected.to contain_tp__dir('psick::openssh::sample').with('ensure' => 'present', 'source' => 'puppet:///profile/spec') }
-      end
-
-      describe 'with custom settings_hash' do
-        sample_settings_hash = {
-          'package_name'     => 'my_psick::openssh',
-          'service_name'     => 'my_psick::openssh',
-          'config_dir_path'  => '/etc/my_psick::openssh',
-          'config_file_path' => '/etc/my_psick::openssh/config.yaml',
-        },
-        sample_dir_hash = {
-          '' => {
-            'source' => 'puppet:///profile/spec/sample',
-          },
-        }
-        sample_conf_hash = {
-          '' => {
-            'source' => 'puppet:///profile/spec',
-          },
-        }
-        let(:params) do {
-          'settings_hash' => sample_settings_hash,
-          'dir_hash'      => sample_dir_hash,
-          'conf_hash'     => sample_conf_hash, 
-        } end
-
-        it { is_expected.to contain_tp__install('psick::openssh').with(default_params.merge('options_hash' => sample_options_hash)) }
-        it { is_expected.to contain_tp__conf('psick::openssh').with('ensure' => 'present', 'source' => 'puppet:///profile/spec/sample') }
-        it { is_expected.to contain_tp__dir('psick::openssh').with('ensure' => 'present', 'source' => 'puppet:///profile/spec') }
-        it { is_expected.to contain_package('my_psick::openssh').with('ensure' => 'present',)
-        it { is_expected.to contain_service('my_psick::openssh').with('ensure' => 'present',)
-        it { is_expected.to contain_file('/etc/my_psick::openssh/config.yaml').with('ensure' => 'present',)
-        it { is_expected.to contain_file('/etc/my_psick::openssh').with('ensure' => 'directory',)
     end
   end
 end

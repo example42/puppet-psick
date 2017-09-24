@@ -1,9 +1,9 @@
-# Define: psick::ssh::keygen
+# Define: psick::openssh::keygen
 # Brutally imported and adapted from:
 # https://github.com/maestrodev/puppet-ssh_keygen/blob/master/manifests/init.pp
 # Full credits to the Maestro Devs
 #
-define psick::ssh::keygen (
+define psick::openssh::keygen (
   Optional[String] $user     = undef,
   Optional[String] $type     = undef,
   Optional[String] $bits     = undef,

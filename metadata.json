@@ -1,6 +1,6 @@
 {
   "name": "example42-psick",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "author": "Example42",
   "summary": "Psick: the infrastructure module.",
   "description": "Psick Puppet module. A single module to manage an extendable Puppet infrastructure",
@@ -10,7 +10,7 @@
   "dependencies": [
     { "name":"puppetlabs/stdlib","version_requirement":">= 4.0.0 < 5.0.0" },
     { "name":"example42/tp","version_requirement":">= 2.0.0 < 3.0.0" },
-    { "name":"example42/tinydata","version_requirement":">= 0.0.1 < 2.0.0" }
+    { "name":"example42/tinydata","version_requirement":">= 0.1.0 < 2.0.0" }
   ],
   "operatingsystem_support": [
     {

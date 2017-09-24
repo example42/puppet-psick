@@ -44,7 +44,7 @@ class psick::puppet::pe_code_manager (
       default => "/home/${deploy_user}",
     }
 
-    psick::ssh::keygen { $deploy_user:
+    psick::openssh::keygen { $deploy_user:
       comment => $deploy_comment,
     }
 

@@ -60,20 +60,20 @@ class psick (
     data_module  => $tp['data_module'],
   }
   Tp::Conf {
-    config_file_notify => $tp['config_file_notify'],
+    config_file_notify  => $tp['config_file_notify'],
     config_file_require => $tp['config_file_require'],
-    debug        => $tp['debug'],
-    data_module  => $tp['data_module'],
+    debug               => $tp['debug'],
+    data_module         => $tp['data_module'],
   }
   Tp::Dir {
-    config_dir_notify => $tp['config_dir_notify'],
+    config_dir_notify  => $tp['config_dir_notify'],
     config_dir_require => $tp['config_dir_require'],
-    debug        => $tp['debug'],
-    data_module  => $tp['data_module'],
+    debug              => $tp['debug'],
+    data_module        => $tp['data_module'],
   }
 
   # PSICK PRE, BASE CLASSES AND PROFILES + OPTIONAL FIRSTRUN MODE
-  if getvar($::firstrun) == 'done' or $enable_firstrun == false {
+  if $facts['firstrun'] == 'done' or $enable_firstrun == false {
     contain ::psick::pre
     contain ::psick::base
     contain ::psick::profiles
