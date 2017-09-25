@@ -8,7 +8,7 @@ class psick::repo (
   Hash $yum_repos            = {},
   String $apt_resource       = 'apt::source', # From puppetlabs-apt
   Hash $apt_repos            = {},
-  String $zypper_resource    = 'zypprepo',    # From darin-zypprepo
+  String $zypper_resource    = 'zypprepo',    # From darin-zypprepo
   Hash $zypper_repos         = {},
 ) {
 

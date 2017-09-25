@@ -24,6 +24,7 @@
 #
 class psick::timezone(
   String $timezone             = '',
+  String $timezone_windows     = '',
   Boolean $hw_utc              = false,
   String $set_timezone_command = '',
   String $template             = "psick/timezone/timezone-${::operatingsystem}",

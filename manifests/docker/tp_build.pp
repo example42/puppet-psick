@@ -76,7 +76,7 @@ define psick::docker::tp_build (
   # Dockerfile creation
   exec { "mkdir -p ${basedir_path}/root":
     creates => "${basedir_path}/root",
-  } ->
+  } -> # lint:ignore:arrow_on_right_operand_line
   file { [ "${basedir_path}/Dockerfile" , "${basedir_path}/root/Dockerfile" ]:
     ensure  => $ensure,
     content => template($template),
@@ -109,24 +109,24 @@ define psick::docker::tp_build (
 
   $dir_hash.each |$dir_name,$dir_options| {
     tp::dir { "${dir_name}::docker::build":
-      ensure              => pick_default($dir_options['ensure'],present),
-      source              => pick_undef($dir_options['source']),
-      vcsrepo             => pick_undef($dir_options['vcsrepo']),
-      base_dir            => pick_default($dir_options['base_dir'],'config'),
-      path                => pick_undef($dir_options['path']),
-      mode                => pick_undef($dir_options['mode']),
-      owner               => pick_undef($dir_options['owner']),
-      group               => pick_undef($dir_options['group']),
-      path_prefix         => "${basedir_path}/root",
-      path_parent_create  => true,
-      config_dir_notify   => false,
-      config_dir_require  => false,
-      purge               => pick_default($dir_options['purge'],false),
-      recurse             => pick_default($dir_options['recurse'],false),
-      force               => pick_default($dir_options['force'],false),
-      settings_hash       => pick_default($dir_options['settings_hash'],{ } ),
-      data_module         => pick_default($dir_options['data_module'],'tinydata'),
-      notify              => Exec["docker build ${build_options} -t ${real_image_name} ${basedir_path}"],
+      ensure             => pick_default($dir_options['ensure'],present),
+      source             => pick_undef($dir_options['source']),
+      vcsrepo            => pick_undef($dir_options['vcsrepo']),
+      base_dir           => pick_default($dir_options['base_dir'],'config'),
+      path               => pick_undef($dir_options['path']),
+      mode               => pick_undef($dir_options['mode']),
+      owner              => pick_undef($dir_options['owner']),
+      group              => pick_undef($dir_options['group']),
+      path_prefix        => "${basedir_path}/root",
+      path_parent_create => true,
+      config_dir_notify  => false,
+      config_dir_require => false,
+      purge              => pick_default($dir_options['purge'],false),
+      recurse            => pick_default($dir_options['recurse'],false),
+      force              => pick_default($dir_options['force'],false),
+      settings_hash      => pick_default($dir_options['settings_hash'],{ } ),
+      data_module        => pick_default($dir_options['data_module'],'tinydata'),
+      notify             => Exec["docker build ${build_options} -t ${real_image_name} ${basedir_path}"],
     }
   }
 
