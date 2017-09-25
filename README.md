@@ -13,74 +13,200 @@ It is what we call an Infrastructure Puppet module. It provides:
   - Safe and easy to be integrated in existing setup, allows expandibility by design.
   - Entirely Hiera driven: Basically a DSL to configure infrastructures
  
-It can be used as with the [PSICK control-repo](https://github.com/example42/psick) or as a strandalone module, just:
+It can be used together with the [PSICK control-repo](https://github.com/example42/psick) or as a strandalone module, just:
 
     include psick
 
-This doesn't do anything at all, since we have to configure it in some way.
-In the following examples we will use Hiera yaml files, but any backend can be used: psick is a normal, even if unusual, Puppet module and has params lookups as any Puppet module.
+This doesn't do anything at all, by default, since we have to configure it by settings psick classes parameters..
+In the following examples we will use Hiera yaml files, but any backend can be used: psick is a normal, even if somehow unusual, Puppet module and has params lookups as any Puppet module.
 
 ## Do you speak psick?
 
-We mentioned this Psick provides a DSL to configure infrastructures. Maybe we were exaggerating, anyway what follows is Psick's "language".
+We mentioned this Psick provides a DSL to configure infrastructures. Maybe we were exaggerating, anyway what follows is Psick's "language". In this case is yaml, but can be expressed by variables set any Hiera backend.
 
-If you are lazy and trust our defaults (always WIP) you can simply try to use one of our default sets of configurations, note that you can customise and override everything, in your control-repo hiera data:
+If you are lazy and trust our defaults (always WIP) you can simply try to use one of our embedded sets of configurations, note that you can customise and override everything, in your control-repo hiera data.
 
-    ---
-    # Use Psick predefined defaults (as in  data/default/*.yaml)
+For example, to use Psick predefined defaults (as in  data/default/*.yaml):
+
     psick::auto_conf: default
 
-    # Use some hardened defaults (as in data/hardened/*.yaml)
-    psick::auto_conf: default
+To use, instead, some hardened defaults (as in data/hardened/*.yaml):
 
+    psick::auto_conf: hardened
 
-everything can be configured with Hiera yaml data like:
+To avoid any predefined setting and expressively set the classes to include in a node before any other class:
     
-    ---
-    # List of prerequisites classes to include on Linux nodes
+    psick::auto_conf: none # This is already the default
     psick::pre::linux_classes:
-      hosts: '::psick::hosts::resource'
-      users: '::psick::users::static'
-      hostname: '::psick::hostname'
-      dns: '::psick::dns::resolver'
-      proxy: '::psick::proxy'
-      puppet: '::puppet'
+      hosts: psick::hosts::resource
+      users: psick::users::static
+      hostname: psick::hostname
+      dns: psick::dns::resolver
+      proxy: psick::proxy
+      puppet: puppet
 
-    # List of common classes to include on Linux nodes, they are applied after the pre ones
+To specify the list of common classes to include on Linux nodes, they are applied after the pre ones:
+
     psick::base::linux_classes:
-      mail: '::psick::mail::postfix'
-      ssh: '::psick::ssh::openssh'
-      sudo: '::psick::sudo'
-      logs: '::psick::logs::rsyslog'
-      time: '::psick::time'
-      sysctl: '::psick::sysctl'
-      update: '::psick::update'
-      motd: '::psick::motd'
-      profile: '::psick::profile'
+      mail: psick::mail::postfix
+      ssh: psick::ssh::openssh
+      sudo: psick::sudo
+      logs: psick::logs::rsyslog
+      time: psick::time
+      sysctl: psick::sysctl
+      update: psick::update
+      motd: psick::motd
+
+To manage exceptions and use a different class on special nodes (on the relevant Hiera files):
+
+    psick::base::linux_classes:
+      ssh: ::profile::ssh_bastion
+
+To completely disable the sage of a common base class, used by default:
+
+    psick::base::linux_classes:
+      ssh: ''
+
+An example of classification with Windows nodes:
     
-    # Pre and Base classes for Windows nodes
     psick::pre::windows_classes:
-      hosts: '::psick::hosts::resource'
+      hosts: psick::hosts::resource
     psick::windows::base_classes:
-      features: '::psick::windows::features'
-      registry: '::psick::windows::registry'
-      users: '::psick::users::ad'
-      time: '::psick::time'
-    
-    # Package respositories settings
-    psick::repo::add_defaults: true
-    
-    # Time settings
+      features: psick::windows::features
+      registry: psick::windows::registry
+      users: psick::users::ad
+      time: psick::time
+
+The classes defined before can be from public modules, local profiles, or psick itself, which provides a set of profiles for common use cases.
+
+They are in dedicated classes and can configured accordingly.
+
+For example, to manage both on Linux and Windows timezone and ntp servers to use:
+
     psick::time::servers:
       - 'pool.ntp.org'
-    
-    # Timezone settings
     psick::timezone::timezone: 'UTC'
     
-    # Sample sysctl settings
+To manage sysctl settings (on Linux):
+
     psick::sysctl::settings:
       net.ipv4.conf.all.forwarding: 0
 
+For more examples look at the documentation of the single Psick profiles.
+
+## Classification
+
+Psick can manage the whole classification of the nodes of your infrastructure. It can work side by side and External Node Classifier, or it can totally replace it.
+
+All you need is to include the psick class and define, using ```${::kernel}_class``` parameters, which classes to include in a node in different phases.
+
+Psick provides 4 phases, managed by the relevant subclasses:
+
+  - **firstboot**, optional phase, in which the resulting catalog is applied only once, at the first Puppet run. After a reboot can optionally be triggered and the real definitive catalog is applied.
+  - **pre**, prerequisites classes, they are applied in a normal catalog run (that is, always besides in firstboot phae) before all the other classes.
+  - **base**, base classes, common to all the nodes (but exceptions can be applied), applied in normal catalog runs after the pre classes and before the profiles.
+  - **profiles**, profiles, exactly as in the roles and profiles pattern. The profile classes to use that differentiate nodes by their role or function. Profiles are applied after the base classes are managed.
+
+An example of configurations, both for Linux and Windows nodes that use all the above phases:
+
+    # First run mode must be enabled and each class to include there explicitely defined:
+    psick::enable_firstrun: true
+    psick::firstrun::linux_classes:
+      hostname: psick::hostname
+      packages: psick::aws::sdk
+    psick::firstrun::windows_classes:
+      hostname: psick::hostname
+      packages: psick::aws::sdk
+
+    # Pre and base classes, both on Linux and Windows
+    psick::pre::linux_classes:
+      puppet: ::puppet
+      dns: psick::dns::resolver
+      hostname: psick::hostname
+      hosts: psick::hosts::resource
+      repo: psick::repo
+    psick::base::linux_classes:
+      sudo: psick::sudo
+      time: psick::time
+      sysctl: psick::sysctl
+      update: psick::update
+      ssh: psick::openssh::tp
+      mail: psick::postfix::tp
+      mail: psick::users::ad
+
+    psick::pre::windows_classes:
+      hosts: psick::hosts::resource
+    psick::base::windows_classes:
+      features: psick::windows::features
+      registry: psick::windows::registry
+      services: psick::windows::services
+      time: psick::time
+      users: psick::users::ad
+
+    # Profiles for specific roles (ie: webserver)
+    psick::profiles::linux_classes:
+      webserver: apache
+    psick::profiles::windows_classes:
+      webserver: iis
+
+The each key-pair of these $kernel_classes parameters contain an arbitrary tag or marker (users, time, services, but could be any string), and the name the class to include.
+
+This name must be a valid class, which can be found in the Puppet Master modulepath (so probably defined in your control-repo ```Puppetfile```) : you can use some of the predefinied Psick profiles, or your own local site profiles, or directly classes from public modules and configure them via Hiera in their own namespace.
+
+
+## Psick profiles
+
+Psick provides out of the box profiles to manage more or less common baselines on Linux and Windows. Details on them are described later.
+
+Additionally there are the **Psick tp profiles**, that is profiles that use tp ([Tiny Puppet](https://github.com/example42/puppet-tp) to manage applications.
+
+These tp profiles have a common structure and can be configured, for each application, using common parameters. For example to configure Openssh both client and server settings we can write something like:
+
+    # By including the psick::openssh::tp profile we install Openssh
+    psick::base::linux_classes:
+      ssh: 'psick::openssh::tp'
+
+    # To customise the configuration files to manage at their options:
+    psick::openssh::tp::resources_hash:
+      tp::conf:
+        openssh: # The openssh main configuration file
+          template: 'profile/openssh/sshd_config.erb'
+        openssh::ssh_config # The /etc/ssh/ssh_config file
+          epp: 'profile/openssh/ssh_config.epp'
+
+    # To manage the variables referenced in the used templates (the have to map the same keys):
+    psick::openssh::options_hash:
+      AllowAgentForwarding: yes
+      AllowTcpForwarding: yes
+      Banner: none
+      ChallengeResponseAuthentication: yes
+      ClientAliveInterval: 0
+      ClientAliveCountMax: 3
+      GatewayPorts: no
+      GSSAPIAuthentication: no
+      GSSAPICleanupCredentials: yes
+      KeyRegenerationInterval: 1h
+      HostbasedAuthentication: no
+      IgnoreRhosts: yes
+      ListenAddress:
+        - 127.0.0.1
+        - 0.0.0.0
+      LogLevel: INFO
+      MaxAuthTries: 2
+      MaxSessions: 10
+      PasswordAuthentication: yes
+      PermitEmptyPasswords: no
+      PermitRootLogin: yes
+      PermitTunnel: no
+      PrintMotd: yes
+      PrintLastLog: yes
+      Protocol: 2
+      PubkeyAuthentication: yes
+      RSAAuthentication: yes
+      RhostsRSAAuthentication: no
+      TCPKeepAlive: yes
+      X11Forwarding: no
+      X11UseLocalhost: yes
 
 
 ### psick::proxy - Proxy Management
