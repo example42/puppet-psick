@@ -52,7 +52,7 @@ class psick::docker::tp (
 ) {
 
   if $manage {
-    # tp::install docker
+    # tp::install docker
     $install_defaults = {
       ensure        => $ensure,
       options_hash  => $options_auto_conf_hash + $options_hash,
@@ -63,7 +63,7 @@ class psick::docker::tp (
     ::tp::install { 'docker':
       * => $install_defaults,
     }
-  
+
     # tp::conf iteration based on 
     $file_ensure = $ensure ? {
       'absent' => 'absent',
@@ -74,21 +74,21 @@ class psick::docker::tp (
       options_hash       => $options_auto_conf_hash + $options_hash,
       settings_hash      => $settings_hash,
     }
-    $tp_confs = pick($resources_auto_conf_hash['tp::conf'], {}) + pick($resources_hash['tp::conf'], {}) 
-    # All the tp::conf defines declared here
+    $tp_confs = pick($resources_auto_conf_hash['tp::conf'], {}) + pick($resources_hash['tp::conf'], {})
+    # All the tp::conf defines declared here
     $tp_confs.each | $k,$v | {
       ::tp::conf { $k:
         * => $conf_defaults + $v,
       }
     }
-  
+
     # tp::dir iterated over $dir_hash
     $dir_defaults = {
       ensure             => $file_ensure,
       settings_hash      => $settings_hash,
     }
-    # All the tp::dir defines declared here
-    $tp_dirs = pick($resources_auto_conf_hash['tp::dir'], {}) + pick($resources_hash['tp::dir'], {}) 
+    # All the tp::dir defines declared here
+    $tp_dirs = pick($resources_auto_conf_hash['tp::dir'], {}) + pick($resources_hash['tp::dir'], {})
     $tp_dirs.each | $k,$v | {
       ::tp::dir { $k:
         * => $dir_defaults + $v,

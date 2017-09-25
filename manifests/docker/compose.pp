@@ -33,11 +33,11 @@ class psick::docker::compose(
       cwd     => '/tmp',
       command => "curl -s -L https://github.com/docker/compose/releases/download/${real_version}/docker-compose-${::kernel}-x86_64 > /usr/local/bin/docker-compose-${real_version}",
       creates => "/usr/local/bin/docker-compose-${real_version}"
-    } ->
+    } -> # lint:ignore:arrow_on_right_operand_line
     file { "/usr/local/bin/docker-compose-${real_version}":
       owner => 'root',
       mode  => '0755'
-    } ->
+    } -> # lint:ignore:arrow_on_right_operand_line
     file { '/usr/local/bin/docker-compose':
       ensure => 'link',
       target => "/usr/local/bin/docker-compose-${real_version}",

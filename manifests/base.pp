@@ -1,5 +1,5 @@
 # This class includes base classes that manage the common baseline
-# resources generally applied to any node.
+# resources generally applied to any node.
 # Is exposes parameters that allow to define any class (from Psick,
 # public modules or local profiles) to include after the prerequisites
 # classes declared in the osich::pre class.
@@ -56,12 +56,12 @@
 #
 class psick::base (
 
-  Boolean $manage = $::psick::manage,
-
   Psick::Class $linux_classes,
   Psick::Class $windows_classes,
   Psick::Class $darwin_classes,
   Psick::Class $solaris_classes,
+
+  Boolean $manage = $::psick::manage,
 
 ) {
 

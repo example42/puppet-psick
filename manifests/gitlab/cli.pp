@@ -12,7 +12,7 @@
 #   operations.
 #
 # @param template The path of the erb template (as used in template() to use
-#  as content for gitlab-cli config file. This is alternative to epp.
+#  as content for gitlab-cli config file. This is alternative to epp.
 #
 # @param config_hash An open hash of options you can use in your template. Note that
 #   this hash is merged with an hash of default options provided in the class

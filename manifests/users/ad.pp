@@ -25,7 +25,7 @@ class psick::users::ad (
       true  => '3',
       false => '1',
     }
-    
+
     class { '::domain_membership':
       domain       => $domain,
       username     => $username,

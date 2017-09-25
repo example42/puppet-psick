@@ -79,8 +79,8 @@ define psick::docker::run (
       'absent'  => "docker ps --no-trunc | grep `cat ${cidfile}` || true",
     }
     exec { "docker run ${sanitised_title}":
-      command     => $exec_command,
-      unless      => $exec_unless,
+      command => $exec_command,
+      unless  => $exec_unless,
     }
   }
 
@@ -114,6 +114,9 @@ define psick::docker::run (
         $init_file_mode = '0755'
         $service_provider = undef
       }
+      default: {
+        fail('Unknow init system check $::psick::docker::module_settings[init_system]')
+      }
     }
 
     file { $initscript_file_path:
@@ -123,10 +126,10 @@ define psick::docker::run (
       notify  => Service["docker-${app}"],
     }
     service { "${service_prefix}${sanitised_title}":
-      ensure    => $service_ensure,
-      enable    => $service_enable,
-      provider  => $service_provider,
-      require   => Service[$::psick::docker::module_settings['service_name']],
+      ensure   => $service_ensure,
+      enable   => $service_enable,
+      provider => $service_provider,
+      require  => Service[$::psick::docker::module_settings['service_name']],
     }
   }
 }

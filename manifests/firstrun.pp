@@ -146,10 +146,10 @@ class psick::firstrun (
 
     if $reboot {
       reboot { $reboot_name:
-        apply       => $reboot_apply,
-        message     => $reboot_message,
-        when        => $reboot_when,
-        timeout     => $reboot_timeout,
+        apply   => $reboot_apply,
+        message => $reboot_message,
+        when    => $reboot_when,
+        timeout => $reboot_timeout,
       }
     }
 
