@@ -1,4 +1,4 @@
-# PSICK The Puppet Infrastructure module
+# PSICK: The Infrastructure Puppet module
 
 [![Build Status](https://travis-ci.org/example42/puppet-psick.png?branch=production)](https://travis-ci.org/example42/puppet-psick)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/503831d4ea6a470e864f1a3969449b78)](https://www.codacy.com/app/example42/puppet-psick?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=example42/puppet-psick&amp;utm_campaign=Badge_Grade)
@@ -83,7 +83,7 @@ everything can be configured with Hiera yaml data like:
 
 
 
-### ::psick::proxy - Proxy Management
+### psick::proxy - Proxy Management
 
 If your servers need a proxy to access the Internet you can include the ```psick::proxy``` class directly in your base classes:
 
@@ -114,7 +114,7 @@ You can customise the components for which proxy should be configured, here are 
     psick::proxy::configure_repo: true
 
 
-### ::psick::hosts::file - /etc/hosts management
+### psick::hosts::file - /etc/hosts management
 
 This class manages /etc/hosts
 
@@ -126,7 +126,7 @@ To customise its behaviour you can set the template to use to manage ```/etc/hos
     psick::hosts::file::hostname: 'www01' # Default: $::hostname
 
 
-### ::psick::update - Manage packages updates
+### psick::update - Manage packages updates
 
 This class manages how and when a system should be updated, it can be included with the parameter:
 
@@ -140,7 +140,7 @@ The class just creates a cronjob which runs the system's specific update command
 The above setting would create a cron job, executed every day at 6:00 AM, that updates the system's packages.
 
 
-### ::psick::sudo - Manage sudo
+### psick::sudo - Manage sudo
 
 This class manages sudo. It can be included by setting:
 
@@ -156,16 +156,16 @@ You can configure the template to use for ```/etc/sudoers```, the admins who can
       - bill
     psick::sudo::sudoers_d_source: 'puppet:///modules/site/sudo/sudoers.d' # Default is empty
 
-It's also possible to provide an hash of custom sudo directives to pass to the ```::tools::sudo::directive``` define:
+It's also possible to provide an hash of custom sudo directives to pass to the ```::psick::sudo::directive``` define:
 
     psick::sudo::directives:
       oracle:
         template: 'psick/sudo/oracle.erb'
         order: 30
        
-The ```::tools::sudo::directive``` define accepts these params (template, content and source are ALTERNATIVE way to manage the content of the sudo file):
+The ```::psick::sudo::directive``` define accepts these params (template, content and source are ALTERNATIVE way to manage the content of the sudo file):
 
-    define tools::sudo::directive (
+    define psick::sudo::directive (
       Enum['present','absent'] $ensure   = present,
       Variant[Undef,String]    $content  = undef,
       Variant[Undef,String]    $template = undef,
@@ -174,7 +174,7 @@ The ```::tools::sudo::directive``` define accepts these params (template, conten
     ) { ...}
 
 
-### ::psick::sysctl - Manage sysctl settings
+### psick::sysctl - Manage sysctl settings
 
 This class manages sysctl settings. To include it:
 
@@ -194,7 +194,7 @@ It's possible to specify which sysctl module to use, other than psick internal's
 The specified module must be on your control-repo's Puppetfile. Not all modules are supported (it's easy to add new ones).
 
 
-### ::psick::motd - Manage /etc/motd and /etc/issue files
+### psick::motd - Manage /etc/motd and /etc/issue files
 
 This class just manages the content of the ```/etc/motd.conf``` and ```/etc/issue``` files. To include it:
 
@@ -217,15 +217,15 @@ To remove these files:
 
 
 
-### ::psick::oracle - Manage Oracle prerequisites and installation
+### psick::oracle - Manage Oracle prerequisites and installation
 
 This psick should be added to oracle servers. By default it does nothing, but, activating the relevant parameters, it allows
 the configuration of all the prerequisites for Oracle 12 installation and, if installation files are available, it can automate the installation of Oracle products (via the biemond/oradb external module).
 
 Main use case is the configuration for prerequisites. This can be done with:
 
-    profiles:
-      psick::oracle
+    psick::profiles::linux_classes:
+      'oracle': psick::oracle
 
     # Activate the prerequisites class that manages /etc/limits
     psick::oracle::prerequisites::limits_class: 'psick::oracle::prerequisites::limits'
@@ -240,7 +240,8 @@ Main use case is the configuration for prerequisites. This can be done with:
 
     # Activate the prerequisites class that manages sysctl
     psick::oracle::prerequisites::sysctl_class: 'psick::oracle::prerequisites::sysctl'
-    profile::base::linux::sysctl_class: '' # The base default sysctl class conflicts with the above
+    psick::base::linux_classes:
+      'sysctl': '::psick::sysctl' # The base default sysctl class conflicts with the above
 
     # Activate the prerequisites class that cretaes a swap file (needs petems/swap_file module)
     # psick::oracle::prerequisites::swap_class: 'psick::oracle::prerequisites::swap'
