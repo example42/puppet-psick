@@ -1,23 +1,52 @@
 # PSICK The Puppet Infrastructure module
 
+[![Build Status](https://travis-ci.org/example42/puppet-psick.png?branch=production)](https://travis-ci.org/example42/puppet-psick)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/503831d4ea6a470e864f1a3969449b78)](https://www.codacy.com/app/example42/puppet-psick?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=example42/puppet-psick&amp;utm_campaign=Badge_Grade)
 This is the PSICK (Puppet Systems Infrastructure Construction Kit) module.
 
-It contains an extendable set of profiles for common systems management activities and all the necessary data entry points to configure a whole infrastructure via Puppet.
+It is what we call an Infrastructure Puppet module. It provides:
 
-It can be used as a strandalone module, just:
+  - Solid management of classification. Entirely hiera driven.
+  - An integrated set of profiles for common systems management activities
+  - A growing number of profiles for common applications
+  - Integrated and automated firewall (WIP) and monitoring management
+  - Safe and easy to be integrated in existing setup, allows expandibility by design.
+  - Entirely Hiera driven: Basically a DSL to configure infrastructures
+ 
+It can be used as with the [PSICK control-repo](https://github.com/example42/psick) or as a strandalone module, just:
 
     include psick
 
-and configure with Hiera yaml data like:
+This doesn't do anything at all, since we have to configure it in some way.
+In the following examples we will use Hiera yaml files, but any backend can be used: psick is a normal, even if unusual, Puppet module and has params lookups as any Puppet module.
+
+## Do you speak psick?
+
+We mentioned this Psick provides a DSL to configure infrastructures. Maybe we were exaggerating, anyway what follows is Psick's "language".
+
+If you are lazy and trust our defaults (always WIP) you can simply try to use one of our default sets of configurations, note that you can customise and override everything, in your control-repo hiera data:
+
+    ---
+    # Use Psick predefined defaults (as in  data/default/*.yaml)
+    psick::auto_conf: default
+
+    # Use some hardened defaults (as in data/hardened/*.yaml)
+    psick::auto_conf: default
+
+
+everything can be configured with Hiera yaml data like:
     
     ---
-    # Pre and Base classes for Linux nodes
+    # List of prerequisites classes to include on Linux nodes
     psick::pre::linux_classes:
       hosts: '::psick::hosts::resource'
       users: '::psick::users::static'
       hostname: '::psick::hostname'
       dns: '::psick::dns::resolver'
       proxy: '::psick::proxy'
+      puppet: '::puppet'
+
+    # List of common classes to include on Linux nodes, they are applied after the pre ones
     psick::base::linux_classes:
       mail: '::psick::mail::postfix'
       ssh: '::psick::ssh::openssh'
@@ -38,7 +67,7 @@ and configure with Hiera yaml data like:
       users: '::psick::users::ad'
       time: '::psick::time'
     
-    # Repo settings
+    # Package respositories settings
     psick::repo::add_defaults: true
     
     # Time settings
@@ -52,12 +81,9 @@ and configure with Hiera yaml data like:
     psick::sysctl::settings:
       net.ipv4.conf.all.forwarding: 0
 
-or within the PSICK [control-repo](https://github.com/example42/psick).
-
-PSICK is entirely data driven configurable, for features which are not managed directly it leave entry points to include and manage any other resource.
 
 
-## ::psick::proxy - Proxy Management
+### ::psick::proxy - Proxy Management
 
 If your servers need a proxy to access the Internet you can include the ```psick::proxy``` class directly in your base classes:
 
@@ -88,7 +114,7 @@ You can customise the components for which proxy should be configured, here are 
     psick::proxy::configure_repo: true
 
 
-## ::psick::hosts::file - /etc/hosts management
+### ::psick::hosts::file - /etc/hosts management
 
 This class manages /etc/hosts
 
@@ -100,7 +126,7 @@ To customise its behaviour you can set the template to use to manage ```/etc/hos
     psick::hosts::file::hostname: 'www01' # Default: $::hostname
 
 
-## ::psick::update - Manage packages updates
+### ::psick::update - Manage packages updates
 
 This class manages how and when a system should be updated, it can be included with the parameter:
 
@@ -114,7 +140,7 @@ The class just creates a cronjob which runs the system's specific update command
 The above setting would create a cron job, executed every day at 6:00 AM, that updates the system's packages.
 
 
-## ::psick::sudo - Manage sudo
+### ::psick::sudo - Manage sudo
 
 This class manages sudo. It can be included by setting:
 
@@ -148,23 +174,27 @@ The ```::tools::sudo::directive``` define accepts these params (template, conten
     ) { ...}
 
 
-## ::psick::sysctl - Manage sysctl settings
+### ::psick::sysctl - Manage sysctl settings
 
 This class manages sysctl settings. To include it:
 
     psick::base::linux_classes:
       'sysctl': '::psick::sysctl'
 
-Any sysctl setting can be set via Hiera, using the ```psick::sysctl::settings``` key, which expects and hash (looked up via hiera_hash so values across the hierarchies are merged):
+Any sysctl setting can be set via Hiera, using the ```psick::sysctl::settings``` key, which expects an hash like:
 
     psick::sysctl::settings:
-      kernel.shmmni:
-        value: 4096
-      kernel.sem:
-        value: 250 32000 100 128
+      kernel.shmmni: value: 4096
+      kernel.sem: value: 250 32000 100 128
+
+It's possible to specify which sysctl module to use, other than psick internal's default:
+
+    psick::sysctl::module: 'duritong'
+
+The specified module must be on your control-repo's Puppetfile. Not all modules are supported (it's easy to add new ones).
 
 
-## ::psick::motd - Manage /etc/motd and /etc/issue files
+### ::psick::motd - Manage /etc/motd and /etc/issue files
 
 This class just manages the content of the ```/etc/motd.conf``` and ```/etc/issue``` files. To include it:
 
@@ -186,9 +216,8 @@ To remove these files:
     psick::motd::issue_file_ensure: 'absent'
 
 
-# Other profiles
 
-## ::psick::oracle - Manages prerequisites and installation
+### ::psick::oracle - Manage Oracle prerequisites and installation
 
 This psick should be added to oracle servers. By default it does nothing, but, activating the relevant parameters, it allows
 the configuration of all the prerequisites for Oracle 12 installation and, if installation files are available, it can automate the installation of Oracle products (via the biemond/oradb external module).
