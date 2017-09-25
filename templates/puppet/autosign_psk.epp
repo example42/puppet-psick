@@ -1,0 +1,3 @@
+<% $psick::puppet::autosign::policy_based_psk.each |$psk| { -%>
+<%= $psk %>
+<% } -%>

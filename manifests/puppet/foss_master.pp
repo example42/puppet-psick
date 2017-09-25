@@ -26,9 +26,34 @@ class psick::puppet::foss_master (
   Optional[String]  $r10k_remote_repo     = undef,
   Boolean           $manage_puppetdb_repo = true,
   Boolean           $enable_puppetdb      = true,
+  String            $dns_alt_names        = "puppet, puppet.${::domain}",
 ){
+  if versioncmp('5', $facts['puppetversion']) > 0 {
+    $postgresversion = '9.4'
+  } else {
+    $postgresversion = '9.6'
+  }
+
   contain ::psick::git
   contain puppetserver
+  # Workflow: create puppetserver ssl ca and certificates
+  ini_setting { 'puppet master dns alt names':
+    ensure  => present,
+    path    => '/etc/puppetlabs/puppet/puppet.conf',
+    section => 'master',
+    setting => 'dns_alt_names',
+    value   => $dns_alt_name_entries,
+  }
+  # step 1 generate ca
+  exec { '/opt/puppetlabs/puppet/bin/puppet cert list --all --allow-dns-alt-names':
+    creates   => '/etc/puppetlabs/puppet/ssl/ca/ca_key.pem',
+    logoutput => true,
+  }
+  # step 2: generate host certificate
+  exec { "/opt/puppetlabs/puppet/bin/puppet cert generate ${::facts['networking']['fqdn']}":
+    creates   => "/etc/puppetlabs/puppet/ssl/certs/${::facts['networking']['fqdn']}.pem",
+    logoutput => true,
+  }
 
   if $r10k_remote_repo {
     class { 'r10k':
@@ -53,34 +78,13 @@ class psick::puppet::foss_master (
       manage_firewall     => false,
       manage_package_repo => $manage_puppetdb_repo,
       ssl_protocols       => 'TLSv1.2',
-      postgres_version    => '9.4',
-    }
-    # Workflow: create puppetserver ssl ca and certificates
-    # needed for puppetdb ssl setup
-    exec { '/sbin/service puppetserver start':
-      command => 'puppet resource service puppetserver ensure=running',
-      path    => '/opt/puppetlabs/bin:/usr/bin:/bin:/usr/sbin:/sbin',
-      creates => '/etc/puppetlabs/puppet/ssl/certs/ca.pem',
-      require => Package['puppetserver'],
+      postgres_version    => $postgresversion,
     }
     class { 'puppetdb::master::config':
       manage_report_processor => true,
       enable_reports          => true,
       restart_puppet          => false,
       before                  => Service['puppetserver'],
-    }
-    # Bug: running puppetserver as root creates certificates as root
-    # puppetserver on standard run needs certificates to be owned by puppet user
-    file { '/etc/puppetlabs/puppet/ssl':
-      ensure  => directory,
-      owner   => 'puppet',
-      group   => 'puppet',
-      recurse => true,
-      require => [
-        Class['puppetdb'],
-        CLass['puppetdb::master::config'],
-      ],
-      notify  => Service['puppetserver'],
     }
   }
 }
