@@ -4,11 +4,11 @@
 #
 # @example Include it to install mariadb
 #   include psick::mariadb::tp
-# 
+#
 # @example Include in PSICK via hiera (yaml)
 #   psick::profiles::linux_classes:
 #     mariadb: psick::mariadb::tp
-# 
+#
 # @example Manage extra configs via hiera (yaml) with templates based on custom options
 #   psick::mariadb::tp::ensure: present
 #   psick::mariadb::tp::resources_hash:
@@ -46,7 +46,7 @@
 #   paths, package names, repo info and whatever can match Tp::Settings data type:
 #   https://github.com/example42/puppet-tp/blob/master/types/settings.pp
 # @param auto_prereq If to automatically install eventual dependencies for mariadb.
-#   Set to false if you have problems with duplicated resources, being sure that you 
+#   Set to false if you have problems with duplicated resources, being sure that you
 #   manage the prerequistes to install mariadb (other packages, repos or tp installs).
 class psick::mariadb::tp (
   Psick::Ensure   $ensure                   = 'present',
@@ -60,7 +60,7 @@ class psick::mariadb::tp (
 ) {
 
   if $manage {
-    # tp::install mariadb
+    # tp::install mariadb
     $install_defaults = {
       ensure        => $ensure,
       options_hash  => $options_auto_conf_hash + $options_hash,
@@ -71,8 +71,8 @@ class psick::mariadb::tp (
     ::tp::install { 'mariadb':
       * => $install_defaults,
     }
-  
-    # tp::conf iteration based on 
+
+    # tp::conf iteration based on
     $file_ensure = $ensure ? {
       'absent' => 'absent',
       default  => 'present',
@@ -82,21 +82,21 @@ class psick::mariadb::tp (
       options_hash       => $options_auto_conf_hash + $options_hash,
       settings_hash      => $settings_hash,
     }
-    $tp_confs = pick($resources_auto_conf_hash['tp::conf'], {}) + pick($resources_hash['tp::conf'], {}) 
-    # All the tp::conf defines declared here
+    $tp_confs = pick($resources_auto_conf_hash['tp::conf'], {}) + pick($resources_hash['tp::conf'], {})
+    # All the tp::conf defines declared here
     $tp_confs.each | $k,$v | {
       ::tp::conf { $k:
         * => $conf_defaults + $v,
       }
     }
-  
+
     # tp::dir iterated over $dir_hash
     $dir_defaults = {
       ensure             => $file_ensure,
       settings_hash      => $settings_hash,
     }
-    # All the tp::dir defines declared here
-    $tp_dirs = pick($resources_auto_conf_hash['tp::dir'], {}) + pick($resources_hash['tp::dir'], {}) 
+    # All the tp::dir defines declared here
+    $tp_dirs = pick($resources_auto_conf_hash['tp::dir'], {}) + pick($resources_hash['tp::dir'], {})
     $tp_dirs.each | $k,$v | {
       ::tp::dir { $k:
         * => $dir_defaults + $v,
@@ -104,4 +104,3 @@ class psick::mariadb::tp (
     }
   }
 }
-
