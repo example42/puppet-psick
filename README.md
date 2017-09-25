@@ -1,9 +1,9 @@
 # PSICK: The Infrastructure Puppet module
 
-[![Build Status](https://travis-ci.org/example42/puppet-psick.png?branch=production)](https://travis-ci.org/example42/puppet-psick)
+[![Build Status](https://travis-ci.org/example42/puppet-psick.png?branch=master)](https://travis-ci.org/example42/puppet-psick)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/503831d4ea6a470e864f1a3969449b78)](https://www.codacy.com/app/example42/puppet-psick?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=example42/puppet-psick&amp;utm_campaign=Badge_Grade)
 This is the PSICK (Puppet Systems Infrastructure Construction Kit) module.
-
+ 
 It is what we call an Infrastructure Puppet module. It provides:
 
   - Solid management of classification. Entirely hiera driven.
@@ -154,13 +154,13 @@ The each key-pair of these $kernel_classes parameters contain an arbitrary tag o
 This name must be a valid class, which can be found in the Puppet Master modulepath (so probably defined in your control-repo ```Puppetfile```) : you can use some of the predefinied Psick profiles, or your own local site profiles, or directly classes from public modules and configure them via Hiera in their own namespace.
 
 
-## Psick profiles
+## Psick tp profiles
 
 Psick provides out of the box profiles to manage more or less common baselines on Linux and Windows. Details on them are described later.
 
-Additionally there are the **Psick tp profiles**, that is profiles that use tp ([Tiny Puppet](https://github.com/example42/puppet-tp) to manage applications.
+Additionally there are the **Psick tp profiles**, they use ([Tiny Puppet](https://github.com/example42/puppet-tp) to manage common applications and expose a common set of parameters.
 
-These tp profiles have a common structure and can be configured, for each application, using common parameters. For example to configure Openssh both client and server settings we can write something like:
+For example to configure Openssh both client and server settings we can write something like:
 
     # By including the psick::openssh::tp profile we install Openssh
     psick::base::linux_classes:
@@ -178,36 +178,37 @@ These tp profiles have a common structure and can be configured, for each applic
     psick::openssh::options_hash:
       AllowAgentForwarding: yes
       AllowTcpForwarding: yes
-      Banner: none
-      ChallengeResponseAuthentication: yes
-      ClientAliveInterval: 0
-      ClientAliveCountMax: 3
-      GatewayPorts: no
-      GSSAPIAuthentication: no
-      GSSAPICleanupCredentials: yes
-      KeyRegenerationInterval: 1h
-      HostbasedAuthentication: no
-      IgnoreRhosts: yes
       ListenAddress:
         - 127.0.0.1
         - 0.0.0.0
-      LogLevel: INFO
-      MaxAuthTries: 2
-      MaxSessions: 10
       PasswordAuthentication: yes
       PermitEmptyPasswords: no
-      PermitRootLogin: yes
-      PermitTunnel: no
-      PrintMotd: yes
-      PrintLastLog: yes
-      Protocol: 2
-      PubkeyAuthentication: yes
-      RSAAuthentication: yes
-      RhostsRSAAuthentication: no
-      TCPKeepAlive: yes
-      X11Forwarding: no
-      X11UseLocalhost: yes
+      PermitRootLogin: no
 
+Similary we could manage postfix with data like:
+
+    psick::base::linux_classes:
+      mail: 'psick::postfix::tp'
+
+    # To customise the configuration files to manage at their options:
+    psick::postfix::tp::resources_hash:
+      tp::conf:
+        postfix: # Postfix's main.cf
+          template: 'profile/postfix/main.cf.erb'
+        postfix::master.cf # master.cf
+          epp: 'profile/postfix/master.cf.erb'
+
+    # To manage the variables referenced in the used templates (the have to map the same keys):
+    psick::openssh::options_hash:
+
+
+## Psick base profiles
+
+Basides tp profiles, Psick features a large set of profiles for common baseline configurations.
+
+Some of them are intended to be used both on Linux and Windows, others are more specific.
+
+Here follows a list (incomplete):
 
 ### psick::proxy - Proxy Management
 
