@@ -24,32 +24,36 @@
 class psick (
 
   # General PSICK wide switches
-  Boolean $manage,
-  Psick::Autoconf $auto_conf,
-  Boolean $auto_prereq,
+  Boolean $manage = true,
+  Boolean $auto_prereq = true,
+
+  # Define auto_configuration layout to use
+  Psick::Autoconf $auto_conf = 'none',
 
   # Firstrun mode. Disabled by default.
-  Boolean $enable_firstrun,
+  Boolean $enable_firstrun = false,
 
   # General network settings
-  Boolean $is_cluster,
-  Stdlib::Compat::Ip_address $primary_ip_address,
-  String  $mgmt_interface,
+  Boolean $is_cluster = false,
+  Stdlib::Compat::Ip_address $primary_ip = $facts['networking']['ip'],
+  String  $mgmt_interface = $facts['networking']['primary'],
 
-  # PSICK wide settings
-  Hash $settings,
-  Hash $servers,
-  Hash $tp,
-  Hash $firewall,
-  Hash $monitor,
+  # An open hash of Psick wide settings. Define data structure and use as wanted
+  Hash $settings = {},
+
+  # An open hash of infrastructure endpoints. profile::proxy uses this
+  Hash $servers = {},
+
+  # Configure behaviour of tp in Psick. Look in data/ for defaults.
+  Hash $tp = {},
+
+  # Psick global firewall configurations. Look in data/ for defaults.
+  Hash $firewall = {},
+
+  # Psick global monitoring configurations. Look in data/ for defaults.
+  Hash $monitor = {},
 
 ) {
-
-  # PSICK VARIABLES
-  $primary_ip = $primary_ip_address ? {
-    '255.255.255.255' => $facts['networking']['interfaces'][$mgmt_interface]['ip'],
-    default           => $primary_ip_address,
-  }
 
   # RESOURCE DEFAULTS
   Tp::Install {

@@ -18,7 +18,7 @@ class psick::proxy (
   Boolean $configure_system        = true,
   Boolean $configure_repo          = true,
   Boolean $force                   = false,
-  Optional[Hash] $proxy_server     = $::psick::proxy_server,
+  Optional[Hash] $proxy_server     = $::psick::servers['proxy'],
 ) {
 
   if $force {
@@ -105,7 +105,7 @@ class psick::proxy (
       'Debian': {
         file { '/etc/apt/apt.conf.d/80proxy':
           ensure => $ensure,
-          epp    => 'site/psick/proxy/proxy.apt.epp',
+          epp    => 'psick/proxy/proxy.apt.epp',
         }
       }
       default: {

@@ -5,17 +5,19 @@
 # if to trigger a system reboot after this Puppet run.
 #
 # By default, if psick::enable_firstrun is set to true, this class automatically
-# includes the classes listed in the $::kernel_classes hashes, triggers a reboot
+# includes the classes listed in the ${::kernel}_classes hashes, triggers a reboot
 # (on Windows) and creates an external fact that prevents a reboot
 # cycle.
 
-# IMPORTANT NOTE: If firstrun mode is enabled on an existing infrastructure
-# of if the $::firstrun external fact is removed, this class is included and
-# after it has been applied a reboot is triggered on Windows nodes.
+# IMPORTANT NOTE: If firstrun mode is activated on an existing infrastructure
+# or if the 'firstrun' external fact is removed from nodes, this class will
+# included in the main psick class as if this were a real first Puppet run.
+# This will trigger a, probably unwanted, reboot on Windows nodes (and in any
+# other node for which reboot is configured.
 # Set psick::firstrun::${kernel}_reboot to false to prevent undesired reboots.
 #
 # Use cases:
-# - Set a desired hostname on Windows, reboot and join a AD domain
+# - Set a desired hostname on Windows, reboot and join an AD domain
 # - Install aws-sdk gem, reboot and have ec2_tags facts since the first real Puppet run
 # - Set external facts with configurable content (not via pluginsync) and
 #   run a catalog only when they are loaded (after the first Puppet run)
@@ -27,6 +29,7 @@
 #     psick::enable_firstrun: true
 #     psick::firstrun::windows_classes:
 #       hostname: psick::hostname
+#     psick::firstrun::windows_reboot: true # (Default value)
 #
 # @example Enable firstrun and configure it to set hostname and proxy
 #   on Linux but do not trigger any reboot
@@ -41,9 +44,7 @@
 # exceptions management and customisations across Hiera's hierarchies.
 # Values are actual class names to include in the node's catalog only at
 # first Puppet execution.
-# They can be classes from psick module or any other module, both public
-# ones (the typical component modules from the Forge) and private
-# site profiles and modules.
+# They can be classes from psick module or any other module.
 #
 # @example Disable the whole class (no resource from this class is declared)
 #     psick::firstrun::manage: false
@@ -79,10 +80,10 @@ class psick::firstrun (
 
   Boolean $manage = $::psick::manage,
 
-  Psick::Class $linux_classes,
-  Psick::Class $windows_classes,
-  Psick::Class $darwin_classes,
-  Psick::Class $solaris_classes,
+  Psick::Class $linux_classes   = {},
+  Psick::Class $windows_classes = {},
+  Psick::Class $darwin_classes  = {},
+  Psick::Class $solaris_classes = {},
 
   Boolean $linux_reboot   = false,
   Boolean $windows_reboot = true,
@@ -97,7 +98,7 @@ class psick::firstrun (
 ) {
 
   if $manage {
-    if !empty($linux_classes) {
+    if !empty($linux_classes) and $::kernel == 'Linux' {
       $linux_classes.each |$n,$c| {
         if $c != '' {
           contain $c
@@ -105,7 +106,7 @@ class psick::firstrun (
         }
       }
     }
-    if !empty($windows_classes) {
+    if !empty($windows_classes) and $::kernel == 'windows' {
       $windows_classes.each |$n,$c| {
         if $c != '' {
           contain $c
@@ -113,7 +114,7 @@ class psick::firstrun (
         }
       }
     }
-    if !empty($darwin_classes) {
+    if !empty($darwin_classes) and $::kernel == 'Darwin' {
       $darwin_classes.each |$n,$c| {
         if $c != '' {
           contain $c
@@ -121,7 +122,7 @@ class psick::firstrun (
         }
       }
     }
-    if !empty($solaris_classes) {
+    if !empty($solaris_classes) and $::kernel == 'Solaris' {
       $solaris_classes.each |$n,$c| {
         if $c != '' {
           contain $c
@@ -149,7 +150,6 @@ class psick::firstrun (
         message     => $reboot_message,
         when        => $reboot_when,
         timeout     => $reboot_timeout,
-        refreshonly => true,
       }
     }
 

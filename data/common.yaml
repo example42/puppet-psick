@@ -3,7 +3,7 @@ psick::manage: true
 psick::auto_prereq: true
 psick::auto_conf: 'none'
 psick::is_cluster: false
-psick::primary_ip_address: '255.255.255.255'
+psick::primary_ip_address: "%{facts.networking.ip}"
 psick::mgmt_interface: "%{facts.networking.primary}"
 
 psick::enable_firstrun: false
