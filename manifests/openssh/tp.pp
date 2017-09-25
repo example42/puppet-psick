@@ -4,12 +4,12 @@
 #
 # @example Include it to install openssh
 #   include psick::openssh::tp
-# 
+#
 # @example Include in PSICK via hiera (yaml)
-#   psick::profiles:
+#   psick::profiles::linux_classes:
 #     openssh: psick::openssh::tp
-# 
-# @example Manage extra configs via hiera (yaml)
+#
+# @example Manage extra configs via hiera (yaml) with templates based on custom options
 #   psick::openssh::tp::ensure: present
 #   psick::openssh::tp::resources_hash:
 #     tp::conf:
@@ -18,28 +18,36 @@
 #       dot.conf:
 #         epp: profile/openssh/dot.conf.epp
 #         base_dir: conf
+#   psick::openssh::tp::options_hash:
+#     key: value
 #
 # @example Enable default auto configuration, if configurations are available
 #   for the underlying system and the given auto_conf value, they are
 #   automatically added (Default value is inherited from global $::psick::auto_conf
 #   psick::openssh::tp::auto_conf: 'default'
 #
-# @param manage If to actually manage any resource or not
-# @param ensure If to install or remove openssh
-# @param resources_hash An hash of tp conf and dir resources for openssh.
+# @param manage If to actually manage any resource in this profile or not
+# @param ensure If to install or remove openssh. Valid values are present, absent, latest
+#   or any version string, matching the expected openssh package version.
+# @param resources_hash An hash of tp::conf and tp::dir resources for openssh.
 #   tp::conf params: https://github.com/example42/puppet-tp/blob/master/manifests/conf.pp
 #   tp::dir params: https://github.com/example42/puppet-tp/blob/master/manifests/dir.pp
+# @param resources_auto_conf_hash The default resources hash if auto_conf is set. Default
+#   value is based on $::psick::auto_conf. Can be overridden or set to an empty hash.
+#   The final resources manages are the ones specified here and in $resources_hash.
+#   Check psick::openssh::tp:resources_auto_conf_hash in data/$auto_conf/*.yaml for
+#   the auto_conf defaults.
 # @param options_hash An open hash of options to use in the templates referenced
-#   in the $conf_hash. This is passed as parameter to all the tp::conf defines.
-#   Note, if an options_hash is set also in the $conf_hash that gets precedence.
-#   It's looked up via a deep merge hash
-# @param settings_hash An hash of tp settings to customise openssh file
+#   in the tp::conf entries of the $resouces_hash.
+# @param options_auto_conf_hash The default options hash if auto_conf is set.
+#   Check psick::openssh::tp:options_auto_conf_hash in data/$auto_conf/*.yaml for
+#   the auto_conf defaults.
+# @param settings_hash An hash of tp settings to override default openssh file
 #   paths, package names, repo info and whatever can match Tp::Settings data type:
 #   https://github.com/example42/puppet-tp/blob/master/types/settings.pp
 # @param auto_prereq If to automatically install eventual dependencies for openssh.
-#   Set to false if you have problems with duplicated resources, being sure that you 
+#   Set to false if you have problems with duplicated resources, being sure that you
 #   manage the prerequistes to install openssh (other packages, repos or tp installs).
-# @param auto_conf If to automatically use default configurations for openssh.
 class psick::openssh::tp (
   Psick::Ensure   $ensure                   = 'present',
   Boolean         $manage                   = $::psick::manage,
@@ -64,7 +72,7 @@ class psick::openssh::tp (
       * => $install_defaults,
     }
 
-    # tp::conf iteration based on 
+    # tp::conf iteration based on
     $file_ensure = $ensure ? {
       'absent' => 'absent',
       default  => 'present',
@@ -96,4 +104,3 @@ class psick::openssh::tp (
     }
   }
 }
-

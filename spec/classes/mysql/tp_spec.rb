@@ -100,7 +100,6 @@ describe 'psick::mysql::tp' do
 
         it { is_expected.to contain_tp__install('mysql').with(default_params.merge('auto_repo' => false, 'auto_prereq' => false)) }
       end
-
     end
   end
 end
