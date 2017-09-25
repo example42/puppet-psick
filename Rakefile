@@ -5,4 +5,3 @@ require 'puppet-lint/tasks/puppet-lint'
 
 PuppetLint.configuration.fail_on_warnings = false
 PuppetLint.configuration.send('relative')
-
