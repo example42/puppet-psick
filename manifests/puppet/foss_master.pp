@@ -34,9 +34,6 @@ class psick::puppet::foss_master (
     $postgresversion = '9.6'
   }
 
-  if !defined(Class['git']) {
-    contain ::psick::git
-  }
   contain puppetserver
   # Workflow: create puppetserver ssl ca and certificates
   ini_setting { 'puppet master dns alt names':
