@@ -34,7 +34,9 @@ class psick::puppet::foss_master (
     $postgresversion = '9.6'
   }
 
-  contain ::psick::git
+  if !defined(Class['git']) {
+    contain ::psick::git
+  }
   contain puppetserver
   # Workflow: create puppetserver ssl ca and certificates
   ini_setting { 'puppet master dns alt names':
@@ -59,7 +61,6 @@ class psick::puppet::foss_master (
     class { 'r10k':
       remote   => $r10k_remote_repo,
       provider => 'puppet_gem',
-      require  => Class['psick::git'],
     }
     class {'r10k::webhook::config':
       enable_ssl      => false,
