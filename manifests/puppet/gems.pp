@@ -19,11 +19,13 @@ class psick::puppet::gems (
       }
     }
     if $install_puppet_gems {
-      package { "puppet_${gem}":
-        ensure          => $ensure,
-        name            => $gem,
-        install_options => $install_options,
-        provider        => 'puppet_gem',
+      if !defined(Class['r10k']) {
+        package { "puppet_${gem}":
+          ensure          => $ensure,
+          name            => $gem,
+          install_options => $install_options,
+          provider        => 'puppet_gem',
+        }
       }
     }
     if $install_puppetserver_gems {
