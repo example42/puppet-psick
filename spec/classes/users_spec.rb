@@ -67,7 +67,7 @@ describe 'psick::users', :type => :class do
         it { is_expected.to have_user_resource_count(2) }
       end
 
-      context('with :_users_hash defined') {
+      context('with :_users_hash defined') do
         let(:params) { {
             users_hash: {
                 'testmanaged_user1' => {
@@ -76,13 +76,12 @@ describe 'psick::users', :type => :class do
                 'test_user2' => {
                     'name' => 'managed_user2'
                 }
-            }
+            },
             module: 'psick'
           }
         }
-        describe
         it { is_expected.to have_psick__users__managed_resource_count(2) }
-      }
+      end
 
       context 'with invalid parameter values' do
         describe ':root_pw cannot be empty string'
@@ -91,7 +90,6 @@ describe 'psick::users', :type => :class do
           end
           it { is_expected.to raise_error(Puppet::PreformattedError, /^Evaluation Error:.*/) }
       end
-
     end
   end
 end
