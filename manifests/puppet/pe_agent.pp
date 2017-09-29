@@ -6,7 +6,6 @@ class psick::puppet::pe_agent (
   Boolean $manage_noop        = false,
   Boolean $manage_service     = false,
   Boolean $noop_mode          = false,
-  Optional[String] $default_notify = 'Service[puppet]',
   Hash $settings              = {},
 ) {
 
@@ -24,6 +23,9 @@ class psick::puppet::pe_agent (
       ensure => 'running',
       enable => true,
     }
+    $service_notify = 'Service[puppet]'
+  } else {
+    $service_notify = undef
   }
 
   # Set environment
@@ -34,7 +36,7 @@ class psick::puppet::pe_agent (
       section => 'agent',
       setting => 'environment',
       value   => $environment,
-      notify  => $default_notify,
+      notify  => $service_notify,
     }
   }
 
@@ -46,7 +48,7 @@ class psick::puppet::pe_agent (
       section => 'agent',
       setting => 'noop',
       value   => $noop_mode,
-      notify  => $default_notify,
+      notify  => $service_notify,
     }
   }
 }

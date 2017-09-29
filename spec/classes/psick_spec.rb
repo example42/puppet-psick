@@ -33,7 +33,7 @@ describe 'psick', type: :class do
         it { is_expected.to compile.with_all_deps }
         it { is_expected.to contain_class('psick::dns::resolver').that_comes_before(['Class[psick::base]','Class[psick::profiles]']) }
         it { is_expected.to contain_class('psick::hostname').that_comes_before(['Class[psick::base]','Class[psick::profiles]']) }
-        it { is_expected.to contain_class('psick::users::static') }
+        it { is_expected.to contain_class('psick::users') }
         it { is_expected.to contain_class('psick::sudo') }
         it { is_expected.to contain_class('psick::logs::rsyslog') }
         it { is_expected.to contain_class('psick::time') }
