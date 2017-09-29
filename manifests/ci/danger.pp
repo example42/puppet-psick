@@ -11,7 +11,7 @@ class psick::ci::danger (
   String $ensure               = 'present',
   Array $plugins               = [ ],
   Boolean $use_gitlab          = false,
-  Boolean $install_system_gems = true,
+  Boolean $install_system_gems = false,
   Boolean $install_puppet_gems = true,
 ) {
   contain ::psick::ruby

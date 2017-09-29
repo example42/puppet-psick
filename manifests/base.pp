@@ -15,7 +15,7 @@
 #
 # @example Manage common baseline classes for Linux and Windows:
 #     psick::base::linux_classes:
-#       users: '::psick::users::static'
+#       users: '::psick::users'
 #       sudo: '::psick::sudo'
 #       logs: '::psick::logs::rsyslog'
 #       time: '::psick::time'

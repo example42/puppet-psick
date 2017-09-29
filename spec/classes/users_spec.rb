@@ -3,7 +3,7 @@ require 'yaml'
 facts_yaml = File.dirname(__FILE__) + '/../../fixtures/facts/spec.yaml'
 facts = YAML.load_file(facts_yaml)
 
-describe 'psick::users::static', :type => :class do
+describe 'psick::users', :type => :class do
   let(:facts) do
     facts
   end
@@ -15,7 +15,7 @@ describe 'psick::users::static', :type => :class do
       end
 
       it { is_expected.to compile.with_all_deps }
-      it { is_expected.to contain_class('psick::users::static') }
+      it { is_expected.to contain_class('psick::users') }
 
       context 'with defaults values' do
         describe 'Root user is not created'
@@ -67,16 +67,18 @@ describe 'psick::users::static', :type => :class do
         it { is_expected.to have_user_resource_count(2) }
       end
 
-      context('with :managed_users_hash defined') {
+      context('with :_users_hash defined') {
         let(:params) { {
-            managed_users_hash: {
+            users_hash: {
                 'testmanaged_user1' => {
                     'name' => 'managed_user1'
                 },
                 'test_user2' => {
                     'name' => 'managed_user2'
                 }
-            }}
+            }
+            module: 'psick'
+          }
         }
         describe
         it { is_expected.to have_psick__users__managed_resource_count(2) }

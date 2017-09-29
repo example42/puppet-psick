@@ -29,11 +29,11 @@ class psick::gitlab::runner (
 ) {
 
   if $use_docker {
-    contain ::docker
+    contain ::psick::docker
     # Quick and very dirty
     exec { 'usermod -a -G docker gitlab-runner':
       refreshonly => true,
-      subscribe   => Class['docker'],
+      subscribe   => Class['psick::docker'],
     }
   }
   $options_default = {

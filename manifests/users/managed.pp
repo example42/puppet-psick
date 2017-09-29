@@ -23,38 +23,40 @@
 #                   Default: true
 # sshkey_content:   supply ssh key via 'key', 'comment' and 'type'
 # sshkeys_content:  supply ssh keys via an array of 'key', 'comment' and 'type'
-define psick::users::managed(
-  String $ensure       = present,
-  String $comment       = '',
-  String $uid          = 'absent',
-  String $gid          = 'uid',
-  Array $groups              = [],
-  Boolean $manage_group        = true,
-  String $membership          = 'minimum',
-  $homedir             = 'absent',
-  $managehome          = true,
-  $homedir_mode        = '0750',
-  $sshkey              = 'absent',
-  $authorized_keys_source       = '',
-  $bashprofile_source  = '',
-  $known_hosts_source  = '',
-  $password            = 'absent',
-  $password_crypted    = true,
-  $password_salt       = '',
-  $shell               = '/bin/bash',
-  $id_rsa_source       = '',
-  $id_rsa_pub_source   = '',
-  $sshkey_content      = {},
-  $sshkeys_content     = [],
-  $generate_ssh_keypair = false,
+define psick::users::managed (
+  String $ensure          = present,
+  String $comment         = '',
+  String $uid             = 'absent',
+  String $gid             = 'uid',
+  Array $groups           = [],
+  Boolean $manage_group   = true,
+  String $membership      = 'minimum',
+  String $home            = 'absent',
+  Optional[Integer] $password_max_age = undef,
+  Optional[Integer] $password_min_age = undef,
+  $managehome             = true,
+  $homedir_mode           = '0750',
+  $sshkey                 = 'absent',
+  $authorized_keys_source = '',
+  $bashprofile_source     = '',
+  $known_hosts_source     = '',
+  $password               = 'absent',
+  $password_crypted       = true,
+  $password_salt          = '',
+  $shell                  = '/bin/bash',
+  $id_rsa_source          = '',
+  $id_rsa_pub_source      = '',
+  $sshkey_content         = {},
+  $sshkeys_content        = [],
+  $generate_ssh_keypair   = false,
 ){
 
-  $real_homedir = $homedir ? {
-    'absent' => $name ? {
+  $real_homedir = $home ? {
+    'absent' => $title ? {
       'root'  => '/root',
-      default => "/home/${name}",
+      default => "/home/${title}",
     },
-    default  => $homedir
+    default  => $home
   }
 
   $real_comment = $comment ? {
@@ -74,14 +76,16 @@ define psick::users::managed(
   }
 
   user { $name:
-    ensure     => $ensure,
-    allowdupe  => false,
-    comment    => $real_comment,
-    home       => $real_homedir,
-    managehome => $managehome,
-    shell      => $shell,
-    groups     => $groups,
-    membership => $membership,
+    ensure           => $ensure,
+    allowdupe        => false,
+    comment          => $real_comment,
+    home             => $real_homedir,
+    managehome       => $managehome,
+    shell            => $shell,
+    groups           => $groups,
+    membership       => $membership,
+    password_max_age => $password_max_age,
+    password_min_age => $password_min_age,
   }
 
   # Manage authorized keys if $authorized_keys_source exists

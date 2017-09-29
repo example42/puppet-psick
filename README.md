@@ -39,7 +39,7 @@ To avoid any predefined setting and expressively set the classes to include in a
     psick::auto_conf: none # This is already the default
     psick::pre::linux_classes:
       hosts: psick::hosts::resource
-      users: psick::users::static
+      users: psick::users
       hostname: psick::hostname
       dns: psick::dns::resolver
       proxy: psick::proxy
