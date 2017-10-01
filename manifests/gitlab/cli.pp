@@ -29,7 +29,7 @@ class psick::gitlab::cli (
     project_id => '',
     private_token => '',
     api_endpoint => "https =>//gitlab.${::facts['networking']['domain']}/api/v3",
-    httparty_options => '{verify => false}',
+    httparty_options => '{verify: false}',
     assigned_user => '',
     milestone => '',
     labels => 'automerge',
