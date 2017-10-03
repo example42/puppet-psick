@@ -1,0 +1,100 @@
+# File managed by (Tiny) Puppet
+
+[defaults]
+inventory      = <%= @options['inventory'] %>
+library        = <%= @options['library'] %>
+remote_tmp     = <%= @options['remote_tmp'] %>
+local_tmp      = <%= @options['local_tmp'] %>
+forks          = <%= @options['forks'] %>
+poll_interval  = <%= @options['poll_interval'] %>
+sudo_user      = <%= @options['sudo_user'] %>
+ask_sudo_pass = <%= @options['ask_sudo_pass'] %>
+ask_pass      = <%= @options['ask_pass'] %>
+transport      = <%= @options['transport'] %>
+remote_port    = <%= @options['remote_port'] %>
+module_lang    = <%= @options['remote_lang'] %>
+module_set_locale = <%= @options['module_set_locale'] %>
+gathering = <%= @options['gathering'] %>
+gather_subset = <%= @options['gather_subset'] %>
+roles_path    = <%= @options['roles_path'] %>
+host_key_checking = <%= @options['host_key_checking'] %>
+#stdout_callback = <%= @options['stdout_callback'] %>
+#callback_whitelist = <%= @options['callback_whitelist'] %>
+task_includes_static = <%= @options['task_includes_static'] %>
+handler_includes_static = <%= @options['handler_includes_static'] %>
+sudo_exe = <%= @options['sudo_exe'] %>
+sudo_flags = <%= @options['sudo_flags'] %>
+timeout = <%= @options['timeout'] %>
+remote_user = <%= @options['remote_user'] %>
+<% if @options['log_path'] %>log_path = <%= @options['log_path'] %><% end -%>
+module_name = <%= @options['module_name'] %>
+executable = <%= @options['executable'] %>
+hash_behaviour = <%= @options['hash_behaviour'] %>
+private_role_vars = <%= @options['private_role_vars'] %>
+jinja2_extensions = <%= @options['jinja2_extensions'] %>
+#private_key_file = <%= @options['private_key_file'] %>
+#vault_password_file = <%= @options['vault_password_file'] %>
+ansible_managed = <%= @options['ansible_managed'] %>
+display_skipped_hosts = <%= @options['display_skipped_hosts'] %>
+display_args_to_stdout = <%= @options['display_args_to_stdout'] %>
+error_on_undefined_vars = <%= @options['error_on_undefined_vars'] %>
+system_warnings = <%= @options['system_warnings'] %>
+deprecation_warnings = <%= @options['deprecation_warnings'] %>
+command_warnings = <%= @options['command_warnings'] %>
+bin_ansible_callbacks = <%= @options['bin_ansible_callbacks'] %>
+nocows = <%= @options['nocows'] %>
+cow_selection = <%= @options['cow_selection'] %>
+nocolor = <%= @options['nocolor'] %>
+fact_caching = <%= @options['fact_caching'] %>
+retry_files_enabled = <%= @options['retry_files_enabled'] %>
+retry_files_save_path = <%= @options['retry_files_save_path'] %>
+squash_actions = <%= @options['squash_actions'] %>
+no_log = <%= @options['no_log'] %>
+no_target_syslog = <%= @options['no_target_syslog'] %>
+allow_world_readable_tmpfiles = <%= @options['allow_world_readable_tmpfiles'] %>
+var_compression_level = <%= @options['var_compression_level'] %>
+module_compression = <%= @options['module_compression'] %>
+max_diff_size = <%= @options['max_diff_size'] %>
+
+[privilege_escalation]
+become=<%= @options['become'] %>
+become_method=<%= @options['become_method'] %>
+become_user=<%= @options['become_user'] %>
+become_ask_pass=<%= @options['become_ask_pass'] %>
+
+[paramiko_connection]
+record_host_keys=<%= @options['record_host_keys'] %>
+pty=<%= @options['pty'] %>
+
+[ssh_connection]
+ssh_args = <%= @options['ssh_args'] %>
+control_path = <%= @options['control_path'] %>
+pipelining = <%= @options['pipelining'] %>
+scp_if_ssh = <%= @options['scp_if_ssh'] %>
+sftp_batch_mode = <%= @options['sftp_batch_mode'] %>
+
+[accelerate]
+accelerate_port = <%= @options['accelerate_port'] %>
+accelerate_timeout = <%= @options['accelerate_timeout'] %>
+accelerate_connect_timeout = <%= @options['accelerate_connect_timeout'] %>
+accelerate_daemon_timeout = <%= @options['accelerate_daemon_timeout'] %>
+accelerate_multi_key = <%= @options['accelerate_multi_key'] %>
+
+[selinux]
+special_context_filesystems=<%= @options['special_context_filesystems'] %>
+libvirt_lxc_noseclabel = <%= @options['libvirt_lxc_noseclabel'] %>
+
+[colors]
+highlight = <%= @options['highlight'] %>
+verbose = <%= @options['verbose'] %>
+warn = <%= @options['warn'] %>
+error = <%= @options['error'] %>
+debug = <%= @options['debug'] %>
+deprecate = <%= @options['deprecate'] %>
+skip = <%= @options['skip'] %>
+unreachable = <%= @options['unreachable'] %>
+ok = <%= @options['ok'] %>
+changed = <%= @options['changed'] %>
+diff_add = <%= @options['diff_add'] %>
+diff_remove = <%= @options['diff_remove'] %>
+diff_lines = <%= @options['diff_lines'] %>
