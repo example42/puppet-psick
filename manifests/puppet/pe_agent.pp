@@ -30,7 +30,7 @@ class psick::puppet::pe_agent (
 
   # Set environment
   if $manage_environment {
-    pe_ini_setting { 'agent conf file environment':
+    ini_setting { 'agent conf file environment':
       ensure  => present,
       path    => '/etc/puppetlabs/puppet/puppet.conf',
       section => 'agent',

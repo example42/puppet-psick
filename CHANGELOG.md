@@ -2,6 +2,13 @@
 
 * Your contribution here.
 
+## Release 0.5.0
+
+* Added lamp classes and defines (apache, php, mariadb, mysql) [@alvagante](https://github.com/alvagante)
+* Refactored tp profiles [@alvagante](https://github.com/alvagante)
+* Refactored users and packages profiles [@alvagante](https://github.com/alvagante)
+* Added ansible and docker profiles and defines [@alvagante](https://github.com/alvagante)
+
 ## Release 0.4.0
 
 * Refined and adapted structure to a single standalone module [@alvagante](https://github.com/alvagante)

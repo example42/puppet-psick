@@ -1,0 +1,12 @@
+# File managed by Puppet
+
+GRANT USAGE ON *.*
+    TO '<%= @user %>'@'<%= @host %>'
+    IDENTIFIED BY
+    <% if has_variable?('password_hash') && @password_hash != '' then %>
+        PASSWORD '<%= @password_hash %>'
+    <% else %>
+        '<%= @password %>';
+    <% end %>
+;
+FLUSH PRIVILEGES;

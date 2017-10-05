@@ -1,0 +1,6 @@
+# This file is managed by Puppet. DO NOT EDIT.
+<% if @bool_create_db -%>
+CREATE DATABASE IF NOT EXISTS <%= @real_db %><%= @real_db_create_options %>;
+<% end -%>
+GRANT <%= @privileges %> ON <%= @real_db %>.* TO '<%= @user %>'@'<%= @host %>' IDENTIFIED BY '<%= @password %>'<% if @require_ssl  -%> require ssl<% end -%>;
+FLUSH PRIVILEGES ;

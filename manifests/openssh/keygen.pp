@@ -6,7 +6,7 @@
 define psick::openssh::keygen (
   Optional[String] $user     = undef,
   Optional[String] $type     = undef,
-  Optional[String] $bits     = undef,
+  Optional[Integer] $bits    = undef,
   Optional[String] $home     = undef,
   Optional[String] $filename = undef,
   Optional[String] $comment  = undef,

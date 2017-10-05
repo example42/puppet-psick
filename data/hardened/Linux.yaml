@@ -1,15 +1,6 @@
 ---
-psick::pre::linux_classes:
-  dns: '::psick::dns::resolver'
-  hostname: '::psick::hostname'
 psick::base::linux_classes:
-  users: '::psick::users'
-  sudo: '::psick::sudo'
-  logs: '::psick::logs::rsyslog'
-  time: '::psick::time'
   sysctl: '::psick::sysctl'
-  update: '::psick::update'
-  motd: '::psick::motd'
   ssh: '::psick::openssh::tp'
   hardening: '::psick::hardening'
 
