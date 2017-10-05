@@ -2,7 +2,7 @@
 #
 class psick::ansible:::master (
 
-  Variant[Boolean,String] $ensure          = pick($::psick::ansible::ensure, 'present'),
+  Variant[Boolean,String] $ensure          = 'present',
 
   Variant[Undef,String]   $inventory_epp   = undef,
 

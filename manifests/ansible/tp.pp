@@ -49,7 +49,7 @@
 #   Set to false if you have problems with duplicated resources, being sure that you
 #   manage the prerequistes to install ansible (other packages, repos or tp installs).
 class psick::ansible::tp (
-  Psick::Ensure   $ensure                   = pick($::psick::ansible::ensure, 'present'),
+  Psick::Ensure   $ensure                   = 'present',
   Boolean         $manage                   = $::psick::manage,
   Hash            $resources_hash           = {},
   Hash            $resources_auto_conf_hash = {},

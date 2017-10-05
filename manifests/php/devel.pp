@@ -12,7 +12,7 @@
 #    for special installation needs.
 #
 class psick::php::devel (
-  Psick::Ensure $ensure = 'present'
+  Psick::Ensure $ensure = 'present',
   String $package       = 'php-devel',
   Hash $package_options = {}
   ) {
