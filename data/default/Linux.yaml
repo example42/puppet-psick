@@ -10,3 +10,95 @@ psick::base::linux_classes:
   sysctl: '::psick::sysctl'
   update: '::psick::update'
   motd: '::psick::motd'
+  ansible: '::psick::ansible'
+
+psick::ansible::tp::conf_hash:
+  tp::conf:
+    ansible:
+      template: psick/ansible/ansible.cfg.erb
+psick::ansible::tp::options_hash:
+  inventory: /etc/ansible/hosts
+  library: /usr/share/my_modules/
+  remote_tmp: $HOME/.ansible/tmp
+  local_tmp: $HOME/.ansible/tmp
+  forks: 5
+  poll_interval: 15
+  sudo_user: root
+  ask_sudo_pass: False
+  ask_pass: False
+  transport: smart
+  remote_port: 22
+  module_lang: C
+  module_set_locale: True
+  gathering: implicit
+  gather_subset: all
+  role_parh: all
+  host_key_checking: True
+  #stdout_callback: skippy
+  #callback_whitelist: timer, mail
+  task_includes_static: True
+  handler_includes_static: True
+  sudo_exe: sudo
+  sudo_flags: -H -S -n
+  timeout: 10
+  remote_user: root
+  log_path: false
+  module_name: command
+  executable: /bin/sh
+  hash_behaviour: replace
+  private_role_vars: no
+  jinja2_extensions: jinja2.ext.do,jinja2.ext.i18n
+  #private_key_file: /path/to/file
+  #vault_password_file: /path/to/vault_password_file
+  ansible_managed: 'Ansible managed: {file} on {host}'
+  display_skipped_hosts: True
+  display_args_to_stdout: False
+  error_on_undefined_vars: True
+  system_warnings: True
+  deprecation_warnings: True
+  command_warnings: True
+  bin_ansible_callbacks: False
+  nocows: 0
+  cow_selection: default
+  nocolor: 0
+  fact_caching: memory
+  retry_files_enabled: True
+  retry_files_save_path: ~/.ansible-retry
+  squash_actions: apk,apt,dnf,package,pacman,pkgng,yum,zypper
+  no_log: False
+  no_target_syslog: False
+  allow_world_readable_tmpfiles: False
+  var_compression_level: 0
+  module_compression: "'ZIP_DEFLATED'"
+  max_diff_size: 1048576
+  become: True
+  become_method: sudo
+  become_user: root
+  become_ask_pass: False
+  record_host_keys: True
+  pty: True
+  ssh_args: -o ControlMaster:auto -o ControlPersist:60s
+  control_path: '%(directory)s/ansible-ssh-%%h-%%p-%%r'
+  pipelining: False
+  scp_if_ssh: False
+  sftp_batch_mode: True
+  accelerate_port: 5099
+  accelerate_timeout: 30
+  accelerate_connect_timeout: 5.0
+  accelerate_daemon_timeout: 30
+  accelerate_multi_key: no
+  special_context_filesystems: nfs,vboxsf,fuse,ramfs
+  libvirt_lxc_noseclabel: no
+  highlight: white
+  verbose: blue
+  warn: bright purple
+  error: red
+  debug: dark gray
+  deprecate: purple
+  skip: cyan
+  unreachable: red
+  ok: green
+  changed: yellow
+  diff_add: green
+  diff_remove: red
+  diff_lines: cyan
