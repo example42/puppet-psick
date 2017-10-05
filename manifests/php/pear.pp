@@ -12,7 +12,7 @@
 #    for special installation needs.
 #
 class psick::php::pear (
-  Psick::Ensure $ensure = 'present'
+  Psick::Ensure $ensure = 'present',
   String $package       = 'php-pear',
   Hash $package_options = {}
   ) {
