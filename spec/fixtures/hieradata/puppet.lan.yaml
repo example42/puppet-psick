@@ -1,6 +1,8 @@
 ---
   profiles:
-    - psick::puppet::pe_aio_server
+    - psick::puppet::pe_puppetdb
+    - psick::puppet::pe_console
+    - psick::puppet::pe_server
     - psick::gitlab::cli
     - psick::puppet::pe_code_manager
     - psick::gitlab::runner

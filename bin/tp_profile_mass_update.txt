@@ -10,3 +10,4 @@ mariadb
 nginx
 postgresql
 mysql
+php

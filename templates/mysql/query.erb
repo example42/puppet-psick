@@ -1,0 +1,7 @@
+# File managed by Puppet
+
+<% if @db -%>
+USE <%= @db -%> ;
+<% end -%>
+<%= @query %> ;
+
