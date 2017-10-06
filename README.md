@@ -2,110 +2,49 @@
 
 [![Build Status](https://travis-ci.org/example42/puppet-psick.png?branch=master)](https://travis-ci.org/example42/puppet-psick)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/503831d4ea6a470e864f1a3969449b78)](https://www.codacy.com/app/example42/puppet-psick?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=example42/puppet-psick&amp;utm_campaign=Badge_Grade)
+
 This is the PSICK (Puppet Systems Infrastructure Construction Kit) module.
  
-It is what we call an Infrastructure Puppet module. It provides:
+It is what we call an **Infrastructure** Puppet **module**. It provides:
 
-  - Solid management of classification. Entirely hiera driven.
-  - An integrated set of profiles for common systems management activities
-  - A growing number of profiles for common applications
+  - Solid management of **classification**. Entirely hiera driven.
+  - An integrated set of **profiles** for common systems management activities
+  - A growing number flexible set of **tp profiles** for applications
   - Integrated and automated firewall (WIP) and monitoring management
-  - Safe and easy to be integrated in existing setup, allows expandibility by design.
-  - Entirely Hiera driven: Basically a DSL to configure infrastructures
+  - Safe and easy to be integrated in existing setups, cohexists with other modules, allows expandibility by design.
+  - Entirely Hiera driven: In practice a DSL to configure infrastructures
  
-It can be used together with the [PSICK control-repo](https://github.com/example42/psick) or as a strandalone module, just:
+It can be used together with the [PSICK control-repo](https://github.com/example42/psick) (check the [Hiera data](https://github.com/example42/psick/tree/production/hieradata) there for sample usage patterns) or as a strandalone module, just:
 
     include psick
 
-This doesn't do anything at all, by default, since we have to configure it by settings psick classes parameters..
-In the following examples we will use Hiera yaml files, but any backend can be used: psick is a normal, even if somehow unusual, Puppet module and has params lookups as any Puppet module.
+This doesn't do anything at all, by default, but is enough to let you manage *everything* via Hiera.
 
-## Do you speak psick?
+In the following examples we will use Hiera YAML files, but any backend can be used: psick is a normal, even if somehow unusual, Puppet module, with classes (a lot of them) whose params can be set as Hiera data, defines, templates, files, fuctions, custom data types etc.
 
-We mentioned this Psick provides a DSL to configure infrastructures. Maybe we were exaggerating, anyway what follows is Psick's "language". In this case is yaml, but can be expressed by variables set any Hiera backend.
 
-If you are lazy and trust our defaults (always WIP) you can simply try to use one of our embedded sets of configurations, note that you can customise and override everything, in your control-repo hiera data.
+## Do You Speak Psick?
 
-For example, to use Psick predefined defaults (as in  data/default/*.yaml):
+Psick "language" has the syntax of any Hiera supported backend (here we use YAML), and the semantic you are going to discover here.
 
-    psick::auto_conf: default
+The module provides 3 major features:
 
-To use, instead, some hardened defaults (as in data/hardened/*.yaml):
+  - Structured cross-os, staged **classification** 
+  - Base **profiles** for common system configurations
+  - Standardised and multifunctional **tp profiles** for applications
 
-    psick::auto_conf: hardened
+### Classification
 
-To avoid any predefined setting and expressively set the classes to include in a node before any other class:
-    
-    psick::auto_conf: none # This is already the default
-    psick::pre::linux_classes:
-      hosts: psick::hosts::resource
-      users: psick::users
-      hostname: psick::hostname
-      dns: psick::dns::resolver
-      proxy: psick::proxy
-      puppet: puppet
-
-To specify the list of common classes to include on Linux nodes, they are applied after the pre ones:
-
-    psick::base::linux_classes:
-      mail: psick::mail::postfix
-      ssh: psick::ssh::openssh
-      sudo: psick::sudo
-      logs: psick::logs::rsyslog
-      time: psick::time
-      sysctl: psick::sysctl
-      update: psick::update
-      motd: psick::motd
-
-To manage exceptions and use a different class on special nodes (on the relevant Hiera files):
-
-    psick::base::linux_classes:
-      ssh: ::profile::ssh_bastion
-
-To completely disable the sage of a common base class, used by default:
-
-    psick::base::linux_classes:
-      ssh: ''
-
-An example of classification with Windows nodes:
-    
-    psick::pre::windows_classes:
-      hosts: psick::hosts::resource
-    psick::windows::base_classes:
-      features: psick::windows::features
-      registry: psick::windows::registry
-      users: psick::users::ad
-      time: psick::time
-
-The classes defined before can be from public modules, local profiles, or psick itself, which provides a set of profiles for common use cases.
-
-They are in dedicated classes and can configured accordingly.
-
-For example, to manage both on Linux and Windows timezone and ntp servers to use:
-
-    psick::time::servers:
-      - 'pool.ntp.org'
-    psick::timezone::timezone: 'UTC'
-    
-To manage sysctl settings (on Linux):
-
-    psick::sysctl::settings:
-      net.ipv4.conf.all.forwarding: 0
-
-For more examples look at the documentation of the single Psick profiles.
-
-## Classification
-
-Psick can manage the whole classification of the nodes of your infrastructure. It can work side by side and External Node Classifier, or it can totally replace it.
+Psick can manage the whole classification of the nodes of an infrastructure. It can work side by side and External Node Classifier, or it can totally replace it.
 
 All you need is to include the psick class and define, using ```${::kernel}_class``` parameters, which classes to include in a node in different phases.
 
 Psick provides 4 phases, managed by the relevant subclasses:
 
-  - **firstboot**, optional phase, in which the resulting catalog is applied only once, at the first Puppet run. After a reboot can optionally be triggered and the real definitive catalog is applied.
-  - **pre**, prerequisites classes, they are applied in a normal catalog run (that is, always besides in firstboot phae) before all the other classes.
+  - **firstrun**, optional phase, in which the resulting catalog is applied only once, at the first Puppet run. After a reboot can optionally be triggered and the real definitive catalog is applied.
+  - **pre**, prerequisites classes, they are applied in a normal catalog run (that is, always except in the very first Puppet run, if firstrun is enabled) before all the other classes.
   - **base**, base classes, common to all the nodes (but exceptions can be applied), applied in normal catalog runs after the pre classes and before the profiles.
-  - **profiles**, profiles, exactly as in the roles and profiles pattern. The profile classes to use that differentiate nodes by their role or function. Profiles are applied after the base classes are managed.
+  - **profiles**, exactly as in the roles and profiles pattern. The profile classes that differentiate nodes by their role or function. Profiles are applied after the base classes are managed.
 
 An example of configurations, both for Linux and Windows nodes that use all the above phases:
 
@@ -151,18 +90,47 @@ An example of configurations, both for Linux and Windows nodes that use all the 
 
 The each key-pair of these $kernel_classes parameters contain an arbitrary tag or marker (users, time, services, but could be any string), and the name the class to include.
 
-This name must be a valid class, which can be found in the Puppet Master modulepath (so probably defined in your control-repo ```Puppetfile```) : you can use some of the predefinied Psick profiles, or your own local site profiles, or directly classes from public modules and configure them via Hiera in their own namespace.
+This name must be a valid class, which can be found in the Puppet Master modulepath (so probably defined in your control-repo ```Puppetfile```): you can use any of the predefinied Psick profiles, or your own local site profiles, or directly classes from public modules and configure them via Hiera in their own namespace.
+
+To manage exceptions and use a different class on different nodes is enough to specify the alternative class name as value for the used marker (here 'ssh'), in the appropriate Hiera file: 
+
+    psick::base::linux_classes:
+      ssh: ::profile::ssh_bastion
+
+To completely disable on specific nodes the usage of a class, included in a general hierarhy level, set the class name to an empty string:
+
+    psick::base::linux_classes:
+      ssh: ''
+
+This is the classification part, since it's based on class parameters, it can be managed with flexibility via Hiera and can cohexist (even if this might not be an optimal choice) with other classifications methods.
+
+The pre -> base -> profiles order is strictly enforced, so we sure to place your class in the most appropriate phase (even if functionally they all do the same work: include the specified classes) and, to prevent dependency cycles, avoid to set the same class in two different phases.
 
 
-## Psick tp profiles
+#### Auto configuration defaults
 
-Psick provides out of the box profiles to manage more or less common baselines on Linux and Windows. Details on them are described later.
+If you are lazy or want to try some predefined defaults (always WIP) you can simply try to use one of our embedded sets of configurations, note that you can customise and override everything, in your control-repo hiera data.
 
-Additionally there are the **Psick tp profiles**, they use ([Tiny Puppet](https://github.com/example42/puppet-tp) to manage common applications and expose a common set of parameters.
+For example, to use Psick predefined defaults (as in  ```data/default/*.yaml```):
+
+    psick::auto_conf: default
+
+To use, instead, some hardened defaults (as in ```data/hardened/*.yaml```):
+
+    psick::auto_conf: hardened
+
+The auto configuration settings are defined at module level hierarchy, so they can be overwritten in the environment's Hiera data.
+
+
+### Psick tp profiles
+
+Psick provides out of the box profiles, based on ([Tiny Puppet](https://github.com/example42/puppet-tp), to manage common applications. They can replace or complement component modules when applications can be managed via packeages, services and files.
+
+They have generated from a common [template](https://github.com/example42/pdk-module-template-tp-profile) so have standard parameters, and are always called ```psick::$app::tp```.
 
 For example to configure Openssh both client and server settings we can write something like:
 
-    # By including the psick::openssh::tp profile we install Openssh
+    # By including the psick::openssh::tp profile we install Openssh via tp
     psick::base::linux_classes:
       ssh: 'psick::openssh::tp'
 
@@ -198,11 +166,8 @@ Similary we could manage postfix with data like:
         postfix::master.cf # master.cf
           epp: 'profile/postfix/master.cf.erb'
 
-    # To manage the variables referenced in the used templates (the have to map the same keys):
-    psick::openssh::options_hash:
 
-
-## Psick base profiles
+### Psick base profiles
 
 Basides tp profiles, Psick features a large set of profiles for common baseline configurations.
 
