@@ -2,18 +2,20 @@
 #
 class psick::ansible::master (
 
-  Variant[Boolean,String] $ensure          = 'present',
+  Variant[Boolean,String] $ensure        = 'present',
 
-  Variant[Undef,String]   $inventory_epp   = undef,
+  Variant[Undef,String]   $inventory_epp = undef,
+  Variant[Undef,String]   $ssh_key       = undef,
 
 ) {
 
   include ::psick::ansible
 
-  if $::psick::ansible::keyshare_method == 'storeconfig' and $::psick::ansible::ssh_key {
+  if $::psick::ansible::keyshare_method == 'storeconfigs'
+  and ($ssh_key or $::ansible_user_key) {
     @@ssh_authorized_key { "ansible_user_${::psick::ansible::user_name}_rsa-${clientcert}":
       ensure => $ensure,
-      key    => $::psick::ansible::ssh_key,
+      key    => pick($ssh_key,$::ansible_user_key),
       user   => $::psick::ansible::user_name,
       type   => 'rsa',
       tag    => "ansible_master_${::psick::ansible::master}"

@@ -12,8 +12,7 @@ class psick::ansible (
   String                  $user_name       = 'ansible',
 
   String                  $master          = '',
-  String                  $ssh_key         = '',
-  Variant[Undef,String]   $keyshare_method = '',
+  Variant[Undef,String]   $keyshare_method = 'storeconfigs',
 
   Boolean                 $auto_prereq     = $::psick::auto_prereq,
 
@@ -22,11 +21,17 @@ class psick::ansible (
 
 ) {
 
-  if ::tp::is_something($install_class) {
+  if $user_name != 'ansible' {
+    notify { 'Ansible user warning':
+      message => 'If you change the default ansible user name change psick/facts.d/ansible_user_key.sh or set $::psick::ansible::master::ssh_key',
+    }
+  }
+
+  if $install_class != '' {
     contain $install_class
   }
 
-  if ::tp::is_something($user_class) {
+  if $user_class != '' {
     contain $user_class
   }
 

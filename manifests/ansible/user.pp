@@ -4,7 +4,7 @@ class psick::ansible::user (
   Variant[Boolean,String] $ensure           = pick($::psick::ansible::ensure, 'present'),
   Optional[String]        $password         = undef,
   Boolean                 $configure_sudo   = true,
-  Boolean                 $run_ssh_keygen   = false,
+  Boolean                 $run_ssh_keygen   = true,
 ) {
 
   include ::psick::ansible
@@ -28,7 +28,7 @@ class psick::ansible::user (
     require => User[$::psick::ansible::user_name],
   }
 
-  if $run_ssh_keygen {
+  if $run_ssh_keygen and $::psick::ansible::is_master {
     psick::openssh::keygen { $::psick::ansible::user_name:
       require => File["/home/${::psick::ansible::user_name}/.ssh"],
     }
