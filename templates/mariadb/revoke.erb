@@ -1,0 +1,3 @@
+# This file is managed by Puppet. DO NOT EDIT.
+REVOKE <%= @privileges %> ON <%= @real_db %>.* FROM '<%= @user %>'@'<%= @host %>';
+FLUSH PRIVILEGES;

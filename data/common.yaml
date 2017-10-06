@@ -47,6 +47,10 @@ psick::firewall:
   enable: true
   classes: {}
 
+psick::php::module_prefix: php-
+psick::php::pear_module_prefix: pear
+psick::php::devel::package: php-devel
+
 psick::monitor:
   manage: true
   enable: true
@@ -133,6 +137,7 @@ lookup_options:
   "^psick::(.*)::(.*)_classes$":
     merge:
       strategy: deep
+      merge_hash_arrays: true
       knockout_prefix: "--"
   "^psick::(.*)::(.*)::(.*)_classes$":
     merge:

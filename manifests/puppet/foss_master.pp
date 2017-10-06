@@ -27,6 +27,7 @@ class psick::puppet::foss_master (
   Boolean           $manage_puppetdb_repo = true,
   Boolean           $enable_puppetdb      = true,
   String            $dns_alt_names        = "puppet, puppet.${::domain}",
+  Boolean           $remove_global_hiera_yaml = false,
 ){
   if versioncmp('5', $facts['puppetversion']) > 0 {
     $postgresversion = '9.4'
@@ -85,5 +86,11 @@ class psick::puppet::foss_master (
       before                  => Service['puppetserver'],
     }
   }
-}
 
+  if $remove_global_hiera_yaml {
+    file { '/etc/puppetlabs/puppet/hiera.yaml':
+      ensure => absent,
+    }
+  }  
+
+}

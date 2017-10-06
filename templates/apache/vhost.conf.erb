@@ -1,0 +1,23 @@
+# File Managed by Tiny Puppet
+
+<VirtualHost *:80>
+    DocumentRoot <%= @settings['data_dir_path'] %>/<%= @options['ServerName'] %>
+    ServerName <%= @options['ServerName'] %>
+
+<% if @options['ServerAlias'] != "" -%>
+<% if @options['ServerAlias'].is_a? Array -%>
+    ServerAlias <%= @options['ServerAlias'].flatten.join(" ") %>
+<% else -%>
+    ServerAlias <%= @options['ServerAlias'] %>
+<% end -%>
+<% end -%>
+
+<% if @options['AddDefaultCharset'] -%>
+    AddDefaultCharset <%= @options['AddDefaultCharset'] -%>
+<% end -%>
+
+    ErrorLog  <%= @settings['log_dir_path'] %>/<%= @options['ServerName'] %>-error_log
+    CustomLog <%= @settings['log_dir_path'] %>/<%= @options['ServerName'] %>-access_log common
+
+</VirtualHost>
+
