@@ -1,6 +1,6 @@
 # @summary Manages Ansible configurations on Ansible master
 #
-class psick::ansible:::master (
+class psick::ansible::master (
 
   Variant[Boolean,String] $ensure          = 'present',
 
