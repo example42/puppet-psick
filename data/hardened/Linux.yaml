@@ -1,8 +1,9 @@
 ---
 psick::base::linux_classes:
-  sysctl: '::psick::sysctl'
-  ssh: '::psick::openssh::tp'
-  hardening: '::psick::hardening'
+  sysctl: psick::sysctl
+  ssh: psick::openssh::tp
+  update: psick::update
+  hardening: psick::hardening
 
 psick::hardening::class: '::psick::hardening::pam'
 psick::hardening::packages_class: '::psick::hardening::packages'
