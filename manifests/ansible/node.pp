@@ -8,7 +8,7 @@ class psick::ansible::node (
 
   include ::psick::ansible
 
-  if $::psick::ansible::keyshare_method == 'storeconfig' {
+  if $::psick::ansible::keyshare_method == 'storeconfigs' {
     @@sshkey { "ansible_${::fqdn}_rsa":
       ensure       => $ensure,
       host_aliases => [ $::fqdn, $::hostname, $::ipaddress ],
