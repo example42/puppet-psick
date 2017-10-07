@@ -32,6 +32,10 @@ class psick::ansible::user (
     psick::openssh::keygen { $::psick::ansible::user_name:
       require => File["/home/${::psick::ansible::user_name}/.ssh"],
     }
+    psick::puppet::set_external_fact { 'ansible_user_key.sh':
+      template => 'psick/ansible/ansible_user_key.sh.erb',
+      mode     => '0755',
+    }
   }
 
   if $configure_sudo {

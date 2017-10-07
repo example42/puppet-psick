@@ -5,9 +5,16 @@
 # place them in the facts directory of a module.
 #
 define psick::puppet::set_external_fact (
-  Any $value,
   Enum['absent','present'] $ensure = 'present',
+  Optional[Any] $value             = undef,
+  Optional[String] $template       = undef,
+  String $mode                     = '0644',
+  Hash $options                    = {},
 ) {
+
+  if ! $value and ! $template {
+    fail('You must specify either a value or a template to use')
+  }
 
   $external_facts_dir = $::kernel ? {
     'Windows' => 'C:\ProgramData\PuppetLabs\facter\facts.d',
@@ -20,9 +27,18 @@ define psick::puppet::set_external_fact (
     }
   }
 
-  file { "${external_facts_dir}/${title}.yaml":
+  $file_content = $value ? {
+    undef   => template($template),
+    default => "---\n  ${title}: ${value}\n",
+  }
+  $file_path = $value ? {
+    undef   => "${external_facts_dir}/${title}",
+    default => "${external_facts_dir}/${title}.yaml",
+  }
+  file { $file_path:
     ensure  => $ensure,
-    content => "---\n  ${title}: ${value}\n",
+    content => $file_content,
+    mode    => $mode,
   }
 
 }
