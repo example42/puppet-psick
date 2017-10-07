@@ -20,13 +20,6 @@ define psick::puppet::set_external_fact (
     'Windows' => 'C:\ProgramData\PuppetLabs\facter\facts.d',
     default   => '/etc/puppetlabs/facter/facts.d',
   }
-
-  if !defined(Psick::Tools::Create_dir[$external_facts_dir]) {
-    psick::tools::create_dir { $external_facts_dir:
-      before => File["${external_facts_dir}/${title}.yaml"],
-    }
-  }
-
   $file_content = $value ? {
     undef   => template($template),
     default => "---\n  ${title}: ${value}\n",
@@ -35,6 +28,13 @@ define psick::puppet::set_external_fact (
     undef   => "${external_facts_dir}/${title}",
     default => "${external_facts_dir}/${title}.yaml",
   }
+
+  if !defined(Psick::Tools::Create_dir[$external_facts_dir]) {
+    psick::tools::create_dir { $external_facts_dir:
+      before => File[$file_path],
+    }
+  }
+
   file { $file_path:
     ensure  => $ensure,
     content => $file_content,
