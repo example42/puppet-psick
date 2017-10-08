@@ -1,6 +1,6 @@
 {
   "name": "example42-psick",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "author": "Example42",
   "summary": "Psick: the infrastructure module.",
   "description": "Psick Puppet module. A single module to manage an extendable Puppet infrastructure",
