@@ -5,42 +5,11 @@ facts = YAML.load_file(facts_yaml)
 
 default_params = {
   'ensure'             => 'present',
-  'options_hash'       => {},
   'settings_hash'      => {},
   'auto_prereq'        => true,
 }
 sample_settings_hash = {
   'package_name'     => 'my_sysdig',
-  'service_name'     => 'my_sysdig',
-  'config_dir_path'  => '/etc/my_sysdig',
-  'config_file_path' => '/etc/my_sysdig/config.yaml',
-}
-sample_resources_hash = {
-  'tp::conf' => {
-    'sysdig' => {
-      'template' => 'psick/spec/sample.erb',
-    },
-    'sysdig::other' => {
-      'source' => 'puppet:///psick/spec/sample',
-    },
-  },
-  'tp::dir' => {
-    'sysdig' => {
-      'source'  => 'git@github.com:/example42.com/psick',
-      'vcsrepo' => 'git',
-      'path'    => '/opt/psick',
-    },
-    'sysdig::other' => {
-      'source' => 'puppet:///psick/spec',
-    },
-  },
-}
-sample_options_hash = {
-  'server' => {
-    'host' => 'localhost',
-    'port' => '1',
-  },
-  'url' => 'http://sample/',
 }
 
 describe 'psick::sysdig::tp' do
@@ -66,33 +35,15 @@ describe 'psick::sysdig::tp' do
         it { is_expected.to contain_tp__install('sysdig').with(default_params.merge('ensure' => 'absent')) }
       end
 
-      describe 'with custom conf_hash' do
-        let(:params) { { 'resources_hash' => sample_resources_hash, 'options_hash' => sample_options_hash } }
-
-        it { is_expected.to contain_tp__install('sysdig').with(default_params.merge('options_hash' => sample_options_hash)) }
-        it { is_expected.to contain_tp__conf('sysdig').with('ensure' => 'present', 'template' => 'psick/spec/sample.erb', 'options_hash' => sample_options_hash) }
-        it { is_expected.to contain_tp__conf('sysdig::other').with('ensure' => 'present', 'source' => 'puppet:///psick/spec/sample') }
-        it { is_expected.to contain_tp__dir('sysdig').with('ensure' => 'present', 'path' => '/opt/psick', 'vcsrepo' => 'git', 'source' => 'git@github.com:/example42.com/psick') }
-        it { is_expected.to contain_tp__dir('sysdig::other').with('ensure' => 'present', 'source' => 'puppet:///psick/spec') }
-      end
-
       describe 'with custom settings_hash' do
         let(:params) do
           {
             'settings_hash' => sample_settings_hash,
-            'resources_hash' => sample_resources_hash,
-            'options_hash' => sample_options_hash,
           }
         end
 
-        it { is_expected.to contain_tp__install('sysdig').with(default_params.merge('options_hash' => sample_options_hash, 'settings_hash' => sample_settings_hash)) }
-        it { is_expected.to contain_tp__conf('sysdig').with('ensure' => 'present', 'template' => 'psick/spec/sample.erb') }
-        it { is_expected.to contain_tp__conf('sysdig::other').with('ensure' => 'present', 'source' => 'puppet:///psick/spec/sample') }
-        it { is_expected.to contain_tp__dir('sysdig').with('ensure' => 'present', 'source' => 'git@github.com:/example42.com/psick') }
+        it { is_expected.to contain_tp__install('sysdig').with(default_params.merge('settings_hash' => sample_settings_hash)) }
         it { is_expected.to contain_package('my_sysdig').with('ensure' => 'present') }
-        it { is_expected.to contain_service('my_sysdig').with('ensure' => 'running', 'enable' => true) }
-        it { is_expected.to contain_file('/etc/my_sysdig/config.yaml').with('ensure' => 'present') }
-        it { is_expected.to contain_file('/etc/my_sysdig').with('ensure' => 'directory') }
       end
 
       describe 'with auto_prereq => false' do
