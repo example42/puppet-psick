@@ -109,6 +109,10 @@ lookup_options:
     merge:
       strategy: deep
       knockout_prefix: "--"
+  psick::hosts::file::extra_hosts:
+    merge:
+      strategy: deep
+      knockout_prefix: "--"
   psick::windows::features::install:
     merge:
       strategy: deep
@@ -147,4 +151,7 @@ lookup_options:
     merge:
       strategy: deep
       knockout_prefix: "--"
-
+  "^psick::(.*)::(.*)_list$":
+    merge:
+      strategy: deep
+      knockout_prefix: "--"

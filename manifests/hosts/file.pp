@@ -5,9 +5,7 @@
 # @param domain the domain to use for the node domain name
 # @param hostname The hostname to use for the node hostname
 # @param extra_hosts An array of extra lines to add (one line for array element)
-#                    to /etc/hosts. Note: this is not a real class parameter but
-#                    a variable looked up via
-#                    hiera_array('psick::hosts::file::extra_hosts', [] )
+#                    to /etc/hosts.
 #
 class psick::hosts::file (
   String $template  = 'psick/hosts/file/hosts.erb',
@@ -15,9 +13,8 @@ class psick::hosts::file (
   String $ipaddress             = $::psick::primary_ip,
   Variant[Undef,String] $domain = $::domain,
   String $hostname              = $::hostname,
+  Array $extra_hosts            = [],
 ) {
-
-  $extra_hosts=hiera_array('psick::hosts::file::extra_hosts', [] )
 
   file { '/etc/hosts':
     ensure  => file,

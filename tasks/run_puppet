@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+breed=$1
+if [[ $EUID -ne 0 ]]; then
+  pre_command='sudo '
+else
+  pre_command=''
+fi
+
+which tput >/dev/null 2>&1
+if [ "x${?}" == "x0" ]; then
+  SETCOLOR_NORMAL=$(tput sgr0)
+  SETCOLOR_TITLE=$(tput setaf 6)
+  SETCOLOR_BOLD=$(tput setaf 15)
+else
+  SETCOLOR_NORMAL=""
+  SETCOLOR_TITLE=""
+  SETCOLOR_BOLD=""
+fi
+echo_title () {
+  echo
+  echo "${SETCOLOR_BOLD}###${SETCOLOR_NORMAL} ${SETCOLOR_TITLE}${1}${SETCOLOR_NORMAL} ${SETCOLOR_BOLD}###${SETCOLOR_NORMAL}"
+}
+
+echo_title "Running puppet agent"
+$pre_command puppet agent -t
+

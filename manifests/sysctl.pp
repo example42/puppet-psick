@@ -11,6 +11,7 @@ class psick::sysctl (
   Hash            $settings_auto_conf_hash = {},
   String          $module                  = 'psick',
   String          $template                = 'psick/generic/inifile.erb',
+  String          $target_file             = '/etc/sysctl.conf',
 ) {
 
   $all_settings = $settings_auto_conf_hash + $settings_hash
@@ -18,7 +19,7 @@ class psick::sysctl (
   if $manage and $all_settings != {} {
     if $module == 'psick' {
       $parameters = $all_settings
-      file { '/etc/sysctl.conf':
+      file { $target_file:
         content => psick::template($template,$parameters),
         notify  => Exec['psick refresh sysctl'],
       }
