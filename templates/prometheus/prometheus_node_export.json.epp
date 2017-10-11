@@ -1,0 +1,8 @@
+[
+  {
+    "targets": [ "<%= $facts['networking']['fqdn'] %>:9100"],
+    "labels": {
+      "role": "<%= $::role %>"
+    }
+  }
+]
