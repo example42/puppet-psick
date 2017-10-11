@@ -2,6 +2,16 @@
 
 * Your contribution here.
 
+## Release 0.5.2
+
+* Added sample Puppet tasks and psick::bolt [@alvagante](https://github.com/alvagante)
+
+
+## Release 0.5.1
+
+* Improvements and fixes [@alvagante](https://github.com/alvagante)
+
+
 ## Release 0.5.0
 
 * Added lamp classes and defines (apache, php, mariadb, mysql) [@alvagante](https://github.com/alvagante)
