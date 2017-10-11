@@ -1,0 +1,5 @@
+{
+  "description": "Update all packages on a system",
+  "supports_noop": false,
+  "input_method": "stdin"
+}

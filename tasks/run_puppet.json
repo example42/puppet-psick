@@ -1,0 +1,5 @@
+{
+  "description": "Run Puppet agent on a node",
+  "supports_noop": false,
+  "input_method": "stdin"
+}
