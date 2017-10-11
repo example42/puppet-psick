@@ -1,0 +1,2 @@
+# CPU count by instance for use e.g. in load alerting
+instance:node_cpus:count = count(node_cpu{mode="idle"}) without (cpu,mode)

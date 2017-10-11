@@ -5,5 +5,6 @@ fixtures:
     "reboot": "https://github.com/puppetlabs/puppetlabs-reboot.git"
     "tp": "https://github.com/example42/puppet-tp"
     "tinydata": "https://github.com/example42/tinydata"
+    "prometheus": "https://github.com/voxpupuli/puppet-prometheus"
   symlinks:
     "psick": "#{source_dir}"
