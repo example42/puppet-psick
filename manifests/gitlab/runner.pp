@@ -32,8 +32,8 @@ class psick::gitlab::runner (
     contain ::psick::docker
     # Quick and very dirty
     exec { 'usermod -a -G docker gitlab-runner':
-      refreshonly => true,
-      subscribe   => Class['psick::docker'],
+      unless    => 'grep docker /etc/group | grep gitlab-runner',
+      subscribe => Class['psick::docker'],
     }
   }
   $options_default = {

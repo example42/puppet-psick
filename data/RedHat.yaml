@@ -10,3 +10,8 @@ psick::monitor::ganglia::packages:
   - 'ganglia-gmond-modules-python'
   - 'libganglia-3_1_0'
 
+psick::ruby::buildgems::packages:
+  - 'make'
+  - 'cmake'
+  - 'gcc'
+  - 'ruby-devel'
