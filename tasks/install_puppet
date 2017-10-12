@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-breed=$1
+breed=$PT_breed
 if [[ $EUID -ne 0 ]]; then
   pre_command='sudo '
 else
