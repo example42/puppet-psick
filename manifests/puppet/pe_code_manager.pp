@@ -46,6 +46,7 @@ class psick::puppet::pe_code_manager (
 
     psick::openssh::keygen { $deploy_user:
       comment => $deploy_comment,
+      before  => [File[$deploy_ssh_private_key_path],File[$deploy_ssh_public_key_path]],
     }
 
     file { $deploy_ssh_private_key_path:
