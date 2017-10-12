@@ -13,12 +13,14 @@ class psick::gitlab::ci (
     catalog_preview_default_nodes => pick(join($default_nodes,','),' '),
     tp_test_default_nodes => pick(join($default_nodes,','),' '),
     testing_query_default_nodes => pick(join($default_nodes,','),' '),
+    integration_query_default_nodes => pick(join($default_nodes,','),' '),
     production_query_default_nodes => pick(join($default_nodes,','),' '),
 
     catalog_diff_always_nodes => pick(join($always_nodes,','),' '),
     catalog_preview_always_nodes => pick(join($always_nodes,','),' '),
     tp_test_always_nodes => pick(join($always_nodes,','),' '),
     testing_query_always_nodes => pick(join($always_nodes,','),' '),
+    integration_query_always_nodes => pick(join($always_nodes,','),' '),
     production_query_always_nodes => pick(join($always_nodes,','),' '),
   }
   $ci_options = $options_default + $options
