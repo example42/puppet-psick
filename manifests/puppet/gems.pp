@@ -11,11 +11,12 @@ class psick::puppet::gems (
 
   $install_gems.each | $gem | {
     if $install_system_gems {
-      contain ::psick::ruby
+      include ::psick::ruby
       package { $gem:
         ensure          => $ensure,
         install_options => $install_options,
         provider        => 'gem',
+        require         => Class['psick::ruby'],
       }
     }
     if $install_puppet_gems {
