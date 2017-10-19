@@ -52,10 +52,10 @@
 #
 class psick::profiles (
 
-  Psick::Class $linux_classes,
-  Psick::Class $windows_classes,
-  Psick::Class $darwin_classes,
-  Psick::Class $solaris_classes,
+  Psick::Class $linux_classes   = {},
+  Psick::Class $windows_classes = {},
+  Psick::Class $darwin_classes  = {},
+  Psick::Class $solaris_classes = {},
 
   Boolean $manage = $::psick::manage,
 

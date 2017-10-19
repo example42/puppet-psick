@@ -8,26 +8,6 @@ psick::mgmt_interface: "%{facts.networking.primary}"
 
 psick::enable_firstrun: false
 
-psick::firstrun::linux_classes: {}
-psick::firstrun::windows_classes: {}
-psick::firstrun::darwin_classes: {}
-psick::firstrun::solaris_classes: {}
-
-psick::pre::linux_classes: {}
-psick::pre::windows_classes: {}
-psick::pre::darwin_classes: {}
-psick::pre::solaris_classes: {}
-
-psick::base::linux_classes: {}
-psick::base::windows_classes: {}
-psick::base::darwin_classes: {}
-psick::base::solaris_classes: {}
-
-psick::profiles::linux_classes: {}
-psick::profiles::windows_classes: {}
-psick::profiles::darwin_classes: {}
-psick::profiles::solaris_classes: {}
-
 psick::tp:
   cli_enable: false
   test_enable: false

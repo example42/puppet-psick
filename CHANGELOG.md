@@ -2,6 +2,10 @@
 
 * Your contribution here.
 
+## Release 0.5.3
+
+* Complete psick::bolt profile and better tasks [@alvagante](https://github.com/alvagante)
+
 ## Release 0.5.2
 
 * Added sample Puppet tasks and psick::bolt [@alvagante](https://github.com/alvagante)
