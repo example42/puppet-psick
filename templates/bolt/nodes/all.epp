@@ -1,5 +1,0 @@
-<%-
-  $nodes_list = $nodes.map |$node| { $node['certname'] }
-  $nodes_csv = join($nodes_list,',')
--%>
-<%= %nodes_csv %>
