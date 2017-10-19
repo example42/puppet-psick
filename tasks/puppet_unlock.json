@@ -1,5 +1,4 @@
 {
   "description": "Remove Puppet lockfiles ",
-  "supports_noop": false,
-  "input_method": "stdin"
+  "supports_noop": false
 }

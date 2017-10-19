@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
-puppet config set noop true --section agent
+/opt/puppetlabs/puppet/bin/puppet config set noop true --section agent
 
