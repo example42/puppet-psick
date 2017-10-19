@@ -5,6 +5,8 @@ class psick::bolt::user (
   Optional[String]        $password         = undef,
   Boolean                 $configure_sudo   = true,
   Boolean                 $run_ssh_keygen   = true,
+  String                  $sudo_template    = 'psick/bolt/user/sudo.erb',
+  String                  $fact_template    = 'psick/bolt/bolt_user_key.sh.erb',
 ) {
 
   include ::psick::bolt
@@ -33,7 +35,7 @@ class psick::bolt::user (
       require => File["/home/${::psick::bolt::user_name}/.ssh"],
     }
     psick::puppet::set_external_fact { 'bolt_user_key.sh':
-      template => 'psick/bolt/bolt_user_key.sh.erb',
+      template => $fact_template,
       mode     => '0755',
     }
   }
@@ -44,7 +46,7 @@ class psick::bolt::user (
       mode    => '0440',
       owner   => 'root',
       group   => 'root',
-      content => "${::psick::bolt::user_name} ALL = NOPASSWD : ALL\n",
+      content => template($sudo_template),
     }
   }
 

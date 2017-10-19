@@ -30,7 +30,9 @@ class psick::bolt::master (
   if $generate_nodes_list {
     $nodes_query = "nodes { certname ~ '.*' }"
     $nodes = puppetdb_query($nodes_query)
-    
+    $nodes_list = $nodes.map |$node| { $node['certname'] }
+    $nodes_csv = join($nodes_list,',') 
+
     $dir_ensure = ::tp::ensure2dir($ensure)
     file { "/home/${::psick::bolt::user_name}/nodes":
       ensure => $dir_ensure,
@@ -44,7 +46,7 @@ class psick::bolt::master (
     }
     $default_nodes_lists_hash = {
       'all' => {
-        content => template('psick/bolt/nodes/all.erb'),
+        content => $nodes_csv,
       }
     }
     $full_nodes_list_hash = $default_nodes_lists_hash + $nodes_list_hash

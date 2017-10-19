@@ -10,6 +10,7 @@ class psick::bolt (
   String                  $node_class      = '::psick::bolt::node',
 
   String                  $user_name       = 'bolt',
+  String                  $ssh_user        = 'root',
 
   String                  $master          = '',
   Variant[Undef,String]   $keyshare_method = 'storeconfigs',
