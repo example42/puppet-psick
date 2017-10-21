@@ -24,6 +24,7 @@
 #
 class psick::puppet::foss_master (
   Optional[String]  $r10k_remote_repo     = undef,
+  Optional[String]  $git_remote_repo      = undef,
   Boolean           $manage_puppetdb_repo = true,
   Boolean           $enable_puppetdb      = true,
   String            $dns_alt_names        = "puppet, puppet.${::domain}",
@@ -72,6 +73,30 @@ class psick::puppet::foss_master (
       require         => Class['r10k::webhook::config'],
     }
   }
+
+  if $git_remote_repo {
+    exec { 'remove default controlrepo':
+      command     => 'mv /etc/puppetlabs/code/environments/production /etc/puppetlabs/code/environments/production.default',
+      creates     => '/etc/puppetlabs/code/environments/production.default',
+      before      => Tp::Dir['puppet::control-repo'],
+    }
+    tp::dir { 'puppet::control-repo':
+      path               => '/etc/puppetlabs/code/environments/production',
+      vcsrepo            => 'git',
+      source             => $git_remote_repo,
+      config_dir_notify  => false,
+      config_dir_require => false,
+      notify             => Exec['r10k puppetfile install'],
+    }
+    exec { 'r10k puppetfile install':
+      command     => 'r10k puppetfile install',
+      cwd         => '/etc/puppetlabs/code/environments/production',
+      path        => '/opt/puppetlabs/puppet/bin:/usr/bin',
+      refreshonly => true,
+      # require     => Package['r10k'],
+    }
+  }
+
   if $enable_puppetdb {
     class { 'puppetdb':
       manage_firewall     => false,
@@ -91,6 +116,5 @@ class psick::puppet::foss_master (
     file { '/etc/puppetlabs/puppet/hiera.yaml':
       ensure => absent,
     }
-  }  
-
+  }
 }
