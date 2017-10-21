@@ -2,14 +2,25 @@
 #
 class psick::puppet::gems (
   Enum['present','absent'] $ensure   = 'present',
-  Array $install_gems = [ 'r10k','deep_merge','hiera-eyaml' ],
+  Enum['none','client','master','developer','citest','cideploy'] $default_set = 'client',
+  Array $install_gems                = [ ],
   Array $install_options             = [ ],
   Boolean $install_system_gems       = true,
   Boolean $install_puppet_gems       = true,
   Boolean $install_puppetserver_gems = false,
 ) {
 
-  $install_gems.each | $gem | {
+  $default_gems = $default_set ? {
+    'none'      => [],
+    'client'    => [],
+    'master'    => ['r10k','hiera-eyaml','deep_merge'],
+    'cideploy'  => ['r10k','hiera-eyaml','deep_merge'],
+    'citest'    => ['puppet-lint','rspec-puppet'],
+    'developer' => ['puppet-debug','puppet-blacksmith'],
+  }
+
+  $all_gems = $default_gems + $install_gems
+  $all_gems.each | $gem | {
     if $install_system_gems {
       include ::psick::ruby
       package { $gem:
