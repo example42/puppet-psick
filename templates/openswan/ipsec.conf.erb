@@ -1,0 +1,5 @@
+# File managed by Puppet
+config setup
+<% @options.each do |key,value| -%>
+  <%= key %>=<%= value %>
+<% end %>
