@@ -17,10 +17,10 @@ define psick::openswan::connection (
   }
 
   if $secret {
-    tp::conf { "openswan::${title}.secret":
+    tp::conf { "openswan::${title}.secrets":
       ensure  => $ensure,
       mode    => '0400',
-      content => "${options['leftid']} ${options['rightid']}: PSK ${secret}",
+      content => "${options['left']} ${options['right']}: PSK  \"${secret}\"\n",
     }
   }
 }
