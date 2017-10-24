@@ -6,5 +6,7 @@ fixtures:
     "tp": "https://github.com/example42/puppet-tp"
     "tinydata": "https://github.com/example42/tinydata"
     "prometheus": "https://github.com/voxpupuli/puppet-prometheus"
+    "systemd": "https://github.com/camptocamp/puppet-systemd"
+    "archive": "https://github.com/voxpupuli/puppet-archive"
   symlinks:
     "psick": "#{source_dir}"
