@@ -68,7 +68,7 @@ class psick::docker::tp (
       auto_repo     => $auto_prereq,
       auto_prereq   => $auto_prereq,
     }
-    ::tp::install { 'docker':
+    tp::install { 'docker':
       * => $install_defaults,
     }
 
@@ -85,7 +85,7 @@ class psick::docker::tp (
     $tp_confs = pick($resources_auto_conf_hash['tp::conf'], {}) + pick($resources_hash['tp::conf'], {})
     # All the tp::conf defines declared here
     $tp_confs.each | $k,$v | {
-      ::tp::conf { $k:
+      tp::conf { $k:
         * => $conf_defaults + $v,
       }
     }
@@ -98,7 +98,7 @@ class psick::docker::tp (
     # All the tp::dir defines declared here
     $tp_dirs = pick($resources_auto_conf_hash['tp::dir'], {}) + pick($resources_hash['tp::dir'], {})
     $tp_dirs.each | $k,$v | {
-      ::tp::dir { $k:
+      tp::dir { $k:
         * => $dir_defaults + $v,
       }
     }
