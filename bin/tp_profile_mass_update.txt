@@ -11,3 +11,5 @@ nginx
 postgresql
 mysql
 php
+openvpn
+openswan

@@ -1,11 +1,6 @@
 # File managed by Puppet
 # Default rules for rsyslog.
 #
-#                       For more information see rsyslog.conf(5) and /etc/rsyslog.conf
-
-#
-# First some standard log files.  Log by facility.
-#
 auth,authpriv.*          /var/log/auth.log
 *.*;auth,authpriv.none  -/var/log/syslog
 cron.*                   /var/log/cron.log
@@ -15,9 +10,6 @@ lpr.*                   -/var/log/lpr.log
 mail.*                  -/var/log/mail.log
 user.*                  -/var/log/user.log
 mail.err                 /var/log/mail.err
-
-# Warn und schlimmer:
-*.warm                  -/var/log/alerts.log
 
 local0.*        -/var/log/local.log
 local1.*        -/var/log/local.log

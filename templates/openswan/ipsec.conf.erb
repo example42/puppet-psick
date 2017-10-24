@@ -1,0 +1,6 @@
+# File managed by Puppet
+config setup
+<% @setup_options.each do |key,value| -%>
+  <%= key %>=<%= value %>
+<% end %>
+include /etc/ipsec.d/*.conf
