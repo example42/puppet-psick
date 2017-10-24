@@ -2,20 +2,26 @@
 #
 class psick::openswan (
 
-  Variant[Boolean,String]    $ensure = present,
-  Enum['psick']              $module = 'psick',
+  Variant[Boolean,String]    $ensure         = 'present',
+  Enum['psick']              $module         = 'psick',
 
-  Hash                       $connections_hash = {},
+  Hash                       $connections    = {},
+  Hash                       $setup_options  = {},
+  String                     $setup_template = 'psick/openswan/ipsec.conf.erb',
 ) {
 
   # Intallation management
   case $module {
     'psick': {
       contain ::psick::openswan::tp
-      $connections_hash.each |$k,$v| {
+      $connections.each |$k,$v| {
         psick::openswan::connection { $k:
-          options => $v,
+         * => $v,
         }
+      }
+      $content = template($setup_template)
+      tp::conf { 'openswan':
+        content => $content,
       }
     }
     default: {

@@ -7,6 +7,7 @@ define psick::openswan::connection (
   Hash $options,
   Enum['present','absent'] $ensure = 'present',
   String $template = 'psick/openswan/connection.erb',
+  Optional[String] $secret = undef,
 ) {
 
   tp::conf { "openswan::${title}.conf":
@@ -15,4 +16,11 @@ define psick::openswan::connection (
     content => template($template),
   }
 
+  if $secret {
+    tp::conf { "openswan::${title}.secret":
+      ensure  => $ensure,
+      mode    => '0400',
+      content => "${options['leftid']} ${options['rightid']}: PSK ${secret}",
+    }
+  }
 }
