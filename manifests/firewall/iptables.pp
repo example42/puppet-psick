@@ -3,19 +3,36 @@
 class psick::firewall::iptables (
   String $package_name,
   String $service_name,
+  String $service_name_v6,
   String $config_file_path,
+  String $config_file_path_v6,
   String $rules_template                 = 'psick/firewall/iptables.erb',
+  String $rules_template_v6              = 'psick/firewall/iptables6.erb',
   Array $extra_rules                     = [ ],
+  Array $extra_rules_v6                  = [ ],
+  Array $filter_rules                    = [ ],
+  Array $filter_rules_v6                 = [ ],
   Array $nat_rules                       = [ ],
+  Array $nat_rules_v6                    = [ ],
   Array $mangle_rules                    = [ ],
+  Array $mangle_rules_v6                 = [ ],
   Array $allowall_interfaces             = [ ],
+  Array $allowall_interfaces_v6          = [ ],
   Array $allow_tcp_ports                 = [ ],
+  Array $allow_tcp_ports_v6              = [ ],
   Array $allow_udp_ports                 = [ ],
+  Array $allow_udp_ports_v6              = [ ],
   Array $allow_ips                       = [ ],
+  Array $allow_ips_v6                    = [ ],
   Boolean $ssh_safe_mode                 = true,
-  Enum['DROP','ACCEPT'] $default_input   = 'DROP',
-  Enum['DROP','ACCEPT'] $default_output  = 'ACCEPT',
-  Enum['DROP','ACCEPT'] $default_forward = 'ACCEPT',
+  Boolean $ssh_safe_mode_v6              = true,
+  Enum['DROP','ACCEPT'] $default_input      = 'DROP',
+  Enum['DROP','ACCEPT'] $default_input_v6   = 'DROP',
+  Enum['DROP','ACCEPT'] $default_output     = 'ACCEPT',
+  Enum['DROP','ACCEPT'] $default_output_v6  = 'DROP',
+  Enum['DROP','ACCEPT'] $default_forward    = 'ACCEPT',
+  Enum['DROP','ACCEPT'] $default_forward_v6 = 'DROP',
+  Boolean $log_filter_defaults              = true,
 ) {
 
   package { $package_name:
@@ -30,7 +47,19 @@ class psick::firewall::iptables (
     mode    => '0640',
   }
 
+  file { $config_file_path_v6:
+    ensure  => file,
+    notify  => Service[$service_name_v6],
+    content => template($rules_template_v6),
+    mode    => '0640',
+  }
+
   service { $service_name:
+    ensure => running,
+    enable => true,
+  }
+
+  service { $service_name_v6:
     ensure => running,
     enable => true,
   }

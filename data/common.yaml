@@ -42,7 +42,9 @@ psick::monitor:
 # psick::firewall::iptables
 psick::firewall::iptables::package_name: 'iptables'
 psick::firewall::iptables::service_name: 'iptables'
+psick::firewall::iptables::service_name_v6: 'ip6tables'
 psick::firewall::iptables::config_file_path: '/etc/sysconfig/iptables'
+psick::firewall::iptables::config_file_path_v6: '/etc/sysconfig/ip6tables'
 
 # psick::hardening::packages
 psick::hardening::packages::packages_to_remove: []
@@ -135,3 +137,12 @@ lookup_options:
     merge:
       strategy: deep
       knockout_prefix: "--"
+  "^psick::firewall::iptables::(.*)_rules$":
+    merge:
+      strategy: deep
+      knockout_prefix: "--"
+  "^psick::firewall::iptables::(.*)_rules_v6$":
+    merge:
+      strategy: deep
+      knockout_prefix: "--"
+
