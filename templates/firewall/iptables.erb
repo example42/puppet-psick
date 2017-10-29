@@ -1,4 +1,25 @@
 # File managed by Puppet
+*nat
+:INPUT ACCEPT [0:0]
+:OUTPUT ACCEPT [0:0]
+:POSTROUTING ACCEPT [0:0]
+:PREROUTING ACCEPT [0:0]
+<% if @nat_rules != [] -%><% @nat_rules.each do |rule| -%>
+<%= rule %>
+<% end -%><% end -%>
+COMMIT
+
+*mangle
+:PREROUTING ACCEPT [0:0]
+:INPUT ACCEPT [0:0]
+:FORWARD ACCEPT [0:0]
+:OUTPUT ACCEPT [0:0]
+:POSTROUTING ACCEPT [0:0]
+<% if @mangle_rules != [] -%><% @mangle_rules.each do |rule| -%>
+<%= rule %>
+<% end -%><% end -%>
+COMMIT
+
 *filter
 :INPUT <%= @default_input %> [0:0]
 :FORWARD <%= @default_forward %> [0:0]
@@ -17,6 +38,9 @@
 <% end -%><% end -%>
 <% if @allow_udp_ports != [] -%><% @allow_udp_ports.each do |port| -%>
 -A INPUT -p udp --dport <%= port %> -j ACCEPT
+<% end -%><% end -%>
+<% if @allow_ips != [] -%><% @allow_ips.each do |ip| -%>
+-A INPUT -s <%= ip %> -j ACCEPT
 <% end -%><% end -%>
 <% if @extra_rules != [] -%><% @extra_rules.each do |rule| -%>
 <%= rule %>

@@ -6,9 +6,12 @@ class psick::firewall::iptables (
   String $config_file_path,
   String $rules_template                 = 'psick/firewall/iptables.erb',
   Array $extra_rules                     = [ ],
+  Array $nat_rules                       = [ ],
+  Array $mangle_rules                    = [ ],
   Array $allowall_interfaces             = [ ],
   Array $allow_tcp_ports                 = [ ],
   Array $allow_udp_ports                 = [ ],
+  Array $allow_ips                       = [ ],
   Boolean $ssh_safe_mode                 = true,
   Enum['DROP','ACCEPT'] $default_input   = 'DROP',
   Enum['DROP','ACCEPT'] $default_output  = 'ACCEPT',
@@ -34,8 +37,9 @@ class psick::firewall::iptables (
 
   case $::osfamily {
     'RedHat': {
-      package { 'firewalld':
-        ensure => absent,
+      service { 'firewalld':
+        ensure => stopped,
+        enable => false,
       }
     }
     'Debian': {
