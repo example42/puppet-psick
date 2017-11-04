@@ -5,6 +5,8 @@
 ## Release 0.5.4
 
 * Refactored psick::jenkins profile (psick::ci::jenkins removed)
+* Allow alternative pdk templates for mass generation of tp profiles
+* Reduced number of redundant tests on tp profiles
 
 ## Release 0.5.3
 
