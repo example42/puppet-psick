@@ -1,6 +1,11 @@
 #
 class psick::nfs::client () {
 
-  tp::install { 'nfs-client': }
+  # Workaround for rcpbind service handling.
+  tp::install { 'nfs-client':
+    settings_hash => {
+      service_enable => undef,
+    }
+  }
 
 }
