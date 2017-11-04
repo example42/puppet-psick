@@ -14,3 +14,5 @@ php https://github.com/example42/pdk-module-template-tp-profile-minimal-tests
 openvpn https://github.com/example42/pdk-module-template-tp-profile-minimal-tests
 openswan https://github.com/example42/pdk-module-template-tp-profile-minimal-tests
 jenkins https://github.com/example42/pdk-module-template-tp-profile-minimal-tests
+ansible https://github.com/example42/pdk-module-template-tp-profile-minimal-tests
+sysdig https://github.com/example42/pdk-module-template-tp-profile-minimal-tests
