@@ -13,3 +13,4 @@ mysql
 php
 openvpn
 openswan
+jenkins
