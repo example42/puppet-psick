@@ -2,6 +2,10 @@
 
 * Your contribution here.
 
+## Release 0.5.4
+
+* Refactored psick::jenkins profile (psick::ci::jenkins removed)
+
 ## Release 0.5.3
 
 * Complete psick::bolt profile and better tasks [@alvagante](https://github.com/alvagante)
