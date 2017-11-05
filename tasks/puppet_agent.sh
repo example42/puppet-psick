@@ -7,6 +7,7 @@ else
 fi
 
 declare puppet_options
+puppet_options="--detailed-exitcodes"
 [[ -n "${PT_puppet_master}" ]] && puppet_options="${puppet_options} --master ${PT_puppet_master}"
 [[ -n "${PT_verbose}" ]] && puppet_options="${puppet_options} --verbose"
 [[ -n "${PT_debug}" ]] && puppet_options="${puppet_options} --debug"
@@ -17,3 +18,10 @@ readonly puppet_options
 
 $pre_command /opt/puppetlabs/puppet/bin/puppet agent -t $puppet_options
 
+result=$?
+# Puppet exit codes 0 and 2 both imply an error less run
+if [ "x$result" == "x0" ] || [ "x$result" == "x2" ]; then
+  exit 0
+else
+  exit 1
+fi
