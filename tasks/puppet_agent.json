@@ -22,7 +22,7 @@
      "description": "Run puppet agent in noop mode",
      "type": "Boolean"
     },
-    "no-noop": {
+    "no_noop": {
      "description": "Force --no-noop mode in puppet agent run",
      "type": "Boolean"
     }
