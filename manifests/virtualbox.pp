@@ -14,6 +14,7 @@ class psick::virtualbox (
 
   Variant[String[1],Undef] $config_dir_source          = undef,
   String                   $config_file_template       = '',
+  Boolean                  $auto_prereq                = $::psick::auto_prereq,
 ) {
 
   $options_default = {
@@ -23,7 +24,9 @@ class psick::virtualbox (
 
   # Postfix as local mailer
   ::tp::install { 'virtualbox':
-    ensure => $ensure,
+    ensure      => $ensure,
+    auto_repo   => $auto_prereq,
+    auto_prereq => $auto_prereq,    
   }
 
   if $config_file_template != '' {
