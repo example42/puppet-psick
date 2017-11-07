@@ -5,9 +5,9 @@ class psick::aws::cli (
   String $aws_access_key_id     = '',
   String $aws_secret_access_key = '',
   String $config_template       = 'psick/aws/credentials.erb',
-  Array $install_gems = [ 'aws-sdk-core' , 'retries' ],
-  Boolean $install_system_gems     = true,
-  Boolean $install_puppet_gems     = true,
+  Array $install_gems           = [ 'aws-sdk-core' , 'retries' ],
+  Boolean $install_system_gems  = true,
+  Boolean $install_puppet_gems  = true,
 ) {
 
   contain ::psick::python::pip

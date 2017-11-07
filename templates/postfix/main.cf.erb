@@ -10,7 +10,9 @@ mail_owner = <%= @settings['process_user'] %>
 <% if @options['myhostname'] -%>
 myhostname = <%= @options['myhostname'] %>
 <% end -%>
+<% if @options['mydomain'] -%>
 mydomain = <%= @options['mydomain'] %>
+<% end -%>
 <% if @options['myorigin'] -%>
 myorigin = <%= @options['myorigin'] %>
 <% end -%>
