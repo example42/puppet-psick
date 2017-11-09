@@ -173,193 +173,37 @@ Basides tp profiles, Psick features a large set of profiles for common baseline 
 
 Some of them are intended to be used both on Linux and Windows, others are more specific.
 
-Here follows a list (incomplete):
-
-### psick::proxy - Proxy Management
-
-If your servers need a proxy to access the Internet you can include the ```psick::proxy``` class directly in your base classes:
-
-    psick::base::linux_classes:
-      proxy: '::psick::proxy'
-
-and manage proxy settings with:
-
-    psick::servers:
-      proxy:
-        host: proxy.example.com
-        port: 3128
-        user: john    # Optional
-        password: xxx # Optional
-        no_proxy:
-          - localhost
-          - "%{::domain}"
-          - "%{::fqdn}"
-        scheme: http
-
-You can customise the components for which proxy should be configured, here are the default params:
-
-    psick::proxy::ensure: present
-    psick::proxy::configure_gem: true
-    psick::proxy::configure_puppet_gem: true
-    psick::proxy::configure_pip: true
-    psick::proxy::configure_system: true
-    psick::proxy::configure_repo: true
-
-
-### psick::hosts::file - /etc/hosts management
-
-This class manages /etc/hosts
-
-To customise its behaviour you can set the template to use to manage ```/etc/hosts```, and the ipaddress, domain and hostname values for the local node (by default the relevant facts values are used):
-
-    psick::hosts::file::template: 'psick/hosts/file/hosts.erb' # Default value
-    psick::hosts::file::ipaddress: '10.0.0.4' # Default: $::ipaddress
-    psick::hosts::file::domain: 'domain.com' # Default: $::domain
-    psick::hosts::file::hostname: 'www01' # Default: $::hostname
-
-
-### psick::update - Manage packages updates
-
-This class manages how and when a system should be updated, it can be included with the parameter:
-
-    psick::base::linux_classes:
-      'update': '::psick::update'
-
-The class just creates a cronjob which runs the system's specific update command. By default the cron schedule is empy so not update is automatically done:
-
-    psick::update::cron_schedule: '0 6 * * *' 
-
-The above setting would create a cron job, executed every day at 6:00 AM, that updates the system's packages.
-
-
-### psick::sudo - Manage sudo
-
-This class manages sudo. It can be included by setting:
-
-    psick::base::linux_classes:
-      'sudo': '::psick::sudo'
-
-You can configure the template to use for ```/etc/sudoers```, the admins who can sudo on your system (if it's used the default or a compatible template), the Puppet fileserver source for the whole content of the ```/etc/sudoers.d/```:
-
-    psick::sudo::sudoers_template: 'psick/sudo/sudoers.erb' # Default value
-    psick::sudo::admins: # Default is [] 
-      - al
-      - mark
-      - bill
-    psick::sudo::sudoers_d_source: 'puppet:///modules/site/sudo/sudoers.d' # Default is empty
-
-It's also possible to provide an hash of custom sudo directives to pass to the ```::psick::sudo::directive``` define:
-
-    psick::sudo::directives:
-      oracle:
-        template: 'psick/sudo/oracle.erb'
-        order: 30
-       
-The ```::psick::sudo::directive``` define accepts these params (template, content and source are ALTERNATIVE way to manage the content of the sudo file):
-
-    define psick::sudo::directive (
-      Enum['present','absent'] $ensure   = present,
-      Variant[Undef,String]    $content  = undef,
-      Variant[Undef,String]    $template = undef,
-      Variant[Undef,String]    $source   = undef,
-      Integer                  $order    = 20,
-    ) { ...}
-
-
-### psick::sysctl - Manage sysctl settings
-
-This class manages sysctl settings. To include it:
-
-    psick::base::linux_classes:
-      'sysctl': '::psick::sysctl'
-
-Any sysctl setting can be set via Hiera, using the ```psick::sysctl::settings``` key, which expects an hash like:
-
-    psick::sysctl::settings:
-      kernel.shmmni: value: 4096
-      kernel.sem: value: 250 32000 100 128
-
-It's possible to specify which sysctl module to use, other than psick internal's default:
-
-    psick::sysctl::module: 'duritong'
-
-The specified module must be on your control-repo's Puppetfile. Not all modules are supported (it's easy to add new ones).
-
-
-### psick::motd - Manage /etc/motd and /etc/issue files
-
-This class just manages the content of the ```/etc/motd.conf``` and ```/etc/issue``` files. To include it:
-
-    profile::base::linux::motd_class: '::psick::motd'
-
-To customise the content of the provided files:
-
-    psick::motd::motd_file_template: 'psick/motd/motd.erb' # Default value
-    psick::motd::issue_file_template: 'psick/motd/issue.erb' # Default value
-
-To avoid to manage these files:
-
-    psick::motd::motd_file_template: ''
-    psick::motd::issue_file_template: ''
-
-To remove these files:
-
-    psick::motd::motd_file_ensure: 'absent'
-    psick::motd::issue_file_ensure: 'absent'
-
-
-
-### psick::oracle - Manage Oracle prerequisites and installation
-
-This psick should be added to oracle servers. By default it does nothing, but, activating the relevant parameters, it allows
-the configuration of all the prerequisites for Oracle 12 installation and, if installation files are available, it can automate the installation of Oracle products (via the biemond/oradb external module).
-
-Main use case is the configuration for prerequisites. This can be done with:
-
-    psick::profiles::linux_classes:
-      'oracle': psick::oracle
-
-    # Activate the prerequisites class that manages /etc/limits
-    psick::oracle::prerequisites::limits_class: 'psick::oracle::prerequisites::limits'
-
-    # Activate the prerequisites class that manages packages
-    psick::oracle::prerequisites::packages_class: 'psick::oracle::prerequisites::packages'
-
-
-    # Activate the prerequisites class that manages users
-    psick::oracle::prerequisites::users_class: 'psick::oracle::prerequisites::users'
-    psick::oracle::prerequisites::users::has_asm: true # Set this on servers with asm
-
-    # Activate the prerequisites class that manages sysctl
-    psick::oracle::prerequisites::sysctl_class: 'psick::oracle::prerequisites::sysctl'
-    psick::base::linux_classes:
-      'sysctl': '::psick::sysctl' # The base default sysctl class conflicts with the above
-
-    # Activate the prerequisites class that cretaes a swap file (needs petems/swap_file module)
-    # psick::oracle::prerequisites::swap_class: 'psick::oracle::prerequisites::swap'
-
-    # Activate the dirs class and create a set of dirs for Oracle data
-    psick::oracle::prerequisites::dirs_class: 'psick::oracle::prerequisites::dirs'
-    psick::oracle::prerequisites::dirs::base_dir: '/data/oracle' # Default value
-    psick::oracle::prerequisites::dirs::owner: 'oracle'          # Default value
-    psick::oracle::prerequisites::dirs::group: 'dba'             # Default value
-    psick::oracle::prerequisites::dirs::dirs:
-     app1:
-       - 'db1'
-       - 'db2'
-     app2:
-       - 'db1'
-   psick::oracle::prerequisites::dirs::suffixes:   # Default value is ''
-     - '_DATA'
-     - '_FRA'
-
-with the above settings the following directories are created:
-
-    /data/oracle/app1_DATA/db1
-    /data/oracle/app1_DATA/db2
-    /data/oracle/app1_FRA/db1
-    /data/oracle/app1_FRA/db2
-    /data/oracle/app2_DATA/db1
-    /data/oracle/app2_FRA/db1
-
-
+Here follows documentation on how to manage different common system configurations:
+
+  - [psick::hosts::](docs/hosts.md) - Manage /etc/hosts
+  - [psick::motd](docs/motd.md) - Manage /etc/motd and /etc/issue
+  - [psick::nfs::](docs/nfs.md) - Manage NFS client and server
+  - [psick::sudo](docs/sudo.md) - Manage sudo configuration
+  - [psick::sysctl](docs/sysctl.md) - Manage sysctl settings
+  - [psick::firewall::](docs/firewall.md) - Manage firewalling
+  - [psick::openssh::](docs/openssh.md) - tp profile and keygen define
+  - [psick::hardening](docs/hardening.md) - Manage system hardening
+  - [psick::network](docs/network.md) - Manage networking
+  - [psick::puppet::](docs/puppet.md) - Manage Puppet components
+  - [psick::users](docs/users.md) - Manage users
+  - [psick::time](docs/time.md) - Manage time and timezones [Linux/Windows]
+  - [psick::windows::](docs/windows.md) - Windows profiles and tools
+
+
+### Applications profiles
+
+For some applications, besides standard tp profiles, there are dedicated profile classes and defines. Here's a list:
+
+  - [psick::ansible](docs/ansible.md) - Manage Ansible installation and user
+  - [psick::aws](docs/aws.md) - Manage AWS client tools and infrastructures setup
+  - [psick::bolt](docs/bolt.md) - Manage Bolt installation and user
+  - [psick::docker](docs/docker.md) - Docker installation and build tools
+  - [psick::foreman](docs/foreman.md) - Foreman installation
+  - [psick::git](docs/git.md) - Git installation and configuration
+  - [psick::gitlab](docs/gitlab.md) - GitLab installation and configuration
+  - [psick::mariadb](docs/mysql.md) - Manage Mariadb
+  - [psick::mysql](docs/mysql.md) - Manage Mysql
+  - [psick::mongo](docs/mongo.md) - Manage Mongo
+  - [psick::php](docs/php.md) - Manage php and modules
+  - [psick::oracle](docs/oracle.md) - Manage Oracle prerequisites and installation
+  - [psick::sensu](docs/sensu.md) - Manage Sensu
