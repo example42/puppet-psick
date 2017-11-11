@@ -7,6 +7,7 @@ class psick::puppet::pe_agent (
   Boolean $manage_service     = false,
   Boolean $noop_mode          = false,
   Hash $settings              = {},
+  String $config_file_path    = '/etc/puppetlabs/puppet/puppet.conf',
 ) {
 
   if $test_enable {
@@ -32,7 +33,7 @@ class psick::puppet::pe_agent (
   if $manage_environment {
     ini_setting { 'agent conf file environment':
       ensure  => present,
-      path    => '/etc/puppetlabs/puppet/puppet.conf',
+      path    => $config_file_path,
       section => 'agent',
       setting => 'environment',
       value   => $environment,
@@ -44,7 +45,7 @@ class psick::puppet::pe_agent (
   if $manage_noop {
     pe_ini_setting { 'agent conf file noop':
       ensure  => present,
-      path    => '/etc/puppetlabs/puppet/puppet.conf',
+      path    => $config_file_path,
       section => 'agent',
       setting => 'noop',
       value   => $noop_mode,
