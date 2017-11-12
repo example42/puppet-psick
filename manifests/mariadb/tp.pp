@@ -13,9 +13,9 @@
 #   psick::mariadb::tp::ensure: present
 #   psick::mariadb::tp::resources_hash:
 #     tp::conf:
-#       mariadb.conf:
+#       mariadb:
 #         epp: profile/mariadb/mariadb.conf.epp
-#       dot.conf:
+#       mariadb::dot.conf:
 #         epp: profile/mariadb/dot.conf.epp
 #         base_dir: conf
 #   psick::mariadb::tp::options_hash:
@@ -60,10 +60,10 @@ class psick::mariadb::tp (
 ) {
 
   if $manage {
-    # tp::install mariadb
+    $options_all = $options_auto_conf_hash + $options_hash
     $install_defaults = {
       ensure        => $ensure,
-      options_hash  => $options_auto_conf_hash + $options_hash,
+      options_hash  => $options_all,
       settings_hash => $settings_hash,
       auto_repo     => $auto_prereq,
       auto_prereq   => $auto_prereq,
@@ -78,9 +78,9 @@ class psick::mariadb::tp (
       default  => 'present',
     }
     $conf_defaults = {
-      ensure             => $file_ensure,
-      options_hash       => $options_auto_conf_hash + $options_hash,
-      settings_hash      => $settings_hash,
+      ensure        => $file_ensure,
+      options_hash  => $options_all,
+      settings_hash => $settings_hash,
     }
     $tp_confs = pick($resources_auto_conf_hash['tp::conf'], {}) + pick($resources_hash['tp::conf'], {})
     # All the tp::conf defines declared here

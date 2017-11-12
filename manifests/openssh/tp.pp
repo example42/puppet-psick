@@ -13,9 +13,9 @@
 #   psick::openssh::tp::ensure: present
 #   psick::openssh::tp::resources_hash:
 #     tp::conf:
-#       openssh.conf:
+#       openssh:
 #         epp: profile/openssh/openssh.conf.epp
-#       dot.conf:
+#       openssh::dot.conf:
 #         epp: profile/openssh/dot.conf.epp
 #         base_dir: conf
 #   psick::openssh::tp::options_hash:
@@ -60,7 +60,6 @@ class psick::openssh::tp (
 ) {
 
   if $manage {
-    # tp::install openssh
     $options_all = $options_auto_conf_hash + $options_hash
     $install_defaults = {
       ensure        => $ensure,
@@ -79,9 +78,9 @@ class psick::openssh::tp (
       default  => 'present',
     }
     $conf_defaults = {
-      ensure             => $file_ensure,
-      options_hash       => $options_all,
-      settings_hash      => $settings_hash,
+      ensure        => $file_ensure,
+      options_hash  => $options_all,
+      settings_hash => $settings_hash,
     }
     $tp_confs = pick($resources_auto_conf_hash['tp::conf'], {}) + pick($resources_hash['tp::conf'], {})
     # All the tp::conf defines declared here
