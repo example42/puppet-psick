@@ -7,11 +7,15 @@ Ciphers  <%= @options['Ciphers'] %>
 KexAlgorithms <%= @options['KexAlgorithms'] %>
 <% end -%>
 UsePrivilegeSeparation <%= @options['UsePrivilegeSeparation'] %>
+<% if @options['HostKey'] -%>
 <% @options['HostKey'].each do |h| -%>
 HostKey <%= h %>
 <% end -%>
+<% end -%>
+<% if @options['ListenAddress'] -%>
 <% @options['ListenAddress'].each do |a| -%>
 ListenAddress <%= a %>
+<% end -%>
 <% end -%>
 AllowTcpForwarding <%= @options['AllowTcpForwarding'] %>
 TCPKeepAlive <%= @options['TCPKeepAlive'] %>

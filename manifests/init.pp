@@ -35,8 +35,8 @@ class psick (
 
   # General network settings
   Boolean $is_cluster = false,
-  Stdlib::Compat::Ip_address $primary_ip = $facts['networking']['ip'],
-  String  $mgmt_interface = $facts['networking']['primary'],
+  Optional[Stdlib::Compat::Ip_address] $primary_ip = $::networking['ip'],
+  Optional[String] $mgmt_interface = $::networking['primary'],
 
   # An open hash of Psick wide settings. Define data structure and use as wanted
   Hash $settings = {},
