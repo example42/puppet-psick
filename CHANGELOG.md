@@ -2,6 +2,14 @@
 
 * Your contribution here.
 
+## Release 0.5.5
+
+* Improved psick::jenkins and psick::jenkins::plugin
+* Reorganised docs
+* Added psick::reboot profile
+* Improved psick::nfs profiles
+* Regenerated tp profiles
+
 ## Release 0.5.4
 
 * Refactored psick::jenkins profile (psick::ci::jenkins removed)
