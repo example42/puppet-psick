@@ -13,9 +13,9 @@
 #   psick::elasticsearch::tp::ensure: present
 #   psick::elasticsearch::tp::resources_hash:
 #     tp::conf:
-#       elasticsearch.conf:
+#       elasticsearch:
 #         epp: profile/elasticsearch/elasticsearch.conf.epp
-#       dot.conf:
+#       elasticsearch::dot.conf:
 #         epp: profile/elasticsearch/dot.conf.epp
 #         base_dir: conf
 #   psick::elasticsearch::tp::options_hash:
@@ -60,10 +60,10 @@ class psick::elasticsearch::tp (
 ) {
 
   if $manage {
-    # tp::install elasticsearch
+    $options_all = $options_auto_conf_hash + $options_hash
     $install_defaults = {
       ensure        => $ensure,
-      options_hash  => $options_auto_conf_hash + $options_hash,
+      options_hash  => $options_all,
       settings_hash => $settings_hash,
       auto_repo     => $auto_prereq,
       auto_prereq   => $auto_prereq,
@@ -78,9 +78,9 @@ class psick::elasticsearch::tp (
       default  => 'present',
     }
     $conf_defaults = {
-      ensure             => $file_ensure,
-      options_hash       => $options_auto_conf_hash + $options_hash,
-      settings_hash      => $settings_hash,
+      ensure        => $file_ensure,
+      options_hash  => $options_all,
+      settings_hash => $settings_hash,
     }
     $tp_confs = pick($resources_auto_conf_hash['tp::conf'], {}) + pick($resources_hash['tp::conf'], {})
     # All the tp::conf defines declared here
