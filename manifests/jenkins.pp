@@ -12,6 +12,8 @@ class psick::jenkins (
   Boolean $ssh_keys_generate                = false,
   String $home_dir                          = '/var/lib/jenkins',
 
+  Optional[String] $scm_sync_repository_url  = undef,
+  Optional[String] $scm_sync_repository_host = undef,
 ) {
 
   # Installation management
@@ -69,6 +71,22 @@ class psick::jenkins (
       owner   => 'jenkins',
       group   => 'jenkins',
       content => $ssh_public_key_content,
+    }
+  }
+
+  if $scm_sync_repository_url {
+    include ::psick::jenkins::scm_sync
+  }
+
+  if $scm_sync_repository_host {
+    psick::openssh::config { 'jenkins':
+      path         => "${home_dir}/.ssh/config",
+      options_hash => {
+        "Host ${scm_sync_repository_host}" => {
+          'StrictHostKeyChecking' => 'no',
+          'UserKnownHostsFile'    => '/dev/null',
+        }
+      }
     }
   }
 }
