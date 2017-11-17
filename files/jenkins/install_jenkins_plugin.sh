@@ -3,7 +3,7 @@
 set -e
 set -o pipefail
 
-plugin_repo_url="http://updates.jenkins-ci.org/download/plugins"
+jenkins_url="http://updates.jenkins-ci.org"
 plugin_dir="/var/lib/jenkins/plugins"
 include_optionals=false
 
@@ -13,7 +13,7 @@ $0 [OPTIONS] plugin@version ...
 OPTIONS:
 -d,--dir DIR    Install dir. Default is $plugin_dir
 -a,--all        Install also optional dependencies
--u,--url URL    Change to plugin repo URL. Default is $plugin_repo_url
+-u,--url URL    Change the source website. Default is $jenkins_url. After that paths should follow Jenkins's official ones
 -h,--help       Print this help"
 }
 
@@ -23,7 +23,7 @@ key="$1"
 
 case $key in
     -u|--url)
-    plugin_repo_url="$2"
+    jenkins_url="$2"
     shift
     ;;
     -d|--dir)
@@ -49,7 +49,11 @@ shift
 done
 
 download_plugin() {
-  url="${plugin_repo_url}/${1}/${2}/${1}.hpi"
+  if [$2 != 'latest']; then
+    url="${jenkins_url}/download/plugins/${1}/${2}/${1}.hpi"
+  else
+    url="${jenkins_url}/latest/${1}.hpi"
+  fi
   echo "Downloading: $1@$2"
   curl -L --silent --output "${plugin_dir}/${1}.hpi" "$url"
 }
