@@ -31,7 +31,7 @@ class psick::bolt::master (
     $nodes_query = "nodes { certname ~ '.*' }"
     $nodes = puppetdb_query($nodes_query)
     $nodes_list = $nodes.map |$node| { $node['certname'] }
-    $nodes_csv = join($nodes_list,',') 
+    $nodes_csv = join($nodes_list.sort,',') 
 
     $dir_ensure = ::tp::ensure2dir($ensure)
     file { "/home/${::psick::bolt::user_name}/nodes":

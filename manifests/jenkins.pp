@@ -93,7 +93,6 @@ class psick::jenkins (
     psick::openssh::config { 'jenkins':
       path         => "${home_dir}/.ssh/config",
       before       => Service['jenkins'],
-      require      => File["${home_dir}/.ssh"],
       options_hash => {
         "Host ${scm_sync_repository_host}" => {
           'StrictHostKeyChecking' => 'no',
