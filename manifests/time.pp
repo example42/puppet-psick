@@ -11,11 +11,11 @@
 #
 class psick::time (
   Array $servers                            = [],
-  Optional[String] $timezone                = undef,
+  Optional[String] $timezone                = $::psick::timezone,
   Enum['chrony','ntpdate','ntp',''] $method = 'ntpdate',
 ) {
 
-  if $timezone {
+  if $::kernel != 'windows' and $timezone {
     contain ::psick::timezone
   }
 

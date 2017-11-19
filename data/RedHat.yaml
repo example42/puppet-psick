@@ -14,4 +14,5 @@ psick::ruby::buildgems::packages:
   - 'make'
   - 'cmake'
   - 'gcc'
+  - 'gcc-c++'
   - 'ruby-devel'

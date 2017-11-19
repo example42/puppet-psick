@@ -23,7 +23,7 @@
 #   Default is autocalculated for each supported OS
 #
 class psick::timezone(
-  String $timezone             = '',
+  String $timezone             = $::psick::time::timezone,
   String $timezone_windows     = '',
   Boolean $hw_utc              = false,
   String $set_timezone_command = '',

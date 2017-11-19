@@ -3,12 +3,13 @@
 define psick::jenkins::plugin (
   String $version               = 'latest',
   String $jenkins_dir           = '/var/lib/jenkins',
-  String $plugins_url           = 'http://updates.jenkins-ci.org/download/plugins',
+  String $jenkins_url           = 'http://updates.jenkins-ci.org',
   String $install_script_source = 'puppet:///modules/psick/jenkins/install_jenkins_plugin.sh',
   Boolean $enable               = true,
   String $jenkins_user          = 'jenkins',
   String $jenkins_group         = 'jenkins',
   String $jenkins_service       = 'jenkins',
+  Variant[Integer,String] $exec_timeout = '1200',
 ) {
 
   include ::psick::unzip
@@ -42,12 +43,13 @@ define psick::jenkins::plugin (
   }
 
   exec { "install_jenkins_plugins-${name}" :
-    command => "./install_jenkins_plugin.sh -a -d ${plugins_dir} -u ${plugins_url} ${plugin_name}",
+    command => "./install_jenkins_plugin.sh -a -d ${plugins_dir} -u ${jenkins_url} ${plugin_name}",
     cwd     => $jenkins_dir,
     require => [ File["${jenkins_dir}/install_jenkins_plugin.sh"], Class['psick::unzip'] ],
     path    => [ '/usr/bin', '/usr/sbin', '/bin' , $jenkins_dir],
     user    => $jenkins_user,
-    unless  => "test -f ${plugins_dir}/${name}.hpi || test -f ${plugins_dir}/${name}.jpi",
+    unless  => "test -d ${plugins_dir}/${name}",
     notify  => Service[$jenkins_service],
+    timeout => $exec_timeout,
   }
 }
