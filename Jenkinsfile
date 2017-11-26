@@ -5,7 +5,7 @@ pipeline {
       parallel {
         stage('Syntax') {
           steps {
-            sh 'pdk validate'
+            sh 'pdk validate puppet,metadata'
           }
         }
       }
