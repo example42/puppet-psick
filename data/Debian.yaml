@@ -6,3 +6,9 @@ psick::php::module_prefix: php5-
 psick::php::pear_module_prefix: php-
 psick::php::pear::package: php-pear
 psick::php::devel::package: php5-dev
+psick::ruby::buildgems::packages:
+  - 'make'
+  - 'cmake'
+  - 'gcc'
+  - 'ruby-dev'
+  - 'zlib1g-dev'
