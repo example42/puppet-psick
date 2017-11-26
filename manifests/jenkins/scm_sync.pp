@@ -36,7 +36,7 @@ class psick::jenkins::scm_sync (
       cwd     => $::psick::jenkins::home_dir,
       creates => "${::psick::jenkins::home_dir}/scm-sync-configuration.success.log",
       require => [ File["${::psick::jenkins::home_dir}/scm-sync-configuration.xml"], Service['jenkins'] ],
-      user    => $jenkins_user,
+      user    => 'jenkins',
       notify  => Exec['jenkins_reload'],
     }
     exec { 'jenkins_reload' :
@@ -44,7 +44,7 @@ class psick::jenkins::scm_sync (
       # command     => "curl -X POST http://127.0.0.1:8080/reload -u admin:\$(cat 'secrets/initialAdminPassword')",
       cwd         => $::psick::jenkins::home_dir,
       require     => [ File["${::psick::jenkins::home_dir}/scm-sync-configuration.xml"], Service['jenkins'] ],
-      # user        => $jenkins_user,
+      # user        => 'jenkins',
       refreshonly => true,
     }
   }
