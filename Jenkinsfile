@@ -21,7 +21,7 @@ pipeline {
         sh 'bin/docs_classlistgenerate.sh site/profile docs/classes.md'
         sh 'for f in $(cat docs/toc.txt); do cat docs/$f >> README.md ; echo >> README.md ; done'
         sh 'bin/jenkins_before.sh'
-        sh 'puppet strings generate **/*{.pp\,.rb} **/**/*{.pp\,.rb} **/**/**/*{.pp\,.rb}'
+        sh 'puppet strings generate **/*.pp **/*.rb **/**/*.pp **/**/*.rb **/**/**/*.pp **/**/**/*.rb'
       }
     }
   }
