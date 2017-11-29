@@ -32,7 +32,8 @@ class psick::users (
     }
   }
   if $users_hash != {} {
-    $users_hash.each |$u,$v| {
+    $users_hash.each |$u,$rv| {
+      $v = delete($rv, ['ssh_authorized_keys','openssh_keygen','sudo_template'])
       # Find home
       if $v['home'] {
         $home_real = $v['home']
@@ -51,50 +52,50 @@ class psick::users (
       case $module {
         'user': {
           user { $u:
-            ensure           => pick_undef($v['ensure'],'present'),
-            comment          => pick_undef($v['comment']),
-            gid              => pick_undef($v['gid']),
-            groups           => pick_undef($v['groups']),
+            ensure           => $v['ensure'],
+            comment          => $v['comment'],
+            gid              => $v['gid'],
+            groups           => $v['groups'],
             home             => $home_real,
-            password         => pick_undef($v['password']),
-            password_max_age => pick_undef($v['password_max_age']),
-            password_min_age => pick_undef($v['password_min_age']),
-            shell            => pick_undef($v['shell']),
-            uid              => pick_undef($v['uid']),
+            password         => $v['password'],
+            password_max_age => $v['password_max_age'],
+            password_min_age => $v['password_min_age'],
+            shell            => $v['shell'],
+            uid              => $v['uid'],
           }
         }
         'psick': {
           psick::users::managed { $u:
-            ensure           => pick_undef($v['ensure'],'present'),
-            comment          => pick_undef($v['comment']),
-            gid              => pick_undef($v['gid']),
-            groups           => pick_undef($v['groups']),
+            ensure           => $v['ensure'],
+            comment          => $v['comment'],
+            gid              => $v['gid'],
+            groups           => $v['groups'],
             home             => $home_real,
-            password         => pick_undef($v['password']),
-            password_max_age => pick_undef($v['password_max_age']),
-            password_min_age => pick_undef($v['password_min_age']),
-            shell            => pick_undef($v['shell']),
-            uid              => pick_undef($v['uid']),
-            *                => pick_undef($v['extra_params'],{}),
+            password         => $v['password'],
+            password_max_age => $v['password_max_age'],
+            password_min_age => $v['password_min_age'],
+            shell            => $v['shell'],
+            uid              => $v['uid'],
+            *                => $v['extra_params'],
           }
         }
         'accounts': {
           accounts::user { $u:
-            ensure           => pick_undef($v['ensure'],'present'),
-            comment          => pick_undef($v['comment']),
-            gid              => pick_undef($v['gid']),
-            groups           => pick_undef($v['groups']),
-            home             => pick_undef($v['home']),
-            password         => pick_undef($v['password']),
-            shell            => pick_undef($v['shell']),
-            uid              => pick_undef($v['uid']),
-            sshkeys          => pick_undef($v['sshkeys'],[]),
-            *                => pick_undef($v['extra_params'],{}),
+            ensure           => $v['ensure'],
+            comment          => $v['comment'],
+            gid              => $v['gid'],
+            groups           => $v['groups'],
+            home             => $v['home'],
+            password         => $v['password'],
+            shell            => $v['shell'],
+            uid              => $v['uid'],
+            sshkeys          => $v['sshkeys'],
+            *                => $v['extra_params'],
           }
         }
       }
-      if has_key($v,'ssh_authorized_keys') and $module != 'accounts' {
-        $v['ssh_authorized_keys'].each |$key| {
+      if has_key($rv,'ssh_authorized_keys') and $module != 'accounts' {
+        $rv['ssh_authorized_keys'].each |$key| {
           $key_array   = split($key, ' ')
           ssh_authorized_key { "${u}_${key}":
             ensure => present,
@@ -106,11 +107,16 @@ class psick::users (
           }
         }
       }
-      if has_key($v,'openssh_keygen') {
-        $v['openssh_keygen'].each |$u,$vv| {
+      if has_key($rv,'openssh_keygen') {
+        $rv['openssh_keygen'].each |$u,$vv| {
           psick::openssh::keygen { $u:
             * => $vv,
           }
+        }
+      }
+      if has_key($rv,'sudo_template') {
+        psick::sudo::directive { $u:
+          template => $rv['sudo_template'],
         }
       }
     }
