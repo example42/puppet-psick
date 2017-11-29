@@ -10,7 +10,14 @@
 # @param root_params An hash of valid arguments of the user type. If this or
 #   root_pw is set, the root user is managed by this class.
 # @param users_hash An Hash passed to create resources based on the selected
-# module
+#   module. The keys of this hash have to be compatible with the selected
+#   module. The following extra keys can be used:
+#     - ssh_authorized_keys: An array of keys to add to the users' authorized keys
+#     - openssh_keygen: A boolean, if true a ssh key pair is automatically
+#       generated for the user.
+#     - sudo_template: The path as used by the template() fucntion of an erb
+#         template to use to manage the user's sudo file. Nothing is created if
+#         not defined.
 # @param module A string to define which module to use to manage users:
 #   'user' to use Puppet native type
 #   'psick' to use the define psick::users::managed
@@ -50,20 +57,6 @@ class psick::users (
       }
 
       case $module {
-        'user': {
-          user { $u:
-            ensure           => $v['ensure'],
-            comment          => $v['comment'],
-            gid              => $v['gid'],
-            groups           => $v['groups'],
-            home             => $home_real,
-            password         => $v['password'],
-            password_max_age => $v['password_max_age'],
-            password_min_age => $v['password_min_age'],
-            shell            => $v['shell'],
-            uid              => $v['uid'],
-          }
-        }
         'psick': {
           psick::users::managed { $u:
             ensure           => $v['ensure'],
@@ -81,16 +74,30 @@ class psick::users (
         }
         'accounts': {
           accounts::user { $u:
+            ensure   => $v['ensure'],
+            comment  => $v['comment'],
+            gid      => $v['gid'],
+            groups   => $v['groups'],
+            home     => $v['home'],
+            password => $v['password'],
+            shell    => $v['shell'],
+            uid      => $v['uid'],
+            sshkeys  => $v['sshkeys'],
+            *        => $v['extra_params'],
+          }
+        }
+        default: {
+          user { $u:
             ensure           => $v['ensure'],
             comment          => $v['comment'],
             gid              => $v['gid'],
             groups           => $v['groups'],
-            home             => $v['home'],
+            home             => $home_real,
             password         => $v['password'],
+            password_max_age => $v['password_max_age'],
+            password_min_age => $v['password_min_age'],
             shell            => $v['shell'],
             uid              => $v['uid'],
-            sshkeys          => $v['sshkeys'],
-            *                => $v['extra_params'],
           }
         }
       }
