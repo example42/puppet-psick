@@ -96,9 +96,9 @@ class psick::users (
       if has_key($v,'ssh_authorized_keys') and $module != 'accounts' {
         $v['ssh_authorized_keys'].each |$key| {
           $key_array   = split($key, ' ')
-          ssh_authorized_key { "${k}_${key}":
+          ssh_authorized_key { "${u}_${key}":
             ensure => present,
-            user   => $k,
+            user   => $u,
             name   => $key_array[2],
             key    => $key_array[1],
             type   => $key_array[0],
@@ -107,8 +107,8 @@ class psick::users (
         }
       }
       if has_key($v,'openssh_keygen') {
-        $v['openssh_keygen'].each |$k,$vv| {
-          psick::openssh::keygen { $k:
+        $v['openssh_keygen'].each |$u,$vv| {
+          psick::openssh::keygen { $u:
             * => $vv,
           }
         }
