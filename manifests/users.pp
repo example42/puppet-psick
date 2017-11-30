@@ -25,11 +25,13 @@
 # @param delete_unmanaged If true all non system users not managed by Puppet
 #    are automatically deleted.
 class psick::users (
-  Optional[String[1]] $root_pw = undef,
-  Hash $root_params            = {},
-  Hash $users_hash             = {},
+  Optional[String[1]] $root_pw  = undef,
+  Hash $root_params             = {},
+  Hash $users_hash              = {},
+  Hash $available_users_hash    = {},
+  Array $available_users_to_add = [],
   Enum['psick','accounts','user'] $module = 'psick',
-  Boolean $delete_unmanaged    = false,
+  Boolean $delete_unmanaged     = false,
 ) {
 
   if $root_pw or $root_params != {}  {
@@ -38,8 +40,13 @@ class psick::users (
       *        => $root_params,
     }
   }
-  if $users_hash != {} {
-    $users_hash.each |$u,$rv| {
+
+  $added_users = $available_users_hash.filter | $username , $key | {
+    $username in $available_users_to_add
+  }
+  $all_users = $added_users + $users_hash
+  if $all_users != {} {
+    $all_users.each |$u,$rv| {
       $v = delete($rv, ['ssh_authorized_keys','openssh_keygen','sudo_template'])
       # Find home
       if $v['home'] {
@@ -69,7 +76,7 @@ class psick::users (
             password_min_age => $v['password_min_age'],
             shell            => $v['shell'],
             uid              => $v['uid'],
-            *                => $v['extra_params'],
+            *                => pick_default($v['extra_params'],{}),
           }
         }
         'accounts': {
@@ -83,7 +90,7 @@ class psick::users (
             shell    => $v['shell'],
             uid      => $v['uid'],
             sshkeys  => $v['sshkeys'],
-            *        => $v['extra_params'],
+            *        => pick_default($v['extra_params'],{}),
           }
         }
         default: {
