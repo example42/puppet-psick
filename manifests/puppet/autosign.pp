@@ -22,14 +22,19 @@ class psick::puppet::autosign (
       }
     }
     'on': {
-      ini_setting { 'puppet_server_autosign_on':
-        ensure => present,
-        value  => true,
-      }
       if $autosign_match {
+        ini_setting { 'puppet_server_autosign_on':
+          ensure => present,
+          value  => '/etc/puppetlabs/puppet/autosign.conf',
+        }
         file { '/etc/puppetlabs/puppet/autosign.conf':
           ensure  => file,
           content => $autosign_match,
+        }
+      } else {
+        ini_setting { 'puppet_server_autosign_on':
+          ensure => present,
+          value  => true,
         }
       }
     }
