@@ -29,14 +29,18 @@
 # [*options_hash*]
 #   Custom hash of options to use in templates.
 #
+# [*create_ssh_dir*]
+#   If to create the .ssh directory containing SSH config file
+#
 define psick::openssh::config (
-  Enum['present','absent'] $ensure       = present,
-  Variant[Undef,String]    $content      = undef,
-  Variant[Undef,String]    $template     = 'psick/generic/spaced_with_stanzas.erb',
-  Variant[Undef,String]    $source       = undef,
-  Optional[String]         $user         = undef,
-  Optional[String]         $path         = undef,
-  Hash                     $options_hash = {},
+  Enum['present','absent'] $ensure         = present,
+  Variant[Undef,String]    $content        = undef,
+  Variant[Undef,String]    $template       = 'psick/generic/spaced_with_stanzas.erb',
+  Variant[Undef,String]    $source         = undef,
+  Optional[String]         $user           = undef,
+  Optional[String]         $path           = undef,
+  Hash                     $options_hash   = {},
+  Boolean                  $create_ssh_dir = false,
 ) {
 
   $user_real = $user ? {
@@ -57,11 +61,16 @@ define psick::openssh::config (
     default   => inline_template('<%= [@content].flatten.join("\n") + "\n" %>'),
   }
 
-  $path_real = $path ? {
+  $base_dir = $path ? {
     undef   => $user_real ? {
-      'root'  => "/${user_real}/.ssh/config",
-      default => "/home/${user_real}/.ssh/config",
+      'root'  => "/${user_real}/.ssh",
+      default => "/home/${user_real}/.ssh",
     },
+    default => dirname($path),
+  }
+
+  $path_real = $path ? {
+    undef   => "${base_dir}/config",
     default => $path,
   }
 
@@ -74,4 +83,11 @@ define psick::openssh::config (
     source  => $source,
   }
 
+  if $create_ssh_dir {
+    psick::tools::create_dir { $base_dir:
+      owner  => $user_real,
+      group  => $user_real,
+      before => File[$path_real],
+    }
+  }
 }
