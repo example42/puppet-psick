@@ -2,6 +2,11 @@
 
 * Your contribution here.
 
+## Release 0.5.6
+
+* More works on jenkins and Jenkinsfile
+* psick::puppet::postrun_command management
+
 ## Release 0.5.5
 
 * Improved psick::jenkins and psick::jenkins::plugin
