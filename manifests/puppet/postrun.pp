@@ -8,9 +8,14 @@ class psick::puppet::postrun (
   Optional[String] $command = undef,
   Optional[String] $source = undef,
   Optional[String] $content = undef,
+  Optional[String] $template = undef,
+  Optional[String] $epp = undef,
   Optional[String] $path = undef,
   String $puppet_conf_path,
 ){
+
+  $manage_content = tp_content($content, $template, $epp)
+
   File {
     owner => 'root',
     group => 'root',
@@ -29,7 +34,7 @@ class psick::puppet::postrun (
   }
   if $path {
     file { $path:
-      content => $content,
+      content => $manage_content,
       source  => $source,
       mode    => '0755',
     }

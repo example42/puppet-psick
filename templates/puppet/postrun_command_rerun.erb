@@ -1,7 +1,15 @@
+<% if @kernel == 'windows' -%>
+#!c:/Program Data/PuppetLabs/bin/ruby
+<% else -%>
 #!/opt/puppetlabs/puppet/bin/ruby
+<% end -%>
 require 'yaml'
 
+<% if @kernel == 'windows' -%>
+last_run_summary = 'C:/Program Data/PuppetLabs/puppet/cache/state/last_run_summary.yaml'
+<% else -%>
 last_run_summary = '/opt/puppetlabs/puppet/cache/state/last_run_summary.yaml'
+<% end -%>
 
 begin
   settings = YAML.load_file last_run_summary

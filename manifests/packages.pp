@@ -5,6 +5,14 @@
 # resources, when specifying here packages that might be installed by other
 # modules or classes.
 #
+# @example Install an array of packages and use chocolatey as provider (on
+# Windows)
+#    psick::packages::resource_default_arguments:
+#      provider: chocolatey
+#    psick::packages::packages_list:
+#      - "firefox"
+#      - "flashplayerplugin"
+#
 # @param packages_default The packages installed by default (according to the
 #   underlying OS and auto_conf settings)
 # @param add_default_packages If to actually install the default packages
@@ -15,18 +23,25 @@
 # @param delete_unmanaged If true all packages not managed by Puppet
 #    are automatically deleted. WARNING: this option may remove packages
 #    you need on your systems!
+# @param resource_default_arguments An hash of arguments to be used as default
+#    in the package type.
 #
 class psick::packages (
-  Array $packages_default       = [],
-  Array $packages_list          = [],
-  Hash $packages_hash           = {},
-  Boolean $add_default_packages = true,
-  Boolean $delete_unmanaged     = false,
+  Array $packages_default         = [],
+  Array $packages_list            = [],
+  Hash $packages_hash             = {},
+  Hash $resource_default_arguments = {},
+  Boolean $add_default_packages   = true,
+  Boolean $delete_unmanaged       = false,
 ) {
 
   $packages = $add_default_packages ? {
     true  => $packages_list + $packages_default,
     false => $packages_list,
+  }
+
+  Package {
+    * => $resource_default_arguments,
   }
 
   $packages.each |$pkg| {
