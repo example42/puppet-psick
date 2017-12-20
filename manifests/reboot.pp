@@ -15,16 +15,30 @@ class psick::reboot (
   Enum['refreshed','pending'] $when     = 'pending',
   String $reboot_name                   = 'Psick Reboot',
   Integer $timeout                      = 60,
+  Optional[String] $schedule            = undef,
+  Boolean $subscribe_anchor             = false,
 ) {
 
   $message = "Rebooting: when ${when} - apply ${apply} - timeout ${timeout}"
 
+  if $schedule {
+    include psick::schedule
+  }
+
   if $manage {
     reboot { $reboot_name:
-      apply   => $apply,
-      message => $message,
-      when    => $when,
-      timeout => $timeout,
+      apply    => $apply,
+      message  => $message,
+      when     => $when,
+      timeout  => $timeout,
+      schedule => $schedule,
+    }
+  }
+  if $subscribe_anchor {
+    anchor { 'reboot':
+      ensure   => present,
+      notify   => Reboot[$reboot_name],
+      schedule => $schedule,
     }
   }
 }
