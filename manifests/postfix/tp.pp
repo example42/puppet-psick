@@ -26,6 +26,9 @@
 #   automatically added (Default value is inherited from global $::psick::auto_conf
 #   psick::postfix::tp::auto_conf: 'default'
 #
+# @example Set no-noop mode and enforce changes even if noop is set for the agent
+#   psick::postfix::tp::no_noop: true
+#
 # @param manage If to actually manage any resource in this profile or not
 # @param ensure If to install or remove postfix. Valid values are present, absent, latest
 #   or any version string, matching the expected postfix package version.
@@ -48,6 +51,8 @@
 # @param auto_prereq If to automatically install eventual dependencies for postfix.
 #   Set to false if you have problems with duplicated resources, being sure that you
 #   manage the prerequistes to install postfix (other packages, repos or tp installs).
+# @param no_noop Set noop metaparameter to false to all the resources of this class.
+#   This overrides any noop setting which might be in place.
 class psick::postfix::tp (
   Psick::Ensure   $ensure                   = 'present',
   Boolean         $manage                   = $::psick::manage,
@@ -57,9 +62,15 @@ class psick::postfix::tp (
   Hash            $options_auto_conf_hash   = {},
   Hash            $settings_hash            = {},
   Boolean         $auto_prereq              = $::psick::auto_prereq,
+  Boolean         $no_noop                  = false,
 ) {
 
   if $manage {
+    if $no_noop {
+      info('Forced no-noop mode in psick::postfix::tp')
+      noop(false)
+    }
+
     $options_all = $options_auto_conf_hash + $options_hash
     $install_defaults = {
       ensure        => $ensure,
