@@ -7,24 +7,30 @@ class psick::schedule (
   Optional[Integer] $repeat      = undef,
 ) {
 
+  Schedule {
+    repeat => $repeat,
+  }
+
   if $add_default_schedules {
-    Schedule {
-      repeat => $repeat,
-    }
     schedule { 'working_hours':
-      range   => '09:00 - 18:00',
+      range => '09:00 - 18:00',
     }
 
     schedule { 'weekend':
-      weekday => [ 'sat','sun'],
+      weekday => ['sat','sun'],
     }
 
     schedule { 'working_days':
-      weekday => [ 'mon','tues','wed','thurs','fri'],
+      weekday => ['mon','tues','wed','thurs','fri'],
+      repeat => 2,
     }
 
     schedule { 'nightly_maintenance':
-      range   => '02:00 - 05:00',
+      range => '02:00 - 05:00',
+    }
+
+    schedule { 'evening':
+      range => '21:00 - 0:00',
     }
   }
 

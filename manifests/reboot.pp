@@ -36,7 +36,6 @@ class psick::reboot (
   }
   if $subscribe_anchor {
     anchor { 'reboot':
-      ensure   => present,
       notify   => Reboot[$reboot_name],
       schedule => $schedule,
     }
