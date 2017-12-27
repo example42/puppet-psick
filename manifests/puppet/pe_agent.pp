@@ -8,7 +8,14 @@ class psick::puppet::pe_agent (
   Boolean $noop_mode          = false,
   Hash $settings              = {},
   String $config_file_path    = '/etc/puppetlabs/puppet/puppet.conf',
+
+  Boolean $no_noop            = false,
 ) {
+
+  if $no_noop {
+    info('Forced no-noop mode.')
+    noop(false)
+  }
 
   if $test_enable {
     Tp::Test {

@@ -10,7 +10,15 @@ class psick::hostname (
   Boolean               $update_host_entry    = true,
   Boolean               $update_network_entry = true,
   Boolean               $update_cloud_cfg     = false,
-  ) {
+
+  Boolean               $no_noop              = false,
+) {
+
+  if $no_noop {
+    info('Forced no-noop mode.')
+    noop(false)
+  }
+
   case $::kernel {
     'Linux': {
       if $::virtual != 'docker' {

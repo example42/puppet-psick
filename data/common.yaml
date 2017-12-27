@@ -61,6 +61,9 @@ psick::monitor::ganglia::packages: []
 # psick::monitor::snmpd
 psick::monitor::snmpd::extra_packages: []
 
+# psick::puppet::postrun
+psick::puppet::postrun::puppet_conf_path: '/etc/puppetlabs/puppet/puppet.conf'
+
 # Deep merge lookups for the following keys:
 lookup_options:
   psick::settings:

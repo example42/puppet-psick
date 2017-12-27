@@ -12,19 +12,19 @@
     },
     "verbose": {
      "description": "Enable verbose mode in Puppet agent run",
-     "type": "Boolean"
+     "type": "Optional[Boolean]"
     },
     "debug": {
      "description": "Enable debug mode in Puppet agent run",
-     "type": "Boolean"
+     "type": "Optional[Boolean]"
     },
     "noop": {
      "description": "Run puppet agent in noop mode",
-     "type": "Boolean"
+     "type": "Optional[Boolean]"
     },
     "no_noop": {
      "description": "Force --no-noop mode in puppet agent run",
-     "type": "Boolean"
+     "type": "Optional[Boolean]"
     }
   }
 }

@@ -8,7 +8,14 @@ class psick::dns::resolver (
   Optional[Array] $sortlist    = undef,
   String $resolver_path        = '/etc/resolv.conf',
   String $resolver_template    = 'psick/dns/resolver/resolv.conf.erb',
+
+  Boolean $no_noop             = false,
 ) {
+
+  if $no_noop {
+    info('Forced no-noop mode.')
+    noop(false)
+  }
 
   if $::virtual != 'docker' {
     file { $resolver_path:

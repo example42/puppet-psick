@@ -5,10 +5,17 @@ class psick::puppet::gems (
   Enum['none','client','master','developer','citest','cideploy'] $default_set = 'client',
   Array $install_gems                = [ ],
   Array $install_options             = [ ],
-  Boolean $install_system_gems       = true,
+  Boolean $install_system_gems       = false,
   Boolean $install_puppet_gems       = true,
   Boolean $install_puppetserver_gems = false,
+
+  Boolean $no_noop                   = false,
 ) {
+
+  if $no_noop {
+    info('Forced no-noop mode.')
+    noop(false)
+  }
 
   $default_gems = $default_set ? {
     'none'      => [],

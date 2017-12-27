@@ -14,7 +14,14 @@ class psick::hosts::file (
   Variant[Undef,String] $domain = $::domain,
   String $hostname              = $::hostname,
   Array $extra_hosts            = [],
+
+  Boolean $no_noop              = false,
 ) {
+
+  if $no_noop {
+    info('Forced no-noop mode.')
+    noop(false)
+  }
 
   file { '/etc/hosts':
     ensure  => file,

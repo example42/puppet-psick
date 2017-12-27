@@ -26,6 +26,9 @@
 #   automatically added (Default value is inherited from global $::psick::auto_conf
 #   psick::redis::tp::auto_conf: 'default'
 #
+# @example Set no-noop mode and enforce changes even if noop is set for the agent
+#   psick::redis::tp::no_noop: true
+#
 # @param manage If to actually manage any resource in this profile or not
 # @param ensure If to install or remove redis. Valid values are present, absent, latest
 #   or any version string, matching the expected redis package version.
@@ -48,6 +51,8 @@
 # @param auto_prereq If to automatically install eventual dependencies for redis.
 #   Set to false if you have problems with duplicated resources, being sure that you
 #   manage the prerequistes to install redis (other packages, repos or tp installs).
+# @param no_noop Set noop metaparameter to false to all the resources of this class.
+#   This overrides any noop setting which might be in place.
 class psick::redis::tp (
   Psick::Ensure   $ensure                   = 'present',
   Boolean         $manage                   = $::psick::manage,
@@ -57,9 +62,15 @@ class psick::redis::tp (
   Hash            $options_auto_conf_hash   = {},
   Hash            $settings_hash            = {},
   Boolean         $auto_prereq              = $::psick::auto_prereq,
+  Boolean         $no_noop                  = false,
 ) {
 
   if $manage {
+    if $no_noop {
+      info('Forced no-noop mode in psick::redis::tp')
+      noop(false)
+    }
+
     $options_all = $options_auto_conf_hash + $options_hash
     $install_defaults = {
       ensure        => $ensure,

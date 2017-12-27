@@ -1,0 +1,35 @@
+<% if @kernel == 'windows' -%>
+#!c:/Program Data/PuppetLabs/bin/ruby
+<% else -%>
+#!/opt/puppetlabs/puppet/bin/ruby
+<% end -%>
+require 'yaml'
+
+<% if @kernel == 'windows' -%>
+last_run_summary = 'C:/Program Data/PuppetLabs/puppet/cache/state/last_run_summary.yaml'
+<% else -%>
+last_run_summary = '/opt/puppetlabs/puppet/cache/state/last_run_summary.yaml'
+<% end -%>
+
+begin
+  settings = YAML.load_file last_run_summary
+rescue
+  puts 'Lastrun file not found. Is this the first Puppet run?'
+  exit
+end
+
+if settings.has_key?('resources')
+  if settings['resources']['changed'] == 0 and settings['resources']['failed'] == 0
+    exit
+  else
+    pid = Process.fork
+    if pid.nil? then
+      exec('sleep 5 ; puppet agent -t --splay --splaylimit=5')
+    else
+    # In parent
+    Process.detach(pid)
+    end
+  end
+else
+  exit
+end

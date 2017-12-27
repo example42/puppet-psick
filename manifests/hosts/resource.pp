@@ -3,7 +3,14 @@ class psick::hosts::resource (
   Optional[Hash] $hosts    = {},
   Optional[Hash] $defaults = {},
   Boolean $use_defaults    = true,
+
+  Boolean $no_noop         = false,
 ) {
+
+  if $no_noop {
+    info('Forced no-noop mode.')
+    noop(false)
+  }
 
   $all_hosts = $use_defaults ? {
     true  => $hosts + $defaults,
@@ -12,7 +19,7 @@ class psick::hosts::resource (
 
   $all_hosts.each |$k,$v| {
     host { $k:
-      * => $v,
+      *    => $v,
     }
   }
 }

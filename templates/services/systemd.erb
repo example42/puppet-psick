@@ -1,0 +1,14 @@
+# File managed by Puppet
+[Unit]
+<% if @systemd_after -%>
+After=<%= @systemd_after %>
+<% end -%>
+<% if @systemd_before -%>
+Before=<%= @systemd_before %>
+<% end -%>
+
+[Service]
+ExecStart=<%= @path %>
+
+[Install]
+WantedBy=default.target

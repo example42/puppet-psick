@@ -1,2 +1,3 @@
 ---
 psick::puppet::pe_agent::config_file_path: 'c:/programdata/puppetlabs/puppet/etc/puppet.conf'
+psick::puppet::postrun::puppet_conf_path: 'c:/programdata/puppetlabs/puppet/etc/puppet.conf'

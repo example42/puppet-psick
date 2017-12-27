@@ -8,5 +8,6 @@ fixtures:
     "prometheus": "https://github.com/voxpupuli/puppet-prometheus"
     "systemd": "https://github.com/camptocamp/puppet-systemd"
     "archive": "https://github.com/voxpupuli/puppet-archive"
+    "noop": "https://github.com/trlinkin/trlinkin-noop"
   symlinks:
     "psick": "#{source_dir}"
