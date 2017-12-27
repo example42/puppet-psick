@@ -6,6 +6,10 @@
 
 * More works on jenkins and Jenkinsfile
 * psick::puppet::postrun_command management
+* Added no_noop parameter to tp and other profiles
+* Added psick::schedule profile
+* Added psick::lvm profile
+* Added defines to manage services scripts
 
 ## Release 0.5.5
 
