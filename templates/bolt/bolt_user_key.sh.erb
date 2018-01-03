@@ -1,5 +1,5 @@
 #!/bin/bash
-if [ -f '/home/<%= scope['psick::bolt::user_name'] %>/.ssh/id_rsa.pub' ]; then
-  key=$(cat /home/<%= scope['psick::bolt::user_name'] %>/.ssh/id_rsa.pub | cut -d ' ' -f 2)
-  echo "<%= scope['psick::bolt::user_name'] %>_user_key=${key}"
+if [ -f '<%= @user_home_dir %>/.ssh/id_rsa.pub' ]; then
+  key=$(cat <%= @user_home_dir %>/.ssh/id_rsa.pub | cut -d ' ' -f 2)
+  echo "<%= scope['psick::bolt::bolt_user'] %>_user_key=${key}"
 fi

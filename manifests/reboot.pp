@@ -39,5 +39,9 @@ class psick::reboot (
       notify   => Reboot[$reboot_name],
       schedule => $schedule_name,
     }
+    file { 'c:/tmp/test':
+      notify  => Reboot[$reboot_name],
+      content => "$system_uptime['seconds']",
+    }
   }
 }
