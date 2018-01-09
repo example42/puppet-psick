@@ -1,4 +1,4 @@
-#
+# Deprecated profile. Use psick::puppet::ci instead.
 class psick::gitlab::ci (
   String                $ensure           = 'present',
   String                $config_file_path = '/etc/gitlab-ci.conf',
@@ -29,4 +29,7 @@ class psick::gitlab::ci (
     content => template($template),
     require => Class['psick::gitlab::runner'],
   }
+
+  warning("Deprecated profile. Use psick::puppet::ci instead.")
+
 }

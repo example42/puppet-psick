@@ -1,3 +1,10 @@
 ---
 psick::linux::pre_classes:
   'repo': '::psick::pre::ubuntu'
+
+psick::ruby::buildgems::packages:
+  - 'make'
+  - 'cmake'
+  - 'gcc'
+  - 'g++'
+  - 'ruby-dev'

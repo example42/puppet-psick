@@ -2,7 +2,7 @@
 #
 class psick::puppet::gems (
   Enum['present','absent'] $ensure   = 'present',
-  Enum['none','client','master','developer','citest','cideploy'] $default_set = 'client',
+  Enum['none','client','master','developer','citest','cideploy','integration'] $default_set = 'client',
   Array $install_gems                = [ ],
   Array $install_options             = [ ],
   Boolean $install_system_gems       = false,
@@ -17,13 +17,17 @@ class psick::puppet::gems (
     noop(false)
   }
 
+  $minimal_gems = ['r10k','hiera-eyaml','deep_merge']
+  $minimal_test_gems = ['puppet-lint','rspec-puppet','rake','bundler','simplecov','minitest']
+
   $default_gems = $default_set ? {
     'none'      => [],
     'client'    => [],
-    'master'    => ['r10k','hiera-eyaml','deep_merge'],
-    'cideploy'  => ['r10k','hiera-eyaml','deep_merge'],
-    'citest'    => ['puppet-lint','rspec-puppet'],
-    'developer' => ['puppet-debug','puppet-blacksmith'],
+    'master'    => $minimal_gems,
+    'cideploy'  => $minimal_gems + $minimal_test_gems,
+    'citest'    => $minimal_gems + $minimal_test_gems,
+    'integration' => $minimal_gems + $minimal_test_gems + ['beaker','beaker-rspec','beaker-puppet_install_helper'],
+    'developer' => $minimal_gems + $minimal_test_gems + ['puppet-debug','puppet-blacksmith'],
   }
 
   $all_gems = $default_gems + $install_gems

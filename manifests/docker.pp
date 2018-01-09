@@ -12,15 +12,17 @@ class psick::docker (
 
   Array                   $profiles         = [],
 
+  Array                   $allowed_users    = [],
+
   Boolean                 $auto_restart     = true,
   Boolean                 $auto_conf        = false,
 
-  Variant[Undef,Hash]     $run                 = undef,
-  Variant[Undef,Hash]     $build               = undef,
-  Variant[Undef,Hash]     $test                = undef,
-  Variant[Undef,Hash]     $push                = undef,
+  Variant[Undef,Hash]     $run              = undef,
+  Variant[Undef,Hash]     $build            = undef,
+  Variant[Undef,Hash]     $test             = undef,
+  Variant[Undef,Hash]     $push             = undef,
 
-  String[1]               $data_module         = 'tinydata',
+  String[1]               $data_module      = 'tinydata',
 
   ) {
 
@@ -54,5 +56,13 @@ class psick::docker (
   }
   if $push {
     create_resources('psick::docker::push', $push )
+  }
+
+  $allowed_users.each | $u | {
+    exec { "Add $u to docker":
+      unless  => "grep docker /etc/group | grep ${u}",
+      require => Class[$install_class],
+      command => "usermod -a -G docker ${u}",
+    }
   }
 }
