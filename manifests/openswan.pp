@@ -16,7 +16,7 @@ class psick::openswan (
       contain ::psick::openswan::tp
       $connections.each |$k,$v| {
         psick::openswan::connection { $k:
-         * => $v,
+          * => $v,
         }
       }
       $content = template($setup_template)

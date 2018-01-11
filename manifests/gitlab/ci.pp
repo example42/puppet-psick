@@ -30,6 +30,6 @@ class psick::gitlab::ci (
     require => Class['psick::gitlab::runner'],
   }
 
-  warning("Deprecated profile. Use psick::puppet::ci instead.")
+  warning('Deprecated profile. Use psick::puppet::ci instead.')
 
 }

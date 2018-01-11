@@ -4,14 +4,14 @@
 # the command itself
 #
 class psick::puppet::postrun (
-  Psick::Ensure $ensure = present,
-  Optional[String] $command = undef,
-  Optional[String] $source = undef,
-  Optional[String] $content = undef,
-  Optional[String] $template = undef,
-  Optional[String] $epp = undef,
-  Optional[String] $path = undef,
   String $puppet_conf_path,
+  Psick::Ensure $ensure      = present,
+  Optional[String] $command  = undef,
+  Optional[String] $source   = undef,
+  Optional[String] $content  = undef,
+  Optional[String] $template = undef,
+  Optional[String] $epp      = undef,
+  Optional[String] $path     = undef,
 ){
 
   $manage_content = tp_content($content, $template, $epp)

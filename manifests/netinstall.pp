@@ -68,7 +68,7 @@ define psick::netinstall (
   $timeout             = '3600',
   $work_dir            = '/var/tmp',
   $path                = '/bin:/sbin:/usr/bin:/usr/sbin',
-  $extrsickcommand     = '',
+  $extract_command     = '',
   $preextract_command  = '',
   $postextract_command = '',
   $postextract_cwd     = '',

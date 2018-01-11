@@ -44,7 +44,7 @@ class psick::bolt::master (
       ensure   => $ensure,
       provider => 'puppet_gem',
     }
-  }  
+  }
 
   # Management of the user running bolt
   $user_home_dir = $user_home ? {
@@ -67,7 +67,7 @@ class psick::bolt::master (
   }
 
   $ssh_dir_require = $create_bolt_user ? {
-    true  => User[$::psick::bolt::bolt_user],  
+    true  => User[$::psick::bolt::bolt_user],
     false => undef,
   }
 
@@ -124,7 +124,7 @@ class psick::bolt::master (
     $nodes_query = "nodes { certname ~ '.*' }"
     $nodes = puppetdb_query($nodes_query)
     $nodes_list = $nodes.map |$node| { $node['certname'] }
-    $nodes_csv = join($nodes_list.sort,',') 
+    $nodes_csv = join($nodes_list.sort,',')
 
     file { "${user_home_dir}/nodes":
       ensure => $dir_ensure,
@@ -143,7 +143,7 @@ class psick::bolt::master (
     }
     $full_nodes_list_hash = $default_nodes_lists_hash + $nodes_list_hash
     $full_nodes_list_hash.each | $k,$v | {
-      file { "${user_home_dir}/nodes/$k":
+      file { "${user_home_dir}/nodes/${k}":
         * => $default_file_options + $v,
       }
     }

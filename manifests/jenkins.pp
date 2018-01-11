@@ -37,7 +37,7 @@ class psick::jenkins (
     'JENKINS_GROUP'  => '$NAME',
     'JENKINS_WAR'    => '/usr/share/$NAME/$NAME.war',
     'JENKINS_HOME'   => '/var/lib/$NAME',
-    'RUN_STANDALONE' => 'true',
+    'RUN_STANDALONE' => 'true', # lint:ignore:quoted_booleans
     'JENKINS_LOG'    => '/var/log/$NAME/$NAME.log',
     'MAXOPENFILES'   => '8192',
     'HTTP_PORT'      => '8080',
