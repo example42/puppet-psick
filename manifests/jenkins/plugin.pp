@@ -18,9 +18,9 @@ define psick::jenkins::plugin (
 
   if (!defined(File[$plugins_dir])) {
     file { [ $plugins_dir ]:
-      ensure  => directory,
-      owner   => $jenkins_user,
-      group   => $jenkins_group,
+      ensure => directory,
+      owner  => $jenkins_user,
+      group  => $jenkins_group,
     }
   }
   if (!defined(File["${jenkins_dir}/install_jenkins_plugin.sh"])) {
@@ -36,9 +36,9 @@ define psick::jenkins::plugin (
   # Allow plugins that are already installed to be enabled/disabled.
   if $enable == false {
     file { [ "${plugins_dir}/${name}.hpi.disabled", "${plugins_dir}/${name}.jpi.disabled" ]:
-      ensure  => present,
-      owner   => $jenkins_user,
-      notify  => Service[$jenkins_service],
+      ensure => present,
+      owner  => $jenkins_user,
+      notify => Service[$jenkins_service],
     }
   }
 

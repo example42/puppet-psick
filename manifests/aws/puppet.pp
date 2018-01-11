@@ -8,7 +8,7 @@ class psick::aws::puppet (
 
   $install_modules.each | $mod | {
     psick::puppet::module { $mod:
-      user   => $module_user, 
+      user   => $module_user,
     }
   }
 

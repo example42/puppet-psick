@@ -59,7 +59,7 @@ class psick::docker (
   }
 
   $allowed_users.each | $u | {
-    exec { "Add $u to docker":
+    exec { "Add ${u} to docker":
       unless  => "grep docker /etc/group | grep ${u}",
       require => Class[$install_class],
       command => "usermod -a -G docker ${u}",

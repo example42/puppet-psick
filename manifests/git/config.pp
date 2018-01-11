@@ -1,7 +1,7 @@
 # = Define: psick::git::config
 #
 # This define configures the gitconfig file, either for the specified
-# user, or, if provided, in the given path.
+# user, or, if provided, in the given path.
 #
 # == Parameters
 #

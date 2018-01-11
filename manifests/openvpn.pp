@@ -14,7 +14,7 @@ class psick::openvpn (
       contain ::psick::openvpn::tp
       $connections.each |$k,$v| {
         psick::openvpn::connection { $k:
-         * => $v,
+          * => $v,
         }
       }
     }
