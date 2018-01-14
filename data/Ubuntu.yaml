@@ -8,3 +8,4 @@ psick::ruby::buildgems::packages:
   - 'gcc'
   - 'g++'
   - 'ruby-dev'
+  - 'zlib1g-dev'
