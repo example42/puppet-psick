@@ -18,7 +18,7 @@ describe 'psick::puppet::tp' do
 
       describe 'with default params' do
         it { is_expected.to compile }
-        it { is_expected.to contain_tp__install('puppet').with(default_params) }
+        it { is_expected.to contain_tp__install('puppet-agent').with(default_params) }
       end
 
       describe 'with manage => false' do
@@ -30,7 +30,7 @@ describe 'psick::puppet::tp' do
       describe 'with ensure => absent' do
         let(:params) { { 'ensure' => 'absent' } }
 
-        it { is_expected.to contain_tp__install('puppet').with(default_params.merge('ensure' => 'absent')) }
+        it { is_expected.to contain_tp__install('puppet-agent').with(default_params.merge('ensure' => 'absent')) }
       end
 
     end

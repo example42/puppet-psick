@@ -18,4 +18,3 @@ ansible https://github.com/example42/pdk-module-template-tp-profile-minimal-test
 sysdig https://github.com/example42/pdk-module-template-tp-profile-minimal-tests
 puppetdb https://github.com/example42/pdk-module-template-tp-profile-minimal-tests
 puppetserver https://github.com/example42/pdk-module-template-tp-profile-minimal-tests
-puppet https://github.com/example42/pdk-module-template-tp-profile-minimal-tests
