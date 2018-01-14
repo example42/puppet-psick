@@ -22,7 +22,7 @@ class psick::schedule (
 
     schedule { 'working_days':
       weekday => ['mon','tues','wed','thurs','fri'],
-      repeat => 2,
+      repeat  => 2,
     }
 
     schedule { 'nightly_maintenance':

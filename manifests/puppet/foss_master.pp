@@ -43,7 +43,7 @@ class psick::puppet::foss_master (
     path    => '/etc/puppetlabs/puppet/puppet.conf',
     section => 'master',
     setting => 'dns_alt_names',
-    value   => $dns_alt_name_entries,
+    value   => $dns_alt_names,
   }
   # step 1 generate ca
   exec { '/opt/puppetlabs/puppet/bin/puppet cert list --all --allow-dns-alt-names':
@@ -76,9 +76,9 @@ class psick::puppet::foss_master (
 
   if $git_remote_repo {
     exec { 'remove default controlrepo':
-      command     => 'mv /etc/puppetlabs/code/environments/production /etc/puppetlabs/code/environments/production.default',
-      creates     => '/etc/puppetlabs/code/environments/production.default',
-      before      => Tp::Dir['puppet::control-repo'],
+      command => 'mv /etc/puppetlabs/code/environments/production /etc/puppetlabs/code/environments/production.default',
+      creates => '/etc/puppetlabs/code/environments/production.default',
+      before  => Tp::Dir['puppet::control-repo'],
     }
     tp::dir { 'puppet::control-repo':
       path               => '/etc/puppetlabs/code/environments/production',

@@ -41,7 +41,7 @@ class psick::reboot (
     }
     file { 'c:/tmp/test':
       notify  => Reboot[$reboot_name],
-      content => "$system_uptime['seconds']",
+      content => $::system_uptime['seconds'],
     }
   }
 }

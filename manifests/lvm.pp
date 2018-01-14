@@ -21,7 +21,7 @@ class psick::lvm (
 
   $all_disks = keys($facts['disks'])
   $available_disks = delete($all_disks, $all_disks[0])
-  $real_pvs =  $available_disks.map|$k| { "/dev/$k" }
+  $real_pvs =  $available_disks.map|$k| { "/dev/${k}" }
 
   if $available_disks != [] and $create_default_vg {
     lvm::volume_group { $default_vg_name:

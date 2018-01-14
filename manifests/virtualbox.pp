@@ -26,7 +26,7 @@ class psick::virtualbox (
   ::tp::install { 'virtualbox':
     ensure      => $ensure,
     auto_repo   => $auto_prereq,
-    auto_prereq => $auto_prereq,    
+    auto_prereq => $auto_prereq,
   }
 
   if $config_file_template != '' {

@@ -1,4 +1,4 @@
-# Define: php::pear::module
+# Define: psick::php::pear::module
 #
 # Installs the defined php pear component
 #
@@ -8,7 +8,7 @@
 #   If set to "no" it installs the module via pear command
 #
 # [*install_options*]
-#   An array of package manager install options. See $php::install_options
+#   An array of package manager install options. See $psick::php::install_options
 #
 # [*preferred_state*]
 #   (default="stable") - Define which preferred state to use when installing
@@ -19,11 +19,11 @@
 #   be installed. (when use_package=false)
 #
 # Usage:
-# php::pear::module { packagename: }
+# psick::php::pear::module { packagename: }
 # Example:
-# php::pear::module { Crypt-CHAP: }
+# psick::php::pear::module { Crypt-CHAP: }
 #
-define php::pear::module (
+define psick::php::pear::module (
   $service             = '',
   $use_package         = true,
   $install_options     = [],
@@ -38,7 +38,7 @@ define php::pear::module (
   $timeout             = 300
   ) {
 
-  include php::pear
+  include psick::php::pear
 
   $bool_use_package = any2bool($use_package)
   $bool_alldeps = any2bool($alldeps)
@@ -73,27 +73,27 @@ define php::pear::module (
   }
 
   $real_service = $service ? {
-    ''      => $php::service,
+    ''      => $psick::php::service,
     default => $service,
   }
 
   $real_service_autorestart = $service_autorestart ? {
     true    => "Service[${real_service}]",
     false   => undef,
-    ''      => $php::service_autorestart ? {
+    ''      => $psick::php::service_autorestart ? {
       true    => "Service[${real_service}]",
       false   => undef,
     }
   }
 
   $real_module_prefix = $module_prefix ? {
-    ''      => $php::pear_module_prefix,
+    ''      => $psick::php::pear_module_prefix,
     default => $module_prefix,
   }
   $package_name = "${real_module_prefix}${name}"
 
   $real_install_options = $install_options ? {
-    ''      => $php::install_options,
+    ''      => $psick::php::install_options,
     default => $install_options,
   }
 
@@ -110,7 +110,7 @@ define php::pear::module (
     default: {
       if $repository != 'pear.php.net' {
         if !defined (Php::Pear::Config['auto_discover']) {
-          php::pear::config { 'auto_discover':
+          psick::php::pear::config { 'auto_discover':
             value => '1',
           }
         }

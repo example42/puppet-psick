@@ -76,8 +76,8 @@ define psick::docker::tp_build (
   # Dockerfile creation
   exec { "mkdir -p ${basedir_path}/root":
     creates => "${basedir_path}/root",
-  } -> # lint:ignore:arrow_on_right_operand_line
-  file { [ "${basedir_path}/Dockerfile" , "${basedir_path}/root/Dockerfile" ]:
+  }
+  -> file { [ "${basedir_path}/Dockerfile" , "${basedir_path}/root/Dockerfile" ]:
     ensure  => $ensure,
     content => template($template),
   }
