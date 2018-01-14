@@ -32,7 +32,6 @@ describe 'psick::mariadb::tp' do
 
         it { is_expected.to contain_tp__install('mariadb').with(default_params.merge('ensure' => 'absent')) }
       end
-
     end
   end
 end

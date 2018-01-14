@@ -32,7 +32,6 @@ describe 'psick::ansible::tp' do
 
         it { is_expected.to contain_tp__install('ansible').with(default_params.merge('ensure' => 'absent')) }
       end
-
     end
   end
 end
