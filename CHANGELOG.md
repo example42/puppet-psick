@@ -4,6 +4,8 @@
 
 ## Release 0.5.6
 
+* psick::gitlab::ci profile
+* Puppet profiles from example42 puppet module
 * More works on jenkins and Jenkinsfile
 * psick::puppet::postrun_command management
 * Added no_noop parameter to tp and other profiles
