@@ -32,7 +32,6 @@ describe 'psick::php::tp' do
 
         it { is_expected.to contain_tp__install('php').with(default_params.merge('ensure' => 'absent')) }
       end
-
     end
   end
 end

@@ -32,7 +32,6 @@ describe 'psick::apache::tp' do
 
         it { is_expected.to contain_tp__install('apache').with(default_params.merge('ensure' => 'absent')) }
       end
-
     end
   end
 end

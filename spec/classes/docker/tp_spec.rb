@@ -32,7 +32,6 @@ describe 'psick::docker::tp' do
 
         it { is_expected.to contain_tp__install('docker').with(default_params.merge('ensure' => 'absent')) }
       end
-
     end
   end
 end

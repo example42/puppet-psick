@@ -16,3 +16,4 @@ psick::ruby::buildgems::packages:
   - 'gcc'
   - 'gcc-c++'
   - 'ruby-devel'
+  - 'zlib-devel'
