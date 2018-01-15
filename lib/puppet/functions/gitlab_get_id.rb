@@ -10,9 +10,9 @@ require 'gitlab'
 GITLAB_CONFIG='/etc/gitlab-cli.conf'
 config = {}
 File.foreach GITLAB_CONFIG do |line|
-  k = line.split("=")[0].gsub("\n",'') if line =~/=/
-  v = line.split("=")[1].gsub("\n",'') if line =~/=/
-  config.store(k,v)
+  k = line.split('=')[0].gsub("\n",'') if line =~/=/
+  v = line.split('=')[1].gsub("\n",'') if line =~/=/
+  config.store(k, v)
 end
 
 Puppet::Functions.create_function(:gitlab_get_id, Puppet::Functions::InternalFunction) do

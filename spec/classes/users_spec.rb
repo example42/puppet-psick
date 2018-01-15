@@ -35,7 +35,7 @@ describe 'psick::users', :type => :class do
 
         describe 'Root user is created'
         it { is_expected.to contain_user('root').with(
-            'password' => 'test_root_pw'
+          'password' => 'test_root_pw'
         ) }
       end
 
@@ -54,32 +54,32 @@ describe 'psick::users', :type => :class do
 
       context 'with :users_hash defined' do
         let(:params) { {
-            :users_hash => {
-                'test_user1' => {
-                    'name' => 'user1'
-                },
-                'test_user2' => {
-                    'name' => 'user2'
-                }
-        }}
-        }
+          :users_hash => {
+            'test_user1' => {
+              'name' => 'user1'
+            },
+            'test_user2' => {
+              'name' => 'user2'
+            }
+          }
+        } }
+
         describe
         it { is_expected.to have_user_resource_count(2) }
       end
 
       context('with :_users_hash defined') do
         let(:params) { {
-            users_hash: {
-                'testmanaged_user1' => {
-                    'name' => 'managed_user1'
-                },
-                'test_user2' => {
-                    'name' => 'managed_user2'
-                }
+          users_hash: {
+            'testmanaged_user1' => {
+              'name' => 'managed_user1'
             },
-            module: 'psick'
-          }
-        }
+            'test_user2' => {
+              'name' => 'managed_user2'
+            },
+          },
+          module: 'psick'
+        } }
         it { is_expected.to have_psick__users__managed_resource_count(2) }
       end
 
@@ -93,5 +93,3 @@ describe 'psick::users', :type => :class do
     end
   end
 end
-
-

@@ -20,7 +20,7 @@ describe 'psick', type: :class do
         it { is_expected.to have_class_count(4) }
         it { is_expected.to have_resource_count(0) }
 
-        it { is_expected.to contain_class('psick::pre').that_comes_before(['Class[psick::base]','Class[psick::profiles]']) }
+        it { is_expected.to contain_class('psick::pre').that_comes_before(['Class[psick::base]', 'Class[psick::profiles]']) }
         it { is_expected.to contain_class('psick::base').that_comes_before('Class[psick::profiles]') }
         it { is_expected.to contain_class('psick::profiles') }
       end
@@ -55,7 +55,6 @@ describe 'psick', type: :class do
         it { is_expected.to have_reboot_resource_count(0) }
         it { is_expected.to contain_psick__puppet__set_external_fact('firstrun').without('notify') }
       end
-
     end
   end
 end
