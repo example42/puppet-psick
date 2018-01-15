@@ -14,7 +14,8 @@ describe 'psick::firstrun', type: :class do
       end
       let(:params) do {
         'manage' => true,
-      } end
+      }
+      end
 
       it { is_expected.to compile.with_all_deps }
 
@@ -29,6 +30,7 @@ describe 'psick::firstrun', type: :class do
           manage: true,
           linux_reboot: true,
         } end
+
         it { is_expected.to contain_reboot('Rebooting') }
         it { is_expected.to contain_psick__puppet__set_external_fact('firstrun').with('notify' => 'Reboot[Rebooting]', 'value' => 'done') }
       end
@@ -113,7 +115,6 @@ describe 'psick::firstrun', type: :class do
         it { is_expected.not_to contain_reboot('Rebooting') }
         it { is_expected.to contain_psick__puppet__set_external_fact('firstrun').without(['notify']) }
       end
-
     end
   end
 end

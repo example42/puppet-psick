@@ -7,7 +7,7 @@ describe 'psick::prometheus', type: :class do
   let(:pre_condition) { "#{pre_cond_exec}" }
   let(:facts) { facts }
 
-  on_supported_os.select { |_, f| f[:os]['name'] == 'RedHat' and f[:os]['release']['major'] == '7' }.each do |os, f|
+  on_supported_os.select { |_, f| f[:os]['name'] == 'RedHat' && f[:os]['release']['major'] == '7' }.each do |os, f|
     context "on #{os}" do
       let(:facts) do
         f.merge(super())

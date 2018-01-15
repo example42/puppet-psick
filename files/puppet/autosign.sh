@@ -3,7 +3,6 @@
 PSK_FILE=/etc/puppetlabs/puppet/autosign_psk
 
 csr=$(< /dev/stdin)
-certname=$1
 
 # Get the certificate extension with OID $1 from the csr
 function extension {
