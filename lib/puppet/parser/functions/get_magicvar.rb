@@ -4,7 +4,7 @@
 # This define return the value of the the provided var name
 #
 module Puppet::Parser::Functions
-  newfunction(:get_magicvar, type: rvalue, doc: <<-EOS
+  newfunction(:get_magicvar, :type => :rvalue, :doc => <<-EOS
   This returns the value of the input variable. For example if you input role
   it returns the value of $role'.
   EOS
