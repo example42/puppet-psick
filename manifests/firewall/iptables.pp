@@ -33,6 +33,7 @@ class psick::firewall::iptables (
   Enum['DROP','ACCEPT'] $default_forward    = 'ACCEPT',
   Enum['DROP','ACCEPT'] $default_forward_v6 = 'DROP',
   Boolean $log_filter_defaults              = true,
+  Boolean $manage_ipv6                      = true,
 ) {
 
   package { $package_name:
@@ -47,21 +48,23 @@ class psick::firewall::iptables (
     mode    => '0640',
   }
 
-  file { $config_file_path_v6:
-    ensure  => file,
-    notify  => Service[$service_name_v6],
-    content => template($rules_template_v6),
-    mode    => '0640',
-  }
-
   service { $service_name:
     ensure => running,
     enable => true,
   }
 
-  service { $service_name_v6:
-    ensure => running,
-    enable => true,
+  if $manage_ipv6 {
+    service { $service_name_v6:
+      ensure => running,
+      enable => true,
+    }
+
+    file { $config_file_path_v6:
+      ensure  => file,
+      notify  => Service[$service_name_v6],
+      content => template($rules_template_v6),
+      mode    => '0640',
+    }
   }
 
   case $::osfamily {
