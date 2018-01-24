@@ -8,7 +8,7 @@ fi
 
 declare puppet_options
 puppet_options="--detailed-exitcodes"
-[[ -n "${PT_puppet_master}" ]] && puppet_options="${puppet_options} --master ${PT_puppet_master}"
+[[ -n "${PT_puppet_master}" ]] && puppet_options="${puppet_options} --server ${PT_puppet_master}"
 [[ -n "${PT_verbose}" ]] && puppet_options="${puppet_options} --verbose"
 [[ -n "${PT_debug}" ]] && puppet_options="${puppet_options} --debug"
 [[ -n "${PT_noop}" ]] && puppet_options="${puppet_options} --noop"
