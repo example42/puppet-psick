@@ -1,6 +1,7 @@
 ## Changelog
 
 * Your contribution here.
+* Use correct puppet agent parameter for server - [@tuxmea](https://github.com/tuxmea).
 
 ## Release 0.5.6
 
