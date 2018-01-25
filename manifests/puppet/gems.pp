@@ -1,15 +1,17 @@
 # This class installs the gems needed to run Puppet with this control-repo
 #
 class psick::puppet::gems (
-  Enum['present','absent'] $ensure   = 'present',
+  Enum['present','absent'] $ensure     = 'present',
   Enum['none','client','master','developer','citest','cideploy','integration'] $default_set = 'client',
-  Array $install_gems                = [ ],
-  Array $install_options             = [ ],
-  Boolean $install_system_gems       = false,
-  Boolean $install_puppet_gems       = true,
-  Boolean $install_puppetserver_gems = false,
-
-  Boolean $no_noop                   = false,
+  Array $install_gems                  = [ ],
+  Array $install_options               = [ ],
+  Boolean $install_system_gems         = false,
+  Boolean $install_puppet_gems         = true,
+  Boolean $install_puppetserver_gems   = false,
+  Boolean $install_rbenv_gems          = false,
+  Optional[String] $rbenv_ruby_version = undef,       
+  Boolean $no_noop                     = false,
+  Boolean $auto_prereq                 = $::psick::auto_prereq,
 ) {
 
   if $no_noop {
@@ -28,6 +30,10 @@ class psick::puppet::gems (
     'citest'    => $minimal_gems + $minimal_test_gems,
     'integration' => $minimal_gems + $minimal_test_gems + ['beaker','beaker-rspec','beaker-puppet_install_helper'],
     'developer' => $minimal_gems + $minimal_test_gems + ['puppet-debug','puppet-blacksmith'],
+  }
+
+  if $install_rbenv_gems and $auto_prereq {
+    include psick::rbenv
   }
 
   $all_gems = $default_gems + $install_gems
@@ -59,7 +65,12 @@ class psick::puppet::gems (
         provider        => 'puppetserver_gem',
       }
     }
+    if $install_rbenv_gems and $gem != 'bundler' {
+      # bundler gem already installed by rbenv module
+      rbenv::gem { $gem:
+        ruby_version    => pick($rbenv_ruby_version,$::psick::rbenv::default_ruby_version),
+        skip_docs       => true,
+      }
+    }
   }
-
-
 }
