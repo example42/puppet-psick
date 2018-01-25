@@ -1,8 +1,7 @@
-# This profile triggers a system reboot
+# This profile triggers a system reboot using puppetlabs-reboot
+# module.
 #
-# This profiles uses puppetfile/reboot module to manage
-# system reboots.
-#
+# 
 # @example Enable firstrun mode and set reboot class on windows
 #   and linux
 #   firstrun_enable: true
@@ -38,10 +37,6 @@ class psick::reboot (
     anchor { 'reboot':
       notify   => Reboot[$reboot_name],
       schedule => $schedule_name,
-    }
-    file { 'c:/tmp/test':
-      notify  => Reboot[$reboot_name],
-      content => $::system_uptime['seconds'],
     }
   }
 }

@@ -1,4 +1,4 @@
-# @class puppetserver
+# @class psick::puppetserver
 #
 class psick::puppetserver (
 
@@ -6,6 +6,11 @@ class psick::puppetserver (
   Enum['psick']              $module = 'psick',
 
   Optional[String]  $r10k_remote_repo     = undef,
+  Optional[String]  $r10k_template        = 'psick/puppet/r10k/r10k.yaml.erb',
+  Hash $r10k_options                      = {},
+  Boolean $r10k_configure_webhook         = true,
+  Boolean $r10k_autodeploy                = true,
+
   Optional[String]  $git_remote_repo      = undef,
   String            $dns_alt_names        = "puppet, puppet.${::domain}",
   Boolean           $remove_global_hiera_yaml = false,  
@@ -39,21 +44,54 @@ class psick::puppetserver (
     logoutput => true,
   }
 
-  if $r10k_remote_repo {
-    class { 'r10k':
-      remote   => $r10k_remote_repo,
-      provider => 'puppet_gem',
+  if $r10k_remote_repo or $r10k_options {
+    # r10k gem is expected to be already installed
+    # for example by psick::puppet::gems
+    # He we configure just r10k.yaml and eventually the webhook
+    # using puppetlabs-r10k module
+    $r10k_sources  = {
+      'puppet' => {
+        'remote'  => $r10k_remote_repo,
+        'basedir' => '/etc/puppetlabs/code/environments',
+      }
     }
-    class {'r10k::webhook::config':
-      enable_ssl      => false,
-      use_mcollective => false,
-      require         => Class['r10k'],
+    $r10k_default_options = {
+      postrun         => [], 
+      cachedir        => "${facts['puppet_vardir']}/r10k", 
+      sources         => $r10k_sources,
+      source_keys     => keys($r10k_sources),
+      deploy_settings => {},
+      git_settings    => {},
+      forge_settings  => {},
     }
-    class {'r10k::webhook':
-      use_mcollective => false,
-      user            => 'root',
-      group           => '0',
-      require         => Class['r10k::webhook::config'],
+    $r10k_real_options = $r10k_default_options + $r10k_options
+    if $r10k_template {
+      file { '/etc/puppetlabs/r10k':
+        ensure => directory,
+      }
+      file { '/etc/puppetlabs/r10k/r10k.yaml':
+        ensure  => present,
+        content => template($r10k_template),
+      }
+    }
+    if $r10k_autodeploy and $r10k_template {
+      exec { 'r10k deploy environment':
+        refreshonly => true,
+        subscribe   => File['/etc/puppetlabs/r10k/r10k.yaml'],
+      }
+    }
+    if $r10k_configure_webhook {
+      class {'r10k::webhook::config':
+        enable_ssl      => false,
+        use_mcollective => false,
+        require         => Class['r10k'],
+      }
+      class {'r10k::webhook':
+        use_mcollective => false,
+        user            => 'root',
+        group           => '0',
+        require         => Class['r10k::webhook::config'],
+      }
     }
   }
 

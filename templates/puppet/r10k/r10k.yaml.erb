@@ -1,0 +1,32 @@
+---
+<% if @r10k_real_options['postrun'] and @r10k_real_options['postrun'].is_a?(Array) -%>
+:postrun: [<%= @r10k_real_options['postrun'].map{ |s| "\"#{s}\"" }.join(', ') %>]
+<% end -%>
+:cachedir: <%= @r10k_real_options['cachedir'] %>
+<% unless @r10k_real_options['sources'].empty? -%>
+:sources:
+<% @r10k_real_options['source_keys'].sort.each do |source| -%>
+  <%=source-%>:
+<% @r10k_real_options['sources'][source].sort.each do |key,value| -%>
+    <%=key-%>: <%=value%>
+<% end -%>
+<% end -%>
+<% end -%>
+<% if !@r10k_real_options['deploy_settings'].empty? -%>
+deploy:
+<% @r10k_real_options['deploy_settings'].sort.each do |key, value| -%>
+  <%=key-%>: <%=value%>
+<% end -%>
+<% end -%>
+<% if !@r10k_real_options['git_settings'].empty? -%>
+git:
+<% @r10k_real_options['git_settings'].sort.each do |key, value| -%>
+  <%=key-%>: <%=value%>
+<% end -%>
+<% end -%>
+<% if !@r10k_real_options['forge_settings'].empty? -%>
+forge:
+<% @r10k_real_options['forge_settings'].sort.each do |key, value| -%>
+  <%=key-%>: <%=value%>
+<% end -%>
+<% end -%>
