@@ -20,7 +20,7 @@
 #   may use this value.
 # @param primary_ip The server primary IP address. Default value is
 #   the value of the $::networking['ip'] fact.
-# @param mgmt_interface # The management interface of the server. Default value is
+# @param mgmt_interface The management interface of the server. Default value is
 #   the value of the $::networking['primary'] fact.
 # @param timezone The timezone to set on the system. Single entry point used by
 #   some PSICK profiles.
@@ -40,16 +40,16 @@
 #   other psick profiles. Customise as needed.
 #
 # @example Sample data for proxy server hash
-# psick::servers:
-#   proxy:
-#     host: proxy.example.com
-#     port: 3128
-#     user: john    # Optional
-#     password: xxx # Optional
-#     no_proxy:
-#       - localhost
-#       - "%{::domain}"
-#     scheme: http
+#   psick::servers:
+#     proxy:
+#       host: proxy.example.com
+#       port: 3128
+#       user: john    # Optional
+#       password: xxx # Optional
+#       no_proxy:
+#         - localhost
+#         - "%{::domain}"
+#       scheme: http
 #
 class psick (
 
