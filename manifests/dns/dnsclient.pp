@@ -9,8 +9,8 @@
 #   - 'timeout:1'
 # dnsclient::search:
 #   - my.domain
-# dnsclient::domain:
-#   - my.domain
+# dnsclient::domain: my.domain
+#
 # Note that all nameservers, options, search amd sortlist all require an array
 # as argument
 class psick::dns::dnsclient {
