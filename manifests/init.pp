@@ -9,13 +9,18 @@
 # @param manage If to actually manage the resources of a class. This allows
 #   to skip management of resources even if classes are included. Used
 #   to avoid to manage some resources when building Docker images.
-# @auto_prereq If to automtically manage prerequisites. Set to false here to 
+# @param auto_prereq If to automtically manage prerequisites. Set to false here to 
 #   apply this value for all the PSICK profiles that honour this global
 #   setting. Use when you have duplicated resources.
-# @auto_conf Which autoconfiguration layout to use. Default is 'none', if you
+# @param auto_conf Which autoconfiguration layout to use. Default is 'none', if you
 #   set 'hardened' some hardened configurations are enforced by default
-# @enable_firstrun If to enable firstrun mode, a special one-time only, Puppet
+# @param enable_firstrun If to enable firstrun mode, a special one-time only, Puppet
 #   run where some specific, prerequisites, classes are applied.
+# @param noop_mode Psick's noop mode. Looks for the hiera key noop_mode to check
+#   if to enable noop mode in the module itself. The same is done on the default
+#   psick-control repo. Note that if noop_mode is set to true here (or in
+#   Hiera's noop_mode key) the no-noop params in the psick profiles are not
+#   valid: If noop_mode is true, noop is enforced also where no-noop is true.
 # @param is_cluster Defines if the server is a cluster member. Some PSICK profiles
 #   may use this value.
 # @param primary_ip The server primary IP address. Default value is
@@ -58,6 +63,7 @@ class psick (
   Boolean $auto_prereq                             = true,
   Psick::Autoconf $auto_conf                       = 'none',
   Boolean $enable_firstrun                         = false,
+  Boolean $noop_mode                               = lookup('noop_mode', Boolean,'first',false),
 
   # General network settings
   Boolean $is_cluster = false,
