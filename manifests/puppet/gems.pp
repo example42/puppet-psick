@@ -67,9 +67,14 @@ class psick::puppet::gems (
     }
     if $install_rbenv_gems and $gem != 'bundler' {
       # bundler gem already installed by rbenv module
+      $rbenv_require = $auto_prereq ? {
+        true  => Class['psick::rbenv'],
+        false => undef,
+      }
       rbenv::gem { $gem:
-        ruby_version    => pick($rbenv_ruby_version,$::psick::rbenv::default_ruby_version),
-        skip_docs       => true,
+        ruby_version => pick($rbenv_ruby_version,$::psick::rbenv::default_ruby_version),
+        skip_docs    => true,
+        require      => $rbenv_require,
       }
     }
   }
