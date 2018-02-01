@@ -9,5 +9,6 @@ fixtures:
     "systemd": "https://github.com/camptocamp/puppet-systemd"
     "archive": "https://github.com/voxpupuli/puppet-archive"
     "noop": "https://github.com/trlinkin/trlinkin-noop"
+    "rbenv": "https://github.com/justindowning/puppet-rbenv"
   symlinks:
     "psick": "#{source_dir}"
