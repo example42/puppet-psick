@@ -16,7 +16,7 @@ fixture_path = File.expand_path(File.join(__FILE__, '..', 'fixtures'))
 RSpec.configure do |c|
   c.module_path = File.join(fixture_path, 'modules')
   c.hiera_config = File.expand_path(File.join(fixture_path, '../fixtures/hiera.yaml'))
-
+  c.strict_variables = true
   # Coverage generation
   c.after(:suite) do
     RSpec::Puppet::Coverage.report!
