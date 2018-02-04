@@ -38,7 +38,7 @@ define psick::docker::run (
   ) {
 
   $sanitised_title = $title
-  # $sanitised_title = regsubst($title, '[^0-9A-Za-z.\-]', '-', 'G')
+  # $sanitised_title = regsubst($title, '/', '-', 'G')
 
   $username_prefix = $username ? {
     ''      => $::psick::docker::username ? {
