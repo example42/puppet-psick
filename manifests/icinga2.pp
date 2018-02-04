@@ -1,7 +1,7 @@
 # This class manages the installation and initialisation of icinga2
 #
 # @param ensure If to install or remove icinga2
-# @param auto_prerequisites If to automatically install all the prerequisites
+# @param auto_prereq If to automatically install all the prerequisites
 #                           resources needed to install the runner
 # @param template The path to the erb template (as used in template()) to use
 #                 to populate the Runner configuration file. Note that if you
@@ -11,7 +11,7 @@
 #
 class psick::icinga2 (
   String                $ensure      = 'present',
-  Boolean               $auto_prerequisites = true,
+  Boolean               $auto_prereq = true,
   Optional[String]      $template    = undef,
   Hash                  $options     = { },
   Boolean        $install_icinga_cli = false,
@@ -27,7 +27,7 @@ class psick::icinga2 (
   $real_options = $options_default + $options
   ::tp::install { 'icinga2' :
     ensure             => $ensure,
-    auto_prerequisites => $auto_prerequisites,
+    auto_prereq => $auto_prereq,
   }
 
   if $template {
