@@ -4,7 +4,7 @@
 # @param ensure Define if to install (present), remote (absent) or the version
 #               of the octocatalog-diff gem
 # @param auto_prereq Define if to automatically install the prerequisites
-#                           needed by octocatalog-diff
+#                    needed by octocatalog-diff
 # @param template The path of the erb template (as used in template()) to use
 #                 as content for the octocatalog-diff configuration file
 # @param options An open hash of options you can use in your template. Note that
@@ -17,13 +17,13 @@
 # @param run_as_user The user octocatalog-diff is supposed to be executed as
 #
 class psick::ci::octocatalog (
-  String           $ensure             = 'present',
-  Boolean          $auto_prereq = false,
-  Optional[String] $template           = undef,
-  Hash             $options            = { },
-  Optional[String] $git_repo           = undef,
-  String           $git_repo_dir       = '/srv/control-repo',
-  String           $run_as_user        = 'root', # In CI setups set this to the CI user
+  String           $ensure       = 'present',
+  Boolean          $auto_prereq  = false,
+  Optional[String] $template     = undef,
+  Hash             $options      = { },
+  Optional[String] $git_repo     = undef,
+  String           $git_repo_dir = '/srv/control-repo',
+  String           $run_as_user  = 'root', # In CI setups set this to the CI user
 ) {
 
   if $run_as_user =='root' {
@@ -56,7 +56,7 @@ class psick::ci::octocatalog (
   }
   $octocatalog_options = $options_default + $options
   ::tp::install { 'octocatalog-diff' :
-    ensure             => $ensure,
+    ensure      => $ensure,
     auto_prereq => $auto_prereq,
   }
 
