@@ -1,7 +1,7 @@
 # This class manages the installation and initialisation of rundeck
 #
 # @param ensure If to install or remove rundeck
-# @param auto_prerequisites If to automatically install all the prerequisites
+# @param auto_prereq If to automatically install all the prerequisites
 #                           resources needed to install rundeck, if defined in tinydata
 # @param template The path to the erb template (as used in template()) to use
 #                 to populate the main configuration file.
@@ -11,7 +11,7 @@
 # 
 class psick::rundeck (
   String           $ensure             = 'present',
-  Boolean          $auto_prerequisites = true,
+  Boolean          $auto_prereq = true,
   Optional[String] $template           = undef,
   Optional[String] $init_template      = undef,
   Hash             $options            = { },
@@ -30,7 +30,7 @@ class psick::rundeck (
 
   ::tp::install { 'rundeck' :
     ensure             => $ensure,
-    auto_prerequisites => $auto_prerequisites,
+    auto_prereq => $auto_prereq,
   }
 
   if $template {

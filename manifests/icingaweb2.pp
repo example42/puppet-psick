@@ -1,7 +1,7 @@
 # This class manages the installation and initialisation of icingaweb2
 #
 # @param ensure If to install or remove icingaweb2
-# @param auto_prerequisites If to automatically install all the prerequisites
+# @param auto_prereq If to automatically install all the prerequisites
 #                           resources needed to install the runner
 # @param template The path to the erb template (as used in template()) to use
 #                 to populate the Runner configuration file. Note that if you
@@ -13,7 +13,7 @@ class psick::icingaweb2 (
   String                $ensure          = 'present',
   Optional[String]      $webserver_class = '::psick::apache::tp',
   Optional[String]      $dbserver_class  = '::psick::mariadb::tp',
-  Boolean               $auto_prerequisites = true,
+  Boolean               $auto_prereq = true,
   Optional[String]      $template        = undef,
   Hash                  $options          = { },
   Optional[Enum['mysql','pgsql']] $db_backend = 'mysql',
@@ -34,7 +34,7 @@ class psick::icingaweb2 (
   $real_options = $options_default + $options
   ::tp::install { 'icingaweb2' :
     ensure             => $ensure,
-    auto_prerequisites => $auto_prerequisites,
+    auto_prereq => $auto_prereq,
   }
 
   if $template {
