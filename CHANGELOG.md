@@ -3,6 +3,12 @@
 * Your contribution here.
 * Use correct puppet agent parameter for server - [@tuxmea](https://github.com/tuxmea).
 
+## Release 0.5.8
+
+* Global renaming auto_prerequisites to auto_prereq #61
+* Added force_ordering param to psick #55
+* Docs, test and addons to psick::puppet::gems and psick::rbenv #50 #47
+
 ## Release 0.5.7
 
 * psick::rbenv profile

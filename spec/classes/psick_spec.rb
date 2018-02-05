@@ -55,6 +55,19 @@ describe 'psick', type: :class do
         it { is_expected.to have_reboot_resource_count(0) }
         it { is_expected.to contain_psick__puppet__set_external_fact('firstrun').without('notify') }
       end
+
+      describe 'with force_ordering = true' do
+        let(:params) do
+          { force_ordering: true }
+        end
+        it { is_expected.to compile.with_all_deps }
+        it { is_expected.to have_class_count(4) }
+        it { is_expected.to have_resource_count(0) }
+
+        #it { is_expected.to contain_class('psick::pre').that_not_comes_before(['Class[psick::base]', 'Class[psick::profiles]']) }
+        #it { is_expected.to contain_class('psick::base').that_not_comes_before('Class[psick::profiles]') }
+      end
+
     end
   end
 end

@@ -43,6 +43,10 @@
 #   other psick profiles. Customise as needed.
 # @param monitor An hash of general monitor settings. Can be used and honoured by
 #   other psick profiles. Customise as needed.
+# @param force_ordering When enabled, as default, the psick module enforces
+#   ordering of the classes included in psick::pre -> psick::base ->
+#   psick::profiles. Disable only if you have unresolvable dependency loops or
+#   if you don't want the PSICK class provisioning staged in different phases.
 #
 # @example Sample data for proxy server hash
 #   psick::servers:
@@ -77,6 +81,7 @@ class psick (
   Hash $tp                                         = {},
   Hash $firewall                                   = {},
   Hash $monitor                                    = {},
+  Boolean $force_ordering                          = true,
 
 ) {
 
@@ -108,7 +113,9 @@ class psick (
     contain ::psick::pre
     contain ::psick::base
     contain ::psick::profiles
-    Class['psick::pre'] -> Class['psick::base'] -> Class['psick::profiles']
+    if $force_ordering {
+      Class['psick::pre'] -> Class['psick::base'] -> Class['psick::profiles']
+    }
   } else {
     contain ::psick::firstrun
     notify { "This catalog should be applied only at the first Puppen run\n": }

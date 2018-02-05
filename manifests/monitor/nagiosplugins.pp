@@ -2,12 +2,12 @@
 #
 class psick::monitor::nagiosplugins (
   Variant[Boolean,String] $ensure = present,
-  Boolean     $auto_prerequisites = true,
+  Boolean $auto_prereq = $::psick::auto_prereq,
 ) {
 
   ::tp::install { 'nagios-plugins':
-    ensure             => $ensure,
-    auto_prerequisites => $auto_prerequisites,
+    ensure      => $ensure,
+    auto_prereq => $auto_prereq,
   }
 
 }

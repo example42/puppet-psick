@@ -40,8 +40,8 @@ class psick::gitlab::runner (
   }
   $gitlab_runner_options = $options_default + $options
   ::tp::install { 'gitlab-runner' :
-    ensure             => $ensure,
-    auto_prerequisites => $auto_prereq,
+    ensure      => $ensure,
+    auto_prereq => $auto_prereq,
   }
 
   if $template {

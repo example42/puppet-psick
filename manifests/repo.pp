@@ -16,7 +16,7 @@ class psick::repo (
   if $auto_conf {
     case $::osfamily {
       'RedHat': {
-        tp::install { 'epel': auto_prerequisites => true }
+        tp::install { 'epel': auto_prereq => true }
       }
       'Debian': {
       }

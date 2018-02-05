@@ -70,10 +70,8 @@ class psick::puppet::gems (
       info('Forced no-noop mode.')
       noop(false)
     }
-  
     $minimal_gems = ['r10k','hiera-eyaml','deep_merge']
     $minimal_test_gems = ['puppet-lint','rspec-puppet','rake','bundler','simplecov','minitest','rspec-puppet-facts','puppetlabs_spec_helper','yaml-lint']
-  
     $default_gems = $default_set ? {
       'none'      => [],
       'client'    => [],
@@ -83,9 +81,7 @@ class psick::puppet::gems (
       'integration' => $minimal_gems + $minimal_test_gems + ['beaker','beaker-rspec','beaker-puppet_install_helper'],
       'developer' => $minimal_gems + $minimal_test_gems + ['puppet-debug','puppet-blacksmith'],
     }
-  
     $all_gems = $default_gems + $install_gems
-  
     if $install_system_gems {
       if $auto_prereq {
         include ::psick::ruby
@@ -100,7 +96,6 @@ class psick::puppet::gems (
         }
       }
     }
-  
     if $install_puppet_gems {
       $puppet_gems = $all_gems + $additional_puppet_gems
       $puppet_gems.each | $gem | {
@@ -114,7 +109,6 @@ class psick::puppet::gems (
         }
       }
     }
-  
     if $install_puppetserver_gems {
       $puppetserver_gems = $all_gems + $additional_puppetserver_gems
       $puppetserver_gems.each | $gem | {
@@ -126,7 +120,6 @@ class psick::puppet::gems (
         }
       }
     }
-  
     if $install_rbenv_gems {
       if $auto_prereq {
         include ::psick::rbenv

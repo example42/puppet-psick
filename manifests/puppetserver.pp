@@ -13,7 +13,7 @@ class psick::puppetserver (
 
   Optional[String]  $git_remote_repo      = undef,
   String            $dns_alt_names        = "puppet, puppet.${::domain}",
-  Boolean           $remove_global_hiera_yaml = false,  
+  Boolean           $remove_global_hiera_yaml = false,
 ) {
 
   # Installation management
@@ -56,8 +56,8 @@ class psick::puppetserver (
       }
     }
     $r10k_default_options = {
-      postrun         => [], 
-      cachedir        => "${facts['puppet_vardir']}/r10k", 
+      postrun         => [],
+      cachedir        => "${facts['puppet_vardir']}/r10k",
       sources         => $r10k_sources,
       source_keys     => keys($r10k_sources),
       deploy_settings => {},
@@ -97,9 +97,9 @@ class psick::puppetserver (
 
   if $git_remote_repo {
     exec { 'remove default controlrepo':
-      command     => 'mv /etc/puppetlabs/code/environments/production /etc/puppetlabs/code/environments/production.default',
-      creates     => '/etc/puppetlabs/code/environments/production.default',
-      before      => Tp::Dir['puppet::control-repo'],
+      command => 'mv /etc/puppetlabs/code/environments/production /etc/puppetlabs/code/environments/production.default',
+      creates => '/etc/puppetlabs/code/environments/production.default',
+      before  => Tp::Dir['puppet::control-repo'],
     }
     tp::dir { 'puppet::control-repo':
       path               => '/etc/puppetlabs/code/environments/production',

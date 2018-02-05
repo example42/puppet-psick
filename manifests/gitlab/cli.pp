@@ -3,7 +3,7 @@
 #
 # @param ensure Define if to install (present), remove (absent) or the version
 #   of the gitlab-cli gem
-# @param auto_prerequisites Define if to automatically install the prerequisites
+# @param auto_prereq Define if to automatically install the prerequisites
 #   needed by gitlab-cli
 # @param epp The path of the epp template (as used in epp()) to use
 #   as content for the gitlab-cli configuration file. Note that this file is not an
@@ -18,11 +18,11 @@
 #   this hash is merged with an hash of default options provided in the class
 #
 class psick::gitlab::cli (
-  String           $ensure             = 'present',
-  Boolean          $auto_prerequisites = true,
-  Optional[String] $epp                = 'psick/gitlab/cli/gitlab-cli.conf.epp',
-  Optional[String] $template           = undef,
-  Hash             $config_hash        = {},
+  String           $ensure      = 'present',
+  Boolean          $auto_prereq = $::psick::auto_prereq,
+  Optional[String] $epp         = 'psick/gitlab/cli/gitlab-cli.conf.epp',
+  Optional[String] $template    = undef,
+  Hash             $config_hash = {},
 ) {
 
   $default_hash = {
@@ -41,8 +41,8 @@ class psick::gitlab::cli (
   $options = $default_hash + $config_hash
 
   ::tp::install { 'gitlab-cli' :
-    ensure             => $ensure,
-    auto_prerequisites => $auto_prerequisites,
+    ensure      => $ensure,
+    auto_prereq => $auto_prereq,
   }
   if $template or $epp {
     $file_content = $template ? {
