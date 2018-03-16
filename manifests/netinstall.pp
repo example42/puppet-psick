@@ -72,7 +72,8 @@ define psick::netinstall (
   $preextract_command  = '',
   $postextract_command = '',
   $postextract_cwd     = '',
-  $exec_env            = []
+  $exec_env            = [],
+  $creates             = undef,
   ) {
 
   $source_filename = url_parse($url,'filename')
@@ -111,6 +112,11 @@ define psick::netinstall (
     default => $postextract_cwd,
   }
 
+  $real_creates = $creates ? {
+    undef   => "${destination_dir}/${real_extracted_dir}",
+    default => $creates,
+  }
+
   if $preextract_command and $preextract_command != '' {
     exec { "PreExtract ${source_filename} in ${destination_dir} - ${title}":
       command     => $preextract_command,
@@ -134,7 +140,7 @@ define psick::netinstall (
   exec { "Extract ${source_filename} from ${work_dir} - ${title}":
     command     => "mkdir -p ${destination_dir} && cd ${destination_dir} && ${real_extract_command} ${work_dir}/${source_filename} ${extract_command_second_arg}",
     unless      => "ls ${destination_dir}/${real_extracted_dir}",
-    creates     => "${destination_dir}/${real_extracted_dir}",
+    creates     => $real_creates,
     timeout     => $timeout,
     require     => Exec["Retrieve ${url} in ${work_dir} - ${title}"],
     path        => $path,

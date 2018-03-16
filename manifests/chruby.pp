@@ -19,17 +19,19 @@
 # @param no_noop Set noop metaparameter to false to all the resources of this class.
 #   This overrides any noop setting which might be in place.
 class psick::chruby (
-  Psick::Ensure   $ensure                   = 'present',
-  String $version       = '0.3.7',
-  StdLib::AbsolutePath $ruby_prefix   = '/opt/rubies',
-  String $user          = 'puppet',
-  Optional[String] $group         = undef,
-  Optional[String] $sources_root  = undef,
-  Optional[String] $download_root = undef
+  Psick::Ensure $ensure             = 'present',
+  String $version                   = '0.3.7',
+  String $default_ruby_version      = '2.4.2',
+  StdLib::AbsolutePath $ruby_prefix = '/opt/rubies',
+  String $user                      = 'puppet',
+  Optional[String] $group           = undef,
+  Optional[String] $sources_root    = undef,
+  Optional[String] $download_root   = undef,
   
-  Boolean         $manage                   = $::psick::manage,
-  Boolean         $auto_prereq              = $::psick::auto_prereq,
-  Boolean         $no_noop                  = false,
+  Boolean         $manage           = $::psick::manage,
+  Boolean         $auto_prereq      = $::psick::auto_prereq,
+  Boolean         $no_noop          = false,
+
 ) {
 
   # We declare resources only if $manage = true

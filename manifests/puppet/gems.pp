@@ -30,13 +30,18 @@
 # @param install_puppetserver_gems Manage installation of gems using Puppetserver's gem
 # @param install_rbenv_gems Manage installation of gems under rbenv (requires
 #   jdowning/rbenv or compatible module)
+# @param install_chruby_gems Manage installation of gems under chruby (uses
+#   psick::chruby profile
 # @param additional_system_gems Array of additional gems to install using system's gem
 # @param additional_puppet_gems Array of additional gems to install using Puppet's gem
 # @param additional_puppetserver_gems Array of additional gems to install using
 #   Puppetserver's gem
 # @param additional_rbenv_gems Array of additional gems to install under rbenv
+# @param additional_chruby_gems Array of additional gems to install under chruby
 # @param rbenv_ruby_version Ruby version to use under rbenv. Default is from
 #   $::psick::rbenv::default_ruby_version
+# @param chruby_ruby_version Ruby version to use under chruby. Default is from
+#   $::psick::chruby::default_ruby_version
 # @param manage If to actually manage ANY resource from this class.
 #   When set to false, no resource from this class is managed whatever are
 #   the other parameters.
@@ -55,11 +60,14 @@ class psick::puppet::gems (
   Boolean $install_puppet_gems         = true,
   Boolean $install_puppetserver_gems   = false,
   Boolean $install_rbenv_gems          = false, 
+  Boolean $install_chruby_gems         = false, 
   Array $additional_system_gems        = [],
   Array $additional_puppet_gems        = [],
   Array $additional_puppetserver_gems  = [],
   Array $additional_rbenv_gems         = [],
-  Optional[String] $rbenv_ruby_version = undef,       
+  Array $additional_chruby_gems        = [],
+  Optional[String] $rbenv_ruby_version  = undef,       
+  Optional[String] $chruby_ruby_version = undef,       
   Boolean $manage                      = $::psick::manage,
   Boolean $auto_prereq                 = $::psick::auto_prereq,
   Boolean $no_noop                     = false,
@@ -137,6 +145,22 @@ class psick::puppet::gems (
             skip_docs    => true,
             require      => $rbenv_require,
           }
+        }
+      }
+    }
+    if $install_chruby_gems {
+      if $auto_prereq {
+        include ::psick::chruby
+      }
+      $chruby_require = $auto_prereq ? {
+        true  => Class['psick::chruby'],
+        false => undef,
+      }
+      $chruby_gems = $all_gems + $additional_chruby_gems
+      $chruby_gems.each | $gem | {
+        psick::chruby::gem { $gem:
+          ruby_version => pick($chruby_ruby_version,$::psick::chruby::default_ruby_version),
+          require      => $chruby_require,
         }
       }
     }
