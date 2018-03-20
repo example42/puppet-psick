@@ -65,8 +65,8 @@ class psick (
 
   # General network settings
   Boolean $is_cluster = false,
-  Optional[Stdlib::Compat::Ip_address] $primary_ip = $::networking['ip'],
-  Optional[String] $mgmt_interface                 = $::networking['primary'],
+  Optional[Stdlib::Compat::Ip_address] $primary_ip = fact('networking.ip'),
+  Optional[String] $mgmt_interface                 = fact('networking.primary'),
   Optional[String] $timezone                       = undef,
 
   # General endpoints and variables

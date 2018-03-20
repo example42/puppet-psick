@@ -1,6 +1,8 @@
 # File managed by Puppet
 127.0.0.1       localhost       localhost.localdomain 
+<% if @ipaddress -%>
 <%= @ipaddress %> <%= @hostname %> <% if @domain %><%= @hostname %>.<%= @domain %><% end %>
+<% end -%>
 
 <% @extra_hosts.each do |h| -%>
 <%= h %>
