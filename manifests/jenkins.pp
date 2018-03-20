@@ -1,13 +1,72 @@
-# @class jenkins
+# @class psick::jenkins
+# @summary Installs and configures Jenkins, also via SCM sync plugin
+# This profile can be used to install and configure Jenkins using
+# different modules.
 #
+# @param ensure If to install or remove jenkins (may not work on all
+# select modules).
+# @param module The module to use to install Jenkins. Default, 'psick',
+# uses local psick classes.
+# @param plugins An hash of Jenkins plugins to install.
+# @param init_options An hash of options to use in init scripts.
+# @param ssh_private_key_content The content of the ssh private key for the
+# jenkins user. It's used to connect scm_sync_repository_url.
+# @param ssh_public_key_content The content of the ssh public key for jenkins
+#   user. If set, also the private one must be set, and
+#   this public key has to be added on the GIT(hub/lab/...) web interface as
+#   deploy key for the scm_sync_repository_url with write access.
+# @param ssh_private_key_source The source of the ssh private key for the
+#   jenkins user. It's used to connect scm_sync_repository_url.
+#   This is alternative to ssh_private_key_content.
+# @param ssh_public_key_source The source of the ssh public key for jenkins
+#   user. This is alternative to ssh_public_key_content
+# @param ssh_keys_generate If to automaticallty generate a ssh keypair for
+#   the jenkins user to use to connect to scm_sync_repository_url or
+#   any other remote node via ssh.
+# @param scm_sync_repository_url The url of the git repo containing the Jenkins
+#   configurations synced via the scm-sync plugin
+# @param scm_sync_repository_host The hostname of the server which hosts the
+#   scm_sync_repository_url. If set a ssh config entry is added to ignore
+#   the hostkey verification
+# @param disable_setup_wizard If to (try) to disable the initial Jenkins
+#   setup wizard. Set this to true and define a $admin_password to disable
+#   it and set the admin password via Puppet
+# @param basic_security_template The template to use for the groovy script that sets
+#   the admin password.
+#
+# @example Install Jenkins and a pair of plugins
+#    psick::base::linux_classes:
+#      jenkins: psick::jenkins
+#    psick::jenkins::plugins:
+#      warnings:
+#        enable: true
+#      blueocean:
+#        enable: true
+#
+# @example Install Jenkins, configure scm plugin with predefined keys, set admin
+# password and disable initial Wizard
+#    psick::base::linux_classes:
+#      jenkins: psick::jenkins
+#    psick::jenkins::scm_sync_repository_url: git@github.com:alvagante/jenkins.foss.psick.io-scmsync.git
+#    psick::jenkins::disable_setup_wizard: true
+#    psick::jenkins::admin_password: 'example42'
+#    psick::jenkins::ssh_private_key_source: puppet:///modules/profile/jenkins/id_rsa
+#    psick::jenkins::ssh_public_key_source: puppet:///modules/profile/jenkins/id_rsa.pub
+#    psick::openssh::configs_hash:
+#      jenkins:
+#        path: /var/lib/jenkins/.ssh/config
+#        create_ssh_dir: false
+#        options_hash:
+#          Host github.com:
+#            StrictHostKeyChecking: no
+#            UserKnownHostsFile: /dev/null
 class psick::jenkins (
 
   Variant[Boolean,String]    $ensure     = 'present',
   Enum['psick']              $module     = 'psick',
-
   Hash                       $plugins    = {},
-
   Hash                       $init_options  = {},
+  String $home_dir                          = '/var/lib/jenkins',
 
   Optional[String] $ssh_private_key_content = undef,
   Optional[String] $ssh_public_key_content  = undef,
@@ -15,12 +74,14 @@ class psick::jenkins (
   Optional[String] $ssh_public_key_source   = undef,
 
   Boolean $ssh_keys_generate                = false,
-  String $home_dir                          = '/var/lib/jenkins',
 
   Optional[String] $scm_sync_repository_url  = undef,
   Optional[String] $scm_sync_repository_host = undef,
 
   Boolean $disable_setup_wizard              = false,
+  String $basic_security_template            = 'psick/jenkins/basic-security.groovy.erb',
+  String $admin_password                     = '',
+
 ) {
 
   $java_args_extra = $disable_setup_wizard ? {
@@ -122,6 +183,11 @@ class psick::jenkins (
     include ::psick::jenkins::scm_sync
   }
 
+  # Disables host checking on scm_sync_repository_host for unattended
+  # setups. Be sure to have psick::openssh and psick::jenkins profiles
+  # in the same Psick phase (pre|base|profile) in order to avoid
+  # dependency loops.
+  # If not, set this via psick::openssh::configs_hash
   if $scm_sync_repository_host {
     psick::openssh::config { 'jenkins':
       path         => "${home_dir}/.ssh/config",
@@ -132,6 +198,24 @@ class psick::jenkins (
           'UserKnownHostsFile'    => '/dev/null',
         }
       }
+    }
+  }
+
+  # Extra step to disable setup Wizard
+  if $admin_password != '' {
+    file { "${home_dir}/init.groovy.d":
+      ensure  => directory,
+      owner   => 'jenkins',
+      group   => 'jenkins',
+      require => Package['jenkins'],
+    }
+    tp::conf { 'jenkins::basic-security.groovy':
+      path    => "${home_dir}/init.groovy.d/basic-security.groovy",
+      content => template($basic_security_template),
+      mode    => '0640',
+      owner   => 'jenkins',
+      group   => 'jenkins',
+      before  => Service['jenkins'],
     }
   }
 
