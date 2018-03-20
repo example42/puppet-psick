@@ -16,7 +16,7 @@ class psick::repo (
   if $auto_conf {
     case $::osfamily {
       'RedHat': {
-        tp::install { 'epel': auto_prereq => true }
+        tp::repo { 'epel': }
       }
       'Debian': {
       }
@@ -27,6 +27,7 @@ class psick::repo (
     }
   }
 
+  # Not converted to Puppet 4 style for easier variables management.
   if $yum_repos != {} {
     create_resources($yum_resource, $yum_repos)
   }
