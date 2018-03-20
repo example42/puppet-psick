@@ -1,4 +1,5 @@
 # @summary Special class applied only at first Puppet run
+#
 # This special class is supposed to be included ONLY at the first Puppet run.
 # It's up to user to decide if to enable it (by setting psick::enable_firstrun)
 # and it's up to the user to decide what classes to include in this run and
@@ -8,7 +9,6 @@
 # includes the classes listed in the ${::kernel}_classes hashes, triggers a reboot
 # (on Windows) and creates an external fact that prevents a reboot
 # cycle.
-
 # IMPORTANT NOTE: If firstrun mode is activated on an existing infrastructure
 # or if the 'firstrun' external fact is removed from nodes, this class will
 # included in the main psick class as if this were a real first Puppet run.
@@ -32,13 +32,12 @@
 #     psick::firstrun::windows_reboot: true # (Default value)
 #
 # @example Enable firstrun and configure it to set hostname and proxy
-#   on Linux but do not trigger any reboot
+# on Linux but do not trigger any reboot
 #     psick::enable_firstrun: true
 #     psick::firstrun::linux_classes:
 #       hostname: psick::hostname
 #       proxy: psick::proxy
 #     psick::firstrun::linux_reboot: false # (Default value)
-#
 # For each of these $::kernel_classes parameters, it's expected an Hash of key-values:
 # Keys can have any name, and are used as markers to allow overrides,
 # exceptions management and customisations across Hiera's hierarchies.

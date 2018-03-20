@@ -44,16 +44,16 @@
 #   if you don't want the PSICK class provisioning staged in different phases.
 #
 # @example Sample data for proxy server hash
-#   psick::servers:
-#     proxy:
-#       host: proxy.example.com
-#       port: 3128
-#       user: john    # Optional
-#       password: xxx # Optional
-#       no_proxy:
-#         - localhost
-#         - "%{::domain}"
-#       scheme: http
+#     psick::servers:
+#       proxy:
+#         host: proxy.example.com
+#         port: 3128
+#         user: john    # Optional
+#         password: xxx # Optional
+#         no_proxy:
+#           - localhost
+#           - "%{::domain}"
+#         scheme: http
 #
 class psick (
 
