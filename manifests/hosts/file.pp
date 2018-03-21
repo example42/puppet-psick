@@ -10,7 +10,7 @@
 class psick::hosts::file (
   String $template  = 'psick/hosts/file/hosts.erb',
 
-  String $ipaddress             = $::psick::primary_ip,
+  Optional[Stdlib::Compat::Ip_address] $ipaddress = $::psick::primary_ip,
   Variant[Undef,String] $domain = $::domain,
   String $hostname              = $::hostname,
   Array $extra_hosts            = [],

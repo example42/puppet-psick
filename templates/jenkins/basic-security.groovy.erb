@@ -1,0 +1,16 @@
+#!groovy
+// From: https://github.com/geerlingguy/ansible-role-jenkins/issues/50
+import jenkins.model.*
+import hudson.security.*
+
+def instance = Jenkins.getInstance()
+
+println "--> creating local user 'admin'"
+
+def hudsonRealm = new HudsonPrivateSecurityRealm(false)
+hudsonRealm.createAccount('admin','<%= @admin_password %>')
+instance.setSecurityRealm(hudsonRealm)
+
+def strategy = new FullControlOnceLoggedInAuthorizationStrategy()
+instance.setAuthorizationStrategy(strategy)
+instance.save()

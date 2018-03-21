@@ -49,16 +49,16 @@
 #   if you don't want the PSICK class provisioning staged in different phases.
 #
 # @example Sample data for proxy server hash
-#   psick::servers:
-#     proxy:
-#       host: proxy.example.com
-#       port: 3128
-#       user: john    # Optional
-#       password: xxx # Optional
-#       no_proxy:
-#         - localhost
-#         - "%{::domain}"
-#       scheme: http
+#     psick::servers:
+#       proxy:
+#         host: proxy.example.com
+#         port: 3128
+#         user: john    # Optional
+#         password: xxx # Optional
+#         no_proxy:
+#           - localhost
+#           - "%{::domain}"
+#         scheme: http
 #
 class psick (
 
@@ -71,8 +71,8 @@ class psick (
 
   # General network settings
   Boolean $is_cluster = false,
-  Optional[Stdlib::Compat::Ip_address] $primary_ip = $::networking['ip'],
-  Optional[String] $mgmt_interface                 = $::networking['primary'],
+  Optional[Stdlib::Compat::Ip_address] $primary_ip = fact('networking.ip'),
+  Optional[String] $mgmt_interface                 = fact('networking.primary'),
   Optional[String] $timezone                       = undef,
 
   # General endpoints and variables
