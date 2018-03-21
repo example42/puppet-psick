@@ -51,4 +51,5 @@ networking:
   network: 10.0.2.0
   primary: eth0
 
-
+# Quick workaround to fix psick::prometheus tests
+service_provider: 'systemd'
