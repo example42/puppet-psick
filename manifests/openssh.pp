@@ -7,23 +7,35 @@ class psick::openssh (
   Hash                     $configs_hash  = {},
   Hash                     $keygens_hash  = {},
   Hash                     $keypairs_hash = {},
+  String                   $module        = 'psick',
+  Booleab                  $use_tp        = true,
 ) {
-  tp::install { 'openssh':
-    ensure => $ensure,
-  }
-  $configs_hash.each |$k,$v| {
-    psick::openssh::config { $k:
-      * => $v,
+
+  case $module {
+    'psick': {
+      if $use_tp {
+        tp::install { 'openssh':
+          ensure => $ensure,
+        }
+      }
+      $configs_hash.each |$k,$v| {
+        psick::openssh::config { $k:
+          * => $v,
+        }
+      }
+      $keygens_hash.each |$k,$v| {
+        psick::openssh::keygen { $k:
+          * => $v,
+        }
+      }
+      $keypairs_hash.each |$k,$v| {
+        psick::openssh::keypair { $k:
+          * => $v,
+        }
+      }
     }
-  }
-  $keygens_hash.each |$k,$v| {
-    psick::openssh::keygen { $k:
-      * => $v,
-    }
-  }
-  $keypairs_hash.each |$k,$v| {
-    psick::openssh::keypair { $k:
-      * => $v,
+    default: {
+      contain ::openssh
     }
   }
 }
