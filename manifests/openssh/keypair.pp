@@ -1,6 +1,6 @@
 # define psick::openssh::keypair
 #
-# @summary manages ssh keypairs, by providing source or content 
+# @summary manages ssh keypairs, by providing source or content
 #
 define psick::openssh::keypair (
 
@@ -31,8 +31,8 @@ define psick::openssh::keypair (
 
   $ssh_dir_path = $dir_path ? {
     undef   => $user ? {
-      'root'  => "/${user_real}/.ssh",
-      default => "/home/${user_real}/.ssh",
+      'root'  => "/${user}/.ssh",
+      default => "/home/${user}/.ssh",
     },
     default => $dir_path,
   }
@@ -72,4 +72,3 @@ define psick::openssh::keypair (
     }
   }
 }
-
