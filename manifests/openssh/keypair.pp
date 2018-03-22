@@ -72,3 +72,4 @@ define psick::openssh::keypair (
     }
   }
 }
+
