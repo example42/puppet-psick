@@ -9,13 +9,23 @@ define psick::openssh::keypair (
 
   Optional[String] $private_key_content     = undef,
   Optional[String] $private_key_source      = undef,
+  Optional[String] $private_key_owner       = undef,
+  Optional[String] $private_key_group       = undef,
+  Optional[String] $private_key_mode        = '0600',
 
   Optional[String] $public_key_content      = undef,
   Optional[String] $public_key_source       = undef,
+  Optional[String] $public_key_owner        = undef,
+  Optional[String] $public_key_group        = undef,
+  Optional[String] $public_key_mode         = '0644',
 
   Optional[String] $dir_path                = undef,
-  String $dir_path_mode                     = '0700',
+  Optional[String] $dir_owner               = undef,
+  Optional[String] $dir_group               = undef,
+  Optional[String] $dir_mode                = '0700',
+
   String $key_name                          = 'id_rsa',
+  Boolean $create_ssh_dir                   = true,
 
 ) {
 
@@ -28,15 +38,14 @@ define psick::openssh::keypair (
   }
 
   # SSH keys management
-  if $private_key_content
-  or $public_key_content
-  or $private_key_source
-  or $public_key_source {
+  if $create_ssh_dir {
     if !defined(File[$ssh_dir_path]) {
       $dir_ensure = ::tp::ensure2dir($ensure)
       file { $ssh_dir_path:
         ensure => $dir_ensure,
-        mode   => $dir_path_mode,
+        owner  => pick($dir_owner,$user),
+        group  => pick($dir_group,$user),
+        mode   => $dir_mode,
       }
     }
   }
@@ -44,6 +53,9 @@ define psick::openssh::keypair (
   if $private_key_content or $private_key_source {
     file { "${ssh_dir_path}/${key_name}" :
       ensure  => $ensure,
+      owner   => pick($private_key_user,$user),
+      group   => pick($private_key_group,$user),
+      mode    => $private_key_mode,
       content => $private_key_content,
       source  => $private_key_source,
     }
@@ -52,10 +64,12 @@ define psick::openssh::keypair (
   if $public_key_content or $public_key_source {
     file { "${ssh_dir_path}/${key_name}.pub" :
       ensure  => $ensure,
+      owner   => $public_key_user,
+      group   => $public_key_group,
+      mode    => $public_key_mode,
       content => $public_key_content,
       source  => $public_key_source,
     }
   }
-
 }
 

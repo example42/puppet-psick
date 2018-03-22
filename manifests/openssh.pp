@@ -8,7 +8,7 @@ class psick::openssh (
   Hash                     $keygens_hash  = {},
   Hash                     $keypairs_hash = {},
   String                   $module        = 'psick',
-  Booleab                  $use_tp        = true,
+  Boolean                  $use_tp        = true,
 ) {
 
   case $module {
