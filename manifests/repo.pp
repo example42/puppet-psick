@@ -1,19 +1,24 @@
 # Generic repo management wrapper class
-# Repos to create, besides default ones (when add_defaults = true)
+# Repos to create, besides default ones (when use_defaults = true)
 # are looked up via hiera_hash
 #
 class psick::repo (
-  Psick::Autoconf $auto_conf = $::psick::auto_conf,
-  String $yum_resource       = 'yumrepo',     # Native resource type
-  Hash $yum_repos            = {},
-  String $apt_resource       = 'apt::source', # From puppetlabs-apt
-  Hash $apt_repos            = {},
-  String $zypper_resource    = 'zypprepo',    # From darin-zypprepo
-  Hash $zypper_repos         = {},
+  Optional[String] $auto_conf = undef,
+  Boolean $use_defaults       = true,
+  String $yum_resource        = 'yumrepo',     # Native resource type
+  Hash $yum_repos             = {},
+  String $apt_resource        = 'apt::source', # From puppetlabs-apt
+  Hash $apt_repos             = {},
+  String $zypper_resource     = 'zypprepo',    # From darin-zypprepo
+  Hash $zypper_repos          = {},
 ) {
 
-  # Default repos
   if $auto_conf {
+    deprecation('psick::repo::auto_conf', 'psick::repo: auto_conf parameter has been deprecated and been replaced by use_defaults')
+  }
+
+  # Default repos
+  if $use_defaults {
     case $::osfamily {
       'RedHat': {
         tp::repo { 'epel': }

@@ -1,0 +1,9 @@
+# File managed by Puppet
+external_url '<%= @options['external_url'] %>'
+<% @options.tap { |o| o.delete('external_url') }.each do |k,v| -%>
+<% if v.is_a?(FalseClass) or v.is_a?(TrueClass) or v.is_a?(Numeric) or v.match(/[[:digit:]]+/) -%>
+<%= k %> = <%= v %>
+<% else -%>
+<%= k %> = '<%= v %>'
+<% end -%>
+<% end -%>

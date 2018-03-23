@@ -25,7 +25,7 @@ class psick::gitlab (
   String                $ensure      = 'present',
 
   Variant[Undef,String] $template    = undef,
-  Hash                  $options     = { },
+  Hash $options_hash                 = { },
 
   Boolean $manage_installation       = true,
 
@@ -46,20 +46,19 @@ class psick::gitlab (
         true  => "https://${server_name}",
         false => "http://${server_name}",
       },
-      nginx_ssl_certificate => "/etc/gitlab/ssl/${server_name}.crt",
-      nginx_ssl_certificate_key => "/etc/gitlab/ssl/${server_name}.key",
+      "nginx['ssl_certificate']" => "/etc/gitlab/ssl/${server_name}.crt",
+      "nginx['ssl_certificate_key']" => "/etc/gitlab/ssl/${server_name}.key",
     }
-    $gitlab_options = $options + $options_default
+    $options = $options_default + $options_hash
     ::tp::install { 'gitlab-ce' :
       ensure => $ensure,
     }
 
     if $template {
       ::tp::conf { 'gitlab-ce':
-        ensure       => $ensure,
-        template     => $template,
-        options_hash => $gitlab_options,
-        notify       => Exec['gitlab-ctl reconfigure'],
+        ensure  => $ensure,
+        content => template($template), 
+        notify  => Exec['gitlab-ctl reconfigure'],
       }
     }
 
@@ -117,6 +116,13 @@ class psick::gitlab (
       psick::gitlab::project { $k:
         * => $v,
       }
+    }
+  }
+
+  # Add tp test if cli enabled
+  if any2bool($::psick::tp['cli_enable']) {
+    tp::test { 'gitlab-ce':
+      content => 'gitlab-ctl status',
     }
   }
 }
