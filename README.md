@@ -4,17 +4,19 @@
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/503831d4ea6a470e864f1a3969449b78)](https://www.codacy.com/app/example42/puppet-psick?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=example42/puppet-psick&amp;utm_campaign=Badge_Grade)
 
 This is the PSICK (Puppet Systems Infrastructure Construction Kit) module.
- 
-It is what we call an **Infrastructure** Puppet **module**. It provides:
 
-  - Solid management of **classification**. Entirely hiera driven.
-  - An integrated set of **profiles** for common systems management activities
-  - A growing number flexible set of **tp profiles** for applications
-  - Integrated and automated firewall (WIP) and monitoring management
-  - Safe and easy to be integrated in existing setups, cohexists with other modules, allows expandibility by design.
-  - Entirely Hiera driven: In practice a DSL to configure infrastructures
- 
-It can be used together with the [PSICK control-repo](https://github.com/example42/psick) (check the [Hiera data](https://github.com/example42/psick/tree/production/hieradata) there for sample usage patterns) or as a strandalone module, just:
+It is what we call an **Infrastructure** Puppet **module**, as it can be used for most common systems configurations.
+
+It provides:
+
+- Solid management of **classification**. Entirely hiera driven.
+- An integrated set of **profiles** for common systems management activities
+- A growing number flexible set of **tp profiles** for applications
+- Safe and easy to be integrated in existing setups, cohexists with other modules
+- It allows expandibility and customisability by design.
+- Entirely Hiera driven: In practice a DSL to configure infrastructures
+
+It can be used together with the [PSICK control-repo](https://github.com/example42/psick) or as a strandalone module, just:
 
     include psick
 
@@ -22,6 +24,7 @@ This doesn't do anything at all, by default, but is enough to let you manage *ev
 
 In the following examples we will use Hiera YAML files, but any backend can be used: psick is a normal, even if somehow unusual, Puppet module, with classes (a lot of them) whose params can be set as Hiera data, defines, templates, files, fuctions, custom data types etc.
 
+Check the default [PSICK hiera data](https://github.com/example42/psick-hieradata) module for various usage examples.
 
 ## Do You Speak Psick?
 
@@ -29,7 +32,7 @@ Psick "language" has the syntax of any Hiera supported backend (here we use YAML
 
 The module provides 3 major features:
 
-  - Structured cross-os, staged **classification** 
+  - Structured cross-os, staged **classification**
   - Base **profiles** for common system configurations
   - Standardised and multifunctional **tp profiles** for applications
 
@@ -92,7 +95,7 @@ The each key-pair of these $kernel_classes parameters contain an arbitrary tag o
 
 This name must be a valid class, which can be found in the Puppet Master modulepath (so probably defined in your control-repo ```Puppetfile```): you can use any of the predefinied Psick profiles, or your own local site profiles, or directly classes from public modules and configure them via Hiera in their own namespace.
 
-To manage exceptions and use a different class on different nodes is enough to specify the alternative class name as value for the used marker (here 'ssh'), in the appropriate Hiera file: 
+To manage exceptions and use a different class on different nodes is enough to specify the alternative class name as value for the used marker (here 'ssh'), in the appropriate Hiera file:
 
     psick::base::linux_classes:
       ssh: ::profile::ssh_bastion
@@ -106,12 +109,11 @@ This is the classification part, since it's based on class parameters, it can be
 
 The pre -> base -> profiles order is strictly enforced, so we sure to place your class in the most appropriate phase (even if functionally they all do the same work: include the specified classes) and, to prevent dependency cycles, avoid to set the same class in two different phases.
 
-
 #### Auto configuration defaults
 
 If you are lazy or want to try some predefined defaults (always WIP) you can simply try to use one of our embedded sets of configurations, note that you can customise and override everything, in your control-repo hiera data.
 
-For example, to use Psick predefined defaults (as in  ```data/default/*.yaml```):
+For example, to use Psick predefined defaults (as in ```data/default/*.yaml```):
 
     psick::auto_conf: default
 
@@ -120,7 +122,6 @@ To use, instead, some hardened defaults (as in ```data/hardened/*.yaml```):
     psick::auto_conf: hardened
 
 The auto configuration settings are defined at module level hierarchy, so they can be overwritten in the environment's Hiera data.
-
 
 ### Psick tp profiles
 
@@ -175,35 +176,111 @@ Some of them are intended to be used both on Linux and Windows, others are more 
 
 Here follows documentation on how to manage different common system configurations:
 
-  - [psick::hosts::](docs/hosts.md) - Manage /etc/hosts
-  - [psick::motd](docs/motd.md) - Manage /etc/motd and /etc/issue
-  - [psick::nfs::](docs/nfs.md) - Manage NFS client and server
-  - [psick::sudo](docs/sudo.md) - Manage sudo configuration
-  - [psick::sysctl](docs/sysctl.md) - Manage sysctl settings
-  - [psick::firewall::](docs/firewall.md) - Manage firewalling
-  - [psick::openssh::](docs/openssh.md) - tp profile and keygen define
-  - [psick::hardening](docs/hardening.md) - Manage system hardening
-  - [psick::network](docs/network.md) - Manage networking
-  - [psick::puppet::](docs/puppet.md) - Manage Puppet components
-  - [psick::users](docs/users.md) - Manage users
-  - [psick::time](docs/time.md) - Manage time and timezones [Linux/Windows]
-  - [psick::windows::](docs/windows.md) - Windows profiles and tools
+- [psick::hosts](docs/hosts.md) - Manage /etc/hosts
+- [psick::motd](docs/motd.md) - Manage /etc/motd and /etc/issue
+- [psick::nfs](docs/nfs.md) - Manage NFS client and server
+- [psick::sudo](docs/sudo.md) - Manage sudo configuration
+- [psick::sysctl](docs/sysctl.md) - Manage sysctl settings
+- [psick::firewall](docs/firewall.md) - Manage firewalling
+- [psick::openssh](docs/openssh.md) - Manage openssh. Manage or create ssh keypairs
+- [psick::hardening](docs/hardening.md) - Manage system hardening
+- [psick::network](docs/network.md) - Manage networking
+- [psick::puppet](docs/puppet.md) - Manage Puppet components
+- [psick::users](docs/users.md) - Manage users
+- [psick::time](docs/time.md) - Manage time and timezones [Linux/Windows]
+- [psick::windows](docs/windows.md) - Windows profiles and tools
 
 
 ### Applications profiles
 
 For some applications, besides standard tp profiles, there are dedicated profile classes and defines. Here's a list:
 
-  - [psick::ansible](docs/ansible.md) - Manage Ansible installation and user
-  - [psick::aws](docs/aws.md) - Manage AWS client tools and infrastructures setup
-  - [psick::bolt](docs/bolt.md) - Manage Bolt installation and user
-  - [psick::docker](docs/docker.md) - Docker installation and build tools
-  - [psick::foreman](docs/foreman.md) - Foreman installation
-  - [psick::git](docs/git.md) - Git installation and configuration
-  - [psick::gitlab](docs/gitlab.md) - GitLab installation and configuration
-  - [psick::mariadb](docs/mysql.md) - Manage Mariadb
-  - [psick::mysql](docs/mysql.md) - Manage Mysql
-  - [psick::mongo](docs/mongo.md) - Manage Mongo
-  - [psick::php](docs/php.md) - Manage php and modules
-  - [psick::oracle](docs/oracle.md) - Manage Oracle prerequisites and installation
-  - [psick::sensu](docs/sensu.md) - Manage Sensu
+- [psick::ansible](docs/ansible.md) - Manage Ansible installation and user
+- [psick::aws](docs/aws.md) - Manage AWS client tools and infrastructures setup
+- [psick::bolt](docs/bolt.md) - Manage Bolt installation and user
+- [psick::docker](docs/docker.md) - Docker installation and build tools
+- [psick::foreman](docs/foreman.md) - Foreman installation
+- [psick::git](docs/git.md) - Git installation and configuration
+- [psick::gitlab](docs/gitlab.md) - GitLab installation and configuration
+- [psick::mariadb](docs/mysql.md) - Manage Mariadb
+- [psick::mysql](docs/mysql.md) - Manage Mysql
+- [psick::mongo](docs/mongo.md) - Manage Mongo
+- [psick::php](docs/php.md) - Manage php and modules
+- [psick::oracle](docs/oracle.md) - Manage Oracle prerequisites and installation
+- [psick::sensu](docs/sensu.md) - Manage Sensu
+
+### Main variables and common paraters
+
+The main ```psick``` class manages classification (it includes ```psick::pre```, ```psick::base```, ```psick::profiles``` and eventually ```psick::firstrun``` classes, from where classes are included based on Hiera data) and exposes some parameters which can be used by other psick profiles.
+
+#### Parameters in main psick class used by other psick profiles
+
+Some of psick class' parameters are used as defaults for all tp profiles and most of the base ones.
+
+They are as follows, with their default values.
+
+Define if to actually manage any resource. Note that when used globally no class is actually included when cladsified via psick.
+
+    Boolean $manage            = true
+
+If to manage automatically prerequisites for the used profiles. This affects tp::install and other resources.
+Set to false, globally or in specific profiles, to cope with duplicated resources errors, in case same prerequisites are requested by more profiles.
+
+    Boolean $auto_prereq       = true
+
+If to enable noop mode globally (for all the classes included via psick)
+
+    Boolean $noop_mode         = lookup('noop_mode', Boolean,'first',false)
+
+#### Special parameters in main psick class
+
+What set of auto configuration settings to use. This is currently not widely implemented, but it's possible to have different set of configurations (currently accepted values are: node, default, hardened) automatically loaded based on the local psick module data.
+
+    Psick::Autoconf $auto_conf = 'none'
+
+A generic, by default empty, hash of custom settings to use as needed in any class included by psick.
+No psick profile is using this.
+
+    Hash $settings             = {}
+
+An hash of different endpoints for different infrastructure services (which may be referenced in different classes).
+Currently used in psick::proxy
+
+    Hash $servers              = {}
+
+An hash that configures the default resource defaults for tp::install, tp::conf and tp::dir defines.
+Is honoured by the above tp defines in any class included via psick.
+
+    Hash $tp                   = {} # Defaults in data/common.yaml
+
+An hash to configure firewall related settings.
+
+    Hash $firewall             = {} # Defaults in data/common.yaml
+
+An hash to configure monitor related settings.
+
+    Hash $monitor              = {} # Defaults in data/common.yaml
+
+A parameter that disables forced ordering of the classes included in psick different phases (pre, base, profiles). Set this to false when you can dependency cicles between classes included via psick which you are not able to manage via proper psick classification. If set to false classes included in pre might not be actually applied before the other ones.
+
+    Boolean $force_ordering    = true
+
+#### Common parameters in psick base and tp profiles
+
+Some other parameters can be found in psick profiles:
+
+If to override client side noop for the given class (it forces the application of its resources, even if the client runs in noop mode).
+
+    Boolean         $no_noop                  = false
+
+Generic hash of options which can be used in templates evaluated in the relevant profile. It's looked up in deep merge mode and in some profiles in can be merged with local default settings. In erb templates the keys used in the $options_hash can be generally referred with <%= @options['key'] %>, with the $options var being the merge of a local $options_default + $options_hash.
+
+    Hash            $options_hash             = {}
+
+If to install or remove the relevant profile resources (can be present, absent, installed or a version number):
+
+    Psick::Ensure   $ensure                   = 'present'
+
+What module to use to manage the relevant profile application. This is present is some base profiles. The default is to use local psick resources (usually a tp profile), some profiles have integrations with different common public modules.
+
+    String          $module                  = 'psick'
