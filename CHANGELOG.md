@@ -1,6 +1,12 @@
 ## Changelog
 
 * Your contribution here.
+
+## Release 0.6.0
+
+* Added no_noop parameter to tp profiles
+* Changed current no_noop params to not override server side noop_mode
+* Added psick::chroby profile
 * Use correct puppet agent parameter for server - [@tuxmea](https://github.com/tuxmea).
 
 ## Release 0.5.8

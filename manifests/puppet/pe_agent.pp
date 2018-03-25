@@ -12,7 +12,7 @@ class psick::puppet::pe_agent (
   Boolean $no_noop            = false,
 ) {
 
-  if $no_noop {
+  if !$::psick::noop_mode and $no_noop {
     info('Forced no-noop mode.')
     noop(false)
   }
