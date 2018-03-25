@@ -48,6 +48,8 @@
 # @param auto_prereq If to automatically install eventual dependencies for apache.
 #   Set to false if you have problems with duplicated resources, being sure that you
 #   manage the prerequistes to install apache (other packages, repos or tp installs).
+# @param no_noop Set noop metaparameter to false to all the resources of this class.
+#   This overrides client site noop setting but not $psick::noop_mode.
 class psick::apache::tp (
   Psick::Ensure   $ensure                   = 'present',
   Boolean         $manage                   = $::psick::manage,
@@ -57,9 +59,14 @@ class psick::apache::tp (
   Hash            $options_auto_conf_hash   = {},
   Hash            $settings_hash            = {},
   Boolean         $auto_prereq              = $::psick::auto_prereq,
+  Boolean         $no_noop                  = false,
 ) {
 
   if $manage {
+    if !$::psick::noop_mode and $no_noop {
+      info('Forced no-noop mode in psick::apache::tp')
+      noop(false)
+    }
     $options_all = $options_auto_conf_hash + $options_hash
     $install_defaults = {
       ensure        => $ensure,

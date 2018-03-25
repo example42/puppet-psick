@@ -100,12 +100,6 @@ describe 'psick::postfix::tp' do
 
         it { is_expected.to contain_tp__install('postfix').with(default_params.merge('auto_repo' => false, 'auto_prereq' => false)) }
       end
-
-      describe 'with no_noop => true' do
-        let(:params) { { 'no_noop' => true } }
-
-        it { is_expected.to contain_tp__install('postfix').with(default_params.merge('noop' => false)) }
-      end
     end
   end
 end

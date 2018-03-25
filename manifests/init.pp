@@ -67,7 +67,7 @@ class psick (
   Boolean $auto_prereq                             = true,
   Psick::Autoconf $auto_conf                       = 'none',
   Boolean $enable_firstrun                         = false,
-  Boolean $noop_mode                               = lookup('noop_mode', Boolean,'first',false),
+  Boolean $noop_mode                               = lookup('noop_mode', Boolean,'first',true),
 
   # General network settings
   Boolean $is_cluster = false,
