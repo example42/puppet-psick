@@ -76,9 +76,9 @@ define psick::netinstall (
   $creates             = undef,
   ) {
 
-  $source_filename = url_parse($url,'filename')
-  $source_filetype = url_parse($url,'filetype')
-  $source_dirname = url_parse($url,'filedir')
+  $source_filename = parse_url($url,'filename')
+  $source_filetype = parse_url($url,'filetype')
+  $source_dirname = parse_url($url,'filedir')
 
   $real_extract_command = $extract_command ? {
     ''      => $source_filetype ? {

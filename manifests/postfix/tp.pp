@@ -52,7 +52,7 @@
 #   Set to false if you have problems with duplicated resources, being sure that you
 #   manage the prerequistes to install postfix (other packages, repos or tp installs).
 # @param no_noop Set noop metaparameter to false to all the resources of this class.
-#   This overrides any noop setting which might be in place.
+#   This overrides client site noop setting but not $psick::noop_mode.
 class psick::postfix::tp (
   Psick::Ensure   $ensure                   = 'present',
   Boolean         $manage                   = $::psick::manage,
@@ -66,7 +66,7 @@ class psick::postfix::tp (
 ) {
 
   if $manage {
-    if $no_noop {
+    if !$::psick::noop_mode and $no_noop {
       info('Forced no-noop mode in psick::postfix::tp')
       noop(false)
     }

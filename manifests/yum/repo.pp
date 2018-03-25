@@ -41,7 +41,7 @@ define psick::yum::repo (
     }
 
     $gpgkey_real_name = $gpgkey_name ? {
-      ''      => url_parse($gpgkey_source,'filename'),
+      ''      => parse_url($gpgkey_source,'filename'),
       default => $gpgkey_name,
     }
 

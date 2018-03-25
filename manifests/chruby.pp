@@ -21,7 +21,7 @@
 class psick::chruby (
   Psick::Ensure $ensure             = 'present',
   String $version                   = '0.3.7',
-  String $default_ruby_version      = '2.4.2',
+  String $default_ruby_version      = '2.4.3',
   StdLib::AbsolutePath $ruby_prefix = '/opt/rubies',
   String $user                      = 'puppet',
   Optional[String] $group           = undef,
@@ -44,11 +44,11 @@ class psick::chruby (
     }
 
     $sources_dest = $sources_root ? {
-      undef   => "${staging_root}/sources",
+      undef   => "${ruby_prefix}/sources",
       default => $sources_root
     }
     $download_dest = $download_root ? {
-      undef   => "${staging_root}/downloads",
+      undef   => "${ruby_prefix}/downloads",
       default => $download_root
     }
     psick::netinstall { "chruby-v${version}.tar.gz":
