@@ -17,7 +17,7 @@ define psick::grafana::plugin (
   Enum['present','absent'] $ensure = 'present',
   String $version                  = ' ',
   String $plugin                   = $title,
-  OptionalString $exec_notify      = 'Service[grafana-server]',
+  Optional[String] $exec_notify    = 'Service[grafana-server]',
 ) {
 
   if $ensure == 'present' {
