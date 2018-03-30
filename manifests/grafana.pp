@@ -34,6 +34,7 @@ class psick::grafana (
 
   Hash            $dashboards_hash          = {},
   Hash            $datasources_hash         = {},
+  Hash            $plugins_hash             = {},
 ) {
 
   # We declare resources only if $manage = true
@@ -68,7 +69,11 @@ class psick::grafana (
             * => $v,
           }
         }
-
+        $plugins_hash.each | $k,$v | {
+          psick::grafana::plugin { $k:
+            * => $v,
+          }
+        }
       }
       default: {
         contain $module
