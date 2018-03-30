@@ -55,6 +55,17 @@ psick::hardening::services::services_default: []
 # psick::hardware::hp
 psick::hardware::hp::packages: []
 
+# psick::network
+psick::network::interfaces_default_options_hash:
+  onboot: 'yes'
+  type: 'Ethernet',
+  template: "psick/network/interface-%{::osfamily}.erb",
+  options:
+    IPV6INIT: 'no'
+    IPV4_FAILURE_FATAL: 'yes'
+  bootproto: 'none'
+  nozeroconf: 'yes'
+
 # psick::monitor::ganglia
 psick::monitor::ganglia::packages: []
 
