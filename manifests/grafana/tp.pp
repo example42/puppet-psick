@@ -70,13 +70,12 @@ class psick::grafana::tp (
       info('Forced no-noop mode in psick::grafana::tp')
       noop(false)
     }
-
     $options_all = $options_auto_conf_hash + $options_hash
     $install_defaults = {
       ensure        => $ensure,
       options_hash  => $options_all,
       settings_hash => $settings_hash,
-      auto_repo     => $auto_prereq,
+      auto_repo     => true,
       auto_prereq   => $auto_prereq,
     }
     tp::install { 'grafana':
