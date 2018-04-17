@@ -1,0 +1,55 @@
+apiVersion: 1
+
+<% if @ensure == 'present' -%>
+datasources:
+<% elsif @ensure == 'absent' -%>
+deleteDatasources:
+<% end -%>
+  - name: <%= @name %>
+    type: <%= @type %>
+    access: <%= @access %>
+<% if @database -%>
+    database: <%= @database %>
+<% end -%>
+<% if @user -%>
+    user: <%= @user %>
+<% end -%>
+<% if @password -%>
+    password: <%= @password %>
+<% end -%>
+<% if @url -%>
+    url: <%= @url %>
+<% end -%>
+<% if @org_id -%>
+    OrgId: <%= @org_id %>
+<% end -%>
+<% if @basic_auth -%>
+    basicAuth: <%= @basic_auth %>
+<% end -%>
+<% if @basic_auth_user -%>
+    basicAuthUser: <%= @basic_auth_user %>
+<% end -%>
+<% if @basic_auth_password -%>
+    basicAuthPassword: <%= @basic_auth_password %>
+<% end -%>
+<% if @with_credentials -%>
+    withCredentials: <%= @with_credentials %>
+<% end -%>
+<% if @is_default -%>
+    isDefault: <%= @is_default %>
+<% end -%>
+<% if @editable -%>
+    editable: <%= @editable %>
+<% end -%>
+<% if @json_data -%>
+    jsonData:
+<% @json_data.each do |key, value| -%>
+      <%= key %>: <%= value %>
+<% end -%>
+<% end -%>
+<% if @secure_json_data -%>
+    secureJsonData:
+<% @secure_json_data.each do |key, value| -%>
+      <%= key %>: <%= value %>
+<% end -%>
+<% end -%>
