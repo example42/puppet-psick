@@ -1,0 +1,15 @@
+apiVersion: 1
+
+providers:
+  - name: <%= @name %>
+    type: <%= @type %>
+    OrgId: <%= @org_id %>
+    folder: <%= @folder %>
+    disableDeletion: <%= @disable_deletion %>
+    editable: <%= @editable %>
+<% if @options -%>
+    options
+<% @options.each do |key, value| -%>
+      <%= key %>: <%= value %>
+<% end -%>
+<% end -%>
