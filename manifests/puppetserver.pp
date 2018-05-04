@@ -10,6 +10,8 @@ class psick::puppetserver (
   Hash $r10k_options                      = {},
   Boolean $r10k_configure_webhook         = true,
   Boolean $r10k_autodeploy                = true,
+  Array $r10k_postrun_command             = '/usr/local/bin/generate_types.sh',
+  String[1] $r10k_postrun_source          = 'puppet:///modules/psick/puppet/generate_types.sh',
 
   Optional[String]  $git_remote_repo      = undef,
   String            $dns_alt_names        = "puppet, puppet.${::domain}",
@@ -56,7 +58,7 @@ class psick::puppetserver (
       }
     }
     $r10k_default_options = {
-      postrun         => [],
+      postrun         => [$r10k_postrun_command],
       cachedir        => "${facts['puppet_vardir']}/r10k",
       sources         => $r10k_sources,
       source_keys     => keys($r10k_sources),
@@ -73,9 +75,15 @@ class psick::puppetserver (
         ensure  => present,
         content => template($r10k_template),
       }
+      file { $r10k_postrun_command:
+        ensure => file,
+        mode   => '0755',
+        source => $r10k_postrun_source,
+      }
     }
     if $r10k_autodeploy and $r10k_template {
       exec { 'r10k deploy environment':
+        path        => '/opt/puppetlabs/puppet/bin',
         refreshonly => true,
         subscribe   => File['/etc/puppetlabs/r10k/r10k.yaml'],
       }
