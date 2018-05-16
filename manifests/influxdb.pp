@@ -32,6 +32,7 @@ class psick::influxdb (
   Boolean         $no_noop                  = false,
   Hash            $databases_hash           = {},
   Hash            $users_hash               = {},
+  Hash            $grants_hash              = {},
 ) {
 
   # We declare resources only if $manage = true
@@ -54,6 +55,16 @@ class psick::influxdb (
         #}
         $databases_hash.each | $k,$v | {
           psick::influxdb::database { $k:
+            * => $v,
+          }
+        }
+        $users_hash.each | $k,$v | {
+          psick::influxdb::user { $k:
+            * => $v,
+          }
+        }
+        $grants_hash.each | $k,$v | {
+          psick::influxdb::grant { $k:
             * => $v,
           }
         }
