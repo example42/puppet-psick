@@ -34,21 +34,21 @@ define psick::users::managed (
   String $home            = 'absent',
   Optional[Integer] $password_max_age = undef,
   Optional[Integer] $password_min_age = undef,
-  $managehome             = true,
-  $homedir_mode           = '0750',
-  $sshkey                 = 'absent',
-  $authorized_keys_source = '',
-  $bashprofile_source     = '',
-  $known_hosts_source     = '',
-  $password               = 'absent',
-  $password_crypted       = true,
-  $password_salt          = '',
-  $shell                  = '/bin/bash',
-  $id_rsa_source          = '',
-  $id_rsa_pub_source      = '',
-  $sshkey_content         = {},
-  $sshkeys_content        = [],
-  $generate_ssh_keypair   = false,
+  Boolean $managehome     = true,
+  String $homedir_mode    = '0750',
+  String $sshkey          = 'absent',
+  String $authorized_keys_source = '',
+  String $bashprofile_source     = '',
+  String $known_hosts_source     = '',
+  String $password               = 'absent',
+  Boolean $password_crypted      = true,
+  String $password_salt          = '',
+  String $shell                  = '/bin/bash',
+  String $id_rsa_source          = '',
+  String $id_rsa_pub_source      = '',
+  Hash $sshkey_content           = {},
+  Array $sshkeys_content         = [],
+  Boolean $generate_ssh_keypair  = false,
 ){
 
   $real_homedir = $home ? {
@@ -169,16 +169,15 @@ define psick::users::managed (
   }
 
   if $managehome {
-    file{ $real_homedir: }
     if $ensure == 'absent' {
-      File[$real_homedir]{
+      $file_options = {
         ensure  => absent,
         purge   => true,
         force   => true,
         recurse => true,
       }
     } else {
-      File[$real_homedir]{
+      $file_options = {
         ensure  => directory,
         require => User[$name],
         owner   => $name,
@@ -186,16 +185,19 @@ define psick::users::managed (
       }
       case $gid {
         'absent','uid': {
-          File[$real_homedir]{
+          $file_group_option = {
             group => $name,
           }
         }
         default: {
-          File[$real_homedir]{
+          $file_group_option = {
             group => $gid,
           }
         }
       }
+    }
+    file{ $real_homedir:
+      * => $file_options + $file_group_option,
     }
   }
 

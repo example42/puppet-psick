@@ -24,6 +24,9 @@
 #   'accounts' to use accounts::user from puppetlabs-accounts module
 # @param delete_unmanaged If true all non system users not managed by Puppet
 #    are automatically deleted.
+# @param skel_dir_source The source from where to sync files to place on /etc/skel
+#   The contents of this directly are copied (when managehome parameter is true)
+#   to the home dir of each new user created on the system
 class psick::users (
   Optional[String[1]] $root_pw  = undef,
   Hash $root_params             = {},
@@ -32,7 +35,17 @@ class psick::users (
   Array $available_users_to_add = [],
   Enum['psick','accounts','user'] $module = 'psick',
   Boolean $delete_unmanaged     = false,
+  Optional[String] $skel_dir_source = undef,  
 ) {
+
+  if $skel_dir_source {
+    file { '/etc/skel':
+      ensure  => directory,
+      source  => $skel_dir_source,
+      recurse => true,
+    }
+    File['/etc/skel'] -> User<||>
+  }
 
   if $root_pw or $root_params != {}  {
     user { 'root':
@@ -76,7 +89,8 @@ class psick::users (
             password_min_age => $v['password_min_age'],
             shell            => $v['shell'],
             uid              => $v['uid'],
-            *                => pick_default($v['extra_params'],{}),
+            managehome       => $v['managehome'],            
+            *                => pick($v['extra_params'],{}),
           }
         }
         'accounts': {
@@ -105,6 +119,8 @@ class psick::users (
             password_min_age => $v['password_min_age'],
             shell            => $v['shell'],
             uid              => $v['uid'],
+            managehome       => $v['managehome'],            
+            *                => pick_default($v['extra_params'],{}),
           }
         }
       }
