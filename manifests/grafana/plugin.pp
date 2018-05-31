@@ -18,6 +18,7 @@ define psick::grafana::plugin (
   String $version                  = ' ',
   String $plugin                   = $title,
   Optional[String] $exec_notify    = 'Service[grafana-server]',
+  Optional[String] $exec_require   = 'Package[grafana]',
 ) {
 
   if $ensure == 'present' {
@@ -25,6 +26,7 @@ define psick::grafana::plugin (
       command => "grafana-cli plugins install ${plugin} ${version}",
       unless  => "grafana-cli plugins ls | grep ${plugin} | grep '${version}'",
       notify  => $exec_notify,
+      require => $exec_require,
       path    => $::path,
     }
   } else {
@@ -32,6 +34,7 @@ define psick::grafana::plugin (
       command => "grafana-cli plugins uninstall ${plugin}",
       onlyif  => "grafana-cli plugins ls | grep ${plugin}",
       notify  => $exec_notify,
+      require => $exec_require,
       path    => $::path,
     }
   }

@@ -26,13 +26,12 @@ define psick::grafana::dashboard (
   Enum['true', 'false'] 
           $editable                = 'false',
   Hash    $options                 = {},
-  Optional[String]  $exec_notify   = 'Service[grafana-server]',
   
 ) {
 
-  file { "/etc/grafana/provisioning/dashboards/${name}.yaml":
-    content => template($template), 
-    notify  => $exec_notify,
+  tp::conf { "grafana::${name}.yaml":
+    content  => template($template),
+    base_dir => 'dashboards',
   }
-  
+
 }
