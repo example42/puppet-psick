@@ -104,8 +104,8 @@ class psick::proxy (
       }
       'Debian': {
         file { '/etc/apt/apt.conf.d/80proxy':
-          ensure => $ensure,
-          epp    => 'psick/proxy/proxy.apt.epp',
+          ensure  => $ensure,
+          content => epp('psick/proxy/proxy.apt.epp'),
         }
       }
       default: {
