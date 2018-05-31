@@ -33,7 +33,10 @@ class psick::proxy (
       $proxy_credentials = ''
     }
     $proxy_url = "${proxy_server['scheme']}://${proxy_credentials}${proxy_server['host']}:${proxy_server['port']}"
+  } else {
+    $proxy_url = ''
   }
+
   if $configure_gem and !empty($proxy_server) {
     ini_setting { 'proxy_gem':
       ensure            => $ensure,
