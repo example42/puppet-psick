@@ -62,9 +62,9 @@ class psick::bolt::node (
     Ssh_authorized_key <<| tag == "bolt_master_${::psick::bolt::master}_${::psick::bolt::bolt_user}" |>>
   }
   if $::psick::bolt::keyshare_method == 'static' {
-    ssh_authorized_key { "bolt_user_${::psick::bolt::ssh_user}_rsa-${::psick::bolt::ssh_pub_key}":
+    ssh_authorized_key { "bolt_user_${::psick::bolt::ssh_user}_rsa-${::psick::bolt::bolt_user_pub_key}":
       ensure => $ensure,
-      key    => $::psick::bolt::ssh_pub_key,
+      key    => $::psick::bolt::bolt_user_pub_key,
       user   => $::psick::bolt::ssh_user,
       type   => 'rsa',
     }
