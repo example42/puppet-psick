@@ -37,13 +37,11 @@ define psick::grafana::datasource (
   Optional[Hash]    $json_data          = undef,
   Optional[Hash]    $secure_json_data   = undef,
   Optional[Boolean] $editable           = undef,
-  Optional[String]  $exec_notify        = 'Service[grafana-server]',
-  
 ) {
 
-  file { "/etc/grafana/provisioning/datasources/${name}.yaml":
-    content => template($template), 
-    notify  => $exec_notify,
+  tp::conf { "grafana::${name}.yaml":
+    content  => template($template),
+    base_dir => 'datasources',
   }
-  
+
 }
