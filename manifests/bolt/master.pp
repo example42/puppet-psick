@@ -71,7 +71,7 @@ class psick::bolt::master (
     false => undef,
   }
 
-  if $run_ssh_keygen or $::psick::bolt::bolt_user_ssh_pub_key {
+  if $run_ssh_keygen or $::psick::bolt::bolt_user_pub_key {
     file { "${user_home_dir}/.ssh" :
       ensure  => $dir_ensure,
       mode    => '0700',
@@ -92,10 +92,10 @@ class psick::bolt::master (
   }
 
   if $::psick::bolt::keyshare_method == 'storeconfigs'
-  and ($::psick::bolt::ssh_user_pub_key or $::bolt_user_key) {
+  and ($::psick::bolt::bolt_user_pub_key or $::bolt_user_key) {
     @@ssh_authorized_key { "bolt_user_${::psick::bolt::ssh_user}_rsa-${clientcert}":
       ensure => $ensure,
-      key    => pick($::psick::bolt::ssh_user_pub_key,$::bolt_user_key),
+      key    => pick($::psick::bolt::bolt_user_pub_key,$::bolt_user_key),
       user   => $::psick::bolt::ssh_user,
       type   => 'rsa',
       tag    => "bolt_master_${::psick::bolt::master}_${::psick::bolt::bolt_user}"
@@ -103,20 +103,20 @@ class psick::bolt::master (
     Sshkey <<| tag == "bolt_node_${::psick::bolt::master}_rsa" |>>
   }
 
-  if $::psick::boot::ssh_user_pub_key and $::psick::boot::ssh_user_priv_key {
+  if $::psick::bolt::bolt_user_pub_key and $::psick::bolt::bolt_user_priv_key {
     file { "${user_home_dir}/.ssh/id_rsa.pub":
       ensure  => $dir_ensure,
       mode    => '0700',
       owner   => $::psick::bolt::bolt_user,
       group   => $::psick::bolt::bolt_user,
-      content => $::psick::bolt::ssh_user_pub_key,
+      content => $::psick::bolt::bolt_user_pub_key,
     }
     file { "${user_home_dir}/.ssh/id_rsa":
       ensure  => $dir_ensure,
       mode    => '0700',
       owner   => $::psick::bolt::bolt_user,
       group   => $::psick::bolt::bolt_user,
-      content => $::psick::bolt::ssh_user_priv_key,
+      content => $::psick::bolt::bolt_user_priv_key,
     }
   }
 

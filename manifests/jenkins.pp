@@ -26,8 +26,8 @@
 # @param scm_sync_repository_url The url of the git repo containing the Jenkins
 #   configurations synced via the scm-sync plugin
 # @param scm_sync_repository_host The hostname of the server which hosts the
-#   scm_sync_repository_url. If set a ssh config entry is added to ignore
-#   the hostkey verification
+#   scm_sync_repository_url. If set a ssh-keyscan is done and the host is added
+#   to Jenkins's known_hosts file
 # @param disable_setup_wizard If to (try) to disable the initial Jenkins
 #   setup wizard. Set this to true and define a $admin_password to disable
 #   it and set the admin password via Puppet
@@ -48,18 +48,11 @@
 #    psick::base::linux_classes:
 #      jenkins: psick::jenkins
 #    psick::jenkins::scm_sync_repository_url: git@github.com:alvagante/jenkins.foss.psick.io-scmsync.git
+#    psick::jenkins::scm_sync_repository_host: github.com
 #    psick::jenkins::disable_setup_wizard: true
 #    psick::jenkins::admin_password: 'example42'
 #    psick::jenkins::ssh_private_key_source: puppet:///modules/profile/jenkins/id_rsa
 #    psick::jenkins::ssh_public_key_source: puppet:///modules/profile/jenkins/id_rsa.pub
-#    psick::openssh::configs_hash:
-#      jenkins:
-#        path: /var/lib/jenkins/.ssh/config
-#        create_ssh_dir: false
-#        options_hash:
-#          Host github.com:
-#            StrictHostKeyChecking: no
-#            UserKnownHostsFile: /dev/null
 class psick::jenkins (
 
   Variant[Boolean,String]    $ensure     = 'present',
@@ -183,21 +176,14 @@ class psick::jenkins (
     include ::psick::jenkins::scm_sync
   }
 
-  # Disables host checking on scm_sync_repository_host for unattended
-  # setups. Be sure to have psick::openssh and psick::jenkins profiles
-  # in the same Psick phase (pre|base|profile) in order to avoid
-  # dependency loops.
-  # If not, set this via psick::openssh::configs_hash
+  # Pre-scan ssh host key of $scm_sync_repository_host and adds
+  # them to known_hosts for to avoid ssh issues with unknown hosts keys
   if $scm_sync_repository_host {
-    psick::openssh::config { 'jenkins':
-      path         => "${home_dir}/.ssh/config",
-      before       => Service['jenkins'],
-      options_hash => {
-        "Host ${scm_sync_repository_host}" => {
-          'StrictHostKeyChecking' => 'no',
-          'UserKnownHostsFile'    => '/dev/null',
-        }
-      }
+    psick::openssh::keyscan { $scm_sync_repository_host:
+      user             => 'jenkins',
+      known_hosts_path => "${home_dir}/.ssh/known_hosts",
+      require          => Package['jenkins'],
+      before           => Service['jenkins'],
     }
   }
 
