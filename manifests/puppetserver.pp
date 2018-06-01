@@ -10,7 +10,7 @@ class psick::puppetserver (
   Hash $r10k_options                      = {},
   Boolean $r10k_configure_webhook         = true,
   Boolean $r10k_autodeploy                = true,
-  Array $r10k_postrun_command             = '/usr/local/bin/generate_types.sh',
+  String $r10k_postrun_command            = '/usr/local/bin/generate_types.sh',
   String[1] $r10k_postrun_source          = 'puppet:///modules/psick/puppet/generate_types.sh',
 
   Optional[String]  $git_remote_repo      = undef,
