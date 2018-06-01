@@ -59,7 +59,7 @@ define psick::influxdb::database (
     $exec_title = "Create database ${title}"
     $_cmd = "CREATE DATABASE ${database}"
     $exec_command = "/usr/bin/influx ${influx_params} -execute \"${_cmd}\""
-    $exec_unless  = "/usr/bin/influx -execute \"SHOW DATABASES\" | grep --perl-regex \"^${name}\t\""
+    $exec_unless  = "/usr/bin/influx -execute \"SHOW DATABASES\" | grep --perl-regex \"^${name}\""
     $exec_onlyif  = undef
   } else {
     $exec_title = "Drop database ${title}"
