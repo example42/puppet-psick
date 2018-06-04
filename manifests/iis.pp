@@ -32,5 +32,4 @@ class psick::iis (
       * => $v,
     }
   }
-  include ::iis
 }
