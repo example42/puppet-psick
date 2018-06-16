@@ -15,7 +15,9 @@ class psick::reboot (
   String $reboot_name                   = 'Psick Reboot',
   Integer $timeout                      = 60,
   Optional[String] $schedule_name       = undef,
-  Boolean $subscribe_anchor             = false,
+  Optional[Integer] $retries            = undef,
+  Optional[Integer] $retries_interval   = undef,
+  Boolean $refresh_reboot               = false,
 ) {
 
   $message = "Rebooting: when ${when} - apply ${apply} - timeout ${timeout}"
@@ -25,16 +27,21 @@ class psick::reboot (
   }
 
   if $manage {
+    $reboot_params = {
+      apply           => $apply,
+      message         => $message,
+      when            => $when,
+      timeout         => $timeout,
+      schedule        => $schedule_name,
+      retries         => $retries,
+      retries_interval=> $retries_interval,
+    }
     reboot { $reboot_name:
-      apply    => $apply,
-      message  => $message,
-      when     => $when,
-      timeout  => $timeout,
-      schedule => $schedule_name,
+      * => delete_undef_values($reboot_params),
     }
   }
-  if $subscribe_anchor {
-    anchor { 'reboot':
+  if $refresh_reboot {
+    notify { 'reboot trigger':
       notify   => Reboot[$reboot_name],
       schedule => $schedule_name,
     }
