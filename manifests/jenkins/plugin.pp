@@ -4,7 +4,8 @@ define psick::jenkins::plugin (
   String $version               = 'latest',
   String $jenkins_dir           = '/var/lib/jenkins',
   String $jenkins_url           = 'http://updates.jenkins-ci.org',
-  String $install_script_source = 'puppet:///modules/psick/jenkins/install_jenkins_plugin.sh',
+  Optional[String] $install_script_source   = undef,
+  Optional[String] $install_script_template = 'psick/jenkins/install_jenkins_plugin.sh.epp',
   Boolean $enable               = true,
   String $jenkins_user          = 'jenkins',
   String $jenkins_group         = 'jenkins',
@@ -24,12 +25,14 @@ define psick::jenkins::plugin (
     }
   }
   if (!defined(File["${jenkins_dir}/install_jenkins_plugin.sh"])) {
+    $install_script_content = pick_default(psick::template($install_script_template),undef)
     file { "${jenkins_dir}/install_jenkins_plugin.sh":
-      ensure => present,
-      owner  => $jenkins_user,
-      group  => $jenkins_group,
-      mode   => '0750',
-      source => $install_script_source,
+      ensure  => present,
+      owner   => $jenkins_user,
+      group   => $jenkins_group,
+      mode    => '0750',
+      source  => $install_script_source,
+      content => $install_script_content,
     }
   }
 
