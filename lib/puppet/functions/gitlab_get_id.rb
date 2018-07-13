@@ -7,7 +7,7 @@
 # on every Puppet master
 #
 require 'gitlab'
-GITLAB_CONFIG = '/etc/gitlab-cli.conf'
+GITLAB_CONFIG = '/etc/gitlab-cli.conf'.freeze
 config = {}
 File.foreach GITLAB_CONFIG do |line|
   k = line.split('=')[0].gsub("\n", '') if line =~ /=/
@@ -34,7 +34,7 @@ Puppet::Functions.create_function(:gitlab_get_id, Puppet::Functions::InternalFun
 
     list.each do |item|
       record = item.to_h
-      result = record[id] if record[name] == varname
+      record[id] if record[name] == varname
     end
   end
 end

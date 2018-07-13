@@ -1,9 +1,8 @@
 require 'uri'
 
-Puppet::Parser::Functions::newfunction(:parse_url, :type => :rvalue, :doc => <<-'ENDHEREDOC') do |args|
+Puppet::Parser::Functions.newfunction(:parse_url, :type => :rvalue, :doc => <<-'ENDHEREDOC') do |args|
     Returns information about an url
-    
-    This function expects two arguments, an URL and the part of the url you want to retrieve. 
+    This function expects two arguments, an URL and the part of the url you want to retrieve.
     It is derived from url_parse function from the puppi module.
 
     Example:
@@ -22,24 +21,23 @@ Puppet::Parser::Functions::newfunction(:parse_url, :type => :rvalue, :doc => <<-
     filename : file.php
     filetype : php
     filedir  : file
-   
- 
+
   ENDHEREDOC
+
   raise ArgumentError, ("parse_url(): wrong number of arguments (#{args.length}; must be 2)") if args.length != 2
-  url=URI.parse args[0]
+  url = URI.parse args[0]
   case args[1]
-    when 'scheme' then url.scheme
-    when 'userinfo' then url.userinfo
-    when 'user' then url.user
-    when 'password' then url.password
-    when 'host' then url.host
-    when 'port' then url.port
-    when 'path' then url.path
-    when 'query' then url.query
-    when 'filename' then File.basename url.path
-    when 'filetype' then File.extname url.path
-    when 'filedir' then (File.basename url.path).chomp(File.extname(url.path))
-    else url
+  when 'scheme' then url.scheme
+  when 'userinfo' then url.userinfo
+  when 'user' then url.user
+  when 'password' then url.password
+  when 'host' then url.host
+  when 'port' then url.port
+  when 'path' then url.path
+  when 'query' then url.query
+  when 'filename' then File.basename url.path
+  when 'filetype' then File.extname url.path
+  when 'filedir' then (File.basename url.path).chomp(File.extname(url.path))
+  else url
   end
 end
-
