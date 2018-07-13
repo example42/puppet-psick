@@ -4,7 +4,7 @@
 #               package version to use
 # @param template Path (as used in template()) of the Erb template to use to
 #                 manage GitLab configuration file.
-# @param options An hash of options to eventually use in the provided template
+# @param options_hash An hash of options to eventually use in the provided template
 # @param manage_installation Set to true to atually install GitLab. Default,
 #                            false, just manages symlink in /etc/ssh/auth_keys
 # @param use_https Define if you want gitlab services to use ssl.
