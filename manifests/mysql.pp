@@ -18,22 +18,22 @@ class psick::mysql (
     'psick': {
       contain ::psick::mysql::tp
       contain ::psick::mysql::root_password
-      user_hash.each |$k,$v| {
+      $user_hash.each |$k,$v| {
         psick::mysql::user { $k:
           * => $v,
         }
       }
-      query_hash.each |$k,$v| {
+      $query_hash.each |$k,$v| {
         psick::mysql::query { $k:
           * => $v,
         }
       }
-      sqlfile_hash.each |$k,$v| {
+      $sqlfile_hash.each |$k,$v| {
         psick::mysql::sqlfile { $k:
           * => $v,
         }
       }
-      grant_hash.each |$k,$v| {
+      $grant_hash.each |$k,$v| {
         psick::mysql::grant { $k:
           * => $v,
         }
