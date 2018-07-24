@@ -37,8 +37,10 @@
 #   The final resources manages are the ones specified here and in $resources_hash.
 #   Check psick::elasticsearch::tp:resources_auto_conf_hash in data/$auto_conf/*.yaml for
 #   the auto_conf defaults.
+# @param install_hash An hash of valid params to pass to tp::install defines. Useful to
+#   manage specific params that are not automatically defined.
 # @param options_hash An open hash of options to use in the templates referenced
-#   in the tp::conf entries of the $resouces_hash.
+#   in the tp::conf entries of the $resources_hash.
 # @param options_auto_conf_hash The default options hash if auto_conf is set.
 #   Check psick::elasticsearch::tp:options_auto_conf_hash in data/$auto_conf/*.yaml for
 #   the auto_conf defaults.
@@ -55,6 +57,7 @@ class psick::elasticsearch::tp (
   Boolean         $manage                   = $::psick::manage,
   Hash            $resources_hash           = {},
   Hash            $resources_auto_conf_hash = {},
+  Hash            $install_hash             = {},
   Hash            $options_hash             = {},
   Hash            $options_auto_conf_hash   = {},
   Hash            $settings_hash            = {},
@@ -76,10 +79,10 @@ class psick::elasticsearch::tp (
       auto_prereq   => $auto_prereq,
     }
     tp::install { 'elasticsearch':
-      * => $install_defaults,
+      * => $install_defaults + $install_hash,
     }
 
-    # tp::conf iteration based on
+    # tp::conf iteration based on $resources_hash['tp::conf']
     $file_ensure = $ensure ? {
       'absent' => 'absent',
       default  => 'present',
@@ -97,7 +100,7 @@ class psick::elasticsearch::tp (
       }
     }
 
-    # tp::dir iterated over $dir_hash
+    # tp::dir iteration on $resources_hash['tp::dir']
     $dir_defaults = {
       ensure             => $file_ensure,
       settings_hash      => $settings_hash,
