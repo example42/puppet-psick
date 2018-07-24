@@ -26,9 +26,6 @@
 #   automatically added (Default value is inherited from global $::psick::auto_conf
 #   psick::redis::tp::auto_conf: 'default'
 #
-# @example Set no-noop mode and enforce changes even if noop is set for the agent
-#   psick::redis::tp::no_noop: true
-#
 # @param manage If to actually manage any resource in this profile or not
 # @param ensure If to install or remove redis. Valid values are present, absent, latest
 #   or any version string, matching the expected redis package version.
@@ -40,8 +37,10 @@
 #   The final resources manages are the ones specified here and in $resources_hash.
 #   Check psick::redis::tp:resources_auto_conf_hash in data/$auto_conf/*.yaml for
 #   the auto_conf defaults.
+# @param install_hash An hash of valid params to pass to tp::install defines. Useful to
+#   manage specific params that are not automatically defined.
 # @param options_hash An open hash of options to use in the templates referenced
-#   in the tp::conf entries of the $resouces_hash.
+#   in the tp::conf entries of the $resources_hash.
 # @param options_auto_conf_hash The default options hash if auto_conf is set.
 #   Check psick::redis::tp:options_auto_conf_hash in data/$auto_conf/*.yaml for
 #   the auto_conf defaults.
@@ -58,6 +57,7 @@ class psick::redis::tp (
   Boolean         $manage                   = $::psick::manage,
   Hash            $resources_hash           = {},
   Hash            $resources_auto_conf_hash = {},
+  Hash            $install_hash             = {},
   Hash            $options_hash             = {},
   Hash            $options_auto_conf_hash   = {},
   Hash            $settings_hash            = {},
@@ -70,7 +70,6 @@ class psick::redis::tp (
       info('Forced no-noop mode in psick::redis::tp')
       noop(false)
     }
-
     $options_all = $options_auto_conf_hash + $options_hash
     $install_defaults = {
       ensure        => $ensure,
@@ -80,10 +79,10 @@ class psick::redis::tp (
       auto_prereq   => $auto_prereq,
     }
     tp::install { 'redis':
-      * => $install_defaults,
+      * => $install_defaults + $install_hash,
     }
 
-    # tp::conf iteration based on
+    # tp::conf iteration based on $resources_hash['tp::conf']
     $file_ensure = $ensure ? {
       'absent' => 'absent',
       default  => 'present',
@@ -101,7 +100,7 @@ class psick::redis::tp (
       }
     }
 
-    # tp::dir iterated over $dir_hash
+    # tp::dir iteration on $resources_hash['tp::dir']
     $dir_defaults = {
       ensure             => $file_ensure,
       settings_hash      => $settings_hash,
