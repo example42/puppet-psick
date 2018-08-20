@@ -2,35 +2,53 @@
 
 set -e
 
-
-# check that we are a mom, get information from puppetdb
-if [ ! -e /etc/puppetlabs/puppet/puppetdb.conf ]; then
-  echo "not running on a master... terminating"
+# verify whether we can rely on PE node classification. Use static list otherwise.
+is_pe=$(/opt/puppetlabs/puppet/bin/facter is_pe)
+if [ $is_pe != 'true' ]; then
+  # manage your list of puppet infrastructure nodes here and remove the echo and exit line
+  #
+  pe_mom='master.domain.tld'
+  pe_compiler='master.domain.tld compiler1.domain.tld compiler2.domain.tld'
+  pe_puppetdb='puppetdb.domain.tld'
+  pe_console='console.domain.tld'
+  #
+  echo 'FOSS Puppet required variables not set'
   exit 1
+
+else
+
+  # we need to find puppetdb from puppetdb.conf file
+  # if file is missing we can exit
+  if [ ! -e /etc/puppetlabs/puppet/puppetdb.conf ]; then
+    echo "not running on a master... terminating"
+    exit 1
+  fi
+
+  # get our certificate name
+  certname=$(/opt/puppetlabs/puppet/bin/puppet agent --configprint certname)
+  capem="/etc/puppetlabs/puppet/ssl/certs/ca.pem"
+  cert="/etc/puppetlabs/puppet/ssl/certs/$certname.pem"
+  key="/etc/puppetlabs/puppet/ssl/private_keys/$certname.pem"
+
+  # read puppetdb url from puppetdb.conf file
+  server=$(grep server /etc/puppetlabs/puppet/puppetdb.conf | cut -d "=" -f2 |sed -e 's/^[ \t]*//')
+
+  # get list of pe_master nodes classified with puppet_enterprise::profile::master class:
+  pe_masters=$(puppet query --urls $server --cacert $cacert --cert $cert --key $key 'resources[certname] { type = "Class" and title = "Puppet_enterprise::Profile::Master" }' | grep certname | cut -d '"' -f4)
+
+  # TODO: pe master of masters has orchestrator service running
+  pe_master_of_masters=$pe_masters
+
+  # TODO: puppetdb node is classified with ...
+
+  # TODO: pe-console node is classified with ...
+
+  pe_mom=$pe_master_of_masters
+  pe_compiler=$pe_masters
+  pe_puppetdb=$pe_masters
+  pe_console=$pe_masters
+
 fi
-
-# get our certificate name
-certname=$(/opt/puppetlabs/puppet/bin/puppet agent --configprint certname)
-
-# read puppetdb url from puppetdb.conf file
-server=$(grep server /etc/puppetlabs/puppet/puppetdb.conf | cut -d "=" -f2 |sed -e 's/^[ \t]*//')
-
-# get list of nodes classified with puppet_enterprise::profile::master class:
-pe_masters=$(puppet query --urls $server --cacert /etc/puppetlabs/puppet/ssl/certs/ca.pem --cert /etc/puppetlabs/puppet/ssl/certs/$certname.pem --key /etc/puppetlabs/puppet/ssl/private_keys/$certname.pem 'resources[certname] { type = "Class" and title = "Puppet_enterprise::Profile::Master" }' | grep certname | cut -d '"' -f4)
-
-# manage your list of PE MoM nodes here
-#
-#pe_mom='master.razor.demo nod32 node3'
-#pe_compiler='master.razor.demo compiler1 compiler2'
-#
-# or use the computed list:
-#
-pe_mom=$pe_masters
-pe_compiler=$pe_masters
-
-
-# dont change from here on #
-############################
 
 # set variables
 node_is_mom=false
@@ -55,16 +73,31 @@ IFS='[],' read -r -a array <<< $nodes
 # iterate over given nodes
 for node in ${array[@]}; do
 
-  # sanity check: do not remove mom or compiler certificates
+  # sanity check: do not remove mom certificates
   for pe_mom_node in $pe_mom; do
     if [ "${node//\"}" == $pe_mom_node ]; then
       echo "One node in list is a PE MoM. Terminating"
       exit 1
     fi
   done
+  # sanity check: do not remove compiler certificates
   for pe_compiler_node in $pe_compiler; do
     if [ "${node//\"}" == $pe_compiler_node ]; then
       echo "One node in list is a compiler node. Terminating"
+      exit 1
+    fi
+  done
+  # sanity check: do not remove puppetdb certificates
+  for pe_puppetdb_node in $pe_puppetdb; do
+    if [ "${node//\"}" == $pe_puppetdb_node ]; then
+      echo "One node in list is a puppetdb node. Terminating"
+      exit 1
+    fi
+  done
+  # sanity check: do not remove console certificates
+  for pe_console_node in $pe_console; do
+    if [ "${node//\"}" == $pe_console_node ]; then
+      echo "One node in list is a console node. Terminating"
       exit 1
     fi
   done
