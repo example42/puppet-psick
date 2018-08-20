@@ -105,6 +105,9 @@ class psick::puppet::gems (
       }
     }
     if $install_puppet_gems {
+      if $auto_prereq {
+        include ::psick::ruby::buildgems
+      }
       $puppet_gems = $all_gems + $additional_puppet_gems
       $puppet_gems.each | $gem | {
         if !defined(Class['r10k']) {
@@ -113,6 +116,7 @@ class psick::puppet::gems (
             name            => $gem,
             install_options => $install_options,
             provider        => 'puppet_gem',
+            require         => Class['psick::ruby::buildgems'],
           }
         }
       }
