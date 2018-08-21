@@ -34,16 +34,16 @@ else
   server=$(grep server /etc/puppetlabs/puppet/puppetdb.conf | cut -d "=" -f2 |sed -e 's/^[ \t]*//')
 
   # get list of pe_compiler nodes classified with puppet_enterprise::profile::master class
-  pe_compiler=$(puppet query --urls $server --cacert $cacert --cert $cert --key $key 'resources[certname] { type = "Class" and title = "Puppet_enterprise::Profile::Master" }' | grep certname | cut -d '"' -f4)
+  pe_compiler=$(/opt/puppetlabs/bin/puppet-query --urls $server --cacert $cacert --cert $cert --key $key 'resources[certname] { type = "Class" and title = "Puppet_enterprise::Profile::Master" }' | grep certname | cut -d '"' -f4)
 
   # pe master of masters node is classified with puppet_enterprise::profile::ochestrator
-  pe_mom=$(puppet query --urls $server --cacert $cacert --cert $cert --key $key 'resources[certname] { type = "Class" and title = "Puppet_enterprise::Profile::Orchestrator" }' | grep certname | cut -d '"' -f4)
+  pe_mom=$(/opt/puppetlabs/bin/puppet-query --urls $server --cacert $cacert --cert $cert --key $key 'resources[certname] { type = "Class" and title = "Puppet_enterprise::Profile::Orchestrator" }' | grep certname | cut -d '"' -f4)
 
   # puppetdb node is classified with puppet_enterprise::profile::puppetdb
-  pe_puppetdb=$(puppet query --urls $server --cacert $cacert --cert $cert --key $key 'resources[certname] { type = "Class" and title = "Puppet_enterprise::Profile::Puppetdb" }' | grep certname | cut -d '"' -f4)
+  pe_puppetdb=$(/opt/puppetlabs/bin/puppet-query --urls $server --cacert $cacert --cert $cert --key $key 'resources[certname] { type = "Class" and title = "Puppet_enterprise::Profile::Puppetdb" }' | grep certname | cut -d '"' -f4)
 
   # pe-console node is classified with puppet_enterprise::profile::console
-  pe_console=$(puppet query --urls $server --cacert $cacert --cert $cert --key $key 'resources[certname] { type = "Class" and title = "Puppet_enterprise::Profile::Console" }' | grep certname | cut -d '"' -f4)
+  pe_console=$(/opt/puppetlabs/bin/puppet-query --urls $server --cacert $cacert --cert $cert --key $key 'resources[certname] { type = "Class" and title = "Puppet_enterprise::Profile::Console" }' | grep certname | cut -d '"' -f4)
 
 fi
 
