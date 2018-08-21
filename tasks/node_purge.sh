@@ -26,7 +26,7 @@ else
 
   # get our certificate name
   certname=$(/opt/puppetlabs/puppet/bin/puppet agent --configprint certname)
-  capem="/etc/puppetlabs/puppet/ssl/certs/ca.pem"
+  cacert="/etc/puppetlabs/puppet/ssl/certs/ca.pem"
   cert="/etc/puppetlabs/puppet/ssl/certs/$certname.pem"
   key="/etc/puppetlabs/puppet/ssl/private_keys/$certname.pem"
 
