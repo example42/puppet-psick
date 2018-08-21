@@ -16,7 +16,7 @@ class psick::puppet::pe_server (
 
   Tp::Test {
     cli_enable => true,
-    template   => '',
+    content    => 'puppet infrastructure status',
   }
   tp::test { 'puppetserver': settings_hash => $puppetserver_settings }
 
