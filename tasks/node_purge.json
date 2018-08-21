@@ -1,0 +1,13 @@
+{
+  "supports_noop": false,
+  "description": "Remove nodes from PE Master (deleting Certificate and remove node from PuppetDB)",
+  "parameters": {
+    "nodenames": {
+      "description": "List of node to remove from Puppet. e.g. [\"node1.domain.tld\", \"node2.domain.tld\"]",
+      "type": "Array[String[1]]"
+    }
+  },
+  "implementations": [
+    { "name": "node_purge.sh", "requirements": ["shell"]}
+  ]
+}
