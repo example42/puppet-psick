@@ -103,7 +103,7 @@ done
 
 # sanity check finished, lets run the cert removal and cleanup
 for node in ${array[@]}; do
-  clean_node=${node//\"}
+  cleannode=${node//\"}
   if [ $(/opt/puppetlabs/puppet/bin/puppet cert list $cleannode | wc -l) -gt 0 ]; then
     echo "Cleaning certificate for $cleannode"
     /opt/puppetlabs/puppet/bin/puppet cert clean $cleannode
