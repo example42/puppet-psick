@@ -3,8 +3,8 @@
 set -e
 
 # verify whether we can rely on PE node classification. Use static list otherwise.
-is_pe=$(/opt/puppetlabs/puppet/bin/facter is_pe)
-if [ $is_pe != 'true' ]; then
+is_pe=$(/opt/puppetlabs/puppet/bin/facter -p pe_build)
+if [ "$is_pe" = '' ]; then
   # manage your list of puppet infrastructure nodes here and remove the echo and exit line
   #
   pe_mom='master.domain.tld'
@@ -20,7 +20,7 @@ else
   # we need to find puppetdb from puppetdb.conf file
   # if file is missing we can exit
   if [ ! -e /etc/puppetlabs/puppet/puppetdb.conf ]; then
-    echo "not running on a master... terminating"
+    echo "not running on a master... missing puppetdb.conf file. terminating"
     exit 1
   fi
 
@@ -33,20 +33,17 @@ else
   # read puppetdb url from puppetdb.conf file
   server=$(grep server /etc/puppetlabs/puppet/puppetdb.conf | cut -d "=" -f2 |sed -e 's/^[ \t]*//')
 
-  # get list of pe_master nodes classified with puppet_enterprise::profile::master class:
-  pe_masters=$(puppet query --urls $server --cacert $cacert --cert $cert --key $key 'resources[certname] { type = "Class" and title = "Puppet_enterprise::Profile::Master" }' | grep certname | cut -d '"' -f4)
+  # get list of pe_compiler nodes classified with puppet_enterprise::profile::master class
+  pe_compiler=$(puppet query --urls $server --cacert $cacert --cert $cert --key $key 'resources[certname] { type = "Class" and title = "Puppet_enterprise::Profile::Master" }' | grep certname | cut -d '"' -f4)
 
-  # TODO: pe master of masters has orchestrator service running
-  pe_master_of_masters=$pe_masters
+  # pe master of masters node is classified with puppet_enterprise::profile::ochestrator
+  pe_mom=$(puppet query --urls $server --cacert $cacert --cert $cert --key $key 'resources[certname] { type = "Class" and title = "Puppet_enterprise::Profile::Orchestrator" }' | grep certname | cut -d '"' -f4)
 
-  # TODO: puppetdb node is classified with ...
+  # puppetdb node is classified with puppet_enterprise::profile::puppetdb
+  pe_puppetdb=$(puppet query --urls $server --cacert $cacert --cert $cert --key $key 'resources[certname] { type = "Class" and title = "Puppet_enterprise::Profile::Puppetdb" }' | grep certname | cut -d '"' -f4)
 
-  # TODO: pe-console node is classified with ...
-
-  pe_mom=$pe_master_of_masters
-  pe_compiler=$pe_masters
-  pe_puppetdb=$pe_masters
-  pe_console=$pe_masters
+  # pe-console node is classified with puppet_enterprise::profile::console
+  pe_console=$(puppet query --urls $server --cacert $cacert --cert $cert --key $key 'resources[certname] { type = "Class" and title = "Puppet_enterprise::Profile::Console" }' | grep certname | cut -d '"' -f4)
 
 fi
 
@@ -76,28 +73,28 @@ for node in ${array[@]}; do
   # sanity check: do not remove mom certificates
   for pe_mom_node in $pe_mom; do
     if [ "${node//\"}" == $pe_mom_node ]; then
-      echo "One node in list is a PE MoM. Terminating"
+      echo "$node in list is a MoM node. Terminating"
       exit 1
     fi
   done
   # sanity check: do not remove compiler certificates
   for pe_compiler_node in $pe_compiler; do
     if [ "${node//\"}" == $pe_compiler_node ]; then
-      echo "One node in list is a compiler node. Terminating"
+      echo "$node in list is a compiler node. Terminating"
       exit 1
     fi
   done
   # sanity check: do not remove puppetdb certificates
   for pe_puppetdb_node in $pe_puppetdb; do
     if [ "${node//\"}" == $pe_puppetdb_node ]; then
-      echo "One node in list is a puppetdb node. Terminating"
+      echo "$node in list is a puppetdb node. Terminating"
       exit 1
     fi
   done
   # sanity check: do not remove console certificates
   for pe_console_node in $pe_console; do
     if [ "${node//\"}" == $pe_console_node ]; then
-      echo "One node in list is a console node. Terminating"
+      echo "$node in list is a console node. Terminating"
       exit 1
     fi
   done
@@ -106,8 +103,16 @@ done
 
 # sanity check finished, lets run the cert removal and cleanup
 for node in ${array[@]}; do
-  /opt/puppetlabs/puppet/bin/puppet node clean $node
+  if [ $(/opt/puppetlabs/puppet/bin/puppet cert list $node | wc -l) -gt 0 ]; then
+    echo "Cleaning certificate for $node"
+    /opt/puppetlabs/puppet/bin/puppet cert clean $node
+    /opt/puppetlabs/puppet/bin/puppet node clean $node
+  else
+    echo "No certificate found for $node. Skipping."
+  fi
+  echo "Deactivating $node in PuppetDB"
   /opt/puppetlabs/puppet/bin/puppet node deactivate $node
-  /opt/puppetlabs/puppet/bin/puppet cert clean $node
 done
+
+echo "Done."
 
