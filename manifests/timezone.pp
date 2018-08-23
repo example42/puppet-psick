@@ -39,8 +39,8 @@ class psick::timezone(
     }
     'Debian' : {
       $debian_command = $::operatingsystemmajrelease ? {
-        /16.04/ => "timedatectl set-timezone ${timezone}",
-        default => 'dpkg-reconfigure -f noninteractive tzdata',
+        /(16.04|16.10|17.04|17.10|18.04|18.10)/ => "timedatectl set-timezone ${timezone}",
+        default                                 => 'dpkg-reconfigure -f noninteractive tzdata',
       }
     }
   }
