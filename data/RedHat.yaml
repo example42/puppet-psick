@@ -11,9 +11,9 @@ psick::monitor::ganglia::packages:
   - 'libganglia-3_1_0'
 
 psick::puppet::install_ca::ca_ssl_dir: '/etc/pki/ca-trust/source/anchors/'
-psick::puppet::install_ca::ca_setup_command = 'update-ca-trust force-enable'
-psick::puppet::install_ca::ca_update_command = 'update-ca-trust extract'
-psick::puppet::install_ca::ca_package = 'ca-certificates'
+psick::puppet::install_ca::ca_setup_command: 'update-ca-trust force-enable'
+psick::puppet::install_ca::ca_update_command: 'update-ca-trust extract'
+psick::puppet::install_ca::ca_package: 'ca-certificates'
 
 psick::ruby::buildgems::packages:
   - 'make'
