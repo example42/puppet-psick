@@ -18,7 +18,7 @@ define psick::gitlab::runner_register (
   }
 
   $command_options = "--non-interactive --executor ${executor} --name ${title} --url ${url} --registration-token ${token} ${extra_options} ${tag_option} ${tls_option}"
-  $saved_options = "${executor} ${title} ${url} ${token} ${tag_option} ${tls_option}"
+  $saved_options = "${executor} ${title} ${url} ${token}"
   exec { "gitlab-runner register ${title}":
     command => "gitlab-runner register ${command_options} && echo ${saved_options} > /etc/gitlab-runner/.registered-${title}",
     unless  => "grep '${saved_options}' /etc/gitlab-runner/.registered-${title}",
