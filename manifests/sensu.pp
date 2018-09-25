@@ -3,34 +3,34 @@ class psick::sensu (
   Psick::Password $rabbitmq_password,
   Psick::Password $api_password,
 
-  String $api_user          = 'sensu',
-  String $api_host          = '127.0.0.1',
-  String $api_bind          = '0.0.0.0',
-  Integer $api_port         = 4567,
+  String $api_user                      = 'sensu',
+  String $api_host                      = '127.0.0.1',
+  String $api_bind                      = '0.0.0.0',
+  Integer $api_port                     = 4567,
 
-  String $rabbitmq_host     = '127.0.0.1',
-  String $rabbitmq_user     = 'sensu',
-  String $rabbitmq_vhost    = '/sensu',
+  String $rabbitmq_host                 = '127.0.0.1',
+  String $rabbitmq_user                 = 'sensu',
+  String $rabbitmq_vhost                = '/sensu',
 
-  String $subscriptions     = 'base',
-  String $client_address    = $::psick::monitor['ip'],
-  String $client_name       = $::psick::monitor['hostname'],
+  Variant[String,Array] $subscriptions  = 'base',
+  String $client_address                = $::psick::monitor['ip'],
+  String $client_name                   = $::psick::monitor['hostname'],
 
-  Boolean $is_client        = true,
-  Boolean $is_server        = false,
-  Boolean $is_api           = false,
+  Boolean $is_client                    = true,
+  Boolean $is_server                    = false,
+  Boolean $is_api                       = false,
 
-  String $rabbitmq_class    = '',
-  String $redis_class       = '',
-  String $dashboard_class   = '',
+  String $rabbitmq_class                = '',
+  String $redis_class                   = '',
+  String $dashboard_class               = '',
 
-  Boolean $tp_test          = $::psick::tp['test_enable'],
+  Boolean $tp_test                      = $::psick::tp['test_enable'],
 
-  Hash $checks_hash         = {},
-  Hash $checks_params_hash  = {},
+  Hash $checks_hash                     = {},
+  Hash $checks_params_hash              = {},
 
-  Hash $plugins_hash        = {},
-  Hash $plugins_params_hash = {},
+  Hash $plugins_hash                    = {},
+  Hash $plugins_params_hash             = {},
 
 ) {
 
