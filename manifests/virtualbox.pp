@@ -14,7 +14,7 @@ class psick::virtualbox (
   # Intallation management
   case $module {
     'psick': {
-      contain ::psick::virtualbox::tp
+      contain psick::virtualbox::tp
       $vm_hash.each |$k,$v| {
         psick::virtualbox::vm { $k:
           * => $v,

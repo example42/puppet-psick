@@ -8,7 +8,7 @@
 class psick::vagrant (
   Variant[Undef,String] $version = undef,
   Array $plugins         = [] ,
-  Array $default_plugins = [ 'vagrant-hostmanager' , 'vagrant-vbguest' ,  'vagrant-cachier', 'vagrant-triggers' , 'vagrant-  pe_build'],
+  Array $default_plugins = [ 'vagrant-vbguest' ,  'vagrant-cachier' ],
   String $user           = 'root',
 ) {
 
