@@ -7,6 +7,7 @@ class psick::hostname (
   Variant[Undef,String] $fqdn                 = $::fqdn,
   Variant[Undef,String] $dom                  = $::domain,
   String                $ip                   = $::ipaddress,
+  Boolean               $update_hostname      = true,
   Boolean               $update_host_entry    = true,
   Boolean               $update_network_entry = true,
   Boolean               $update_cloud_cfg     = false,
@@ -22,18 +23,20 @@ class psick::hostname (
   case $::kernel {
     'Linux': {
       if $::virtual != 'docker' {
-        file { '/etc/hostname':
-          ensure  => file,
-          owner   => 'root',
-          group   => 'root',
-          mode    => '0644',
-          content => "${fqdn}\n",
-          notify  => Exec['apply_hostname'],
-        }
+        if $update_hostname {
+          file { '/etc/hostname':
+            ensure  => file,
+            owner   => 'root',
+            group   => 'root',
+            mode    => '0644',
+            content => "${fqdn}\n",
+            notify  => Exec['apply_hostname'],
+          }
 
-        exec { 'apply_hostname':
-          command => '/bin/hostname -F /etc/hostname',
-          unless  => '/usr/bin/test `hostname` = `/bin/cat /etc/hostname`',
+          exec { 'apply_hostname':
+            command => '/bin/hostname -F /etc/hostname',
+            unless  => '/usr/bin/test `hostname` = `/bin/cat /etc/hostname`',
+          }
         }
 
         if $update_host_entry {
@@ -67,10 +70,12 @@ class psick::hostname (
       }
     }
     'windows': {
-      exec  { 'Change win hostname':
-        command  => "netdom renamecomputer ${::hostname} /newname:${host} /force",
-        unless   => "hostname | findstr /I /B /C:'${host}'",
-        provider => powershell,
+      if $update_hostname {
+        exec  { 'Change win hostname':
+          command  => "netdom renamecomputer ${::hostname} /newname:${host} /force",
+          unless   => "hostname | findstr /I /B /C:'${host}'",
+          provider => powershell,
+        }
       }
     }
     default: {
