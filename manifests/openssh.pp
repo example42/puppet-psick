@@ -1,23 +1,16 @@
 # This class installs openssh using tp
 #
-# @param ensure Define if to install or remove openssh
-#
 class psick::openssh (
-  Enum['present','absent'] $ensure        = 'present',
   Hash                     $configs_hash  = {},
   Hash                     $keygens_hash  = {},
   Hash                     $keypairs_hash = {},
+  Hash                     $keyscans_hash = {},
   String                   $module        = 'psick',
-  Boolean                  $use_tp        = true,
 ) {
 
   case $module {
     'psick': {
-      if $use_tp {
-        tp::install { 'openssh':
-          ensure => $ensure,
-        }
-      }
+      contain ::psick::openssh::tp
       $configs_hash.each |$k,$v| {
         psick::openssh::config { $k:
           * => $v,
@@ -30,6 +23,11 @@ class psick::openssh (
       }
       $keypairs_hash.each |$k,$v| {
         psick::openssh::keypair { $k:
+          * => $v,
+        }
+      }
+      $keyscans_hash.each |$k,$v| {
+        psick::openssh::keyscan { $k:
           * => $v,
         }
       }
