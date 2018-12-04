@@ -39,14 +39,10 @@ define psick::openssh::keypair (
 
   # SSH keys management
   if $create_ssh_dir {
-    if !defined(File[$ssh_dir_path]) {
-      $dir_ensure = ::tp::ensure2dir($ensure)
-      file { $ssh_dir_path:
-        ensure => $dir_ensure,
-        owner  => pick($dir_owner,$user),
-        group  => pick($dir_group,$user),
-        mode   => $dir_mode,
-      }
+    psick::tools::create_dir { "openssh_keypair_${ssh_dir_path}":
+      path  => $ssh_dir_path,
+      owner => pick($dir_owner,$user),
+      group => pick($dir_group,$user),
     }
   }
 
@@ -59,6 +55,9 @@ define psick::openssh::keypair (
       content => $private_key_content,
       source  => $private_key_source,
     }
+    if $create_ssh_dir {
+      Psick::Tools::Create_dir["openssh_keypair_${ssh_dir_path}"] -> File["${ssh_dir_path}/${key_name}"]
+    }
   }
 
   if $public_key_content or $public_key_source {
@@ -69,6 +68,9 @@ define psick::openssh::keypair (
       mode    => $public_key_mode,
       content => $public_key_content,
       source  => $public_key_source,
+    }
+    if $create_ssh_dir {
+      Psick::Tools::Create_dir["openssh_keypair_${ssh_dir_path}"] -> File["${ssh_dir_path}/${key_name}.pub"]
     }
   }
 }
