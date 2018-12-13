@@ -19,5 +19,10 @@
     ErrorLog  <%= @settings['log_dir_path'] %>/<%= @options['ServerName'] %>-error_log
     CustomLog <%= @settings['log_dir_path'] %>/<%= @options['ServerName'] %>-access_log common
 
+<% if @options['extra'] -%>
+<% @options['extra'].each do |k,v| -%>
+    <%= k %> <%= v %>
+<% end -%>
+<% end -%>
 </VirtualHost>
 
