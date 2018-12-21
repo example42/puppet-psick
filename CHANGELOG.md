@@ -2,11 +2,19 @@
 
 * Your contribution here.
 
+## Release 0.6.1
+* Improved openssh defines
+* Added extra_packages_list to psick::git
+* Added extra options to default apache vhost template
+* Added update_hostname option to psick::hostname
+* Less default vagrant plugins
+* psick::virtualbox updated
+
 ## Release 0.6.0
 
 * Added no_noop parameter to tp profiles
 * Changed current no_noop params to not override server side noop_mode
-* Added psick::chroby profile
+* Added psick::chruby profile
 * Use correct puppet agent parameter for server - [@tuxmea](https://github.com/tuxmea).
 
 ## Release 0.5.8
