@@ -55,18 +55,18 @@
 #    psick::jenkins::ssh_public_key_source: puppet:///modules/profile/jenkins/id_rsa.pub
 class psick::jenkins (
 
-  Variant[Boolean,String]    $ensure     = 'present',
-  Enum['psick']              $module     = 'psick',
-  Hash                       $plugins    = {},
-  Hash                       $init_options  = {},
-  String $home_dir                          = '/var/lib/jenkins',
+  Variant[Boolean,String] $ensure            = 'present',
+  Enum['psick'] $module                      = 'psick',
+  Hash $plugins                              = {},
+  Hash $init_options                         = {},
+  String $home_dir                           = '/var/lib/jenkins',
 
-  Optional[String] $ssh_private_key_content = undef,
-  Optional[String] $ssh_public_key_content  = undef,
-  Optional[String] $ssh_private_key_source  = undef,
-  Optional[String] $ssh_public_key_source   = undef,
+  Optional[String] $ssh_private_key_content  = undef,
+  Optional[String] $ssh_public_key_content   = undef,
+  Optional[String] $ssh_private_key_source   = undef,
+  Optional[String] $ssh_public_key_source    = undef,
 
-  Boolean $ssh_keys_generate                = false,
+  Boolean $ssh_keys_generate                 = false,
 
   Optional[String] $scm_sync_repository_url  = undef,
   Optional[String] $scm_sync_repository_host = undef,
@@ -129,12 +129,11 @@ class psick::jenkins (
   or $ssh_private_key_source
   or $ssh_public_key_source
   or $scm_sync_repository_host {
-    $dir_ensure = ::tp::ensure2dir($ensure)
-    file { "${home_dir}/.ssh" :
-      ensure  => $dir_ensure,
-      mode    => '0700',
+    psick::tools::create_dir { "jenkins_${home_dir}/.ssh":
+      path    => "${home_dir}/.ssh",
       owner   => 'jenkins',
       group   => 'jenkins',
+      mode    => '0700',
       require => Package['jenkins'],
       before  => Service['jenkins'],
     }
@@ -142,21 +141,23 @@ class psick::jenkins (
 
   if $ssh_keys_generate {
     psick::openssh::keygen { 'jenkins':
-      require => File["${home_dir}/.ssh"],
+      require => Psick::Tools::Create_dir["jenkins_${home_dir}/.ssh"],
       before  => Service['jenkins'],
       home    => $home_dir,
     }
   }
 
   if $ssh_private_key_content or $ssh_private_key_source {
-    file { "${home_dir}/.ssh/id_rsa" :
+    file { 'jenkins_id_rsa':
       ensure  => $ensure,
+      path    => "${home_dir}/.ssh/id_rsa",
       mode    => '0600',
       owner   => 'jenkins',
       group   => 'jenkins',
       content => $ssh_private_key_content,
       source  => $ssh_private_key_source,
       before  => Service['jenkins'],
+      require => Psick::Tools::Create_dir["jenkins_${home_dir}/.ssh"],
     }
   }
 
@@ -169,6 +170,7 @@ class psick::jenkins (
       content => $ssh_public_key_content,
       source  => $ssh_public_key_source,
       before  => Service['jenkins'],
+      require => Psick::Tools::Create_dir["jenkins_${home_dir}/.ssh"],
     }
   }
 
