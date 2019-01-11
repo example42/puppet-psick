@@ -14,7 +14,7 @@ class psick::puppetserver (
   String[1] $r10k_postrun_source          = 'puppet:///modules/psick/puppet/generate_types.sh',
 
   Optional[String]  $git_remote_repo      = undef,
-  String            $dns_alt_names        = "puppet, puppet.${::domain}",
+  String            $dns_alt_names        = "puppet,puppet.${::domain}",
   Boolean           $remove_global_hiera_yaml = false,
 ) {
 
@@ -22,9 +22,11 @@ class psick::puppetserver (
   case $module {
     'psick': {
       contain ::psick::puppetserver::tp
+      $puppetserver_class = 'psick::puppetserver::tp'
     }
     default: {
       contain ::puppetserver
+      $puppetserver_class = 'puppetserver'
     }
   }
 
@@ -34,16 +36,25 @@ class psick::puppetserver (
     section => 'master',
     setting => 'dns_alt_names',
     value   => $dns_alt_names,
+    before  => Service['puppetserver'],
   }
-  # step 1 generate ca
-  exec { '/opt/puppetlabs/puppet/bin/puppet cert list --all --allow-dns-alt-names':
-    creates   => '/etc/puppetlabs/puppet/ssl/ca/ca_key.pem',
-    logoutput => true,
-  }
-  # step 2: generate host certificate
-  exec { "/opt/puppetlabs/puppet/bin/puppet cert generate ${::facts['networking']['fqdn']}":
-    creates   => "/etc/puppetlabs/puppet/ssl/certs/${::facts['networking']['fqdn']}.pem",
-    logoutput => true,
+
+  case $facts['puppetversion'] {
+    /^(3|4|5)/: {
+      # step 1 generate ca
+      exec { '/opt/puppetlabs/puppet/bin/puppet cert list --all --allow-dns-alt-names':
+        creates   => '/etc/puppetlabs/puppet/ssl/ca/ca_key.pem',
+        logoutput => true,
+        require   => [ Package['puppetserver'], Ini_setting['puppet master dns alt names'] ],
+      }
+      # step 2: generate host certificate
+      exec { "/opt/puppetlabs/puppet/bin/puppet cert generate ${::facts['networking']['fqdn']}":
+        creates   => "/etc/puppetlabs/puppet/ssl/certs/${::facts['networking']['fqdn']}.pem",
+        logoutput => true,
+        require   => [ Package['puppetserver'], Ini_setting['puppet master dns alt names'] ],
+      }
+    }
+    default: { }
   }
 
   if $r10k_remote_repo or $r10k_options {

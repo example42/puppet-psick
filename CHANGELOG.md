@@ -2,6 +2,12 @@
 
 * Your contribution here.
 
+## Release 0.6.2
+* Updated psick::puppet::foss_master to Puppet 6
+* Updated psick::puppetserver to Puppet 6
+* Added psick::jenkins::jcasc clsss
+* Updated .travis.yml
+
 ## Release 0.6.1
 * Improved openssh defines
 * Added extra_packages_list to psick::git

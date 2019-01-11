@@ -27,7 +27,7 @@ class psick::puppet::foss_master (
   Optional[String]  $git_remote_repo      = undef,
   Boolean           $manage_puppetdb_repo = true,
   Boolean           $enable_puppetdb      = true,
-  String            $dns_alt_names        = "puppet, puppet.${::domain}",
+  String            $dns_alt_names        = "puppet,puppet.${::domain}",
   Boolean           $remove_global_hiera_yaml = false,
 ){
   if versioncmp('5', $facts['puppetversion']) > 0 {
@@ -45,15 +45,23 @@ class psick::puppet::foss_master (
     setting => 'dns_alt_names',
     value   => $dns_alt_names,
   }
-  # step 1 generate ca
-  exec { '/opt/puppetlabs/puppet/bin/puppet cert list --all --allow-dns-alt-names':
-    creates   => '/etc/puppetlabs/puppet/ssl/ca/ca_key.pem',
-    logoutput => true,
-  }
-  # step 2: generate host certificate
-  exec { "/opt/puppetlabs/puppet/bin/puppet cert generate ${::facts['networking']['fqdn']}":
-    creates   => "/etc/puppetlabs/puppet/ssl/certs/${::facts['networking']['fqdn']}.pem",
-    logoutput => true,
+
+  case $facts['puppetversion'] {
+    /^(3|4|5)/: {
+      # step 1 generate ca
+      exec { '/opt/puppetlabs/puppet/bin/puppet cert list --all --allow-dns-alt-names':
+        creates   => '/etc/puppetlabs/puppet/ssl/ca/ca_key.pem',
+        logoutput => true,
+        require   => [ Package['puppetserver'], Ini_setting['puppet master dns alt names'] ],
+      }
+      # step 2: generate host certificate
+      exec { "/opt/puppetlabs/puppet/bin/puppet cert generate ${::facts['networking']['fqdn']}":
+        creates   => "/etc/puppetlabs/puppet/ssl/certs/${::facts['networking']['fqdn']}.pem",
+        logoutput => true,
+        require   => [ Package['puppetserver'], Ini_setting['puppet master dns alt names'] ],
+      }
+    }
+    default: { }
   }
 
   if $r10k_remote_repo {
