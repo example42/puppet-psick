@@ -35,14 +35,16 @@ class psick::puppet::foss_master (
   } else {
     $postgresversion = '9.6'
   }
-  if versioncmp('6', $facts['puppetversion']) > 0 {
-    $puppet_cert_list_command = '/opt/puppetlabs/puppet/bin/puppet cert list --all --allow-dns-alt-names'
-    $puppet_cert_generate_command = '/opt/puppetlabs/puppet/bin/puppet cert generate'
-  } else {
-    $puppet_cert_list_command = '/opt/puppetlabs/server/bin/puppetserver ca list --all'
-    $puppet_cert_generate_command = '/opt/puppetlabs/server/bin/puppetserver ca generate --certname'
+  case $facts['puppetversion'] {
+    /^(3|4|5)/: {
+      $puppet_cert_list_command = '/opt/puppetlabs/puppet/bin/puppet cert list --all --allow-dns-alt-names'
+      $puppet_cert_generate_command = '/opt/puppetlabs/puppet/bin/puppet cert generate'
+    }
+    default: {
+      $puppet_cert_list_command = '/opt/puppetlabs/server/bin/puppetserver ca setup'
+      $puppet_cert_generate_command = '/opt/puppetlabs/server/bin/puppetserver ca generate --certname'
+    }
   }
-
 
   contain puppetserver
   # Workflow: create puppetserver ssl ca and certificates
@@ -57,13 +59,13 @@ class psick::puppet::foss_master (
   exec { $puppet_cert_list_command:
     creates   => '/etc/puppetlabs/puppet/ssl/ca/ca_key.pem',
     logoutput => true,
-    require   => Class['puppetserver'],
+    require   => [ Package['puppetserver'], Ini_setting['puppet master dns alt names'] ],
   }
   # step 2: generate host certificate
   exec { "${puppet_cert_generate_command} ${::facts['networking']['fqdn']}":
     creates   => "/etc/puppetlabs/puppet/ssl/certs/${::facts['networking']['fqdn']}.pem",
     logoutput => true,
-    require   => Class['puppetserver'],
+    require   => [ Package['puppetserver'], Ini_setting['puppet master dns alt names'] ],
   }
 
   if $r10k_remote_repo {
