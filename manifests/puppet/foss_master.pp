@@ -60,9 +60,9 @@ class psick::puppet::foss_master (
         logoutput => true,
         require   => [ Package['puppetserver'], Ini_setting['puppet master dns alt names'] ],
       }
-      default: { }
     }
-  }  
+    default: { }
+  }
 
   if $r10k_remote_repo {
     class { 'r10k':
