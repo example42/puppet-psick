@@ -75,7 +75,7 @@ class psick::grafana::tp (
       ensure        => $ensure,
       options_hash  => $options_all,
       settings_hash => $settings_hash,
-      auto_repo     => true,
+      auto_repo     => $auto_prereq,
       auto_prereq   => $auto_prereq,
     }
     tp::install { 'grafana':
