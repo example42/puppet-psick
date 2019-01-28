@@ -125,7 +125,7 @@ class psick::puppet::foss_master (
       manage_report_processor => true,
       enable_reports          => true,
       restart_puppet          => false,
-      before                  => Service['puppetserver'],
+      require                 => Service['puppetserver'],
     }
     if $enable_puppetdb_sslsetup {
       exec { 'puppetdb ssl-setup':
