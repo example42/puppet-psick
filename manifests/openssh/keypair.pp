@@ -39,7 +39,7 @@ define psick::openssh::keypair (
 
   # SSH keys management
   if $create_ssh_dir {
-    psick::tools::create_dir { "openssh_keypair_${ssh_dir_path}":
+    psick::tools::create_dir { "openssh_keypair_${ssh_dir_path}_${title}":
       path  => $ssh_dir_path,
       owner => pick($dir_owner,$user),
       group => pick($dir_group,$user),
@@ -56,7 +56,7 @@ define psick::openssh::keypair (
       source  => $private_key_source,
     }
     if $create_ssh_dir {
-      Psick::Tools::Create_dir["openssh_keypair_${ssh_dir_path}"] -> File["${ssh_dir_path}/${key_name}"]
+      Psick::Tools::Create_dir["openssh_keypair_${ssh_dir_path}_${title}"] -> File["${ssh_dir_path}/${key_name}"]
     }
   }
 
@@ -70,7 +70,7 @@ define psick::openssh::keypair (
       source  => $public_key_source,
     }
     if $create_ssh_dir {
-      Psick::Tools::Create_dir["openssh_keypair_${ssh_dir_path}"] -> File["${ssh_dir_path}/${key_name}.pub"]
+      Psick::Tools::Create_dir["openssh_keypair_${ssh_dir_path}_${title}"] -> File["${ssh_dir_path}/${key_name}.pub"]
     }
   }
 }
