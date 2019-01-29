@@ -84,7 +84,7 @@ define psick::openssh::config (
   }
 
   if $create_ssh_dir {
-    psick::tools::create_dir { "openssh_config_$base_dir":
+    psick::tools::create_dir { "openssh_config_${base_dir}_${title}":
       path   => $base_dir,
       owner  => $user_real,
       group  => $user_real,
