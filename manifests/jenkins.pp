@@ -116,6 +116,7 @@ class psick::jenkins (
         options_hash => $all_init_options,
         base_file    => 'init',
       }
+      Tp::Conf['jenkins::init'] -> Psick::Jenkins::Plugin<| |>
     }
     default: {
       contain ::jenkins
