@@ -21,7 +21,7 @@ class psick::puppet::install_ca (
       $package_notify = $ca_setup_command ? {
         undef   => undef,
         default => Exec['setup ca certs'],
-      } 
+      }
       package { $ca_package:
         notify => $package_notify,
       }

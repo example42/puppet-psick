@@ -39,7 +39,7 @@ class psick::grafana (
 
   # We declare resources only if $manage = true
   if $manage {
-    
+
     # If no_noop is set it's enforced, unless psick::noop_mode is 
     if !$::psick::noop_mode and $no_noop {
       info('Forced no-noop mode in psick::grafana')

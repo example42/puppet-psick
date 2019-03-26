@@ -1,6 +1,8 @@
 ## Changelog
 
 * Your contribution here.
+* Puppetserver 6 has new ca commands - [@tuxmea](https://github.com/tuxmea).
+
 
 ## Release 0.6.2
 * Updated psick::puppet::foss_master to Puppet 6

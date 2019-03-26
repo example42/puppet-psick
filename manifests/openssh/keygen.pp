@@ -56,7 +56,7 @@ define psick::openssh::keygen (
   }
 
   if $create_ssh_dir {
-    psick::tools::create_dir { "openssh_keygen_$base_dir":
+    psick::tools::create_dir { "openssh_keygen_${base_dir}":
       path   => $base_dir,
       owner  => $user_real,
       before => Exec["ssh_keygen-${name}"],

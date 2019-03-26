@@ -57,15 +57,15 @@ class psick::puppet::foss_master (
       $cert_generate_command =  '/opt/puppetlabs/bin/puppetserver ca setup'
     }
   }
-     
-  if $cerl_list_command {
-    exec { $cerl_list_command:
+
+  if $cert_list_command {
+    exec { $cert_list_command:
       creates   => '/etc/puppetlabs/puppet/ssl/ca/ca_key.pem',
       logoutput => true,
       require   => [ Package['puppetserver'], Ini_setting['puppet master dns alt names'] ],
     }
   }
-  if $cerl_generate_command {
+  if $cert_generate_command {
     exec { $cert_generate_command:
       creates   => "/etc/puppetlabs/puppet/ssl/certs/${::facts['networking']['fqdn']}.pem",
       logoutput => true,

@@ -35,7 +35,7 @@ class psick::users (
   Array $available_users_to_add = [],
   Enum['psick','accounts','user'] $module = 'psick',
   Boolean $delete_unmanaged     = false,
-  Optional[String] $skel_dir_source = undef,  
+  Optional[String] $skel_dir_source = undef,
 ) {
 
   if $skel_dir_source {
@@ -89,7 +89,7 @@ class psick::users (
             password_min_age => $v['password_min_age'],
             shell            => $v['shell'],
             uid              => $v['uid'],
-            managehome       => $v['managehome'],            
+            managehome       => $v['managehome'],
             *                => pick($v['extra_params'],{}),
           }
         }
@@ -119,7 +119,7 @@ class psick::users (
             password_min_age => $v['password_min_age'],
             shell            => $v['shell'],
             uid              => $v['uid'],
-            managehome       => $v['managehome'],            
+            managehome       => $v['managehome'],
             *                => pick_default($v['extra_params'],{}),
           }
         }
