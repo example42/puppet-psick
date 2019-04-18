@@ -19,9 +19,11 @@ class psick::openswan (
           * => $v,
         }
       }
-      $content = template($setup_template)
-      tp::conf { 'openswan':
-        content => $content,
+      if $setup_template != '' {
+        $content = template($setup_template)
+        tp::conf { 'openswan':
+          content => $content,
+        }
       }
     }
     default: {

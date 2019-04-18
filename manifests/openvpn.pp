@@ -3,9 +3,32 @@
 class psick::openvpn (
 
   Variant[Boolean,String]    $ensure         = 'present',
-  Enum['psick']              $module         = 'psick',
+  Enum['psick','openvpn']    $module         = 'psick',
 
-  Hash                       $connections    = {},
+  # Used with module = psick
+  Hash                          $connections = {},
+
+  # Used with module = openvpn (vopupuli one as reference)
+  Hash                              $ca_hash = {},
+  Hash                          $ca_defaults = {},
+
+  Hash                          $server_hash = {},
+  Hash                      $server_defaults = {},
+
+  Hash                          $revoke_hash = {},
+  Hash                      $revoke_defaults = {},
+
+  Hash                          $client_hash = {},
+  Hash                      $client_defaults = {},
+
+  Hash          $client_specific_config_hash = {},
+  Hash      $client_specific_config_defaults = {},
+
+  Hash                   $deploy_client_hash = {},
+  Hash               $deploy_client_defaults = {},
+
+  Hash                   $deploy_export_hash = {},
+  Hash               $deploy_export_defaults = {},
 ) {
 
   # Intallation management
@@ -20,7 +43,43 @@ class psick::openvpn (
     }
     default: {
       contain ::openvpn
+      $ca_hash.each |$k,$v| {
+        openvpn::ca { $k:
+          * => $ca_defaults + $v,
+        }
+      }
+      $server_hash.each |$k,$v| {
+        openvpn::server { $k:
+          * => $server_defaults + $v,
+        }
+      }
+      $revoke_hash.each |$k,$v| {
+        openvpn::revoke { $k:
+          * => $revoke_defaults + $v,
+        }
+      }
+      $client_hash.each |$k,$v| {
+        openvpn::client { $k:
+          * => $client_defaults + $v,
+        }
+      }
+      $client_specific_config_hash.each |$k,$v| {
+        openvpn::client_specific_configs { $k:
+          * => $client_specific_defaults + $v,
+        }
+      }
+      $deploy_client_hash.each |$k,$v| {
+        openvpn::deploy::client { $k:
+          * => $client_deploy_defaults + $v,
+        }
+      }
+      $deploy_export_hash.each |$k,$v| {
+        openvpn::deploy::export { $k:
+          * => $deploy_export_defaults + $v,
+        }
+      }
     }
   }
 
 }
+
