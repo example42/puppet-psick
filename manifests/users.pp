@@ -90,6 +90,7 @@ class psick::users (
             shell            => $v['shell'],
             uid              => $v['uid'],
             managehome       => $v['managehome'],            
+            homedir_source   => $v['homedir_source'],            
             *                => pick($v['extra_params'],{}),
           }
         }
