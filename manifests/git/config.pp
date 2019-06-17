@@ -40,6 +40,7 @@ define psick::git::config (
   Hash                     $options_hash = {},
 ) {
 
+  # TODO: This can be replaced with $title as default for user param
   $user_real = $user ? {
     undef    => $title,
     default => $user,
