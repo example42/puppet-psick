@@ -98,6 +98,14 @@ lookup_options:
     merge:
       strategy: deep
       knockout_prefix: "--"
+  psick::network::routes:
+    merge:
+      strategy: deep
+      knockout_prefix: "--"
+  psick::network::interfaces:
+    merge:
+      strategy: deep
+      knockout_prefix: "--"
   psick::windows::features::install:
     merge:
       strategy: deep
