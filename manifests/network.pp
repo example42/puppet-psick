@@ -24,6 +24,7 @@ class psick::network (
   contain ::network
 
   if $use_netplan {
+
     $interfaces.each |$r,$o| {
       if $r =~ /^bond/ {
         $options = $default_options + $default_bonding_options + $o
@@ -44,20 +45,8 @@ class psick::network (
       }
     }
     $default_options = {
-      onboot     => 'yes',
-      'type'     => 'Ethernet',
-      template   => "psick/network/interface-${::osfamily}.erb",
-      options    => {
-        'IPV6INIT'           => 'no',
-        'IPV4_FAILURE_FATAL' => 'yes',
-      },
-      bootproto  => 'none',
-      nozeroconf => 'yes',
     }
     $default_bonding_options = {
-      'type'         => 'Bond',
-      bonding_opts   => "resend_igmp=1 updelay=30000 use_carrier=1 miimon=100 downdelay=100 xmit_hash_policy=0 primary_reselect=0 fail_over_mac=0 arp_validate=0 mode=${bonding_mode} arp_interval=0 ad_select=0",  # lint:ignore:140chars
-      bonding_master => 'yes',
     }
     $interfaces.each |$r,$o| {
       if $r =~ /^bond/ {
