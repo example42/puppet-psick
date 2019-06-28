@@ -1,1 +1,2 @@
+---
 psick::network::use_netplan: true
