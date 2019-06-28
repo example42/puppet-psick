@@ -6,6 +6,8 @@ class psick::openvpn (
   Enum['psick']              $module         = 'psick',
 
   Hash                       $connections    = {},
+  Hash                       $deploy_exports = {},
+  Hash                       $deploy_clients = {},
 ) {
 
   # Intallation management
@@ -19,6 +21,16 @@ class psick::openvpn (
       }
     }
     default: {
+      $deploy_exports.each |$k,$v| {
+        openvpn::deploy::export { $k:
+          * => $v,
+        }
+      }
+      $deploy_clients.each |$k,$v| {
+        openvpn::deploy::client { $k:
+          * => $v,
+        }
+      }
       contain ::openvpn
     }
   }
