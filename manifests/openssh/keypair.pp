@@ -49,7 +49,7 @@ define psick::openssh::keypair (
   if $private_key_content or $private_key_source {
     file { "${ssh_dir_path}/${key_name}" :
       ensure  => $ensure,
-      owner   => pick($private_key_user,$user),
+      owner   => pick($private_key_owner,$user),
       group   => pick($private_key_group,$user),
       mode    => $private_key_mode,
       content => $private_key_content,
@@ -63,7 +63,7 @@ define psick::openssh::keypair (
   if $public_key_content or $public_key_source {
     file { "${ssh_dir_path}/${key_name}.pub" :
       ensure  => $ensure,
-      owner   => $public_key_user,
+      owner   => $public_key_owner,
       group   => $public_key_group,
       mode    => $public_key_mode,
       content => $public_key_content,

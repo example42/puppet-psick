@@ -15,18 +15,14 @@
 #
 
 define psick::grafana::dashboard (
-  Enum['present','absent']
-                    $ensure        = 'present',
-  String            $template      = 'psick/grafana/dashboard.yaml.erb',
-  String  $org_id                  = '1',
-  String  $folder                  = '',
-  String  $type                    = 'file',
-  Enum['true', 'false']                         # lint:ignore:quoted_booleans
-          $disable_deletion        = 'false',   # lint:ignore:quoted_booleans
-  Enum['true', 'false']                         # lint:ignore:quoted_booleans
-          $editable                = 'false',   # lint:ignore:quoted_booleans
+  Enum['present','absent'] $ensure = 'present',
+  String $template                 = 'psick/grafana/dashboard.yaml.erb',
+  String $org_id                   = '1',
+  String $folder                   = '',
+  String $type                     = 'file',
+  Enum['true', 'false'] $disable_deletion = 'false',   # lint:ignore:quoted_booleans
+  Enum['true', 'false'] $editable         = 'false',   # lint:ignore:quoted_booleans
   Hash    $options                 = {},
-
 ) {
 
   tp::conf { "grafana::${name}.yaml":

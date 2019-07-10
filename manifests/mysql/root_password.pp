@@ -16,7 +16,7 @@ class psick::mysql::root_password (
       info('Forced no-noop mode.')
       noop(false)
     }
-  
+
     if ! defined(File['/root/.my.cnf']) {
       file { '/root/.my.cnf':
         ensure  => 'present',
@@ -25,7 +25,7 @@ class psick::mysql::root_password (
         content => template($root_cnf_template),
       }
     }
-  
+
     file { '/root/.my.cnf.backup':
       ensure  => 'present',
       path    => '/root/.my.cnf.backup',
@@ -35,14 +35,14 @@ class psick::mysql::root_password (
       before  => [Exec['mysql_root_password'],
                   Exec['mysql_backup_root_my_cnf'] ],
     }
-  
+
     exec { 'mysql_backup_root_my_cnf':
       path    => '/bin:/sbin:/usr/bin:/usr/sbin',
       unless  => 'diff /root/.my.cnf /root/.my.cnf.backup',
       command => 'cp /root/.my.cnf /root/.my.cnf.backup ; true',
       before  => File['/root/.my.cnf'],
     }
-  
+
     exec { 'mysql_root_password':
       subscribe   => File['/root/.my.cnf'],
       path        => '/bin:/sbin:/usr/bin:/usr/sbin',

@@ -19,19 +19,19 @@
 #        url: http://localhost:8086
 #
 define psick::grafana::datasource (
-  Enum['present','absent'] 
-                    $ensure        = 'present',
-  String            $template      = 'psick/grafana/datasource.yaml.erb',
   String            $type,
   String            $access,
+  Enum['present','absent']
+                    $ensure        = 'present',
+  String            $template      = 'psick/grafana/datasource.yaml.erb',
   Optional[String]  $org_id             = undef,
   Optional[String]  $url                = undef,
   Optional[String]  $database           = undef,
   Optional[String]  $user               = undef,
   Optional[String]  $password           = undef,
   Optional[String]  $basic_auth         = undef,
-  Optional[String]  $basic_authUser     = undef,
-  Optional[String]  $basic_authPassword = undef,
+  Optional[String]  $basic_authuser     = undef,
+  Optional[String]  $basic_authpassword = undef,
   Optional[Boolean] $with_credentials   = undef,
   Optional[Boolean] $is_default         = undef,
   Optional[Hash]    $json_data          = undef,
