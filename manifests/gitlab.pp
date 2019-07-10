@@ -52,6 +52,8 @@ class psick::gitlab (
     }
     $options = $options_default + $options_hash
     ::tp::install { 'gitlab-ce' :
+      ensure      => $ensure,
+      auto_prereq => true,
       * => { ensure => $ensure } + $tp_install_options, 
     }
 

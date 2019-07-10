@@ -13,13 +13,15 @@ class psick::bolt (
 
   String                  $ssh_user           = 'root',
 
-  String                  $master          = '',
+  String                  $master             = '',
   Optional[Enum['storeconfigs','static']] $keyshare_method = 'storeconfigs',
 
-  Boolean                 $auto_prereq     = $::psick::auto_prereq,
+  Boolean                 $auto_prereq        = $::psick::auto_prereq,
 
-  Boolean                 $is_master       = false,
-  Boolean                 $is_node         = true,
+  Boolean                 $is_master          = false,
+  Boolean                 $is_node            = true,
+
+  Hash                    $projects_hash      = {},
 
 ) {
 
@@ -29,6 +31,12 @@ class psick::bolt (
 
   if $is_master {
     contain $master_class
+  }
+
+  $projects_hash.each | $k,$v | {
+    psick::bolt::project { $k:
+      * => $v,
+    }
   }
 
 }

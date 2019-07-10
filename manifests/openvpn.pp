@@ -6,7 +6,9 @@ class psick::openvpn (
   Enum['psick','openvpn']    $module         = 'psick',
 
   # Used with module = psick
-  Hash                          $connections = {},
+  Hash                       $connections    = {},
+  Hash                       $deploy_exports = {},
+  Hash                       $deploy_clients = {},
 
   # Used with module = openvpn (vopupuli one as reference)
   Hash                              $ca_hash = {},
@@ -42,6 +44,16 @@ class psick::openvpn (
       }
     }
     default: {
+      $deploy_exports.each |$k,$v| {
+        openvpn::deploy::export { $k:
+          * => $v,
+        }
+      }
+      $deploy_clients.each |$k,$v| {
+        openvpn::deploy::client { $k:
+          * => $v,
+        }
+      }
       contain ::openvpn
       $ca_hash.each |$k,$v| {
         openvpn::ca { $k:

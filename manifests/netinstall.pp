@@ -138,7 +138,7 @@ define psick::netinstall (
   }
 
   exec { "Extract ${source_filename} from ${work_dir} - ${title}":
-    command     => "mkdir -p ${destination_dir} && cd ${destination_dir} && ${real_extract_command} ${work_dir}/${source_filename} ${extract_command_second_arg}",
+    command     => "mkdir -p ${destination_dir} && cd ${destination_dir} && ${real_extract_command} ${work_dir}/${source_filename} ${extract_command_second_arg}", # lint:ignore:140chars
     unless      => "ls ${destination_dir}/${real_extracted_dir}",
     creates     => $real_creates,
     timeout     => $timeout,
