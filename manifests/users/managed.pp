@@ -36,6 +36,7 @@ define psick::users::managed (
   Optional[Integer] $password_min_age = undef,
   Boolean $managehome     = true,
   String $homedir_mode    = '0750',
+  Optional[String] $homedir_source = undef,
   String $sshkey          = 'absent',
   String $authorized_keys_source = '',
   String $bashprofile_source     = '',
@@ -181,7 +182,9 @@ define psick::users::managed (
         ensure  => directory,
         require => User[$name],
         owner   => $name,
-        mode    => $homedir_mode,
+        mode    => undef,
+        source  => $homedir_source,
+        recurse => true,
       }
       case $gid {
         'absent','uid': {

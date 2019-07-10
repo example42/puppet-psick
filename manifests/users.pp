@@ -89,7 +89,8 @@ class psick::users (
             password_min_age => $v['password_min_age'],
             shell            => $v['shell'],
             uid              => $v['uid'],
-            managehome       => $v['managehome'],
+            managehome       => $v['managehome'],            
+            homedir_source   => $v['homedir_source'],            
             *                => pick($v['extra_params'],{}),
           }
         }
