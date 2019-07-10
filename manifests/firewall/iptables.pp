@@ -3,7 +3,7 @@
 class psick::firewall::iptables (
   String $package_name,
   String $service_name,
-  String $service_name_v6,
+  Optional[String] $service_name_v6,
   String $config_file_path,
   String $config_file_path_v6,
   String $rules_template                 = 'psick/firewall/iptables.erb',
@@ -29,9 +29,9 @@ class psick::firewall::iptables (
   Enum['DROP','ACCEPT'] $default_input      = 'DROP',
   Enum['DROP','ACCEPT'] $default_input_v6   = 'DROP',
   Enum['DROP','ACCEPT'] $default_output     = 'ACCEPT',
-  Enum['DROP','ACCEPT'] $default_output_v6  = 'DROP',
+  Enum['DROP','ACCEPT'] $default_output_v6  = 'ACCEPT',
   Enum['DROP','ACCEPT'] $default_forward    = 'ACCEPT',
-  Enum['DROP','ACCEPT'] $default_forward_v6 = 'DROP',
+  Enum['DROP','ACCEPT'] $default_forward_v6 = 'ACCEPT',
   Boolean $log_filter_defaults              = true,
   Boolean $manage_ipv6                      = true,
 ) {
@@ -54,9 +54,11 @@ class psick::firewall::iptables (
   }
 
   if $manage_ipv6 {
-    service { $service_name_v6:
-      ensure => running,
-      enable => true,
+    if $service_name_v6 {
+      service { $service_name_v6:
+        ensure => running,
+        enable => true,
+      }
     }
 
     file { $config_file_path_v6:
