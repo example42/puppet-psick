@@ -26,7 +26,7 @@
 class psick::profile (
   String $template   = '',
   Hash $options      = {},
-  
+
   Hash $scripts_hash = {},
 
   Boolean $add_tz_optimisation = true,
@@ -52,7 +52,7 @@ class psick::profile (
         * => $v,
       }
     }
-  
+
     file { '/etc/profile.d/tz.sh':
       ensure  => bool2ensure($add_tz_optimisation),
       content => template('psick/profile/tz.sh.erb'),

@@ -58,7 +58,7 @@ class psick::gitlab (
     if $template {
       ::tp::conf { 'gitlab-ce':
         ensure  => $ensure,
-        content => template($template), 
+        content => template($template),
         notify  => Exec['gitlab-ctl reconfigure'],
       }
     }

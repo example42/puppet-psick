@@ -27,7 +27,7 @@ class psick::chruby (
   Optional[String] $group           = undef,
   Optional[String] $sources_root    = undef,
   Optional[String] $download_root   = undef,
-  
+
   Boolean         $manage           = $::psick::manage,
   Boolean         $auto_prereq      = $::psick::auto_prereq,
   Boolean         $no_noop          = false,
@@ -36,7 +36,7 @@ class psick::chruby (
 
   # We declare resources only if $manage = true
   if $manage {
-    
+
     # If no_noop is set it's enforced, unless psick::noop_mode is 
     if ! $::psick::noop_mode and $no_noop {
       info('Forced no-noop mode in psick::chruby')

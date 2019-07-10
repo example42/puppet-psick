@@ -20,7 +20,7 @@ define psick::tools::create_dir (
   }
   if $owner {
     exec { "chown ${owner} ${title}":
-      command => "chown ${owner} ${path}", 
+      command => "chown ${owner} ${path}",
       path    => '/bin:/sbin:/usr/sbin:/usr/bin',
       onlyif  => "[ $(ls -ld ${path} | awk '{ print \$3 }') != ${owner} ]",
     }
@@ -28,8 +28,8 @@ define psick::tools::create_dir (
   if $group {
     exec { "chgrp ${group} ${title}":
       command => "chgrp ${group} ${path}",
-      path   => '/bin:/sbin:/usr/sbin:/usr/bin',
-      onlyif => "[ $(ls -ld ${path} | awk '{ print \$4 }') != ${group} ]",
+      path    => '/bin:/sbin:/usr/sbin:/usr/bin',
+      onlyif  => "[ $(ls -ld ${path} | awk '{ print \$4 }') != ${group} ]",
     }
   }
   if $mode {
