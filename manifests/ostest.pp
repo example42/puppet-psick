@@ -1,8 +1,13 @@
 # Sample psick used by VMs in ostest Vagrant environment
 # Used to code testing on different OS
 #
-class psick::ostest {
+class psick::ostest (
 
-  notify { 'ostest role': }
+  Boolean $notify_enable = false,
 
+) {
+
+  if $notify_enable {
+    notify { 'ostest role': }
+  }
 }
