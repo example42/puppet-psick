@@ -61,7 +61,8 @@ define psick::bolt::project (
 
 ) {
 
-  $bolt_dir = pick($path, psick::get_user_home($user)) + '/Boltdir'
+  $home_dir = pick($path, psick::get_user_home($user))
+  $bolt_dir = "${home_dir}/Boltdir"
 
   File {
     ensure  => $ensure,
