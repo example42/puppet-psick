@@ -55,7 +55,7 @@ define psick::bolt::project (
   Optional[String] $data_repo_url = undef,
 
   Boolean $control_repo_integrate = false,
-  Stdlib::Url $control_repo_url   = 'https://github.com/example42/psick',
+  Psick::Url $control_repo_url    = 'https://github.com/example42/psick',
 
   Boolean $puppetfile_install = false,
 
