@@ -1,1 +1,1 @@
-type Psick::Url = Variant[Stdlib::HTTPSUrl,Stdlib::HTTPUrl]
+type Psick::Url = Variant[Stdlib::HTTPSUrl,Stdlib::HTTPUrl,Psick::Url::Generic]
