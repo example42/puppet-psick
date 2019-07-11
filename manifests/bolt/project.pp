@@ -55,13 +55,14 @@ define psick::bolt::project (
   Optional[String] $data_repo_url = undef,
 
   Boolean $control_repo_integrate = false,
-  Stdlib::Url $control_repo_url   = 'https://github.com/example42/psick',
+  Psick::Url $control_repo_url    = 'https://github.com/example42/psick',
 
   Boolean $puppetfile_install = false,
 
 ) {
 
-  $bolt_dir = pick($path, psick::get_user_home($user)) + '/Boltdir'
+  $home_dir = pick($path, psick::get_user_home($user))
+  $bolt_dir = "${home_dir}/Boltdir"
 
   File {
     ensure  => $ensure,

@@ -1,4 +1,4 @@
-function psick::template(String $filename, Hash $parameters = {}) >> Optional[String] {
+function psick::template(Optional[String] $filename, Hash $parameters = {}) >> Optional[String] {
   if $filename and $filename !='' {
     $ext=$filename[-4,4]
     case $ext {
@@ -12,6 +12,8 @@ function psick::template(String $filename, Hash $parameters = {}) >> Optional[St
         file($filename)
       }
     }
+  } else {
+    $result = undef
   }
 }
 
