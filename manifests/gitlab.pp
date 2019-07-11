@@ -35,6 +35,7 @@ class psick::gitlab (
   String $key_file_source            = "file:///etc/puppetlabs/puppet/ssl/private_keys/${trusted['certname']}.pem",
   String $cert_file_source           = "file:///etc/puppetlabs/puppet/ssl/certs/${trusted['certname']}.pem",
 
+  Hash     $tp_install_options       = { },
   Hash                  $users       = { },
   Hash                  $groups      = { },
   Hash                  $projects    = { },
@@ -53,6 +54,7 @@ class psick::gitlab (
     ::tp::install { 'gitlab-ce' :
       ensure      => $ensure,
       auto_prereq => true,
+      * => { ensure => $ensure } + $tp_install_options, 
     }
 
     if $template {

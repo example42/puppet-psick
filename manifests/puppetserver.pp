@@ -2,8 +2,8 @@
 #
 class psick::puppetserver (
 
-  Variant[Boolean,String]    $ensure = present,
-  Enum['psick']              $module = 'psick',
+  Variant[Boolean,String]       $ensure = present,
+  Enum['psick', 'puppetserver'] $module = 'psick',
 
   Optional[String]  $r10k_remote_repo     = undef,
   Optional[String]  $r10k_template        = 'psick/puppet/r10k/r10k.yaml.erb',
@@ -24,10 +24,11 @@ class psick::puppetserver (
       contain ::psick::puppetserver::tp
       $puppetserver_class = 'psick::puppetserver::tp'
     }
-    default: {
+    'puppetserver': {
       contain ::puppetserver
       $puppetserver_class = 'puppetserver'
     }
+    default: {}
   }
 
   ini_setting { 'puppet master dns alt names':
@@ -50,6 +51,14 @@ class psick::puppetserver (
       # step 2: generate host certificate
       exec { "/opt/puppetlabs/puppet/bin/puppet cert generate ${::facts['networking']['fqdn']}":
         creates   => "/etc/puppetlabs/puppet/ssl/certs/${::facts['networking']['fqdn']}.pem",
+        logoutput => true,
+        require   => [ Package['puppetserver'], Ini_setting['puppet master dns alt names'] ],
+      }
+    }
+    /^(6)/: {
+      # step 1 generate ca
+      exec { "/opt/puppetlabs/bin/puppetserver ca setup --subject-alt-names ${dns_alt_names} --certname ${::facts['networking']['fqdn']}":
+        creates   => '/etc/puppetlabs/puppet/ssl/ca/ca_key.pem',
         logoutput => true,
         require   => [ Package['puppetserver'], Ini_setting['puppet master dns alt names'] ],
       }
