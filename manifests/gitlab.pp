@@ -51,10 +51,10 @@ class psick::gitlab (
       "nginx['ssl_certificate_key']" => "/etc/gitlab/ssl/${server_name}.key",
     }
     $options = $options_default + $options_hash
-    ::tp::install { 'gitlab-ce' :
+    tp::install { 'gitlab-ce' :
       ensure      => $ensure,
       auto_prereq => true,
-      * => { ensure => $ensure } + $tp_install_options, 
+      *           => $tp_install_options, 
     }
 
     if $template {
