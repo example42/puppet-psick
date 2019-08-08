@@ -15,6 +15,8 @@ class psick::sudo (
   String                   $sudoers_template  = '',
   Array                    $admins            = [ ],
   Variant[String[1],Undef] $sudoers_d_source  = undef,
+  String                   $sudoers_owner     = 'root',
+  String                   $sudoers_group     = 'root',
   Boolean                  $purge_sudoers_dir = false,
 ) {
 
@@ -22,8 +24,8 @@ class psick::sudo (
     file { '/etc/sudoers':
       ensure  => file,
       mode    => '0440',
-      owner   => 'root',
-      group   => 'root',
+      owner   => $sudoers_owner,
+      group   => $sudoers_group,
       content => template($sudoers_template),
       notify  => Exec['sudo_syntax_check'],
     }
@@ -40,8 +42,8 @@ class psick::sudo (
   file { '/etc/sudoers.d':
     ensure  => directory,
     mode    => '0440',
-    owner   => 'root',
-    group   => 'root',
+    owner   => $sudoers_owner,
+    group   => $sudoers_group,
     source  => $sudoers_d_source,
     recurse => true,
     purge   => $purge_sudoers_dir,

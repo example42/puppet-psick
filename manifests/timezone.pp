@@ -43,6 +43,7 @@ class psick::timezone(
         default                                 => 'dpkg-reconfigure -f noninteractive tzdata',
       }
     }
+    default: { }
   }
 
   $real_set_timezone_command = $set_timezone_command ? {
@@ -54,6 +55,7 @@ class psick::timezone(
       /(?i:FreeBSD)/                                      => "cp /usr/share/zoneinfo/${timezone} /etc/localtime && adjkerntz -a",
       /(?i:Solaris)/                                      => "rtc -z ${timezone} && rtc -c",
       /(?i:Windows)/                                      => "tzutil.exe /s \"${timezone_windows}\"",
+      /(?i:Darwin)/                                       => "systemsetup -settimezone ${timezone}",
     },
     default => $set_timezone_command,
   }
@@ -62,15 +64,15 @@ class psick::timezone(
     /(?i:RedHat|Centos|Scientific|Fedora|Amazon|Linux)/ => '/etc/sysconfig/clock',
     /(?i:Ubuntu|Debian|Mint)/                           => '/etc/timezone',
     /(?i:SLES|OpenSuSE)/                                => '/etc/sysconfig/clock',
-    /(?i:FreeBSD|OpenBSD)/                              => '/etc/timezone-puppet',
+    /(?i:FreeBSD|OpenBSD|Darwin)/                       => '/etc/timezone-puppet',
     /(?i:Solaris)/                                      => '/etc/default/init',
     /(?i:Windows)/                                      => 'c:\temp\timezone',
     default                                             => '',
   }
 
   $config_file_group = $::operatingsystem ? {
-    /(?i:FreeBSD|OpenBSD)/ => 'wheel',
-    default                => 'root',
+    /(?i:FreeBSD|OpenBSD|Darwin)/ => 'wheel',
+    default                       => 'root',
   }
 
   if $::virtual != 'docker' and $config_file != '' {
