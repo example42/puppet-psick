@@ -60,6 +60,11 @@ define psick::users::managed (
     default  => $home
   }
 
+  $real_managehome = $::osfamily ? {
+    'Darwin' => undef,
+    default  => $managehome,
+  }
+
   $real_comment = $comment ? {
     ''      => $name,
     default => $comment,
@@ -81,7 +86,7 @@ define psick::users::managed (
     allowdupe        => false,
     comment          => $real_comment,
     home             => $real_homedir,
-    managehome       => $managehome,
+    managehome       => $real_managehome,
     shell            => $shell,
     groups           => $groups,
     membership       => $membership,
