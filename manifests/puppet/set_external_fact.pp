@@ -29,10 +29,9 @@ define psick::puppet::set_external_fact (
     default => "${external_facts_dir}/${title}.yaml",
   }
 
-  if !defined(Psick::Tools::Create_dir[$external_facts_dir]) {
-    psick::tools::create_dir { $external_facts_dir:
-      before => File[$file_path],
-    }
+  psick::tools::create_dir { "${external_facts_dir}_${title}":
+    path   => $external_facts_dir,
+    before => File[$file_path],
   }
 
   file { $file_path:
