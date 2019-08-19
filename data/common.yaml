@@ -55,6 +55,9 @@ psick::hardening::services::services_default: []
 # psick::hardware::hp
 psick::hardware::hp::packages: []
 
+# psick::icingaweb2
+psick::icingaweb2::php_fpm_service_name: 'php-fpm'
+
 # psick::monitor::ganglia
 psick::monitor::ganglia::packages: []
 

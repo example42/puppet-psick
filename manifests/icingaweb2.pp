@@ -31,13 +31,16 @@ class psick::icingaweb2 (
   Boolean                $auto_prereq     = $::psick::auto_prereq,
 
   Optional[String]       $webserver_class = '::psick::apache::tp',
-  Optional[String]       $dbserver_class  = '',
+  Optional[String]       $dbserver_class  = '::psick::mariadb::tp',
   Optional[String]       $template        = undef,
   Hash                   $options         = { },
   Hash                   $tp_conf_hash    = { },
 
-  Optional[Enum['mysql','pgsql']] $db_backend = undef,
+  Optional[Enum['mysql','pgsql']] $db_backend = 'mysql',
   Boolean $fix_php_timezone               = true,
+  Boolean $install_icingaweb2_selinux     = false,
+  Boolean $php_fpm_manage                 = true,
+  String $php_fpm_service_name            = 'php-fpm',
   Boolean $no_noop                        = false,
 ) {
 
@@ -79,6 +82,11 @@ class psick::icingaweb2 (
       }
       'icinga': {
         contain ::icingaweb2
+        if $auto_prereq and $::osfamily == 'RedHat' {
+          tp::install { 'scl':
+            before => Package['icingaweb2'],
+          }
+        }
       }
       default: {}
     }
@@ -88,8 +96,12 @@ class psick::icingaweb2 (
         'mysql' => 'Mysql',
         'pgsql' => 'Pgsql',
       }
-      package { "icinga2-ido-${db_backend}": }
-      package { "php-ZendFramework-Db-Adapter-Pdo-${camel_db_backend}": }
+      package { "icinga2-ido-${db_backend}":
+        before => Package['icingaweb2'],
+      }
+      package { "php-ZendFramework-Db-Adapter-Pdo-${camel_db_backend}":
+        before => Package['icingaweb2'],
+      }
     }
 
     if $fix_php_timezone {
@@ -100,11 +112,18 @@ class psick::icingaweb2 (
         ],
       }
     }
-    if $::selinux {
+    if $::selinux and $install_icingaweb2_selinux {
       package { 'icingaweb2-selinux':
         ensure       => $ensure,
       }
     }
 
+    if $php_fpm_manage {
+      service { $php_fpm_service_name:
+        ensure => psick::ensure2service($ensure,'ensure'),
+        enable => psick::ensure2service($ensure,'enable'),
+        before => Package['icingaweb2'],
+      }
+    }
   }
 }

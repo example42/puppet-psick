@@ -1,0 +1,2 @@
+---
+psick::icingaweb2::php_fpm_service_name: 'rh-php70-php-fpm'
