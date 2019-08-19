@@ -98,7 +98,7 @@ class psick::icinga2 (
         } else {
           $features = $client_features
         }
-        class { icinga2:
+        class { 'icinga2':
           features => $features,
         }
 
