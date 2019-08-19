@@ -13,5 +13,3 @@ fixtures:
     "hieradata": "https://github.com/example42/psick-hieradata"
     "yumrepo": "https://github.com/puppetlabs/puppetlabs-yumrepo_core"
     "host": "https://github.com/puppetlabs/puppetlabs-host_core"
-  symlinks:
-    "psick": "#{source_dir}"
