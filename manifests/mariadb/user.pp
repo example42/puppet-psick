@@ -26,8 +26,14 @@ define psick::mariadb::user (
     content => template('psick/mariadb/user.erb'),
   }
 
+  if getvar('psick::mariadb::root_password') {
+    $my_cnf = ''
+  } else {
+    $my_cnf = '--defaults-file=/root/.my.cnf'
+  }
+
   exec { "mariadbuser-${user}-${nice_host}":
-    command     => "mysql --defaults-file=/root/.my.cnf -uroot < ${grant_filepath}/${grant_file}",
+    command     => "mysql ${my_cnf} -uroot < ${grant_filepath}/${grant_file}",
     subscribe   => File[$grant_file],
     path        => [ '/usr/bin' , '/usr/sbin' ],
     refreshonly => true,

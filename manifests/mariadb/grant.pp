@@ -110,8 +110,13 @@ define psick::mariadb::grant (
     content => template($grant_template),
   }
 
+  if getvar('psick::mariadb::root_password') {
+    $my_cnf = ''
+  } else {
+    $my_cnf = '--defaults-file=/root/.my.cnf'
+  }
   $exec_command = $remote_host ? {
-    ''      => "mysql --defaults-file=/root/.my.cnf -uroot < ${grant_filepath}/${grant_file}",
+    ''      => "mysql ${my_cnf} -uroot < ${grant_filepath}/${grant_file}",
     default => "mysql -h${remote_host} -u${remote_user} --password=${remote_password} < ${grant_filepath}/${grant_file}",
   }
 

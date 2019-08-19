@@ -26,8 +26,13 @@ define psick::mysql::user (
     content => template('psick/mysql/user.erb'),
   }
 
+  if getvar('psick::mysql::root_password') {
+    $my_cnf = ''
+  } else {
+    $my_cnf = '--defaults-file=/root/.my.cnf'
+  }
   exec { "mysqluser-${user}-${nice_host}":
-    command     => "mysql --defaults-file=/root/.my.cnf -uroot < ${grant_filepath}/${grant_file}",
+    command     => "mysql ${my_cnf} -uroot < ${grant_filepath}/${grant_file}",
     subscribe   => File[$grant_file],
     path        => [ '/usr/bin' , '/usr/sbin' ],
     refreshonly => true,

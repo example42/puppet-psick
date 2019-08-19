@@ -39,13 +39,13 @@ define psick::mysql::query (
     default => "--password=\"${password}\"",
   }
 
-  $arg_defaults_file = $mysql::real_root_password ? {
-    ''      => '',
-    default => '--defaults-file=/root/.my.cnf',
+  if getvar('psick::mysql::root_password') {
+    $my_cnf = ''
+  } else {
+    $my_cnf = '--defaults-file=/root/.my.cnf'
   }
-
   exec { "mysqlquery-${name}":
-    command     => "mysql ${arg_defaults_file} \
+    command     => "mysql ${my_cnf} \
                     ${arg_user} ${arg_password} ${arg_host} \
                     < ${query_filepath}/mysqlquery-${name}.sql",
     refreshonly => true,
