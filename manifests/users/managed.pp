@@ -189,7 +189,10 @@ define psick::users::managed (
         owner   => $name,
         mode    => undef,
         source  => $homedir_source,
-        recurse => true,
+        recurse => $homedir_source ? {
+          undef   => undef,
+          default => true,
+        },
       }
       case $gid {
         'absent','uid': {
