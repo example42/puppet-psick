@@ -1,6 +1,8 @@
 psick::linux::pre_classes:
   'repo': '::psick::repo'
 
+psick::icinga2::ido_backend: mariadb
+
 psick::monitor::snmpd::extra_packages:
   - 'net-snmp-conf-dtnp'
   - 'net-snmp-utils'

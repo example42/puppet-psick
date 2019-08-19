@@ -55,6 +55,16 @@ psick::hardening::services::services_default: []
 # psick::hardware::hp
 psick::hardware::hp::packages: []
 
+# psick::icinga2
+psick::icinga2::ido_backend: mysql
+psick::icinga2::ido_db_settings:
+  database: 'icinga2'
+  user: 'icinga2'
+  password: 'icinga2pw!'
+  grant: 'SELECT, INSERT, UPDATE, DELETE, DROP, CREATE VIEW, CREATE, INDEX, EXECUTE, ALTER'
+  create_db: true
+  host: 'localhost'
+
 # psick::icingaweb2
 psick::icingaweb2::php_fpm_service_name: 'php-fpm'
 

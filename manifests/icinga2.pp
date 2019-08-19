@@ -42,6 +42,13 @@ class psick::icinga2 (
   Boolean          $is_client          = true,
   Boolean          $is_server          = false,
 
+  Array $client_features = ['api','checker','mainlog'],
+  Array $server_features = ['api','checker','mainlog','notification','statusdata','compatlog','command'],
+
+  Boolean         $ido_manage          = true,
+  Enum['mariadb','mysql','pgsql'] $ido_backend = 'mariadb',
+  Hash            $ido_db_settings     = {},
+
   Boolean         $no_noop             = false,
 ) {
 
@@ -74,21 +81,95 @@ class psick::icinga2 (
             * => $tp_conf_defaults + $v,
           }
         }
-        if $install_icinga_cli {
+        if $install_icinga_cli and $is_server {
           package { 'icingacli':
             ensure => $ensure,
           }
         }
-        if $install_classic_ui {
+        if $install_classic_ui and $is_server {
           package { 'icinga2-classicui-config':
             ensure => $ensure,
           }
         }
       }
       'icinga': {
-        contain ::icinga2
+        if $is_server == true {
+          $features = $server_features
+        } else {
+          $features = $client_features
+        }
+        class { icinga2:
+          features => $features,
+        }
+
+        if $ido_manage and $is_server {
+          case $ido_backend {
+            'mysql': {
+              class{ '::icinga2::feature::idomysql':
+                user          => $ido_db_settings['user'],
+                password      => $ido_db_settings['password'],
+                database      => $ido_db_settings['database'],
+                import_schema => true,
+                require       => Psick::Mysql::Grant['icinga2'],
+              }
+            }
+            'mariadb': {
+              class{ '::icinga2::feature::idomysql':
+                user          => $ido_db_settings['user'],
+                password      => $ido_db_settings['password'],
+                database      => $ido_db_settings['database'],
+                import_schema => true,
+                require       => Psick::Mariadb::Grant['icinga2'],
+              }
+            }
+            'pgsql': {
+              class{ '::icinga2::feature::idopgsql':
+                user          => $ido_db_settings['user'],
+                password      => $ido_db_settings['password'],
+                database      => $ido_db_settings['database'],
+                import_schema => true,
+                require       => Postgresql::Server::Db[$ido_db_settings['database']],
+              }
+            }
+            default: {}
+          }
+        }
       }
       default: {}
+    }
+
+    if $ido_manage and $is_server {
+      case $ido_backend {
+        'mariadb': {
+          psick::mariadb::grant { 'icinga2':
+            user       => $ido_db_settings['user'],
+            password   => $ido_db_settings['password'],
+            db         => $ido_db_settings['database'],
+            create_db  => $ido_db_settings['create_db'],
+            privileges => $ido_db_settings['grant'],
+            host       => $ido_db_settings['host'],
+          }
+        }
+        'mysql': {
+          psick::mysql::grant { 'icinga2':
+            user       => $ido_db_settings['user'],
+            password   => $ido_db_settings['password'],
+            db         => $ido_db_settings['database'],
+            create_db  => $ido_db_settings['create_db'],
+            privileges => $ido_db_settings['grant'],
+            host       => $ido_db_settings['host'],
+          }
+        }
+        'pgsql': {
+          # puppetlabs-postgres module required
+          postgresql::server::db { $ido_db_settings['database']:
+            user     => $ido_db_settings['user'],
+            password => postgresql_password($ido_db_settings['user'], $ido_db_settings['password']),
+          }
+        }
+        default: { }
+      }
+
     }
   }
 }

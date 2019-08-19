@@ -96,9 +96,6 @@ class psick::icingaweb2 (
         'mysql' => 'Mysql',
         'pgsql' => 'Pgsql',
       }
-      package { "icinga2-ido-${db_backend}":
-        before => Package['icingaweb2'],
-      }
       package { "php-ZendFramework-Db-Adapter-Pdo-${camel_db_backend}":
         before => Package['icingaweb2'],
       }
