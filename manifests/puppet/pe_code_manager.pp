@@ -13,7 +13,7 @@ class psick::puppet::pe_code_manager (
   Optional[String] $deploy_comment            = undef,
   Optional[String] $deploy_user               = 'root',
   Optional[String] $puppet_user               = 'pe-puppet',
-  Optional[String] $puppet_grou               = 'pe-puppet',
+  Optional[String] $puppet_group              = 'pe-puppet',
   Optional[String] $puppet_user_home          = undef,
   Optional[String] $lifetime                  = '5y',
   Boolean          $no_noop                   = false,
@@ -40,23 +40,23 @@ class psick::puppet::pe_code_manager (
         lifetime    => $lifetime,
       }
     }
-  
+
     if $generate_ssh_keys {
       file { '/etc/puppetlabs/ssh':
         ensure => directory,
         owner  => $puppet_user,
       }
-  
+
       $real_deploy_user_home = $deploy_user ? {
         'root'  => '/root',
         default => "/home/${deploy_user}",
       }
-  
+
       psick::openssh::keygen { $deploy_user:
         comment => $deploy_comment,
         before  => [File[$deploy_ssh_private_key_path],File[$deploy_ssh_public_key_path]],
       }
-  
+
       file { $deploy_ssh_private_key_path:
         ensure => file,
         owner  => $puppet_user,
@@ -72,11 +72,11 @@ class psick::puppet::pe_code_manager (
         source => pick($deploy_ssh_public_source,"file:///${real_deploy_user_home}/.ssh/id_rsa.pub"),
       }
     }
-  
+
     # TODO Automate Upload of ssh public key to gitlab
     #  psick::gitlab::deploy_key { :
     #    sshkey => $deploy_ssh_public_key
     #  }
-  
+
   }
 }
