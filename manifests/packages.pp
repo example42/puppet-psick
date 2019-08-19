@@ -84,14 +84,14 @@ class psick::packages (
     Package {
       * => $resource_default_arguments,
     }
-  
+
     # Purge umanaged packages if $delete_unmanaged == true (DANGER!)
     if $delete_unmanaged {
       resources { 'package':
         purge => true,
       }
     }
-  
+
     # Packages management based on $packages_list
     $packages = $add_default_packages ? {
       true  => $packages_list + $packages_default,
@@ -100,14 +100,14 @@ class psick::packages (
     $packages.each |$pkg| {
       ensure_packages($pkg)
     }
-  
+
     # Packages management based on $packages_hash
     $packages_hash.each |$k,$v| {
       package { $k:
         * => $v,
       }
     }
-  
+
     # Packages management based on $packages_osfamily_hash
     $packages_osfamily_hash.each |$k,$v| {
       if $::osfamily == $k {
@@ -126,6 +126,9 @@ class psick::packages (
             package { $v:
               ensure => present,
             }
+          }
+          default: {
+            fail("Unsupported type for ${v}. Valid types are String, Array, Hash")
           }
         }
       }
