@@ -31,13 +31,13 @@ define psick::mariadb::sqlfile (
   }
 
   if getvar('psick::mariadb::root_password') {
-    $my_cnf = ''
-  } else {
     $my_cnf = '--defaults-file=/root/.my.cnf'
+  } else {
+    $my_cnf = ''
   }
 
   exec { "mariadbqueryfile-${name}":
-    command => "mysql ${my_cnf} ${arg_user} ${arg_password} ${arg_host} ${db} < ${file} && touch ${query_filepath}/mariadbqueryfile-${name}.run",
+    command => "mysql ${my_cnf} ${arg_user} ${arg_password} ${arg_host} ${db} < ${file} && touch ${query_filepath}/mariadbqueryfile-${name}.run", # lint:ignore:140chars
     path    => [ '/usr/bin' , '/usr/sbin' , '/bin' , '/sbin' ],
     creates => "${query_filepath}/mariadbqueryfile-${name}.run",
     unless  => "ls ${query_filepath}/mariadbqueryfile-${name}.run",

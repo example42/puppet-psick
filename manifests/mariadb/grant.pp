@@ -111,20 +111,30 @@ define psick::mariadb::grant (
   }
 
   if getvar('psick::mariadb::root_password') {
-    $my_cnf = ''
-  } else {
     $my_cnf = '--defaults-file=/root/.my.cnf'
+  } else {
+    $my_cnf = ''
   }
+
+  $exec_flagfile = "${grant_filepath}/${grant_file}.done"
   $exec_command = $remote_host ? {
     ''      => "mysql ${my_cnf} -uroot < ${grant_filepath}/${grant_file}",
     default => "mysql -h${remote_host} -u${remote_user} --password=${remote_password} < ${grant_filepath}/${grant_file}",
   }
 
-  exec { "mariadbgrant-${user}-${nice_host}-${dbname}":
-    command     => $exec_command,
+  exec { "remove_${exec_flagfile}":
+    command     => "rm -f '${exec_flagfile}'",
     subscribe   => File[$grant_file],
     path        => [ '/usr/bin' , '/usr/sbin' ],
-    refreshonly => true;
+    refreshonly => true,
+    before      => Exec["mariadbgrant-${user}-${nice_host}-${dbname}"],
+  }
+
+  exec { "mariadbgrant-${user}-${nice_host}-${dbname}":
+    command   => "${exec_command} && touch ${exec_flagfile}",
+    subscribe => File[$grant_file],
+    path      => [ '/usr/bin' , '/usr/sbin' ],
+    creates   => $exec_flagfile,
   }
 
   if $db_init_query_file != '' and $create_db == true {

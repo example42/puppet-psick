@@ -23,6 +23,7 @@ define psick::mariadb::query (
     notify  => Exec["mariadbquery-${name}"],
   }
 
+  $exec_flagfile = "${query_filepath}/mariadbquery-${name}.sql.done"
 
   $arg_user = $user ? {
     ''      => '',
@@ -40,18 +41,26 @@ define psick::mariadb::query (
   }
 
   if getvar('psick::mariadb::root_password') {
-    $my_cnf = ''
-  } else {
     $my_cnf = '--defaults-file=/root/.my.cnf'
+  } else {
+    $my_cnf = ''
   }
 
-  exec { "mariadbquery-${name}":
-    command     => "mysql ${my_cnf} \
-                    ${arg_user} ${arg_password} ${arg_host} \
-                    < ${query_filepath}/mariadbquery-${name}.sql",
-    refreshonly => true,
+  exec { "remove_${exec_flagfile}":
+    command     => "rm -f '${exec_flagfile}'",
     subscribe   => File["mariadbquery-${name}.sql"],
     path        => [ '/usr/bin' , '/usr/sbin' ],
+    refreshonly => true,
+    before      => Exec["mariadbquery-${name}"],
+  }
+
+  $exec_command = "mysql ${my_cnf} ${arg_user} ${arg_password} ${arg_host} < ${query_filepath}/mariadbquery-${name}.sql"
+
+  exec { "mariadbquery-${name}":
+    command   => "${exec_command} && touch ${exec_flagfile}",
+    subscribe => File["mariadbquery-${name}.sql"],
+    path      => [ '/usr/bin' , '/usr/sbin' ],
+    creates   => $exec_flagfile,
   }
 
 }

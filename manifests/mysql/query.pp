@@ -20,9 +20,9 @@ define psick::mysql::query (
     mode    => '0600',
     path    => "${query_filepath}/mysqlquery-${name}.sql",
     content => template('psick/mysql/query.erb'),
-    notify  => Exec["mysqlquery-${name}"],
   }
 
+  $exec_flagfile = "${query_filepath}/mysqlquery-${name}.sql.done"
 
   $arg_user = $user ? {
     ''      => '',
@@ -40,17 +40,26 @@ define psick::mysql::query (
   }
 
   if getvar('psick::mysql::root_password') {
-    $my_cnf = ''
-  } else {
     $my_cnf = '--defaults-file=/root/.my.cnf'
+  } else {
+    $my_cnf = ''
   }
-  exec { "mysqlquery-${name}":
-    command     => "mysql ${my_cnf} \
-                    ${arg_user} ${arg_password} ${arg_host} \
-                    < ${query_filepath}/mysqlquery-${name}.sql",
-    refreshonly => true,
+
+  exec { "remove_${exec_flagfile}":
+    command     => "rm -f '${exec_flagfile}'",
     subscribe   => File["mysqlquery-${name}.sql"],
     path        => [ '/usr/bin' , '/usr/sbin' ],
+    refreshonly => true,
+    before      => Exec["mysqlquery-${name}"],
+  }
+
+  $exec_command = "mysql ${my_cnf} ${arg_user} ${arg_password} ${arg_host} < ${query_filepath}/mysqlquery-${name}.sql"
+
+  exec { "mysqlquery-${name}":
+    command   => "${exec_command} && touch ${exec_flagfile}",
+    subscribe => File["mysqlquery-${name}.sql"],
+    path      => [ '/usr/bin' , '/usr/sbin' ],
+    creates   => $exec_flagfile,
   }
 
 }

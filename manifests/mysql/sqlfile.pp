@@ -31,12 +31,12 @@ define psick::mysql::sqlfile (
   }
 
   if getvar('psick::mysql::root_password') {
-    $my_cnf = ''
-  } else {
     $my_cnf = '--defaults-file=/root/.my.cnf'
+  } else {
+    $my_cnf = ''
   }
   exec { "mysqlqueryfile-${name}":
-    command => "mysql ${my_cnf} ${arg_user} ${arg_password} ${arg_host} ${db} < ${file} && touch ${query_filepath}/mysqlqueryfile-${name}.run",
+    command => "mysql ${my_cnf} ${arg_user} ${arg_password} ${arg_host} ${db} < ${file} && touch ${query_filepath}/mysqlqueryfile-${name}.run", # lint:ignore:140chars
     path    => [ '/usr/bin' , '/usr/sbin' , '/bin' , '/sbin' ],
     creates => "${query_filepath}/mysqlqueryfile-${name}.run",
     unless  => "ls ${query_filepath}/mysqlqueryfile-${name}.run",
