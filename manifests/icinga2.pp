@@ -49,8 +49,13 @@ class psick::icinga2 (
   Enum['mariadb','mysql','pgsql'] $ido_backend = 'mariadb',
   Hash            $ido_settings            = {},
 
-  Boolean $create_hosts_from_puppetdb      = true,
-
+  Boolean $puppetdb_hosts_import           = true,
+  Boolean $puppetdb_hosts_details_import   = true,
+  Hash $puppetdb_hosts_override_hash       = {},
+  String $notes_url_prefix                 = "https://${servername}/#/inspect/node/",
+  String $notes_url_suffix                 = '/reports',
+  String $puppetdb_fact_address            = 'networking.ip',
+  String $puppetdb_fact_address6           = 'networking.ip6',
   Hash $endpoint_hash                      = {},
   Hash $endpoint_default_params            = {},
 
@@ -189,16 +194,47 @@ class psick::icinga2 (
         }
 
         # PuppetDB nodes import
-        if $create_hosts_from_puppetdb {
-          {}.each |$k,$v| {
-            $hosts_defaults = {
-              target  => '/etc/icinga2/conf.d/hosts.conf',
-              import  => [ 'generic-host' ],
-              address => '',
+        # It's possible to customise via the hiera key psick::icinga2::puppetdb_hosts_override_hash
+        # any host entry retrieved via PuppetDB. The above hash should have as
+        # first level keys certnames matching the ones retrieved from PuppetDB
+        # Values must be valid params of the icinga2::object::host define and
+        # are merged with the default ones set via psick::icinga2::host_default_params
+        if $puppetdb_hosts_import {
+          $nodes_query = 'nodes { deactivated is null }'
+          $nodes = puppetdb_query($nodes_query)
+          $nodes_list = $nodes.map |$node| { $node['certname'] }
+          $nodes_list.each |$k| {
+            if $puppetdb_hosts_details_import {
+              $nodes_facts_query = "inventory[facts] { trusted.certname = '${k}' }"
+              $nodes_facts = puppetdb_query($nodes_facts_query)
+              $disks = $nodes_facts[0]['facts']['mountpoints'].map |$kk,$vv| {
+                if $vv['filesystem'] in ['devtmpfs','hugetlbfs','mqueue','devpts','tmpfs','rpc_pipefs'] {
+                  { $kk => { 'disk_partions' => $kk, } }
+                }
+              }
+              $puppetdb_params = {
+                address      => getvar("nodes_facts.0.facts.${puppetdb_fact_address}"),
+                address6     => getvar("nodes_facts.0.facts.${puppetdb_fact_address6}"),
+                notes        => "${k} | ${nodes_facts[0][facts][operatingsystem]} ${nodes_facts[0][facts][operatingsystemrelease]}",
+                notes_url    => "${notes_url_prefix}${k}${notes_url_suffix}",
+                vars         => {
+                  os         => $nodes_facts[0]['facts']['kernel'],
+                  distro     => $nodes_facts[0]['facts']['os']['name'],
+                  # disks      => $disks,
+                  network    => $nodes_facts[0]['facts']['networking']['network'],
+                  virtual    => $nodes_facts[0]['facts']['virtual'],
+                }
+              }
+            } else {
+              $puppetdb_params = {}
             }
+            $hiera_override = pick ($puppetdb_hosts_override_hash[$k],{} )
             ::icinga2::object::host { $k:
-              * => $hosts_defaults,
+              * => $host_default_params + $puppetdb_params + $hiera_override
             }
+            #file { "/tmp/facts_${k}":
+            #  content => $nodes_facts.to_yaml,
+            #}
           }
         }
 
