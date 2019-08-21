@@ -29,6 +29,7 @@ class psick::icingaweb2 (
   Boolean                $manage          = $::psick::manage,
   Enum['psick','icinga'] $module          = 'psick',
   Boolean                $auto_prereq     = $::psick::auto_prereq,
+  Hash                $icingaweb2_params = {},
 
   Optional[String]       $webserver_class = '::psick::apache::tp',
   Optional[String]       $dbserver_class  = '::psick::mariadb::tp',
@@ -36,11 +37,42 @@ class psick::icingaweb2 (
   Hash                   $options         = { },
   Hash                   $tp_conf_hash    = { },
 
-  Optional[Enum['mysql','pgsql']] $db_backend = 'mysql',
+  Boolean $db_manage                      = true,
+  Optional[Enum['mysql','mariadb','pgsql']] $db_backend = 'mysql',
+  Hash $db_settings                       = {},
+
+  Boolean $director_db_manage             = false,
+  Optional[Enum['mysql','mariadb','pgsql']] $director_db_backend = 'mysql',
+  Hash $director_db_settings              = {},
+
+  Enum['ini','db'] $config_backend        = 'db',
+
+  Hash $ido_settings                      = lookup('psick::icinga2::ido_settings'),
+
   Boolean $fix_php_timezone               = true,
-  Boolean $install_icingaweb2_selinux     = false,
+  Boolean $install_icingaweb2_selinux     = true,
   Boolean $php_fpm_manage                 = true,
-  String $php_fpm_service_name            = 'php-fpm',
+  String $php_fpm_name                    = 'php-fpm',
+
+  Boolean $monitoring_module_manage       = true,
+  Hash $monitoring_module_params          = {},
+
+  Boolean $api_user_manage                = true,
+  String $api_host                        = pick($::psick::icinga2::master,$clientcert),
+  String $api_user                        = 'icingaweb2',
+  String $api_password                    = 'icingaweb2apiuser',
+  Array $api_user_permissions             = [ 'status/query', 'actions/*', 'objects/modify/*', 'objects/query/*' ],
+
+  Boolean $puppetdb_module_manage         = false,
+  Hash $puppetdb_module_params            = {},
+
+  Boolean $director_module_manage         = false,
+  Hash $director_module_params            = {},
+
+  Hash $extra_modules                     = { },
+
+  Boolean $git_manage                     = true,
+
   Boolean $no_noop                        = false,
 ) {
 
@@ -54,6 +86,8 @@ class psick::icingaweb2 (
     }
     if $dbserver_class and $dbserver_class != '' {
       contain $dbserver_class
+      Class[$dbserver_class] -> Psick::Mariadb::Grant<||>
+      Class[$dbserver_class] -> Psick::Mysql::Grant<||>
     }
 
     case $module {
@@ -81,23 +115,196 @@ class psick::icingaweb2 (
         }
       }
       'icinga': {
-        contain ::icingaweb2
+        $db_type = $db_backend ? {
+          'mariadb' => 'mysql',
+          'mysql'   => 'mysql',
+          'pgsql'   => 'pgsql',
+        }
+        $default_icingaweb2_params = $db_manage ? {
+          true  => {
+            import_schema  => true,
+            db_type        => $db_type,
+            db_host        => $db_settings['host'],
+            db_username    => $db_settings['user'],
+            db_password    => $db_settings['password'],
+            config_backend => $config_backend,
+          },
+          false => {
+            config_backend => $config_backend,
+          },
+        }
+        class { '::icingaweb2':
+          * => $default_icingaweb2_params + $icingaweb2_params,
+        }
         if $auto_prereq and $::osfamily == 'RedHat' {
           tp::install { 'scl':
-            before => Package['icingaweb2'],
+            before => [ Package['icingaweb2'] , Class['psick::php::fpm'] ],
+          }
+        }
+
+        if $api_user_manage {
+          icinga2::object::apiuser { $api_user:
+            password    => $api_password,
+            permissions => $api_user_permissions,
+            target      => '/etc/icinga2/conf.d/api-users.conf',
+          }
+        }
+
+        if $monitoring_module_manage {
+          $monitoring_module_defaults = {
+            ensure            => $ensure,
+            ido_type          => $db_type,
+            ido_host          => $ido_settings['host'],
+            ido_db_name       => $ido_settings['database'],
+            ido_db_username   => $ido_settings['user'],
+            ido_db_password   => $ido_settings['password'],
+            commandtransports => {
+              icinga2 => {
+                transport => 'api',
+                username  => $api_user,
+                password  => $api_password,
+              }
+            }
+          }
+          class { 'icingaweb2::module::monitoring':
+            * => $monitoring_module_defaults + $monitoring_module_params,
+          }
+        }
+
+        if $puppetdb_module_manage {
+          $puppetdb_module_defaults = {
+            ensure => $ensure,
+            ssl    => 'puppet',
+            host   => $servername,
+          }
+          class { 'icingaweb2::module::puppetdb':
+            * => $puppetdb_module_defaults + $puppetdb_module_params,
+          }
+        }
+
+        if $director_module_manage {
+          $director_db_type = $director_db_backend ? {
+            'mariadb' => 'mysql',
+            'mysql'   => 'mysql',
+            'pgsql'   => 'pgsql',
+          }
+          $director_module_defaults = {
+            ensure        => $ensure,
+            db_type       => $director_db_type,
+            db_host       => $director_db_settings['host'],
+            db_name       => $director_db_settings['database'],
+            db_username   => $director_db_settings['user'],
+            db_password   => $director_db_settings['password'],
+            import_schema => true,
+            kickstart     => true,
+            api_host      => $api_host,
+            api_username  => $api_user,
+            api_password  => $api_password,
+            endpoint      => pick($::psick::icinga2::master,$clientcert),
+          }
+          class { 'icingaweb2::module::director':
+            * => $director_module_defaults + $director_module_params,
+          }
+        }
+
+        if $git_manage {
+          include ::psick::git
+        }
+        $extra_modules.each |$k,$v| {
+          class { "::icingaweb2::module::${k}":
+            * => $v,
           }
         }
       }
       default: {}
     }
 
+    if $db_manage {
+      case $db_backend {
+        'mariadb': {
+          psick::mariadb::grant { 'icingaweb2':
+            user       => $db_settings['user'],
+            password   => $db_settings['password'],
+            db         => $db_settings['database'],
+            create_db  => $db_settings['create_db'],
+            privileges => $db_settings['grant'],
+            host       => $db_settings['host'],
+            before     => Package['icingaweb2'],
+          }
+        }
+        'mysql': {
+          psick::mysql::grant { 'icingaweb2':
+            user       => $db_settings['user'],
+            password   => $db_settings['password'],
+            db         => $db_settings['database'],
+            create_db  => $db_settings['create_db'],
+            privileges => $db_settings['grant'],
+            host       => $db_settings['host'],
+            before     => Package['icingaweb2'],
+          }
+        }
+        'pgsql': {
+          # puppetlabs-postgres module required
+          postgresql::server::db { $db_settings['database']:
+            user     => $db_settings['user'],
+            password => postgresql_password($db_settings['user'], $db_settings['password']),
+            before   => Package['icingaweb2'],
+          }
+        }
+        default: { }
+      } # END case $db_backend
+    } # END if $db_manage 
+
+
+    if $director_db_manage and $director_module_manage {
+      case $director_db_backend {
+        'mariadb': {
+          psick::mariadb::grant { 'director_icingaweb2':
+            user       => $director_db_settings['user'],
+            password   => $director_db_settings['password'],
+            db         => $director_db_settings['database'],
+            create_db  => $director_db_settings['create_db'],
+            privileges => $director_db_settings['grant'],
+            host       => $director_db_settings['host'],
+            before     => Package['icingaweb2'],
+          }
+        }
+        'mysql': {
+          psick::mysql::grant { 'director_icingaweb2':
+            user       => $director_db_settings['user'],
+            password   => $director_db_settings['password'],
+            db         => $director_db_settings['database'],
+            create_db  => $director_db_settings['create_db'],
+            privileges => $director_db_settings['grant'],
+            host       => $director_db_settings['host'],
+            before     => Package['icingaweb2'],
+          }
+        }
+        'pgsql': {
+          # puppetlabs-postgres module required
+          postgresql::server::db { $director_db_settings['database']:
+            user     => $director_db_settings['user'],
+            password => postgresql_password($director_db_settings['user'], $director_db_settings['password']),
+            before   => Package['icingaweb2'],
+          }
+        }
+        default: { }
+      } # END case $diretor_db_backend
+    } # END if $director_db_manage 
+
     if $db_backend {
       $camel_db_backend = $db_backend ? {
-        'mysql' => 'Mysql',
-        'pgsql' => 'Pgsql',
+        'mariadb' => 'Mysql',
+        'mysql'   => 'Mysql',
+        'pgsql'   => 'Pgsql',
+      }
+      $zend_package_require = $::osfamily ? {
+        'RedHat' => Tp::Install['epel'],
+        default  => undef,
       }
       package { "php-ZendFramework-Db-Adapter-Pdo-${camel_db_backend}":
-        before => Package['icingaweb2'],
+        before  => Package['icingaweb2'],
+        require => $zend_package_require,
       }
     }
 
@@ -116,11 +323,11 @@ class psick::icingaweb2 (
     }
 
     if $php_fpm_manage {
-      service { $php_fpm_service_name:
-        ensure => psick::ensure2service($ensure,'ensure'),
-        enable => psick::ensure2service($ensure,'enable'),
-        before => Package['icingaweb2'],
+      class { 'psick::php::fpm':
+        package_name => $php_fpm_name,
+        service_name => $php_fpm_name,
       }
+
     }
   }
 }

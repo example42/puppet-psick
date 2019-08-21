@@ -5,7 +5,7 @@ psick::hardening::services::services_default:
   - 'NetworkManager'
   - 'cups'
 
-psick::icingaweb2::php_fpm_service_name: 'rh-php71-php-fpm'
+psick::icingaweb2::php_fpm_name: 'rh-php71-php-fpm'
 
 psick::packages::packages_default:
   - 'lynx'

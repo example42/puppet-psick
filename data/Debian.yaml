@@ -14,3 +14,4 @@ psick::ruby::buildgems::packages:
   - 'zlib1g-dev'
 psick::puppet::install_ca::ca_ssl_dir: '/etc/ssl/certs'
 psick::puppet::install_ca::ca_update_command: 'update-ca-certificates'
+psick::selinux::type: 'default'

@@ -20,7 +20,7 @@
 #                           newer icingaweb2 interface use the psick::icingaweb2
 #                           class.
 #                           (used with $module == psick)
-# @param options An open hash of tp::conf resources to manage any icinga related
+# @param tp_conf_hash An open hash of tp::conf resources to manage any icinga related
 #                configuration file
 #                (used with $module == psick)
 # @param no_noop Set noop metaparameter to false to all the resources of this class.
@@ -42,12 +42,65 @@ class psick::icinga2 (
   Boolean          $is_client          = true,
   Boolean          $is_server          = false,
 
-  Array $client_features = ['api','checker','mainlog'],
-  Array $server_features = ['api','checker','mainlog','notification','statusdata','compatlog','command'],
+  Array $client_features = ['api','notification','checker','mainlog'],
+  Array $server_features = ['api','checker','mainlog','notification','command'],
 
-  Boolean         $ido_manage          = true,
+  Boolean         $ido_manage              = true,
   Enum['mariadb','mysql','pgsql'] $ido_backend = 'mariadb',
-  Hash            $ido_db_settings     = {},
+  Hash            $ido_settings            = {},
+
+  Boolean $create_hosts_from_puppetdb      = true,
+
+  Hash $endpoint_hash                      = {},
+  Hash $endpoint_default_params            = {},
+
+  Hash $zone_hash                          = {},
+  Hash $zone_default_params                = {},
+
+  Hash $apiuser_hash                       = {},
+  Hash $apiuser_default_params             = {},
+
+  Hash $checkcommand_hash                  = {},
+  Hash $checkcommand_default_params        = {},
+
+  Hash $host_hash                          = {},
+  Hash $host_default_params                = {},
+
+  Hash $hostgroup_hash                     = {},
+  Hash $hostgroup_default_params           = {},
+
+  Hash $dependency_hash                    = {},
+  Hash $dependency_default_params          = {},
+
+  Hash $timeperiod_hash                    = {},
+  Hash $timeperiod_default_params          = {},
+
+  Hash $usergroup_hash                     = {},
+  Hash $usergroup_default_params           = {},
+
+  Hash $user_hash                          = {},
+  Hash $user_default_params                = {},
+
+  Hash $notificationcommand_hash           = {},
+  Hash $notificationcommand_default_params = {},
+
+  Hash $notification_hash                  = {},
+  Hash $notification_default_params        = {},
+
+  Hash $service_hash                       = {},
+  Hash $service_default_params             = {},
+
+  Hash $servicegroup_hash                  = {},
+  Hash $servicegroup_default_params        = {},
+
+  Hash $scheduleddowntime_hash             = {},
+  Hash $scheduleddowntime_default_params   = {},
+
+  Hash $eventcommand_hash                  = {},
+  Hash $eventcommand_default_params        = {},
+
+  Hash $checkresultreader_hash             = {},
+  Hash $checkresultreader_default_params   = {},
 
   Boolean         $no_noop             = false,
 ) {
@@ -73,8 +126,8 @@ class psick::icinga2 (
           }
         }
         $tp_conf_defaults = {
-          ensure        => $ensure,
-          options_hash  => $options,
+          ensure       => $ensure,
+          options_hash => $options,
         }
         $tp_conf_hash.each |$k,$v| {
           ::tp::conf { $k:
@@ -105,33 +158,134 @@ class psick::icinga2 (
         if $ido_manage and $is_server {
           case $ido_backend {
             'mysql': {
-              class{ '::icinga2::feature::idomysql':
-                user          => $ido_db_settings['user'],
-                password      => $ido_db_settings['password'],
-                database      => $ido_db_settings['database'],
+              class { '::icinga2::feature::idomysql':
+                user          => $ido_settings['user'],
+                password      => $ido_settings['password'],
+                database      => $ido_settings['database'],
                 import_schema => true,
                 require       => Psick::Mysql::Grant['icinga2'],
               }
             }
             'mariadb': {
-              class{ '::icinga2::feature::idomysql':
-                user          => $ido_db_settings['user'],
-                password      => $ido_db_settings['password'],
-                database      => $ido_db_settings['database'],
+              class { '::icinga2::feature::idomysql':
+                user          => $ido_settings['user'],
+                password      => $ido_settings['password'],
+                database      => $ido_settings['database'],
                 import_schema => true,
                 require       => Psick::Mariadb::Grant['icinga2'],
               }
             }
             'pgsql': {
-              class{ '::icinga2::feature::idopgsql':
-                user          => $ido_db_settings['user'],
-                password      => $ido_db_settings['password'],
-                database      => $ido_db_settings['database'],
+              class { '::icinga2::feature::idopgsql':
+                user          => $ido_settings['user'],
+                password      => $ido_settings['password'],
+                database      => $ido_settings['database'],
                 import_schema => true,
-                require       => Postgresql::Server::Db[$ido_db_settings['database']],
+                require       => Postgresql::Server::Db[$ido_settings['database']],
               }
             }
             default: {}
+          }
+        }
+
+        # PuppetDB nodes import
+        if $create_hosts_from_puppetdb {
+          {}.each |$k,$v| {
+            $hosts_defaults = {
+              target  => '/etc/icinga2/conf.d/hosts.conf',
+              import  => [ 'generic-host' ],
+              address => '',
+            }
+            ::icinga2::object::host { $k:
+              * => $hosts_defaults,
+            }
+          }
+        }
+
+        # Extra objects
+        $endpoint_hash.each |$k,$v| {
+          ::icinga2::object::endpoint { $k:
+            * => $endpoint_default_params + $v,
+          }
+        }
+        $zone_hash.each |$k,$v| {
+          ::icinga2::object::zone { $k:
+            * => $zone_default_params + $v,
+          }
+        }
+        $apiuser_hash.each |$k,$v| {
+          ::icinga2::object::apiuser { $k:
+            * => $apiuser_default_params + $v,
+          }
+        }
+        $checkcommand_hash.each |$k,$v| {
+          ::icinga2::object::checkcommand { $k:
+            * => $checkcommand_default_params + $v,
+          }
+        }
+        $host_hash.each |$k,$v| {
+          ::icinga2::object::host { $k:
+            * => $host_default_params + $v,
+          }
+        }
+        $hostgroup_hash.each |$k,$v| {
+          ::icinga2::object::hostgroup { $k:
+            * => $hostgroup_default_params + $v,
+          }
+        }
+        $dependency_hash.each |$k,$v| {
+          ::icinga2::object::dependency { $k:
+            * => $dependency_default_params + $v,
+          }
+        }
+        $timeperiod_hash.each |$k,$v| {
+          ::icinga2::object::timeperiod { $k:
+            * => $timeperiod_default_params + $v,
+          }
+        }
+        $usergroup_hash.each |$k,$v| {
+          ::icinga2::object::usergroup { $k:
+            * => $usergroup_default_params + $v,
+          }
+        }
+        $user_hash.each |$k,$v| {
+          ::icinga2::object::user { $k:
+            * => $user_default_params + $v,
+          }
+        }
+        $notificationcommand_hash.each |$k,$v| {
+          ::icinga2::object::notificationcommand { $k:
+            * => $notificationcommand_default_params + $v,
+          }
+        }
+        $notification_hash.each |$k,$v| {
+          ::icinga2::object::notification { $k:
+            * => $notification_default_params + $v,
+          }
+        }
+        $service_hash.each |$k,$v| {
+          ::icinga2::object::service { $k:
+            * => $service_default_params + $v,
+          }
+        }
+        $servicegroup_hash.each |$k,$v| {
+          ::icinga2::object::servicegroup { $k:
+            * => $servicegroup_default_params + $v,
+          }
+        }
+        $scheduleddowntime_hash.each |$k,$v| {
+          ::icinga2::object::scheduleddowntime { $k:
+            * => $scheduleddowntime_default_params + $v,
+          }
+        }
+        $eventcommand_hash.each |$k,$v| {
+          ::icinga2::object::eventcommand { $k:
+            * => $eventcommand_default_params + $v,
+          }
+        }
+        $checkresultreader_hash.each |$k,$v| {
+          ::icinga2::object::checkresultreader { $k:
+            * => $checkresultreader_default_params + $v,
           }
         }
       }
@@ -142,34 +296,33 @@ class psick::icinga2 (
       case $ido_backend {
         'mariadb': {
           psick::mariadb::grant { 'icinga2':
-            user       => $ido_db_settings['user'],
-            password   => $ido_db_settings['password'],
-            db         => $ido_db_settings['database'],
-            create_db  => $ido_db_settings['create_db'],
-            privileges => $ido_db_settings['grant'],
-            host       => $ido_db_settings['host'],
+            user       => $ido_settings['user'],
+            password   => $ido_settings['password'],
+            db         => $ido_settings['database'],
+            create_db  => $ido_settings['create_db'],
+            privileges => $ido_settings['grant'],
+            host       => $ido_settings['host'],
           }
         }
         'mysql': {
           psick::mysql::grant { 'icinga2':
-            user       => $ido_db_settings['user'],
-            password   => $ido_db_settings['password'],
-            db         => $ido_db_settings['database'],
-            create_db  => $ido_db_settings['create_db'],
-            privileges => $ido_db_settings['grant'],
-            host       => $ido_db_settings['host'],
+            user       => $ido_settings['user'],
+            password   => $ido_settings['password'],
+            db         => $ido_settings['database'],
+            create_db  => $ido_settings['create_db'],
+            privileges => $ido_settings['grant'],
+            host       => $ido_settings['host'],
           }
         }
         'pgsql': {
           # puppetlabs-postgres module required
-          postgresql::server::db { $ido_db_settings['database']:
-            user     => $ido_db_settings['user'],
-            password => postgresql_password($ido_db_settings['user'], $ido_db_settings['password']),
+          postgresql::server::db { $ido_settings['database']:
+            user     => $ido_settings['user'],
+            password => postgresql_password($ido_settings['user'], $ido_settings['password']),
           }
         }
         default: { }
-      }
-
-    }
-  }
+      } # END case $ido_backend
+    } # END if $ido_manage and $is_server
+  } # END if $manage
 }
