@@ -50,7 +50,7 @@ class psick::icingaweb2 (
   Hash $ido_settings                      = lookup('psick::icinga2::ido_settings'),
 
   Boolean $fix_php_timezone               = true,
-  Boolean $install_icingaweb2_selinux     = true,
+  Boolean $install_icingaweb2_selinux     = false,
   Boolean $php_fpm_manage                 = true,
   String $php_fpm_name                    = 'php-fpm',
 
@@ -83,6 +83,7 @@ class psick::icingaweb2 (
     }
     if $webserver_class and $webserver_class != '' {
       contain $webserver_class
+      Class['icingaweb2'] ~> Class[$webserver_class]
     }
     if $dbserver_class and $dbserver_class != '' {
       contain $dbserver_class
@@ -318,7 +319,8 @@ class psick::icingaweb2 (
     }
     if $::selinux and $install_icingaweb2_selinux {
       package { 'icingaweb2-selinux':
-        ensure       => $ensure,
+        ensure  => $ensure,
+        require => Class['icinga2'],
       }
     }
 
@@ -326,6 +328,7 @@ class psick::icingaweb2 (
       class { 'psick::php::fpm':
         package_name => $php_fpm_name,
         service_name => $php_fpm_name,
+        subscribe    => Class['icingaweb2'],
       }
 
     }
