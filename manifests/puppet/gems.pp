@@ -79,7 +79,7 @@ class psick::puppet::gems (
       noop(false)
     }
     $minimal_gems = ['r10k','hiera-eyaml','deep_merge']
-    $minimal_test_gems = ['puppet-lint','rspec-puppet','rake','bundler','simplecov','minitest','rspec-puppet-facts','puppetlabs_spec_helper','yaml-lint'] # lint:ignore:140chars
+    $minimal_test_gems = ['puppet-lint','rspec-puppet','rake','bundler','simplecov','minitest','puppetlabs_spec_helper','yaml-lint'] # lint:ignore:140chars
     $default_gems = $default_set ? {
       'none'      => [],
       'client'    => [],

@@ -197,7 +197,10 @@ define psick::users::managed (
       case $gid {
         'absent','uid': {
           $file_group_option = {
-            group => $name,
+            group => $::osfamily ? {
+              'Suse'  => 'users',
+              default => $name,
+            }
           }
         }
         default: {

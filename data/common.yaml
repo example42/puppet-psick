@@ -93,6 +93,13 @@ psick::icinga2::service_default_params:
   import:
     - generic-service
 
+psick::icinga2::zone_default_params:
+  target: '/etc/icinga2/zones.conf'
+
+psick::icinga2::endpoint_default_params:
+  target: '/etc/icinga2/zones.conf'
+
+
 psick::icinga2::service_hash:
   ping4:
     apply: true

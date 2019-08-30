@@ -42,16 +42,21 @@ class psick::icinga2 (
   Boolean          $is_client          = true,
   Boolean          $is_server          = false,
 
-  Array $client_features = ['api','notification','checker','mainlog'],
-  Array $server_features = ['api','checker','mainlog','notification','command'],
+  Array $client_features = ['checker','mainlog'],
+  Array $server_features = ['checker','mainlog','notification','command'],
 
   Boolean         $ido_manage              = true,
   Enum['mariadb','mysql','pgsql'] $ido_backend = 'mariadb',
   Hash            $ido_settings            = {},
 
+  Boolean $generate_client_zones_file      = true,
+
   Boolean $puppetdb_hosts_import           = true,
   Boolean $puppetdb_hosts_details_import   = true,
+  Boolean $puppetdb_zones_import           = true,
   Hash $puppetdb_hosts_override_hash       = {},
+  Hash $puppetdb_zones_override_hash       = {},
+  Hash $puppetdb_endpoints_override_hash   = {},
   String $notes_url_prefix                 = "https://${servername}/#/inspect/node/",
   String $notes_url_suffix                 = '/reports',
   String $puppetdb_fact_address            = 'networking.ip',
@@ -202,10 +207,12 @@ class psick::icinga2 (
         # first level keys certnames matching the ones retrieved from PuppetDB
         # Values must be valid params of the icinga2::object::host define and
         # are deep merged with the default ones set via psick::icinga2::host_default_params
-        if $puppetdb_hosts_import {
+        if $is_server and ($puppetdb_hosts_import or $puppetdb_zones_import) {
           $nodes_query = 'nodes { deactivated is null }'
           $nodes = puppetdb_query($nodes_query)
           $nodes_list = $nodes.map |$node| { $node['certname'] }
+        }
+        if $is_server and $puppetdb_hosts_import {
           $nodes_list.each |$k| {
             if $puppetdb_hosts_details_import {
               $nodes_facts_query = "inventory[facts] { trusted.certname = '${k}' }"
@@ -240,6 +247,77 @@ class psick::icinga2 (
             #file { "/tmp/facts_${k}":
             #  content => $nodes_facts.to_yaml,
             #}
+          }
+        }
+
+        if $is_server and $puppetdb_zones_import {
+          $nodes_list.each |$k| {
+            $local_zones_params = {
+              ensure    => $ensure,
+              parent    => 'master',
+              endpoints => [ $k ],
+            }
+            $hiera_zones_override = pick ($puppetdb_zones_override_hash[$k],{} )
+            if $k != $master {
+              ::icinga2::object::zone { $k:
+                * => deep_merge($zone_default_params,$local_zones_params,$hiera_zones_override),
+              }
+            }
+
+            $local_endpoints_params = {
+              ensure => $ensure,
+              host   => $k,
+            }
+            $hiera_endpoints_override = pick ($puppetdb_endpoints_override_hash[$k],{} )
+            ::icinga2::object::endpoint { $k:
+              * => deep_merge($endpoint_default_params,$local_endpoints_params,$hiera_endpoints_override),
+            }
+          }
+        }
+
+        # Zones configuration
+        if $generate_client_zones_file {
+          if $is_server and $puppetdb_zones_import {
+            $client_zones_hash = {
+              'master' => {
+                endpoints => [ $master ],
+              }
+            }
+            $client_endpoints_hash = {}
+          } else {
+            $client_zones_hash = {
+              'master' => {
+                endpoints => [ $master ],
+              },
+              $::fqdn => {
+                endpoints => [ $::fqdn ],
+                parent    => 'master',
+              }
+            }
+            $client_endpoints_hash = {
+              $master => {
+                host => $master,
+              },
+              $::fqdn => {
+                host => $::fqdn,
+              }
+            }
+          }
+/*
+          $client_endpoints_hash.each |$k,$v| {
+            ::icinga2::object::endpoint { $k:
+              * => $endpoint_default_params + $v,
+            }
+          }
+          $client_zones_hash.each |$k,$v| {
+            ::icinga2::object::zone { $k:
+              * => $zone_default_params + $v,
+            }
+          }
+*/
+          class { 'icinga2::feature::api':
+            endpoints => $client_endpoints_hash,
+            zones     => $client_zones_hash,
           }
         }
 
