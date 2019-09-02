@@ -21,9 +21,9 @@
 define psick::grafana::datasource (
   String            $type,
   String            $access,
-  Enum['present','absent']
-                    $ensure        = 'present',
-  String            $template      = 'psick/grafana/datasource.yaml.erb',
+  String            $file_name          = "${title}.yaml",
+  Enum['present','absent'] $ensure      = 'present',
+  String            $template           = 'psick/grafana/datasource.yaml.erb',
   Optional[String]  $org_id             = undef,
   Optional[String]  $url                = undef,
   Optional[String]  $database           = undef,
@@ -37,9 +37,10 @@ define psick::grafana::datasource (
   Optional[Hash]    $json_data          = undef,
   Optional[Hash]    $secure_json_data   = undef,
   Optional[Boolean] $editable           = undef,
+  Optional[Hash]    $options            = {},
 ) {
 
-  tp::conf { "grafana::${name}.yaml":
+  tp::conf { "grafana::${file_name}":
     content  => template($template),
     base_dir => 'datasources',
   }

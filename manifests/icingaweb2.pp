@@ -69,6 +69,14 @@ class psick::icingaweb2 (
   Boolean $director_module_manage         = false,
   Hash $director_module_params            = {},
 
+  Boolean $grafana_module_manage          = true,
+  Hash $grafana_module_params             = {},
+  Hash $influxdb_settings                 = lookup('psick::icinga2::influxdb_settings'),
+
+  Boolean $grafana_manage                 = true,
+  Hash $grafana_params                    = {},
+  Hash $grafana_settings                  = {},
+
   Hash $extra_modules                     = { },
 
   Boolean $git_manage                     = true,
@@ -205,6 +213,62 @@ class psick::icingaweb2 (
           }
           class { 'icingaweb2::module::director':
             * => $director_module_defaults + $director_module_params,
+          }
+        }
+
+        if $grafana_module_manage {
+          $grafana_module_defaults = {
+            ensure         => $ensure,
+            git_repository => 'https://github.com/Mikesch-mp/icingaweb2-module-grafana',
+            git_revision   => 'master',
+            settings       => {},
+          }
+          icingaweb2::module { 'grafana':
+            * => $grafana_module_defaults + $grafana_module_params,
+          }
+          if $grafana_manage {
+            $grafana_defaults = {
+              ensure          => $ensure,
+              dashboards_hash => {
+                'icinga2-default.json' => {
+                  ensure   => $ensure,
+                  template => undef,
+                  source   => 'file:///etc/icingaweb2/enabledModules/grafana/dashboards/influxdb/icinga2-default.json',
+                  editable => 'true', # lint:ignore:quoted_booleans
+                }
+              },
+              datasources_hash => {
+                'DS_ICINGA2' => {
+                  ensure           => $ensure,
+                  file_name        => 'ds_icinga2.yaml',
+                  template         => 'psick/grafana/datasource.yaml.erb',
+                  type             => 'influxdb',
+                  access           => 'proxy',
+                  org_id           => '1',
+                  database         => $influxdb_settings['database'],
+                  user             => $influxdb_settings['user'],
+                  url              => "http://${influxdb_settings['host']}:${influxdb_settings['port']}",
+                  basic_authuser   => $grafana_settings['user'],
+                  secure_json_data => {
+                    password          => $influxdb_settings['password'],
+                    basicAuthPassword => $grafana_settings['password'],
+                  }
+                }
+              }
+            }
+            class { 'psick::grafana':
+              * => $grafana_defaults + $grafana_params,
+            }
+            psick::grafana::user { $grafana_settings['user']:
+              name           => $grafana_settings['user'],
+              password       => $grafana_settings['password'],
+              host           => $grafana_settings['host'],
+              port           => $grafana_settings['port'],
+              protocol       => $grafana_settings['protocol'],
+              email          => $grafana_settings['email'],
+              admin_user     => $grafana_settings['admin_user'],
+              admin_password => $grafana_settings['admin_password'],
+            }
           }
         }
 

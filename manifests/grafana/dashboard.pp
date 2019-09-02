@@ -16,7 +16,8 @@
 
 define psick::grafana::dashboard (
   Enum['present','absent'] $ensure = 'present',
-  String $template                 = 'psick/grafana/dashboard.yaml.erb',
+  Optional[String] $template       = undef,
+  Optional[String] $source         = undef,
   String $org_id                   = '1',
   String $folder                   = '',
   String $type                     = 'file',
@@ -25,8 +26,9 @@ define psick::grafana::dashboard (
   Hash    $options                 = {},
 ) {
 
-  tp::conf { "grafana::${name}.yaml":
-    content  => template($template),
+  tp::conf { "grafana::${name}":
+    content  => psick::template($template,$options),
+    source   => $source,
     base_dir => 'dashboards',
   }
 

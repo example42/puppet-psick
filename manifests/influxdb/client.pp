@@ -10,6 +10,8 @@
 #  @param package_params An hash of params to set or override the
 #    arguments passed to the package resource
 #
+# NOTE: this won't work until https://github.com/influxdata/influxdb/issues/6657
+#       is closed
 class psick::influxdb::client (
   Psick::Ensure $ensure = 'present',
   String $package_name  = 'influxdb-client',

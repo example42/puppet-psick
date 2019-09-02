@@ -65,12 +65,23 @@ psick::icinga2::ido_settings:
   create_db: true
   host: 'localhost'
 
+psick::icinga2::influxdb_settings:
+  database: 'icinga2'
+  user: 'icinga2'
+  password: 'icinga2pw!'
+  grant: 'ALL'
+  host: 'localhost'
+  port: 8086
+  influxdb_user: ~
+  influxdb_password: ~
+          
 psick::icinga2::host_default_params:
   target: '/etc/icinga2/conf.d/hosts.conf'
   import:
     - generic-host
   vars:
     os: Linux
+    client_endpoint: name
     disks:
       disk: {}
       disk:
@@ -103,17 +114,20 @@ psick::icinga2::endpoint_default_params:
 psick::icinga2::service_hash:
   ping4:
     apply: true
-    check_command: ping4
+    check_command: hostalive4
     assign:
       - host.address
   ping6:
     apply: true
-    check_command: ping6
+    check_command: hostalive6
     assign:
       - host.address6
   disks:
     apply: 'disk => config in host.vars.disks'
     check_command: disk
+    command_endpoint: host.vars.client_endpoint
+    assign:
+      - host.vars.os == Linux
     vars:
       - + config
   ssh:
@@ -129,25 +143,60 @@ psick::icinga2::service_hash:
   load:
     apply: true
     check_command: load
+    command_endpoint: host.vars.client_endpoint
     assign:
-      - host.name == NodeName
+      - host.vars.os == Linux
     vars:
       backup_downtime: "02:00-03:00"
   procs:
     apply: true
     check_command: procs
+    command_endpoint: host.vars.client_endpoint
     assign:
-      - host.name == NodeName
+      - host.vars.os == Linux
   swap:
     apply: true
     check_command: swap
+    command_endpoint: host.vars.client_endpoint
     assign:
-      - host.name == NodeName
+      - host.vars.os == Linux
   users:
     apply: true
     check_command: users
+    command_endpoint: host.vars.client_endpoint
     assign:
-      - host.name == NodeName
+      - host.vars.os == Linux
+  ntp:
+    apply: true
+    check_command: ntp_time
+    command_endpoint: host.vars.client_endpoint
+    check_interval: 30m
+    assign:
+      - host.vars.os == Linux
+    vars:
+      ntp_address: pool.ntp.org
+  dns:
+    apply: true
+    check_command: dns
+    command_endpoint: host.vars.client_endpoint
+    assign:
+      - host.vars.os == Linux
+  mailq:
+    apply: true
+    check_command: mailq
+    command_endpoint: host.vars.client_endpoint
+    assign:
+      - host.vars.os == Linux
+    vars:
+      mailq_warning: 5
+      mailq_critical: 25
+  apt:
+    apply: true
+    check_command: apt
+    command_endpoint: host.vars.client_endpoint
+    assign:
+      - host.vars.distro == Debian
+      - host.vars.distro == Ubuntu
 
 psick::icinga2::usergroup_hash:
   icingaadmins:
@@ -170,6 +219,16 @@ psick::icingaweb2::director_db_settings:
   grant: 'ALL'
   create_db: true
   host: 'localhost'
+psick::icingaweb2::grafana_settings:
+  host: 'localhost'
+  port: 3000
+  protocol: 'http'
+  user: 'icingaweb2'
+  email: 'root@localhost'
+  password: 'icingweb2pw!'
+  admin_user: 'admin'
+  admin_password: 'admin'
+
 psick::icingaweb2::php_fpm_name: 'php-fpm'
 psick::icingaweb::extra_modules:
   doc: {}
