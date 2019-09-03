@@ -235,7 +235,15 @@ class psick::icingaweb2 (
                   template => undef,
                   source   => 'file:///etc/icingaweb2/enabledModules/grafana/dashboards/influxdb/icinga2-default.json',
                   editable => 'true', # lint:ignore:quoted_booleans
-                }
+                  require  => Icingaweb2::Module['grafana'],
+                },
+                'base-metrics.json' => {
+                  ensure   => $ensure,
+                  template => undef,
+                  source   => 'file:///etc/icingaweb2/enabledModules/grafana/dashboards/influxdb/base-metrics.json',
+                  editable => 'true', # lint:ignore:quoted_booleans
+                  require  => Icingaweb2::Module['grafana'],
+                },
               },
               datasources_hash => {
                 'DS_ICINGA2' => {
