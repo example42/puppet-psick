@@ -22,6 +22,8 @@
 # @param path Set the full path of the icinga2 config file (this overrides the default path:
 #   "/etc/icinga2/zones.d/${title}.conf"
 #
+# @param config_dif Name of the directory, inside /etc/icinga2, where to place
+#   config files (when no path is set).
 # @param owner The owner of the created directory
 # @param group The group of the created directory
 # @param mode The mode of the created directory
@@ -36,6 +38,7 @@ define psick::icinga2::config (
   Variant[Undef,String]    $template     = undef,
   Variant[Undef,String]    $source       = undef,
   Optional[String]         $path         = undef,
+  String                   $config_dir   = 'zones.d',
   String                   $owner        = 'root',
   String                   $group        = 'root',
   String                   $mode         = '0644',
@@ -43,7 +46,7 @@ define psick::icinga2::config (
   Hash                     $options_hash = {},
 ) {
 
-  $path_real=pick($path,"/etc/icinga2/zones.d/${title}.conf")
+  $path_real=pick($path,"/etc/icinga2/${config_dir}/${title}.conf")
   file { $path_real:
     ensure  => $ensure,
     owner   => $owner,
