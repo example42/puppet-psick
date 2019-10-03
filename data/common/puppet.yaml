@@ -1,0 +1,4 @@
+---
+# psick::puppet::postrun
+psick::puppet::postrun::puppet_conf_path: '/etc/puppetlabs/puppet/puppet.conf'
+

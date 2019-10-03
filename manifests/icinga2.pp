@@ -13,20 +13,20 @@
 #   This overrides client site noop setting but not $psick::noop_mode.
 #
 class psick::icinga2 (
-  String          $ensure              = 'present',
-  Boolean         $manage              = $::psick::manage,
+  String          $ensure                  = 'present',
+  Boolean         $manage                  = $::psick::manage,
 
-  String           $master             = "icinga.${::domain}",
-  Boolean          $is_client          = true,
-  Boolean          $is_server          = false,
+  String           $master                 = "icinga.${::domain}",
+  Boolean          $is_client              = true,
+  Boolean          $is_server              = false,
 
   Hash $icinga2_class_params               = {},
 
   # API feature class is declared directly and should not added to these Arrays
   Boolean $manage_api_feature              = true,
   Hash $icinga2_feature_api_class_params   = {},
-  Array $client_features = ['checker','mainlog'],
-  Array $server_features = ['checker','mainlog','notification','command'],
+  Array $client_features                   = ['checker','mainlog'],
+  Array $server_features                   = ['checker','mainlog','notification','command'],
 
   Boolean    $influxdb_manage              = true,
   Hash       $influxdb_settings            = {},
@@ -50,6 +50,9 @@ class psick::icinga2 (
   String $puppetdb_fact_network            = 'network',
   String $puppetdb_fact_role               = 'role',
   String $puppetdb_fact_env                = 'env',
+
+  Hash $config_hash                        = {},
+
   Hash $endpoint_hash                      = {},
   Hash $endpoint_default_params            = {},
 
@@ -117,6 +120,7 @@ class psick::icinga2 (
     }
     $default_params = {
       features => $features,
+      #      confd    => 'zones.d',
     }
     class { 'icinga2':
       * => $default_params + $icinga2_class_params
@@ -346,6 +350,18 @@ class psick::icinga2 (
       }
       class { 'icinga2::feature::api':
         * => $icinga2_feature_api_defaults + $icinga2_feature_api_class_params,
+      }
+    }
+
+    # Custom configuration files
+    if $config_default_files_add {
+      $all_config_hash = $config_default_hash + $config_hash
+    } else {
+      $all_config_hash = $config_hash
+    }
+    $config_hash.each |$k,$v| {
+      ::psick::icinga2::config { $k:
+        * => $v,
       }
     }
 

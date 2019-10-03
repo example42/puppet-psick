@@ -8,12 +8,6 @@ defaults:
 hierarchy:
   - name: "In module hierarchy"
     paths:
-      - "%{psick::auto_conf}/%{facts.os.name}%{facts.os.release.major}.yaml"
-      - "%{psick::auto_conf}/%{facts.os.name}.yaml"
-      - "%{psick::auto_conf}/%{facts.os.family}%{facts.os.release.major}.yaml"
-      - "%{psick::auto_conf}/%{facts.os.family}.yaml"
-      - "%{psick::auto_conf}/%{facts.kernel}.yaml"
-      - "%{psick::auto_conf}/common.yaml"
       - "%{facts.virtual}.yaml"
       - "%{facts.os.name}%{facts.os.release.major}.yaml"
       - "%{facts.os.name}.yaml"
@@ -21,3 +15,7 @@ hierarchy:
       - "%{facts.os.family}.yaml"
       - "%{facts.kernel}.yaml"
       - "common.yaml"
+  - name: "Class commons in dedicated files"
+    glob: "common/*.yaml"
+  - name: "Common"
+    path: "common.yaml"
