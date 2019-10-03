@@ -1,6 +1,6 @@
 #!/bin/sh
 repo_dir="$(dirname $0)/.."
-. "${repo_dir}/bin/functions"
+. "${repo_dir}/scritps/functions"
 cd $repo_dir
 while read line
 do
@@ -8,5 +8,5 @@ do
   b=$(echo $line | cut -f 2 -d ' ')
   rm -f manifests/$a/tp.pp
   rm -f spec/classes/$a/tp_spec.rb
-  bin/tp_profile.generate.sh $a $b
-done < bin/tp_profile_mass_update.txt
+  scritps/tp_profile.generate.sh $a $b
+done < scritps/tp_profile_mass_update.txt
