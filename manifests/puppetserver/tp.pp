@@ -1,3 +1,6 @@
+# DEPRECATION NOTICE: This profile has been deprecated.
+# It will be removed on version 1.0.0 of psick module.
+# Use equivalent class tp_profile::puppetserver in the tp_profile module as replacement
 # psick::puppetserver::tp
 #
 # @summary This psick profile manages puppetserver with Tiny Puppet (tp)
@@ -66,6 +69,9 @@ class psick::puppetserver::tp (
 ) {
 
   if $manage {
+    notify { 'Deprecated profile psick::puppetserver::tp':
+      message => 'This profile has been deprecated. It will be removed on version 1.0.0 of psick module. Use equivalent class tp_profile::puppetserver in the tp_profile module as replacement',
+    }
     if !$::psick::noop_mode and $no_noop {
       info('Forced no-noop mode in psick::puppetserver::tp')
       noop(false)

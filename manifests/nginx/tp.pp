@@ -1,3 +1,6 @@
+# DEPRECATION NOTICE: This profile has been deprecated.
+# It will be removed on version 1.0.0 of psick module.
+# Use equivalent class tp_profile::nginx in the tp_profile module as replacement
 # psick::nginx::tp
 #
 # @summary This psick profile manages nginx with Tiny Puppet (tp)
@@ -66,6 +69,9 @@ class psick::nginx::tp (
 ) {
 
   if $manage {
+    notify { 'Deprecated profile psick::nginx::tp':
+      message => 'This profile has been deprecated. It will be removed on version 1.0.0 of psick module. Use equivalent class tp_profile::nginx in the tp_profile module as replacement',
+    }
     if !$::psick::noop_mode and $no_noop {
       info('Forced no-noop mode in psick::nginx::tp')
       noop(false)

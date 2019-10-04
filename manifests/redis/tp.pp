@@ -1,4 +1,6 @@
-# psick::redis::tp
+# DEPRECATION NOTICE: This profile has been deprecated.
+# It will be removed on version 1.0.0 of psick module.
+# Use equivalent class tp_profile::redis in the tp_profile module as replacement
 #
 # @summary This psick profile manages redis with Tiny Puppet (tp)
 #
@@ -66,6 +68,9 @@ class psick::redis::tp (
 ) {
 
   if $manage {
+    notify { 'Deprecated profile psick::redis::tp':
+      message => 'This profile has been deprecated. It will be removed on version 1.0.0 of psick module. Use equivalent class tp_profile::redis in the tp_profile     module as replacement',
+    }
     if !$::psick::noop_mode and $no_noop {
       info('Forced no-noop mode in psick::redis::tp')
       noop(false)

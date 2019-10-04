@@ -1,3 +1,6 @@
+# DEPRECATION NOTICE: This profile has been deprecated.
+# It will be removed on version 1.0.0 of psick module.
+# Use equivalent class tp_profile::php in the tp_profile module as replacement
 # psick::php::tp
 #
 # @summary This psick profile manages php with Tiny Puppet (tp)
@@ -66,6 +69,9 @@ class psick::php::tp (
 ) {
 
   if $manage {
+    notify { 'Deprecated profile psick::php::tp':
+      message => 'This profile has been deprecated. It will be removed on version 1.0.0 of psick module. Use equivalent class tp_profile::php in the tp_profile module as replacement',
+    }
     if !$::psick::noop_mode and $no_noop {
       info('Forced no-noop mode in psick::php::tp')
       noop(false)

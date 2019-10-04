@@ -1,3 +1,6 @@
+# DEPRECATION NOTICE: This profile has been deprecated.
+# It will be removed on version 1.0.0 of psick module.
+# Use equivalent class tp_profile::apache in the tp_profile module as replacement
 # psick::apache::tp
 #
 # @summary This psick profile manages apache with Tiny Puppet (tp)
@@ -66,6 +69,9 @@ class psick::apache::tp (
 ) {
 
   if $manage {
+    notify { 'Deprecated profile psick::apache::tp':
+      message => 'This profile has been deprecated. It will be removed on version 1.0.0 of psick module. Use equivalent class tp_profile::apache in the tp_profile module as replacement',
+    }
     if !$::psick::noop_mode and $no_noop {
       info('Forced no-noop mode in psick::apache::tp')
       noop(false)
