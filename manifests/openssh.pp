@@ -11,29 +11,32 @@ class psick::openssh (
   case $module {
     'psick': {
       contain ::psick::openssh::tp
-      $configs_hash.each |$k,$v| {
-        psick::openssh::config { $k:
-          * => $v,
-        }
-      }
-      $keygens_hash.each |$k,$v| {
-        psick::openssh::keygen { $k:
-          * => $v,
-        }
-      }
-      $keypairs_hash.each |$k,$v| {
-        psick::openssh::keypair { $k:
-          * => $v,
-        }
-      }
-      $keyscans_hash.each |$k,$v| {
-        psick::openssh::keyscan { $k:
-          * => $v,
-        }
-      }
+    }
+    'tp_profile': {
+      contain ::tp_profile::openssh
     }
     default: {
       contain ::openssh
+    }
+  }
+  $configs_hash.each |$k,$v| {
+    psick::openssh::config { $k:
+      * => $v,
+    }
+  }
+  $keygens_hash.each |$k,$v| {
+    psick::openssh::keygen { $k:
+      * => $v,
+    }
+  }
+  $keypairs_hash.each |$k,$v| {
+    psick::openssh::keypair { $k:
+      * => $v,
+    }
+  }
+  $keyscans_hash.each |$k,$v| {
+    psick::openssh::keyscan { $k:
+      * => $v,
     }
   }
 }

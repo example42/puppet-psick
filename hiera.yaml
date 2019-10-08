@@ -8,13 +8,12 @@ defaults:
 hierarchy:
   - name: "In module hierarchy"
     paths:
-      - "%{facts.virtual}.yaml"
       - "%{facts.os.name}%{facts.os.release.major}.yaml"
       - "%{facts.os.name}.yaml"
       - "%{facts.os.family}%{facts.os.release.major}.yaml"
       - "%{facts.os.family}.yaml"
       - "%{facts.kernel}.yaml"
-      - "common.yaml"
+      - "%{facts.virtual}.yaml"
   - name: "Class commons in dedicated files"
     glob: "common/*.yaml"
   - name: "Common"

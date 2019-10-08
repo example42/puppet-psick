@@ -50,33 +50,36 @@ class psick::grafana (
     case $module {
       'psick': {
         contain ::psick::grafana::tp
-
-        # Default config_template uses $parameters var. We manage it if data is
-        # provided
-        $parameters = $options_hash
-        if $parameters != {} {
-          tp::conf { 'grafana':
-            content => template($config_template),
-          }
-        }
-        $datasources_hash.each | $k,$v | {
-          psick::grafana::datasource { $k:
-            * => $v,
-          }
-        }
-        $dashboards_hash.each | $k,$v | {
-          psick::grafana::dashboard { $k:
-            * => $v,
-          }
-        }
-        $plugins_hash.each | $k,$v | {
-          psick::grafana::plugin { $k:
-            * => $v,
-          }
-        }
+      }
+      'tp_profile': {
+        contain ::tp_profile::grafana
       }
       default: {
         contain $module
+      }
+    }
+
+    # Default config_template uses $parameters var. We manage it if data is
+    # provided
+    $parameters = $options_hash
+    if $parameters != {} {
+      tp::conf { 'grafana':
+        content => template($config_template),
+      }
+    }
+    $datasources_hash.each | $k,$v | {
+      psick::grafana::datasource { $k:
+        * => $v,
+      }
+    }
+    $dashboards_hash.each | $k,$v | {
+      psick::grafana::dashboard { $k:
+        * => $v,
+      }
+    }
+    $plugins_hash.each | $k,$v | {
+      psick::grafana::plugin { $k:
+        * => $v,
       }
     }
   }
