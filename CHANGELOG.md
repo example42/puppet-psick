@@ -1,8 +1,21 @@
 ## Changelog
 
 * Your contribution here.
-* Puppetserver 6 has new ca commands - [@tuxmea](https://github.com/tuxmea).
 
+## Release 0.7.0
+* Deprecated local tp profiles. Preparing transition to tp_profile module
+* Added psick::icinga2 profile, features full
+* Added psick::icingaweb2 profile, features full
+* Added psick::java:install_tarball define
+* Added psick::selinux class
+* Added psick::remediate profile to install Puppet Remediate
+* Added psick::ensure2* functions
+* Added psick::hosts::puppetdb profile.
+* psick::php::fpm profile
+* Improved psick::packages
+* Fixed mariadb and mysql defines
+* Puppetserver 6 has new ca commands - [@tuxmea](https://github.com/tuxmea).
+* Updated hiera.yaml with globs to split per profile hiera data
 
 ## Release 0.6.2
 * Updated psick::puppet::foss_master to Puppet 6
@@ -19,7 +32,6 @@
 * psick::virtualbox updated
 
 ## Release 0.6.0
-
 * Added no_noop parameter to tp profiles
 * Changed current no_noop params to not override server side noop_mode
 * Added psick::chruby profile
