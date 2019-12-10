@@ -137,13 +137,13 @@ class psick::icinga2 (
         $influxdb_service_enable = false
       }
 
-      class { 'psick::influxdb::tp':
+      class { 'tp_profile::influxdb':
         settings_hash => {
           service_ensure => $influxdb_service_ensure,
           service_enable => $influxdb_service_enable,
         },
       }
-      Class[psick::influxdb::tp] -> Psick::Influxdb::Database<||>
+      Class[tp_profile::influxdb] -> Psick::Influxdb::Database<||>
 
       psick::influxdb::database { 'icinga2':
         database        => $influxdb_settings['database'],

@@ -176,23 +176,6 @@ psick::icinga2::service_hash:
       - host.vars.distro == Debian
       - host.vars.distro == Ubuntu
 
-# Default configuration files (same of sample ones under /etc/icinga2/conf.d):
-psick::icinga2::config_default_hash:
-  downtimes:
-    source: puppet:///modules/psick/icinga/config_default/downtimes.conf
-  timeperiods:
-    source: puppet:///modules/psick/icinga/config_default/timeperiods.conf
-  downtimes:
-    source: puppet:///modules/psick/icinga/config_default/downtimes.conf
-  downtimes:
-    source: puppet:///modules/psick/icinga/config_default/downtimes.conf
-  downtimes:
-    source: puppet:///modules/psick/icinga/config_default/downtimes.conf
-
-
-
-
-
 # icinga2::object::scheduleddowntime
 psick::icinga2::scheduleddowntime_default_params:
   target: '/etc/icinga2/zones.d/downtimes.conf'
@@ -200,7 +183,7 @@ psick::icinga2::scheduleddowntime_default_params:
 # icinga2::object::notification
 psick::icinga2::notification_default_params:
   target: '/etc/icinga2/zones.d/commands.conf'
-psick::icinga2::notification_hash:
+apsick::icinga2::notification_hash:
   mail-host-notification:
     template: true
     target: '/etc/icinga2/zones.d/templates.conf'
