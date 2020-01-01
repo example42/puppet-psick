@@ -1,4 +1,6 @@
-# psick::postfix::tp
+# DEPRECATION NOTICE: This profile has been deprecated.
+# It will be removed on version 1.0.0 of psick module.
+# Use equivalent class tp_profile::postfix in the tp_profile module as replacement
 #
 # @summary This psick profile manages postfix with Tiny Puppet (tp)
 #
@@ -66,6 +68,9 @@ class psick::postfix::tp (
 ) {
 
   if $manage {
+    notify { 'Deprecated profile psick::postfix::tp':
+      message => 'This profile has been deprecated. It will be removed on version 1.0.0 of psick module. Use equivalent class tp_profile::postfix in the tp_profile     module as replacement',
+    }
     if !$::psick::noop_mode and $no_noop {
       info('Forced no-noop mode in psick::postfix::tp')
       noop(false)

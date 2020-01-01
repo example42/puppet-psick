@@ -1,0 +1,6 @@
+# File managed by Puppet
+SELINUX=<%= $state %>
+SELINUXTYPE=<%= $type %>
+<% if $::osfamily == 'Debian' { -%>
+SETLOCALDEFS=<%= $setlocaldefs %>
+<% } -%>

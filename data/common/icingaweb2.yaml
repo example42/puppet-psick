@@ -1,0 +1,31 @@
+---
+# psick::icingaweb2
+psick::icingaweb2::db_backend: mysql
+psick::icingaweb2::db_settings:
+  database: 'icingaweb2'
+  user: 'icingaweb2'
+  password: 'icingaweb2pw!'
+  grant: 'ALL'
+  create_db: true
+  host: 'localhost'
+psick::icingaweb2::director_db_settings:
+  database: 'director'
+  user: 'director'
+  password: 'directorpw!'
+  grant: 'ALL'
+  create_db: true
+  host: 'localhost'
+psick::icingaweb2::grafana_settings:
+  host: 'localhost'
+  port: 3000
+  protocol: 'http'
+  user: 'icingaweb2'
+  email: 'root@localhost'
+  password: 'icingweb2pw!'
+  admin_user: 'admin'
+  admin_password: 'admin'
+
+psick::icingaweb2::php_fpm_name: 'php-fpm'
+psick::icingaweb2::extra_modules:
+  doc: {}
+

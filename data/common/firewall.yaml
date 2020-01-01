@@ -1,0 +1,19 @@
+---
+# psick::firewall::iptables
+psick::firewall::iptables::package_name: 'iptables'
+psick::firewall::iptables::service_name: 'iptables'
+psick::firewall::iptables::service_name_v6: 'ip6tables'
+psick::firewall::iptables::config_file_path: '/etc/sysconfig/iptables'
+psick::firewall::iptables::config_file_path_v6: '/etc/sysconfig/ip6tables'
+
+# Deep merge lookups for the following keys:
+lookup_options:
+  "^psick::firewall::iptables::(.*)_rules$":
+    merge:
+      strategy: deep
+      knockout_prefix: "--"
+  "^psick::firewall::iptables::(.*)_rules_v6$":
+    merge:
+      strategy: deep
+      knockout_prefix: "--"
+

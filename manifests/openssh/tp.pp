@@ -1,3 +1,6 @@
+# DEPRECATION NOTICE: This profile has been deprecated.
+# It will be removed on version 1.0.0 of psick module.
+# Use equivalent class tp_profile::openssh in the tp_profile module as replacement
 # psick::openssh::tp
 #
 # @summary This psick profile manages openssh with Tiny Puppet (tp)
@@ -66,6 +69,9 @@ class psick::openssh::tp (
 ) {
 
   if $manage {
+    notify { 'Deprecated profile psick::openssh::tp':
+      message => 'This profile has been deprecated. It will be removed on version 1.0.0 of psick module. Use equivalent class tp_profile::openssh in the tp_profile module as replacement',
+    }
     if !$::psick::noop_mode and $no_noop {
       info('Forced no-noop mode in psick::openssh::tp')
       noop(false)

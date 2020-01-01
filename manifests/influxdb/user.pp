@@ -35,15 +35,14 @@
 define psick::influxdb::user (
   String                    $password,
   String                    $database,
+  String                    $user   = $title,
   Enum['present', 'absent'] $ensure = 'present',
   Optional[String] $server_host     = 'localhost',
-  Optional[String] $server_port     = undef,
+  Variant[Undef,String,Integer] $server_port = undef,
   Optional[String] $server_user     = undef,
   Optional[String] $server_password = undef,
   Hash $exec_params                 = {},
 ){
-
-  include psick::influxdb::client
 
   # Build command line arguments
   $host_param = $server_host ? {
@@ -67,23 +66,23 @@ define psick::influxdb::user (
 
   if $ensure == 'present' {
     $exec_title = "Create user ${title}"
-    $_cmd = "CREATE USER ${name} WITH PASSWORD '${password}'"
+    $_cmd = "CREATE USER ${user} WITH PASSWORD '${password}'"
     $exec_command = "/usr/bin/influx ${influx_params} -execute \"${_cmd}\""
-    $exec_unless  = "/usr/bin/influx -execute \"SHOW USERS\" | grep --perl-regex \"^${name}\t\""
+    $exec_unless  = "/usr/bin/influx -execute \"SHOW USERS\" | grep --perl-regex \"^${user}\s+\""
     $exec_onlyif  = undef
   } else {
     $exec_title = "Drop user ${title}"
-    $_cmd = "DROP USER ${name} "
+    $_cmd = "DROP USER ${user} "
     $exec_command = "/usr/bin/influx ${influx_params} -execute \"${_cmd}\""
     $exec_unless  = undef
-    $exec_onlyif  = "/usr/bin/influx -execute \"SHOW USERS\" | grep --perl-regex \"^${name}\t\""
+    $exec_onlyif  = "/usr/bin/influx -execute \"SHOW USERS\" | grep --perl-regex \"^${user}\s+\""
   }
 
   # Attempt to autoconfigure dependencies based on server host. Can be
   # overridden with param $exec_params
   $exec_require = $server_host ? {
-    /(localhost|127.0.0.1|$fqdn|$hostname|$ipaddress)/ => [Package[influxdb-client],Package[influxdb],Service[influxdb]],
-    default                                            => 'Package[influxdb-client]',
+    /(localhost|127.0.0.1|$fqdn|$hostname|$ipaddress)/ => [Package[influxdb],Service[influxdb]],
+    default                                            => [Package[influxdb]],
   }
   $exec_default_options = {
     'command' => $exec_command,

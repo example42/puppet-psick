@@ -30,13 +30,11 @@ define psick::influxdb::database (
   Enum['present', 'absent'] $ensure = 'present',
   String                  $database = $title,
   Optional[String] $server_host     = 'localhost',
-  Optional[String] $server_port     = undef,
+  Variant[Undef,String,Integer] $server_port = undef,
   Optional[String] $server_user     = undef,
   Optional[String] $server_password = undef,
   Hash $exec_params                 = {},
 ){
-
-  include psick::influxdb::client
 
   # Build command line arguments
   $host_param = "-host '${server_host}'"
@@ -72,8 +70,8 @@ define psick::influxdb::database (
   # Attempt to autoconfigure dependencies based on server host. Can be
   # overridden with param $exec_params
   $exec_require = $server_host ? {
-    /(localhost|127.0.0.1|$fqdn|$hostname|$ipaddress)/ => [Package[influxdb-client],Package[influxdb],Service[influxdb]],
-    default                                            => 'Package[influxdb-client]',
+    /(localhost|127.0.0.1|$fqdn|$hostname|$ipaddress)/ => [Package[influxdb],Service[influxdb]],
+    default                                            => [Package[influxdb]],
   }
   $exec_default_options = {
     'command' => $exec_command,

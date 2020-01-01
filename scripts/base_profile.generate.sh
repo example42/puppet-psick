@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
+my_dir=$(dirname $0)
 repo_dir="$(dirname $0)/.."
-. "${repo_dir}/bin/functions"
+. "${my_dir}/functions"
 app=${1:-undef}
 repo=${2:-https://github.com/example42/pdk-module-template-psick-base-profile}
 

@@ -39,13 +39,11 @@ define psick::influxdb::grant (
   Enum['present', 'absent'] $ensure       = 'present',
   Enum['READ', 'WRITE', 'ALL'] $privilege = 'ALL',
   Optional[String] $server_host           = 'localhost',
-  Optional[String] $server_port           = undef,
+  Variant[Undef,String,Integer] $server_port = undef,
   Optional[String] $server_user           = undef,
   Optional[String] $server_password       = undef,
   Hash $exec_params                       = {},
 ){
-
-  include psick::influxdb::client
 
   # Build command line arguments
   $host_param = $server_host ? {
@@ -68,24 +66,24 @@ define psick::influxdb::grant (
   $influx_params = "-database '${database}' ${host_param} ${port_param} ${password_param} ${user_param}"
 
   if $ensure == 'present' {
-    $exec_title = "Create grant ${title}"
+    $exec_title = "Influxdb create grant ${title}"
     $_cmd = "GRANT ${privilege} ON ${database} TO ${user}"
     $exec_command = "/usr/bin/influx ${influx_params} -execute \"${_cmd}\""
-    $exec_unless  = "/usr/bin/influx -execute \"SHOW GRANTS FOR ${user}\" | grep --perl-regex \"^${database}\t${privilege}\""
+    $exec_unless  = "/usr/bin/influx -execute \"SHOW GRANTS FOR ${user}\" | grep --perl-regex \"^${database}\s+${privilege}\""
     $exec_onlyif  = undef
   } else {
-    $exec_title = "Drop grant ${title}"
+    $exec_title = "Influxdb revoke grant ${title}"
     $_cmd = "REVOKE ${privilege} ON ${database} TO ${user}"
     $exec_command = "/usr/bin/influx ${influx_params} -execute \"${_cmd}\""
     $exec_unless  = undef
-    $exec_onlyif  = "/usr/bin/influx -execute \"SHOW GRANTS FOR ${user}\" | grep --perl-regex \"^${database}\t${privilege}\""
+    $exec_onlyif  = "/usr/bin/influx -execute \"SHOW GRANTS FOR ${user}\" | grep --perl-regex \"^${database}\s+${privilege}\""
   }
 
   # Attempt to autoconfigure dependencies based on server host. Can be
   # overridden with param $exec_params
   $exec_require = $server_host ? {
-    /(localhost|127.0.0.1|$fqdn|$hostname|$ipaddress)/ => [Package[influxdb-client],Package[influxdb],Service[influxdb]],
-    default                                            => 'Package[influxdb-client]',
+    /(localhost|127.0.0.1|$fqdn|$hostname|$ipaddress)/ => [Package[influxdb],Service[influxdb]],
+    default                                            => [Package[influxdb]],
   }
   $exec_default_options = {
     'command' => $exec_command,

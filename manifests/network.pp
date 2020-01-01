@@ -45,7 +45,7 @@ class psick::network (
     }
     $routes.each |$r,$o| {
       ::network::mroute { $r: # With example42-network 3.x
-     # ::network::route { $r: # With example42-network 4.x
+    # ::network::route { $r: # With example42-network 4.x
         routes => $o[routes],
       }
     }

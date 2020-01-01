@@ -1,0 +1,3 @@
+---
+psick::icinga2::ido_backend: mysql
+psick::icingaweb2::php_fpm_name: 'rh-php70-php-fpm'

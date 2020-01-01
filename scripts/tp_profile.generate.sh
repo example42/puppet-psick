@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 repo_dir="$(dirname $0)/.."
-. "${repo_dir}/bin/functions"
+. "${repo_dir}/scripts/functions"
 app=${1:-undef}
-repo=${2:-https://github.com/example42/pdk-module-template-tp-profile}
+repo=${2:-https://github.com/example42/pdk-module-template-psick-tp-profile}
 
 show_help () {
 cat << EOF

@@ -1,0 +1,4 @@
+# File managed by Puppet
+<% $hosts_final_array.each |$h| { -%>
+<%= $h %>
+<% } -%>

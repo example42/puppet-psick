@@ -1,0 +1,12 @@
+{
+  "description": "Update Puppet agent on a node from local PE server",
+  "supports_noop": false,
+  "input_method": "environment",
+  "parameters": {
+    "puppet_server": {
+     "description": "The PE Puppet server fqdn",
+     "type": "Optional[String[1]]"
+    }
+  }
+}
+

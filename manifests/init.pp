@@ -9,7 +9,7 @@
 # @param manage If to actually manage the resources of a class. This allows
 #   to skip management of resources even if classes are included. Used
 #   to avoid to manage some resources when building Docker images.
-# @param auto_prereq If to automtically manage prerequisites. Set to false here to 
+# @param auto_prereq If to automtically manage prerequisites. Set to false here to
 #   apply this value for all the PSICK profiles that honour this global
 #   setting. Use when you have duplicated resources.
 # @param auto_conf Which autoconfiguration layout to use. Default is 'none', if you
@@ -74,6 +74,7 @@ class psick (
   Optional[Stdlib::Compat::Ip_address] $primary_ip = fact('networking.ip'),
   Optional[String] $mgmt_interface                 = fact('networking.primary'),
   Optional[String] $timezone                       = undef,
+  Hash $interfaces_hash                            = {},
 
   # General endpoints and variables
   Hash $settings                                   = {},
@@ -106,6 +107,30 @@ class psick (
     data_module        => $tp['data_module'],
   }
 
+  # Building of the $::psick::interfaces variable, usable in any class included
+  # via or after psick.
+  # By default are set main and mgmt interfaces based on sane facts values and
+  # user params $primary_ip and $mgmt_interface
+  $primary_interface =  $facts['networking']['primary']
+  $interfaces_default = {
+    main => {
+      interface => $facts['networking']['primary'],
+      address   => pick($primary_ip, $facts['networking']['interfaces'][$primary_interface]['ip']),
+      netmask   => $facts['networking']['interfaces'][$primary_interface]['netmask'],
+      network   => $facts['networking']['interfaces'][$primary_interface]['network'],
+      hostname  => $facts['networking']['fqdn'],
+    },
+    mgmt => {
+      interface => $mgmt_interface,
+      address   => $facts['networking']['interfaces'][$mgmt_interface]['ip'],
+      netmask   => $facts['networking']['interfaces'][$mgmt_interface]['netmask'],
+      network   => $facts['networking']['interfaces'][$mgmt_interface]['network'],
+      hostname  => $facts['networking']['fqdn'],
+    }
+  }
+  $interfaces = deep_merge($interfaces_default, $interfaces_hash)
+
+
   # PSICK PRE, BASE CLASSES AND PROFILES + OPTIONAL FIRSTRUN MODE
   # The classes included here manage PSICK classification and
   # relevant class ordering
@@ -120,4 +145,5 @@ class psick (
     contain ::psick::firstrun
     notify { "This catalog should be applied only at the first Puppen run\n": }
   }
+
 }

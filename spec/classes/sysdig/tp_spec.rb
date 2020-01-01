@@ -1,6 +1,6 @@
 require 'spec_helper'
 require 'yaml'
-facts_yaml = File.dirname(__FILE__) + '/../../fixtures/facts/spec.yaml'
+facts_yaml = File.expand_path(File.dirname(__FILE__) + '/../../fixtures/facts/spec.yaml')
 facts = YAML.load_file(facts_yaml)
 
 default_params = {

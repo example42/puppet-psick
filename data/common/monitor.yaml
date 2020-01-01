@@ -1,0 +1,7 @@
+---
+# psick::monitor::ganglia
+psick::monitor::ganglia::packages: []
+
+# psick::monitor::snmpd
+psick::monitor::snmpd::extra_packages: []
+

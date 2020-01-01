@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+# File managed by Puppet
+curl -XPOST -H "Content-Type: application/json" -d '{
+  "name":"<%= @title %>",
+  "email":"<%= @email %>",
+  "login":"<%= @user %>",
+  "password":"<%= @password %>"
+}' <%= @protocol %>://<%= @admin_user %>:<%= @admin_password %>@<%= @host %>:<%= @port %>/api/admin/users

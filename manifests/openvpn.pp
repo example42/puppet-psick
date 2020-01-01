@@ -77,12 +77,12 @@ class psick::openvpn (
       }
       $client_specific_config_hash.each |$k,$v| {
         openvpn::client_specific_configs { $k:
-          * => $client_specific_defaults + $v,
+          * => $client_specific_config_defaults + $v,
         }
       }
       $deploy_client_hash.each |$k,$v| {
         openvpn::deploy::client { $k:
-          * => $client_deploy_defaults + $v,
+          * => $deploy_client_defaults + $v,
         }
       }
       $deploy_export_hash.each |$k,$v| {

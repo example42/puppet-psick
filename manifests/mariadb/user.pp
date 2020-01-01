@@ -18,6 +18,7 @@ define psick::mariadb::user (
 
   $nice_host = regsubst($host, '/', '_')
   $grant_file = "mariadbuser-${user}-${nice_host}.sql"
+  $exec_flagfile = "${grant_filepath}/${grant_file}.done"
 
   file { $grant_file:
     ensure  => present,
@@ -26,11 +27,25 @@ define psick::mariadb::user (
     content => template('psick/mariadb/user.erb'),
   }
 
-  exec { "mariadbuser-${user}-${nice_host}":
-    command     => "mysql --defaults-file=/root/.my.cnf -uroot < ${grant_filepath}/${grant_file}",
+  if getvar('psick::mariadb::root_password') {
+    $my_cnf = '--defaults-file=/root/.my.cnf'
+  } else {
+    $my_cnf = ''
+  }
+
+  exec { "remove_${exec_flagfile}":
+    command     => "rm -f '${exec_flagfile}'",
     subscribe   => File[$grant_file],
     path        => [ '/usr/bin' , '/usr/sbin' ],
     refreshonly => true,
+    before      => Exec["mariadbuser-${user}-${nice_host}"],
+  }
+
+  exec { "mariadbuser-${user}-${nice_host}":
+    command   => "mysql ${my_cnf} -uroot < ${grant_filepath}/${grant_file} && touch ${exec_flagfile}",
+    subscribe => File[$grant_file],
+    path      => [ '/usr/bin' , '/usr/sbin' ],
+    creates   => $exec_flagfile,
   }
 
 }
