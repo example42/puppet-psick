@@ -353,12 +353,7 @@ class psick::icinga2 (
       }
     }
 
-    # Custom configuration files
-    if $config_default_files_add {
-      $all_config_hash = $config_default_hash + $config_hash
-    } else {
-      $all_config_hash = $config_hash
-    }
+    # Configuration files
     $config_hash.each |$k,$v| {
       ::psick::icinga2::config { $k:
         * => $v,

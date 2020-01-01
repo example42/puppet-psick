@@ -16,7 +16,7 @@ class psick::php::fpm (
 
   Hash $files_hash      = {},
   Hash $options_hash    = {},
-  
+
   Boolean $no_noop      = false,
 
 ) {

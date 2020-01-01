@@ -90,7 +90,7 @@ class psick::remediate (
       }
     }
     exec { 'docker-compose run remediate':
-      command  => "docker-compose run remediate start --license-file license.json", # lint:ignore:140char
+      command  => 'docker-compose run remediate start --license-file license.json', # lint:ignore:140char
       path     => $::path,
       cwd      => $remediate_dir,
       user     => $user,

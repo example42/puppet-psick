@@ -38,7 +38,7 @@ class psick::openswan (
         * => $v,
       }
     }
-  
+
     if $setup_template != '' {
       $content = template($setup_template)
       tp::conf { 'openswan':
