@@ -6,8 +6,9 @@ class psick::bolt::master (
   Variant[Boolean,String] $ensure        = 'present',
 
   # Management of bolt installation
+  Boolean $install_package     = true,
   Boolean $install_system_gems = false,
-  Boolean $install_puppet_gems = true,
+  Boolean $install_puppet_gems = false,
 
   # Management of user running bolt
   Optional[String]        $user_password    = undef,
@@ -43,6 +44,12 @@ class psick::bolt::master (
     package { 'bolt':
       ensure   => $ensure,
       provider => 'puppet_gem',
+    }
+  }
+
+  if $install_package {
+    package { 'bolt':
+      ensure   => $ensure,
     }
   }
 

@@ -102,7 +102,7 @@ psick::icinga2::service_hash:
       - host.address6
   disks:
     apply: 'disk => config in host.vars.disks'
-    check_command: disk
+    check_command: "disk"
     command_endpoint: host.vars.client_endpoint
     assign:
       - host.vars.os == Linux
