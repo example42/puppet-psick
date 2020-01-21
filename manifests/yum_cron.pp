@@ -5,7 +5,7 @@
 #                             used for the content of yum-cron config file.
 # @param options An hash of custon options to use in the config_file_template
 #                Note: This is not a class parameter but a key lookup up via:
-#                hiera_hash('psick::yum_cron::options', {} ) and merged with
+#                lookup('psick::yum_cron::options', {} ) and merged with
 #                a default hash of options
 #
 class psick::yum_cron (
@@ -30,7 +30,7 @@ class psick::yum_cron (
     'debuglevel' => '-2',
     'mdpolicy' => 'group:main',
   }
-  $options_user=hiera_hash('psick::yum_cron::options', {} )
+  $options_user=lookup('psick::yum_cron::options', Hash, 'deep', {} )
   $options=merge($options_default,$options_user)
 
   ::tp::install { 'yum-cron':

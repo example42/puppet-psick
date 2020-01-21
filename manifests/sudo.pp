@@ -9,7 +9,7 @@
 #                          and not present in sudoers_d_source
 # @param directives An hash of sudo directives to pass to psick::sudo::directive
 #                   Note this is not a real class parameter but a key looked up
-#                   with hiera_hash('psick::sudo::directives', {})
+#                   with lookup('psick::sudo::directives', {})
 #
 class psick::sudo (
   String                   $sudoers_template  = '',
@@ -49,7 +49,7 @@ class psick::sudo (
     purge   => $purge_sudoers_dir,
   }
 
-  $directives = hiera_hash('psick::sudo::directives', {})
+  $directives = lookup('psick::sudo::directives', Hash, 'deep', {})
   $directives.each |$name,$opts| {
     ::psick::sudo::directive { $name:
       * => $opts,

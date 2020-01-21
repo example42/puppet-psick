@@ -7,7 +7,7 @@
 #                             the content of the postfix main.cf file
 # @param options An open hash of options to use in the provided template.
 #                Note: This variable is not a class paramenter but it's looked
-#                up with hiera_hash('psick::logs::postfix::options', {} )
+#                up with lookup('psick::logs::postfix::options', {} )
 #
 class psick::mail::postfix (
   Enum['present','absent'] $ensure                     = 'present',
@@ -22,7 +22,7 @@ class psick::mail::postfix (
     'inet_protocols'  => 'all',
     'my_destination'  => '$myhostname, localhost.$mydomain, localhost',
   }
-  $options_user=hiera_hash('psick::mail::postfix::options', {} )
+  $options_user=lookup('psick::mail::postfix::options', Hash, 'deep', {} )
   $options=merge($options_default,$options_user)
 
   # Postfix as local mailer

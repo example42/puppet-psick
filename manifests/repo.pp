@@ -1,6 +1,6 @@
 # Generic repo management wrapper class
 # Repos to create, besides default ones (when use_defaults = true)
-# are looked up via hiera_hash
+# are looked up via lookup
 #
 class psick::repo (
   Optional[String] $auto_conf = undef,

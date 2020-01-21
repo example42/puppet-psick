@@ -12,7 +12,7 @@ class psick::keepalived (
     'smtp_connect_timeout'    => '30',
     'lvs_id'                  =>  $::hostname,
   }
-  $options_user=hiera_hash('psick::keepalived::options', {} )
+  $options_user=lookup('psick::keepalived::options', Hash, 'deep' , {} )
   $options=merge($options_default,$options_user)
   # Install package
   ::tp::install { 'keepalived':

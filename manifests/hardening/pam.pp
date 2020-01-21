@@ -16,7 +16,7 @@
 # @params options An open hash of options that can be used in the provided
 #                 templates. It's merged with some defaults options defined in
 #                 the class. Note: this variable is not a class param but looked
-#                 up via hiera_hash('psick::hardening::pam::options', {} )
+#                 up via lookup('psick::hardening::pam::options', {} )
 #
 # @example To set password age settings:
 #   psick::hardening::pam::login_defs_template: 'psick/hardening/pam/login.defs.erb'
@@ -30,7 +30,7 @@ class psick::hardening::pam (
   String $login_defs_template    = '',
 ) {
 
-  $options_user=hiera_hash('psick::hardening::pam::options', {} )
+  $options_user=lookup('psick::hardening::pam::options', Hash, 'deep', {} )
   $options_default = {
     umask                    => '027',
     password_max_age         => 60,
