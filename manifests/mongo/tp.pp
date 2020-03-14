@@ -18,8 +18,8 @@ class psick::mongo::tp (
   String                 $mongos_template    = '',
 ) {
 
-  $options=hiera_hash('psick::mongo::tp::options', { })
-  $settings=hiera_hash('psick::mongo::tp::settings', { })
+  $options=lookup('psick::mongo::tp::options', Hash, 'deep', { })
+  $settings=lookup('psick::mongo::tp::settings', Hash, 'deep', { })
 
   $tp_settings = tp_lookup('mongodb','settings','tinydata','merge')
   $custom_settings = {

@@ -15,8 +15,9 @@ class psick::keepalived::static (
     'smtp_connect_timeout'    => '30',
     'lvs_id'                  =>  $::hostname,
   }
-  $virtualservers=hiera_hash('lb_virtualservers', {} )
-  $options_user=hiera_hash('psick::keepalived::static::options', {} )
+  
+  $virtualservers=lookup('lb_virtualservers', Hash, 'deep', {} )
+  $options_user=lookup('psick::keepalived::static::options', Hash, 'deep', {} )
   $options=merge($options_default,$options_user)
 
   ::tp::install { 'keepalived':

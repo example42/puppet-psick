@@ -5,10 +5,10 @@
 #                         for the file /etc/sysconfig/network
 # @param routes Hash of routes to pass to ::network::mroute define
 #               Note: This is not a real class parameter but a key looked up
-#               via hiera_hash('psick::network::routes', {})
+#               via lookup('psick::network::routes', {})
 # @param interfaces Hash of interfaces to pass to ::network::interface define
 #                   Note: This is not a real class parameter but a key looked up
-#                   via hiera_hash('psick::network::interfaces', {})
+#                   via lookup('psick::network::interfaces', {})
 #                   Note that this psick automatically adds some default
 #                   options according to the interface type. You can override
 #                   them in the provided hash

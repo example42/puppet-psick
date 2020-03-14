@@ -30,7 +30,7 @@ class psick::backup::duply (
     'max_age'         => '3M',
     'max_fullbkp_age' => '1M',
   }
-  $options_user=hiera_hash('duply_options', {} )
+  $options_user=lookup('duply_options', Hash, 'deep', {} )
   $options=merge($options_default,$options_user)
 
   ::tp::conf { 'duply::logs':

@@ -13,7 +13,7 @@ class psick::monitor::newrelic (
     proxy       => $::psick::http_proxy,
   }
   #
-  $options_user=hiera_hash('newrelic_options', {} )
+  $options_user=lookup('newrelic_options', Hash, 'deep', {} )
   $options=merge($options_default,$options_user)
 
   ::tp::install { 'newrelic':

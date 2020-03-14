@@ -183,7 +183,7 @@ psick::icinga2::scheduleddowntime_default_params:
 # icinga2::object::notification
 psick::icinga2::notification_default_params:
   target: '/etc/icinga2/zones.d/commands.conf'
-psick::icinga2::notification_hash_disabled:
+psick::icinga2::notification_hash_notused:
   mail-host-notification:
     template: true
     target: '/etc/icinga2/zones.d/templates.conf'

@@ -8,7 +8,7 @@
 # @param options An open hash of options to use in the provided template. Their
 #                keys are merged with some class defaults
 #                Note: This variable is not a class paramenter but it's looked
-#                up with hiera_hash('psick::logs::snmpd::options', {} )
+#                up with lookup('psick::logs::snmpd::options', {} )
 # @param serverif The primary server IP. Default value is from
 #                 $::psick::primary_ip
 # @param is_cluster If the server is a cluster member. If so extra configs are
@@ -27,7 +27,7 @@ class psick::monitor::snmpd (
     'rocommunity' => 'public',
   }
 
-  $options_user=hiera_hash('psick::monitor::snmpd::options', {} )
+  $options_user=lookup('psick::monitor::snmpd::options', Hash, 'deep', {} )
   $options=merge($options_default,$options_user)
 
   ::tp::install { 'snmpd':
