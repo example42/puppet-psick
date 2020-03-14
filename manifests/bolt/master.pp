@@ -99,7 +99,8 @@ class psick::bolt::master (
   }
 
   if $::psick::bolt::keyshare_method == 'storeconfigs'
-  and ($::psick::bolt::bolt_user_pub_key or $::bolt_user_key) {
+  and defined('psick::bolt::bolt_user_pub_key')
+  or defined('bolt_user_key') {
     @@ssh_authorized_key { "bolt_user_${::psick::bolt::ssh_user}_rsa-${clientcert}":
       ensure => $ensure,
       key    => pick($::psick::bolt::bolt_user_pub_key,$::bolt_user_key),

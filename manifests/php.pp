@@ -16,7 +16,7 @@ class psick::php (
   # Intallation management
   case $module {
     'psick': {
-      contain ::psick::php::tp
+      contain ::tp_profile::php
       $module_hash.each |$k,$v| {
         psick::php::module { $k:
           * => $v,
