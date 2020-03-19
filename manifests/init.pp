@@ -16,11 +16,25 @@
 #   set 'hardened' some hardened configurations are enforced by default
 # @param enable_firstrun If to enable firstrun mode, a special one-time only, Puppet
 #   run where some specific, prerequisites, classes are applied.
-# @param noop_mode Psick's noop mode. Looks for the hiera key noop_mode to check
-#   if to enable noop mode in the module itself. The same is done on the default
-#   psick-control repo. Note that if noop_mode is set to true here (or in
-#   Hiera's noop_mode key) the no-noop params in the psick profiles are not
-#   valid: If noop_mode is true, noop is enforced also where no-noop is true.
+# @param noop_mode This parameter is deprecated and has no effect any more.
+#                  If set, compilation fails.
+#                  It has been replaced by noop_manage and noop_value.
+#                  psick::noop_mode: true and no_noop on a specific class can be replaced by:
+#                  psick::noop_manage: true
+#                  psick::noop_value: false
+# @param noop_manage If to use the noop() function for all the classes included
+#                    in this module. If this is true the noop($noop_value) function
+#                    is called. Overriding any other noop setting (either set on
+#                    client's puppet.conf or elsewhere).
+#                    This values is inherited by all the classes in psick module
+#                    but can singularly overwritten in each of them.
+# @param noop_value The value to pass to noop() function if noop_manage is true.
+#                   It applies to all the resources (and classes) declared in
+#                   this module. Can be overridden is single classes using the
+#                   relevant class parameter.
+#                   If true: noop metaparamenter is set to true, resources are not applied
+#                   If false: noop metaparameter is set to false, and any eventual noop
+#                   setting is overridden: resources are always applied.
 # @param is_cluster Defines if the server is a cluster member. Some PSICK profiles
 #   may use this value.
 # @param primary_ip The server primary IP address. Default value is
@@ -67,7 +81,10 @@ class psick (
   Boolean $auto_prereq                             = true,
   Psick::Autoconf $auto_conf                       = 'none',
   Boolean $enable_firstrun                         = false,
-  Boolean $noop_mode                               = lookup('noop_mode', Boolean,'first',true),
+
+  Optional[Boolean] $noop_mode                     = lookup('noop_mode',Optional[Boolean],'first',undef),
+  Boolean $noop_manage                             = false,
+  Boolean $noop_value                              = false,
 
   # General network settings
   Boolean $is_cluster = false,
@@ -85,6 +102,13 @@ class psick (
   Boolean $force_ordering                          = true,
 
 ) {
+
+  if $noop_mode != undef {
+    fail('psick::noop_mode parameter has been deprecated. Use $noop_manage and $noop_manage instead')
+  }
+  if $noop_manage {
+    noop($noop_value)
+  }  
 
   # Resource defaults for Tiny Puppet defines
   Tp::Install {
