@@ -4,6 +4,7 @@ fixtures:
     "vcsrepo": "https://github.com/puppetlabs/puppetlabs-vcsrepo.git"
     "reboot": "https://github.com/puppetlabs/puppetlabs-reboot.git"
     "tp": "https://github.com/example42/puppet-tp"
+    "tp_profile": "https://github.com/example42/puppet-tp_profile"
     "tinydata": "https://github.com/example42/tinydata"
     "prometheus": "https://github.com/voxpupuli/puppet-prometheus"
     "systemd": "https://github.com/camptocamp/puppet-systemd"
