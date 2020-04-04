@@ -10,23 +10,35 @@ class psick::aws::sdk (
   Array   $install_gems        = [ 'aws-sdk-core' , 'aws-sdk' , 'retries' ],
   Boolean $install_system_gems = true,
   Boolean $install_puppet_gems = true,
+
+  Boolean          $manage               = $::psick::manage,
+  Boolean          $noop_manage          = $::psick::noop_manage,
+  Boolean          $noop_value           = $::psick::noop_value,
+
 ) {
-  $install_gems.each | $gem | {
-    if $facts['os']['family'] != 'windows' {
-      if $install_system_gems {
-        contain ::psick::ruby
-        package { $gem:
-          ensure   => $ensure,
-          provider => 'gem',
-          require  => Class['psick::ruby'],
+
+  if $manage {
+    if $noop_manage {
+      noop($noop_value)
+    }
+
+    $install_gems.each | $gem | {
+      if $facts['os']['family'] != 'windows' {
+        if $install_system_gems {
+          contain ::psick::ruby
+          package { $gem:
+            ensure   => $ensure,
+            provider => 'gem',
+            require  => Class['psick::ruby'],
+          }
         }
       }
-    }
-    if $install_puppet_gems {
-      package { "puppet_${gem}":
-        ensure   => $ensure,
-        name     => $gem,
-        provider => 'puppet_gem',
+      if $install_puppet_gems {
+        package { "puppet_${gem}":
+          ensure   => $ensure,
+          name     => $gem,
+          provider => 'puppet_gem',
+        }
       }
     }
   }

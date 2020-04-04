@@ -32,9 +32,6 @@
 # @example Disable the whole class (no resource from this class is declared)
 #     psick::pre::manage: false
 #
-# @param manage If to actually manage any resource. Set to false to disable
-#   any effect of this psick::pre class.
-#
 # @param linux_classes Hash with the list of classes to include
 #   before the base classes when $::kernel is Linux. Of each key-value
 #   of the hash, the key is used as marker to eventually override
@@ -43,15 +40,25 @@
 #   must be a valid class (of psick, of public modules or local profiles)
 #   existing the the $modulepath. If the value is set to empty string ('')
 #   then the class of the relevant marker is not included.
-#
 # @param windows_classes Hash with the list of classes to include
 #   before the base classes when $::kernel is windows.
-#
 # @param solaris_classes Hash with the list of classes to include
 #   before the base classes when $::kernel is Solaris.
-#
 # @param darwin_classes Hash with the list of classes to include
 #   before the base classes when $::kernel is Darwin.
+# @param manage If to actually manage any resource in this class. If false no
+#               resource is managed. Default value is taken from main psick class.
+# @param noop_manage If to use the noop() function for all the resources provided
+#                    by this class. If this is true the noop function is called
+#                    with $noop_value argument. This overrides any other noop setting
+#                    (either set on client's puppet.conf or by noop() function in
+#                    main psick class). Default from psick class.
+# @param noop_value The value to pass to noop() function if noop_manage is true.
+#                   It applies to all the resources (and classes) declared in this class
+#                   If true: noop metaparamenter is set to true, resources are not applied
+#                   If false: noop metaparameter is set to false, and any eventual noop
+#                   setting is overridden: resources are always applied.
+#                   Default from psick class.
 #
 class psick::pre (
 
@@ -60,11 +67,17 @@ class psick::pre (
   Psick::Class $darwin_classes  = {},
   Psick::Class $solaris_classes = {},
 
-  Boolean $manage = $::psick::manage,
-
+  Boolean $manage               = $::psick::manage,
+  Boolean $noop_manage          = $::psick::noop_manage,
+  Boolean $noop_value           = $::psick::noop_value,
 ) {
 
   if $manage {
+
+    if $noop_manage {
+      noop($noop_value)
+    }
+
     if !empty($linux_classes) and $::kernel == 'Linux' {
       $linux_classes.each |$n,$c| {
         if $c != '' {

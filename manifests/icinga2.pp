@@ -8,13 +8,22 @@
 # grants and db users.
 #
 # @param ensure If to install or remove icinga2
-# @param manage If to actually manage any resource in this profile or not
-# @param no_noop Set noop metaparameter to false to all the resources of this class.
-#   This overrides client site noop setting but not $psick::noop_mode.
+# @param manage If to actually manage any resource in this class. If false no
+#               resource is managed. Default value is taken from main psick class.
+# @param noop_manage If to use the noop() function for all the resources provided
+#                    by this class. If this is true the noop function is called
+#                    with $noop_value argument. This overrides any other noop setting
+#                    (either set on client's puppet.conf or by noop() function in
+#                    main psick class). Default from psick class.
+# @param noop_value The value to pass to noop() function if noop_manage is true.
+#                   It applies to all the resources (and classes) declared in this class
+#                   If true: noop metaparamenter is set to true, resources are not applied
+#                   If false: noop metaparameter is set to false, and any eventual noop
+#                   setting is overridden: resources are always applied.
+#                   Default from psick class.
 #
 class psick::icinga2 (
   String          $ensure                  = 'present',
-  Boolean         $manage                  = $::psick::manage,
 
   String           $master                 = "icinga.${::domain}",
   Boolean          $is_client              = true,
@@ -104,13 +113,14 @@ class psick::icinga2 (
   Hash $checkresultreader_hash             = {},
   Hash $checkresultreader_default_params   = {},
 
-  Boolean         $no_noop             = false,
+  Boolean $manage                          = $::psick::manage,
+  Boolean $noop_manage                     = $::psick::noop_manage,
+  Boolean $noop_value                      = $::psick::noop_value,
 ) {
 
   if $manage {
-    if !$::psick::noop_mode and $no_noop {
-      info('Forced no-noop mode in psick::icinga2')
-      noop(false)
+    if $noop_manage {
+      noop($noop_value)
     }
 
     # Declares Icinga class with selected features

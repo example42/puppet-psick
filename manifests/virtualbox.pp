@@ -3,24 +3,24 @@
 class psick::virtualbox (
 
   Psick::Ensure   $ensure                   = 'present',
-  Boolean         $manage                   = $::psick::manage,
 
-  String                     $module = 'psick',
-  Boolean         $no_noop                  = false,
+  String          $module                   = 'psick',
 
   Optional[Psick::Password]  $root_password = undef,
 
   Hash                       $network_hash  = {},
-  Hash                       $vm_hash    = {},
+  Hash                       $vm_hash       = {},
+
+  Boolean          $manage                  = $::psick::manage,
+  Boolean          $noop_manage             = $::psick::noop_manage,
+  Boolean          $noop_value              = $::psick::noop_value,
 ) {
 
   # We declare resources only if $manage = true
   if $manage {
 
-    # If no_noop is set it's enforced, unless psick::noop_mode is
-    if !$::psick::noop_mode and $no_noop {
-      info('Forced no-noop mode in psick::grafana')
-      noop(false)
+    if $noop_manage {
+      noop($noop_value)
     }
 
     # Intallation management

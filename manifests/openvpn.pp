@@ -31,67 +31,76 @@ class psick::openvpn (
 
   Hash                   $deploy_export_hash = {},
   Hash               $deploy_export_defaults = {},
+
+  Boolean              $manage               = $::psick::manage,
+  Boolean              $noop_manage          = $::psick::noop_manage,
+  Boolean              $noop_value           = $::psick::noop_value,
+
 ) {
 
-  # Intallation management
-  case $module {
-    'psick': {
-      contain ::psick::openvpn::tp
-      $connections.each |$k,$v| {
-        psick::openvpn::connection { $k:
-          * => $v,
-        }
-      }
+  if $manage {
+    if $noop_manage {
+      noop($noop_value)
     }
-    default: {
-      $deploy_exports.each |$k,$v| {
-        openvpn::deploy::export { $k:
-          * => $v,
+
+    case $module {
+      'psick': {
+        contain ::psick::openvpn::tp
+        $connections.each |$k,$v| {
+          psick::openvpn::connection { $k:
+            * => $v,
+          }
         }
       }
-      $deploy_clients.each |$k,$v| {
-        openvpn::deploy::client { $k:
-          * => $v,
+      default: {
+        $deploy_exports.each |$k,$v| {
+          openvpn::deploy::export { $k:
+            * => $v,
+          }
         }
-      }
-      contain ::openvpn
-      $ca_hash.each |$k,$v| {
-        openvpn::ca { $k:
-          * => $ca_defaults + $v,
+        $deploy_clients.each |$k,$v| {
+          openvpn::deploy::client { $k:
+            * => $v,
+          }
         }
-      }
-      $server_hash.each |$k,$v| {
-        openvpn::server { $k:
-          * => $server_defaults + $v,
+        contain ::openvpn
+        $ca_hash.each |$k,$v| {
+          openvpn::ca { $k:
+            * => $ca_defaults + $v,
+          }
         }
-      }
-      $revoke_hash.each |$k,$v| {
-        openvpn::revoke { $k:
-          * => $revoke_defaults + $v,
+        $server_hash.each |$k,$v| {
+          openvpn::server { $k:
+            * => $server_defaults + $v,
+          }
         }
-      }
-      $client_hash.each |$k,$v| {
-        openvpn::client { $k:
-          * => $client_defaults + $v,
+        $revoke_hash.each |$k,$v| {
+          openvpn::revoke { $k:
+            * => $revoke_defaults + $v,
+          }
         }
-      }
-      $client_specific_config_hash.each |$k,$v| {
-        openvpn::client_specific_configs { $k:
-          * => $client_specific_config_defaults + $v,
+        $client_hash.each |$k,$v| {
+          openvpn::client { $k:
+            * => $client_defaults + $v,
+          }
         }
-      }
-      $deploy_client_hash.each |$k,$v| {
-        openvpn::deploy::client { $k:
-          * => $deploy_client_defaults + $v,
+        $client_specific_config_hash.each |$k,$v| {
+          openvpn::client_specific_configs { $k:
+            * => $client_specific_config_defaults + $v,
+          }
         }
-      }
-      $deploy_export_hash.each |$k,$v| {
-        openvpn::deploy::export { $k:
-          * => $deploy_export_defaults + $v,
+        $deploy_client_hash.each |$k,$v| {
+          openvpn::deploy::client { $k:
+            * => $deploy_client_defaults + $v,
+          }
+        }
+        $deploy_export_hash.each |$k,$v| {
+          openvpn::deploy::export { $k:
+            * => $deploy_export_defaults + $v,
+          }
         }
       }
     }
   }
-
 }
 

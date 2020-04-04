@@ -18,36 +18,46 @@ class psick::docker::compose(
   Hash                     $options          = { },
   Variant[Undef,String[1]] $template         = undef,
   String                   $version          = '',
+
+  Boolean          $manage               = $::psick::manage,
+  Boolean          $noop_manage          = $::psick::noop_manage,
+  Boolean          $noop_value           = $::psick::noop_value,
 ) {
 
-  include ::psick::docker
+  if $manage {
+    if $noop_manage {
+      noop($noop_value)
+    }
 
-  $real_version = $version ? {
-    ''      => $::psick::docker::module_settings['compose_version'],
-    default => $version,
-  }
+    include ::psick::docker
 
-  if $ensure == 'present' {
-    exec { "Install Docker Compose ${real_version}":
-      path    => '/usr/bin/',
-      cwd     => '/tmp',
-      command => "curl -s -L https://github.com/docker/compose/releases/download/${real_version}/docker-compose-${::kernel}-x86_64 > /usr/local/bin/docker-compose-${real_version}",
-      creates => "/usr/local/bin/docker-compose-${real_version}"
+    $real_version = $version ? {
+      ''      => $::psick::docker::module_settings['compose_version'],
+      default => $version,
     }
-    -> file { "/usr/local/bin/docker-compose-${real_version}":
-      owner => 'root',
-      mode  => '0755'
-    }
-    -> file { '/usr/local/bin/docker-compose':
-      ensure => 'link',
-      target => "/usr/local/bin/docker-compose-${real_version}",
-    }
-  } else {
-    file { [
-      "/usr/local/bin/docker-compose-${real_version}",
-      '/usr/local/bin/docker-compose'
-    ]:
-      ensure => absent,
+
+    if $ensure == 'present' {
+      exec { "Install Docker Compose ${real_version}":
+        path    => '/usr/bin/',
+        cwd     => '/tmp',
+        command => "curl -s -L https://github.com/docker/compose/releases/download/${real_version}/docker-compose-${::kernel}-x86_64 > /usr/local/bin/docker-compose-${real_version}",
+        creates => "/usr/local/bin/docker-compose-${real_version}"
+      }
+      -> file { "/usr/local/bin/docker-compose-${real_version}":
+        owner => 'root',
+        mode  => '0755'
+      }
+      -> file { '/usr/local/bin/docker-compose':
+        ensure => 'link',
+        target => "/usr/local/bin/docker-compose-${real_version}",
+      }
+    } else {
+      file { [
+        "/usr/local/bin/docker-compose-${real_version}",
+        '/usr/local/bin/docker-compose'
+      ]:
+        ensure => absent,
+      }
     }
   }
 }

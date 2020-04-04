@@ -6,37 +6,45 @@ class psick::openssh (
   Hash                     $keypairs_hash = {},
   Hash                     $keyscans_hash = {},
   String                   $module        = 'psick',
+  Boolean                  $manage        = $::psick::manage,
+  Boolean                  $noop_manage   = $::psick::noop_manage,
+  Boolean                  $noop_value    = $::psick::noop_value,
 ) {
+  if $manage {
+    if $noop_manage {
+      noop($noop_value)
+    }
 
-  case $module {
-    'psick': {
-      contain ::psick::openssh::tp
+    case $module {
+      'psick': {
+        contain ::psick::openssh::tp
+      }
+      'tp_profile': {
+        contain ::tp_profile::openssh
+      }
+      default: {
+        contain ::openssh
+      }
     }
-    'tp_profile': {
-      contain ::tp_profile::openssh
+    $configs_hash.each |$k,$v| {
+      psick::openssh::config { $k:
+        * => $v,
+      }
     }
-    default: {
-      contain ::openssh
+    $keygens_hash.each |$k,$v| {
+      psick::openssh::keygen { $k:
+        * => $v,
+      }
     }
-  }
-  $configs_hash.each |$k,$v| {
-    psick::openssh::config { $k:
-      * => $v,
+    $keypairs_hash.each |$k,$v| {
+      psick::openssh::keypair { $k:
+        * => $v,
+      }
     }
-  }
-  $keygens_hash.each |$k,$v| {
-    psick::openssh::keygen { $k:
-      * => $v,
-    }
-  }
-  $keypairs_hash.each |$k,$v| {
-    psick::openssh::keypair { $k:
-      * => $v,
-    }
-  }
-  $keyscans_hash.each |$k,$v| {
-    psick::openssh::keyscan { $k:
-      * => $v,
+    $keyscans_hash.each |$k,$v| {
+      psick::openssh::keyscan { $k:
+        * => $v,
+      }
     }
   }
 }

@@ -32,102 +32,111 @@ class psick::sensu (
   Hash $plugins_hash                    = {},
   Hash $plugins_params_hash             = {},
 
+  Boolean          $manage               = $::psick::manage,
+  Boolean          $noop_manage          = $::psick::noop_manage,
+  Boolean          $noop_value           = $::psick::noop_value,
 ) {
 
-  class { '::sensu':
-    client            => $is_client,
-    server            => $is_server,
-    api               => $is_api,
-    api_user          => $api_user,
-    api_password      => $api_password,
-    api_bind          => $api_bind,
-    api_host          => $api_host,
-    api_port          => $api_port,
-    rabbitmq_user     => $rabbitmq_user,
-    rabbitmq_password => $rabbitmq_password,
-    rabbitmq_vhost    => $rabbitmq_vhost,
-    rabbitmq_host     => $rabbitmq_host,
-    subscriptions     => $subscriptions,
-    client_address    => $client_address,
-    client_name       => $client_name,
-  }
-
-  if $rabbitmq_class != '' {
-    contain $rabbitmq_class
-
-    # 
-    rabbitmq_user { $rabbitmq_user:
-      admin    => true,
-      password => $rabbitmq_password,
+  if $manage {
+    if $noop_manage {
+      noop($noop_value)
     }
-    rabbitmq_vhost { $rabbitmq_vhost:
-      ensure => present,
+
+    class { '::sensu':
+      client            => $is_client,
+      server            => $is_server,
+      api               => $is_api,
+      api_user          => $api_user,
+      api_password      => $api_password,
+      api_bind          => $api_bind,
+      api_host          => $api_host,
+      api_port          => $api_port,
+      rabbitmq_user     => $rabbitmq_user,
+      rabbitmq_password => $rabbitmq_password,
+      rabbitmq_vhost    => $rabbitmq_vhost,
+      rabbitmq_host     => $rabbitmq_host,
+      subscriptions     => $subscriptions,
+      client_address    => $client_address,
+      client_name       => $client_name,
     }
-    rabbitmq_user_permissions { "${rabbitmq_user}@${rabbitmq_vhost}":
-      configure_permission => '.*',
-      read_permission      => '.*',
-      write_permission     => '.*',
-    }
-  }
 
-  if $dashboard_class != '' {
-    contain $dashboard_class
-  }
+    if $rabbitmq_class != '' {
+      contain $rabbitmq_class
 
-  if $redis_class != '' {
-    contain $redis_class
-  }
-
-  if $checks_hash != {} {
-    $checks_hash.each | $k,$v | {
-      ::sensu::check { $k:
-        * => $checks_params_hash + $v,
+      # 
+      rabbitmq_user { $rabbitmq_user:
+        admin    => true,
+        password => $rabbitmq_password,
+      }
+      rabbitmq_vhost { $rabbitmq_vhost:
+        ensure => present,
+      }
+      rabbitmq_user_permissions { "${rabbitmq_user}@${rabbitmq_vhost}":
+        configure_permission => '.*',
+        read_permission      => '.*',
+        write_permission     => '.*',
       }
     }
-  }
-  if $plugins_hash != {} {
-    $plugins_hash.each | $k,$v | {
-      ::sensu::plugin { $k:
-        * => $plugins_params_hash + $v,
+
+    if $dashboard_class != '' {
+      contain $dashboard_class
+    }
+
+    if $redis_class != '' {
+      contain $redis_class
+    }
+
+    if $checks_hash != {} {
+      $checks_hash.each | $k,$v | {
+        ::sensu::check { $k:
+          * => $checks_params_hash + $v,
+        }
       }
     }
-  }
-
-  # We like sensu module, but we may want to tp test its resources
-  # According to the installed components
-  if $tp_test {
-    $service_client = $is_client ? {
-      true  => ['sensu-client'],
-      false => [],
-    }
-    $service_api = $is_api ? {
-      true  => ['sensu-api'],
-      false => [],
-    }
-    $service_server = $is_server ? {
-      true  => ['sensu-server'],
-      false => [],
-    }
-    $logfile_client = $is_client ? {
-      true  => ['/var/log/sensu/sensu-client.log'],
-      false => [],
-    }
-    $logfile_api = $is_api ? {
-      true  => ['/var/log/sensu/sensu-api.log'],
-      false => [],
-    }
-    $logfile_server = $is_server ? {
-      true  => ['/var/log/sensu/sensu-server.log'],
-      false => [],
+    if $plugins_hash != {} {
+      $plugins_hash.each | $k,$v | {
+        ::sensu::plugin { $k:
+          * => $plugins_params_hash + $v,
+        }
+      }
     }
 
-    tp::install { 'sensu':
-      manage_package => false,
-      manage_service => false,
-      settings_hash  => {
-        'service_name'  => $service_client + $service_api + $service_server,
-        'log_file_path' => $logfile_client + $logfile_api + $logfile_server,
-      },
+    # We like sensu module, but we may want to tp test its resources
+    # According to the installed components
+    if $tp_test {
+      $service_client = $is_client ? {
+        true  => ['sensu-client'],
+        false => [],
+      }
+      $service_api = $is_api ? {
+        true  => ['sensu-api'],
+        false => [],
+      }
+      $service_server = $is_server ? {
+        true  => ['sensu-server'],
+        false => [],
+      }
+      $logfile_client = $is_client ? {
+        true  => ['/var/log/sensu/sensu-client.log'],
+        false => [],
+      }
+      $logfile_api = $is_api ? {
+        true  => ['/var/log/sensu/sensu-api.log'],
+        false => [],
+      }
+      $logfile_server = $is_server ? {
+        true  => ['/var/log/sensu/sensu-server.log'],
+        false => [],
+      }
+
+      tp::install { 'sensu':
+        manage_package => false,
+        manage_service => false,
+        settings_hash  => {
+          'service_name'  => $service_client + $service_api + $service_server,
+          'log_file_path' => $logfile_client + $logfile_api + $logfile_server,
+        },
+      }
     }
   }
 }

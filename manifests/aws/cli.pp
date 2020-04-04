@@ -8,50 +8,59 @@ class psick::aws::cli (
   Array $install_gems           = [ 'aws-sdk-core' , 'retries' ],
   Boolean $install_system_gems  = true,
   Boolean $install_puppet_gems  = true,
+
+  Boolean $manage               = $::psick::manage,
+  Boolean $noop_manage          = $::psick::noop_manage,
+  Boolean $noop_value           = $::psick::noop_value,
 ) {
 
-  contain ::psick::python::pip
-  contain ::psick::ruby
+  if $manage {
+    if $noop_manage {
+      noop($noop_value)
+    }
+    contain ::psick::python::pip
+    contain ::psick::ruby
 
-  tp::install { 'awscli':
-    ensure => $ensure,
-  }
-  ensure_packages('jq')
+    tp::install { 'awscli':
+      ensure => $ensure,
+    }
+    ensure_packages('jq')
 
-  $install_gems.each | $gem | {
-    if $install_system_gems {
-      package { $gem:
-        ensure   => $ensure,
-        provider => 'gem',
-        require  => Class['psick::ruby'],
+    $install_gems.each | $gem | {
+      if $install_system_gems {
+        package { $gem:
+          ensure   => $ensure,
+          provider => 'gem',
+          require  => Class['psick::ruby'],
+        }
+      }
+      if $install_puppet_gems {
+        package { "puppet_${gem}":
+          ensure   => $ensure,
+          name     => $gem,
+          provider => 'puppet_gem',
+          require  => Class['psick::ruby'],
+        }
       }
     }
-    if $install_puppet_gems {
-      package { "puppet_${gem}":
-        ensure   => $ensure,
-        name     => $gem,
-        provider => 'puppet_gem',
-        require  => Class['psick::ruby'],
+
+    file { '/root/.aws':
+      ensure => directory,
+    }
+    if $aws_access_key_id != ''
+    and $aws_secret_access_key != '' {
+      file { '/root/.aws/credentials':
+        ensure  => $ensure,
+        content => template($config_template),
+        mode    => '0400',
       }
     }
-  }
 
-  file { '/root/.aws':
-    ensure => directory,
-  }
-  if $aws_access_key_id != ''
-  and $aws_secret_access_key != '' {
-    file { '/root/.aws/credentials':
-      ensure  => $ensure,
-      content => template($config_template),
-      mode    => '0400',
-    }
-  }
-
-  if $region != '' {
-    file { '/root/.aws/config':
-      ensure  => $ensure,
-      content => template('psick/aws/config.erb'),
+    if $region != '' {
+      file { '/root/.aws/config':
+        ensure  => $ensure,
+        content => template('psick/aws/config.erb'),
+      }
     }
   }
 }
