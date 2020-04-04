@@ -70,7 +70,7 @@ class psick::gitlab (
       false => "http://${server_name}",
     }
     $options_default = $use_https ? {
-      true  => { 
+      true  => {
         "nginx['ssl_certificate']"     => "/etc/gitlab/ssl/${server_name}.crt",
         "nginx['ssl_certificate_key']" => "/etc/gitlab/ssl/${server_name}.key",
       },
@@ -114,7 +114,7 @@ class psick::gitlab (
             path    => '/etc/gitlab/gitlab.rb',
             setting => $k,
             value   => $real_value,
-            notify => Exec['gitlab-ctl reconfigure'],
+            notify  => Exec['gitlab-ctl reconfigure'],
           }
         }
       }

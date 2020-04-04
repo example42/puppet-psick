@@ -37,7 +37,7 @@ class psick::influxdb (
   Psick::Ensure   $ensure                   = 'present',
   Boolean         $auto_prereq              = $::psick::auto_prereq,
   Hash            $options_hash             = {},
-  String          $module                   = 'psick',
+  String          $module                   = 'tp_profile',
 
   Hash            $databases_hash           = {},
   Hash            $users_hash               = {},
@@ -52,16 +52,14 @@ class psick::influxdb (
   # We declare resources only if $manage = true
   if $manage {
 
-    # If no_noop is set it's enforced, unless psick::noop_mode is
-    if !$::psick::noop_mode and $no_noop {
-      info('Forced no-noop mode in psick::influxdb')
-      noop(false)
+    if $noop_manage {
+      noop($noop_value)
     }
 
     # Managed resources according to $module selected
     case $module {
-      'psick': {
-        contain ::psick::influxdb::tp
+      'tp_profile': {
+        contain ::tp_profile::influxdb
         #$users_hash.each | $k,$v | {
         #  psick::influxdb::users { $k:
         #    * => $v,

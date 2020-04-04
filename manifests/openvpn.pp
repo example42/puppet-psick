@@ -3,7 +3,7 @@
 class psick::openvpn (
 
   Variant[Boolean,String]    $ensure         = 'present',
-  Enum['psick','openvpn']    $module         = 'psick',
+  Enum['tp_profile','openvpn'] $module       = 'tp_profile',
 
   # Used with module = psick
   Hash                       $connections    = {},
@@ -44,8 +44,8 @@ class psick::openvpn (
     }
 
     case $module {
-      'psick': {
-        contain ::psick::openvpn::tp
+      'tp_profile': {
+        contain ::tp_profile::openvpn
         $connections.each |$k,$v| {
           psick::openvpn::connection { $k:
             * => $v,

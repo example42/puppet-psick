@@ -22,11 +22,11 @@
 # @example
 #   include psick::mounts
 class psick::mounts (
-  Hash             $mounts               = {},
+  Hash    $mounts      = {},
 
-  Boolean          $manage               = true,
-  Boolean          $noop_manage          = false,
-  Boolean          $noop_value           = false,
+  Boolean $manage      = $::psick::manage,
+  Boolean $noop_manage = $::psick::noop_manage,
+  Boolean $noop_value  = $::psick::noop_value,
 ) {
   if $manage {
     if $noop_manage {
@@ -37,6 +37,6 @@ class psick::mounts (
       mount { $k:
         * => $v,
       }
-    } 
+    }
   }
 }

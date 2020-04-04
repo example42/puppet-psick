@@ -31,7 +31,7 @@ class psick::ansible (
 
     if $user_name != 'ansible' {
       notify { 'Ansible user warning':
-        message => 'If you change the default ansible user name change psick/facts.d/ansible_user_key.sh or set $::psick::ansible::master::ssh_key',
+        message => 'If you change the default ansible user name change psick/facts.d/ansible_user_key.sh or set $::psick::ansible::master::ssh_key', # lint:ignore:140chars
       }
     }
 

@@ -27,7 +27,7 @@ class psick::oracle (
   String $prerequisites_class = '::psick::oracle::prerequisites',
   String $install_class       = '',
   String $resources_class     = '',
-  Hash $instances             = { }
+  Hash $instances             = { },
 
   Boolean $manage             = $::psick::manage,
   Boolean $noop_manage        = $::psick::noop_manage,

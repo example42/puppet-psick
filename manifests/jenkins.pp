@@ -56,7 +56,7 @@
 class psick::jenkins (
 
   Variant[Boolean,String] $ensure            = 'present',
-  Enum['psick'] $module                      = 'psick',
+  Enum['tp_profile'] $module                 = 'tp_profile',
   Hash $plugins                              = {},
   Hash $init_options                         = {},
   String $home_dir                           = '/var/lib/jenkins',
@@ -110,7 +110,7 @@ class psick::jenkins (
 
     # Installation management
     case $module {
-      'psick': {
+      'tp_profile': {
         contain ::psick::java
         contain ::tp_profile::jenkins
         $plugins.each |$k,$v| {

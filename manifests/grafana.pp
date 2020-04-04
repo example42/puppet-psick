@@ -35,7 +35,7 @@ class psick::grafana (
   Psick::Ensure   $ensure                   = 'present',
   Boolean         $auto_prereq              = $::psick::auto_prereq,
   Hash            $options_hash             = {},
-  String          $module                   = 'psick',
+  String          $module                   = 'tp_profile',
 
   String          $config_template          = 'psick/generic/inifile_with_stanzas.erb',
 
@@ -58,9 +58,6 @@ class psick::grafana (
 
     # Managed resources according to $module selected
     case $module {
-      'psick': {
-        contain ::psick::grafana::tp
-      }
       'tp_profile': {
         contain ::tp_profile::grafana
       }

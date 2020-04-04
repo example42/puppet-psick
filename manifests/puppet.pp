@@ -1,3 +1,4 @@
+#
 class psick::puppet (
 
   Optional[String] $agent_class    = undef,

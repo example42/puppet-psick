@@ -4,26 +4,33 @@
 #
 class psick::hardware::hp (
   Array $packages,
+  Boolean $manage                  = $::psick::manage,
+  Boolean $noop_manage             = $::psick::noop_manage,
+  Boolean $noop_value              = $::psick::noop_value,
 ) {
-  $packages.each |$pkg| {
-    ensure_packages($pkg)
-  }
+  if $manage {
+    if $noop_manage {
+      noop($noop_value)
+    }
+    $packages.each |$pkg| {
+      ensure_packages($pkg)
+    }
 
-  service { 'hp-asrd':
-    ensure => 'stopped',
-    enable => false,
-  }
-  service { 'hp-health':
-    ensure => 'running',
-    enable => true,
-  }
-  service { 'hp-snmp-agents':
-    ensure => 'running',
-    enable => true,
-  }
+    service { 'hp-asrd':
+      ensure => 'stopped',
+      enable => false,
+    }
+    service { 'hp-health':
+      ensure => 'running',
+      enable => true,
+    }
+    service { 'hp-snmp-agents':
+      ensure => 'running',
+      enable => true,
+    }
 
-  psick::sudo::directive { 'hp':
-    source => 'puppet:///modules/psick/sudo/hp',
+    psick::sudo::directive { 'hp':
+      source => 'puppet:///modules/psick/sudo/hp',
+    }
   }
-
 }

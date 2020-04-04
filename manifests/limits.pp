@@ -79,7 +79,7 @@ class psick::limits (
     file { $limits_conf_path:
       * => $limits_conf_params_default + $limits_conf_params,
     }
-  
+
     $limits_dir_params_default = {
       ensure  => 'directory',
       owner   => 'root',
@@ -91,16 +91,16 @@ class psick::limits (
     file { $limits_dir_path:
       * => $limits_dir_params_default + $limits_dir_params,
     }
-  
+
     $limits_hash.each |$k,$v| {
       ::psick::limits::limit { $k:
         * => $v,
       }
-    } 
+    }
     $configs_hash.each |$k,$v| {
       ::psick::limits::config { $k:
         * => $v,
       }
-    } 
+    }
   }
 }

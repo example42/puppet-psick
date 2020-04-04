@@ -12,17 +12,23 @@ class psick::hardening::packages (
   Array $packages_to_remove,
   Array $packages_default,
   Boolean $remove_default_packages = true,
+  Boolean $manage                  = $::psick::manage,
+  Boolean $noop_manage             = $::psick::noop_manage,
+  Boolean $noop_value              = $::psick::noop_value,
 ) {
+  if $manage {
+    if $noop_manage {
+      noop($noop_value)
+    }
+    $packages = $remove_default_packages ? {
+      true  => $packages_to_remove + $packages_default,
+      false => $packages_to_remove,
+    }
 
-  $packages = $remove_default_packages ? {
-    true  => $packages_to_remove + $packages_default,
-    false => $packages_to_remove,
-  }
-
-  $packages.each |$pkg| {
-    package { $pkg:
-      ensure => absent,
+    $packages.each |$pkg| {
+      package { $pkg:
+        ensure => absent,
+      }
     }
   }
-
 }

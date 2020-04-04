@@ -1,7 +1,6 @@
 # This class configures PE Code Manager for automatic deployments
 #
 class psick::puppet::pe_code_manager (
-  Boolean $manage                             = $::psick::manage,
   Boolean $generate_ssh_keys                  = true,
   String $deploy_ssh_private_key_path         = '/etc/puppetlabs/ssh/id-control_repo.rsa',
   Optional[String] $deploy_ssh_private_source = undef,
@@ -16,14 +15,15 @@ class psick::puppet::pe_code_manager (
   Optional[String] $puppet_group              = 'pe-puppet',
   Optional[String] $puppet_user_home          = undef,
   Optional[String] $lifetime                  = '5y',
-  Boolean          $no_noop                   = false,
+  Boolean $manage                  = $::psick::manage,
+  Boolean $noop_manage             = $::psick::noop_manage,
+  Boolean $noop_value              = $::psick::noop_value,
 ) {
-
   if $manage {
-    if !$::psick::noop_mode and $no_noop {
-      info('Forced no-noop mode in psick::jenkins::tp')
-      noop(false)
+    if $noop_manage {
+      noop($noop_value)
     }
+
     if $pe_user and $pe_password {
       rbac_user { $pe_user:
         ensure       => 'present',

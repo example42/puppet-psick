@@ -4,7 +4,7 @@ class psick::openswan (
 
   Psick::Ensure   $ensure                   = 'present',
 
-  String                     $module        = 'psick',
+  String                     $module        = 'tp_profile',
 
   Hash                       $connections    = {},
   Hash                       $setup_options  = {},
@@ -23,9 +23,6 @@ class psick::openswan (
     }
 
     case $module {
-      'psick': {
-        contain ::psick::openswan::tp
-      }
       'tp_profile': {
         contain ::tp_profile::openswan
       }

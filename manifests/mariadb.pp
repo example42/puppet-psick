@@ -3,7 +3,7 @@
 class psick::mariadb (
 
   Variant[Boolean,String]    $ensure = present,
-  Enum['psick']              $module = 'psick',
+  Enum['tp_profile']         $module = 'tp_profile',
 
   Optional[Psick::Password]  $root_password = undef,
 
@@ -25,7 +25,7 @@ class psick::mariadb (
 
     # Intallation management
     case $module {
-      'psick': {
+      'tp_profile': {
         contain ::tp_profile::mariadb
         contain ::psick::mariadb::root_password
         $user_hash.each |$k,$v| {

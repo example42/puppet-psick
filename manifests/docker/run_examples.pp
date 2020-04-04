@@ -1,3 +1,4 @@
+#
 class psick::docker::run_examples (
   Variant[Boolean,String] $ensure             = present,
   Enum['command','service'] $default_run_mode = command,

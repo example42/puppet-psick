@@ -64,7 +64,7 @@ class psick::hpsa (
       }
       exec { 'SA registration':
         timeout => 600,
-        command => "/usr/local/bin/${real_sa_agent_file} -s -f --opsw_gw_addr ${opsw_gw_addr} --force_sw_reg --loglevel trace --logfile ${sa_agent_logfile} --force_new_device 2>&1",
+        command => "/usr/local/bin/${real_sa_agent_file} -s -f --opsw_gw_addr ${opsw_gw_addr} --force_sw_reg --loglevel trace --logfile ${sa_agent_logfile} --force_new_device 2>&1", # lint:ignore:140chars
         creates => '/opt/opsware/agent/bin/python',
       }
       service { 'opsware-agent':

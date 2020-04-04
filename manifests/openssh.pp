@@ -5,7 +5,7 @@ class psick::openssh (
   Hash                     $keygens_hash  = {},
   Hash                     $keypairs_hash = {},
   Hash                     $keyscans_hash = {},
-  String                   $module        = 'psick',
+  String                   $module        = 'tp_profile',
   Boolean                  $manage        = $::psick::manage,
   Boolean                  $noop_manage   = $::psick::noop_manage,
   Boolean                  $noop_value    = $::psick::noop_value,
@@ -16,9 +16,6 @@ class psick::openssh (
     }
 
     case $module {
-      'psick': {
-        contain ::psick::openssh::tp
-      }
       'tp_profile': {
         contain ::tp_profile::openssh
       }

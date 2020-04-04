@@ -14,32 +14,39 @@ class psick::mail::postfix (
 
   Variant[String[1],Undef] $config_dir_source          = undef,
   String                   $config_file_template       = '',
+  Boolean $manage             = $::psick::manage,
+  Boolean $noop_manage        = $::psick::noop_manage,
+  Boolean $noop_value         = $::psick::noop_value,
 ) {
-
-  $options_default = {
-    'mydomain'        => $::domain,
-    'inet_interfaces' => 'localhost',
-    'inet_protocols'  => 'all',
-    'my_destination'  => '$myhostname, localhost.$mydomain, localhost',
-  }
-  $options_user=lookup('psick::mail::postfix::options', Hash, 'deep', {} )
-  $options=merge($options_default,$options_user)
-
-  # Postfix as local mailer
-  ::tp::install { 'postfix':
-    ensure => $ensure,
-  }
-
-  if $config_file_template != '' {
-    ::tp::conf { 'postfix':
-      ensure       => $ensure,
-      template     => $config_file_template,
-      options_hash => $options,
+  if $manage {
+    if $noop_manage {
+      noop($noop_value)
     }
-  }
+    $options_default = {
+      'mydomain'        => $::domain,
+      'inet_interfaces' => 'localhost',
+      'inet_protocols'  => 'all',
+      'my_destination'  => '$myhostname, localhost.$mydomain, localhost',
+    }
+    $options_user=lookup('psick::mail::postfix::options', Hash, 'deep', {} )
+    $options=merge($options_default,$options_user)
 
-  ::tp::dir { 'postfix':
-    ensure => $ensure,
-    source => $config_dir_source,
+    # Postfix as local mailer
+    ::tp::install { 'postfix':
+      ensure => $ensure,
+    }
+
+    if $config_file_template != '' {
+      ::tp::conf { 'postfix':
+        ensure       => $ensure,
+        template     => $config_file_template,
+        options_hash => $options,
+      }
+    }
+
+    ::tp::dir { 'postfix':
+      ensure => $ensure,
+      source => $config_dir_source,
+    }
   }
 }

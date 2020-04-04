@@ -6,15 +6,13 @@ class psick::puppet::install_ca (
   Optional[String] $ca_setup_command  = undef,
   Optional[String] $ca_update_command = undef,
   Optional[String] $ca_package        = undef,
-  Boolean          $auto_prereq       = $::psick::auto_prereq,
-  Boolean          $no_noop           = false,
-  Boolean          $manage            = $::psick::manage,
+  Boolean $manage                  = $::psick::manage,
+  Boolean $noop_manage             = $::psick::noop_manage,
+  Boolean $noop_value              = $::psick::noop_value,
 ) {
-
   if $manage {
-    if !$::psick::noop_mode and $no_noop {
-      info('Forced no-noop mode in psick::puppet::install_ca')
-      noop(false)
+    if $noop_manage {
+      noop($noop_value)
     }
 
     if $ca_package {

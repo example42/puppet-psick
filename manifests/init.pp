@@ -108,7 +108,7 @@ class psick (
   }
   if $noop_manage {
     noop($noop_value)
-  }  
+  }
 
   # Resource defaults for Tiny Puppet defines
   Tp::Install {

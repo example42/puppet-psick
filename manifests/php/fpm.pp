@@ -6,8 +6,6 @@ class psick::php::fpm (
 
   Psick::Ensure $ensure = 'present',
 
-  Boolean $manage       = $::psick::manage,
-
   String $package_name  = 'php-fpm',
   Hash $package_params  = {},
 
@@ -17,14 +15,13 @@ class psick::php::fpm (
   Hash $files_hash      = {},
   Hash $options_hash    = {},
 
-  Boolean $no_noop      = false,
-
+  Boolean $manage                  = $::psick::manage,
+  Boolean $noop_manage             = $::psick::noop_manage,
+  Boolean $noop_value              = $::psick::noop_value,
 ) {
-
   if $manage {
-    if !$::psick::noop_mode and $no_noop {
-      info('Forced no-noop mode in psick::jenkins::tp')
-      noop(false)
+    if $noop_manage {
+      noop($noop_value)
     }
 
     # Package

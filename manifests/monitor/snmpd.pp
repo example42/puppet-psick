@@ -16,38 +16,45 @@
 # @param extra_packages An array of extra snmdp related packages to install
 #
 class psick::monitor::snmpd (
-  Array                    $extra_packages             = [],
-  Enum['present','absent'] $ensure                     = 'present',
-  Variant[String[1],Undef] $config_dir_source          = undef,
-  String                   $config_file_template       = '',
-  String                   $serverif                   = $::psick::primary_ip,
+  Array                    $extra_packages       = [],
+  Enum['present','absent'] $ensure               = 'present',
+  Variant[String[1],Undef] $config_dir_source    = undef,
+  String                   $config_file_template = '',
+  String                   $serverif             = $::psick::primary_ip,
+  Boolean                  $manage               = $::psick::manage,
+  Boolean                  $noop_manage          = $::psick::noop_manage,
+  Boolean                  $noop_value           = $::psick::noop_value,
 ) {
-
-  $options_default = {
-    'rocommunity' => 'public',
-  }
-
-  $options_user=lookup('psick::monitor::snmpd::options', Hash, 'deep', {} )
-  $options=merge($options_default,$options_user)
-
-  ::tp::install { 'snmpd':
-    ensure        => $ensure,
-  }
-
-  $extra_packages.each |$pkg| {
-    ensure_packages($pkg)
-  }
-
-  if $config_file_template != '' {
-    ::tp::conf { 'snmpd':
-      ensure       => $ensure,
-      template     => $config_file_template,
-      options_hash => $options,
+  if $manage {
+    if $noop_manage {
+      noop($noop_value)
     }
-  }
+    $options_default = {
+      'rocommunity' => 'public',
+    }
 
-  ::tp::dir { 'snmpd':
-    ensure => $ensure,
-    source => $config_dir_source,
+    $options_user=lookup('psick::monitor::snmpd::options', Hash, 'deep', {} )
+    $options=merge($options_default,$options_user)
+
+    ::tp::install { 'snmpd':
+      ensure        => $ensure,
+    }
+
+    $extra_packages.each |$pkg| {
+      ensure_packages($pkg)
+    }
+
+    if $config_file_template != '' {
+      ::tp::conf { 'snmpd':
+        ensure       => $ensure,
+        template     => $config_file_template,
+        options_hash => $options,
+      }
+    }
+
+    ::tp::dir { 'snmpd':
+      ensure => $ensure,
+      source => $config_dir_source,
+    }
   }
 }

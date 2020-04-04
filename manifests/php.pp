@@ -3,7 +3,7 @@
 class psick::php (
 
   Variant[Boolean,String] $ensure = present,
-  Enum['psick']           $module = 'psick',
+  Enum['tp_profile']      $module = 'tp_profile',
 
   String                  $module_prefix = 'php-',
   String                  $pear_module_prefix = 'php-pear-',
@@ -23,7 +23,7 @@ class psick::php (
       noop($noop_value)
     }
     case $module {
-      'psick': {
+      'tp_profile': {
         contain ::tp_profile::php
         $module_hash.each |$k,$v| {
           psick::php::module { $k:

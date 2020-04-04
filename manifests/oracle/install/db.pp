@@ -39,43 +39,52 @@ class psick::oracle::install::db (
   # after installation
   $cleanup_installfiles = false,
 
+  Boolean $manage                  = $::psick::manage,
+  Boolean $noop_manage             = $::psick::noop_manage,
+  Boolean $noop_value              = $::psick::noop_value,
+
 ) inherits ::psick::oracle::params {
 
-  $install_source = "file://${download_dir}"
-
-  if $source_baseurl {
-    wget::fetch { "${containing_folder}_1of2.zip":
-      source      => "${source_baseurl}/${containing_folder}_1of2.zip",
-      destination => "${download_dir}/${containing_folder}_1of2.zip",
-      before      => Oradb::Installdb["${version}_${::kernel}"],
-      require     => File[$download_dir],
+  if $manage {
+    if $noop_manage {
+      noop($noop_value)
     }
-    wget::fetch { "${containing_folder}_2of2.zip":
-      source      => "${source_baseurl}/${containing_folder}_2of2.zip",
-      destination => "${download_dir}/${containing_folder}_2of2.zip",
-      before      => Oradb::Installdb["${version}_${::kernel}"],
-      require     => File[$download_dir],
+
+    $install_source = "file://${download_dir}"
+
+    if $source_baseurl {
+      wget::fetch { "${containing_folder}_1of2.zip":
+        source      => "${source_baseurl}/${containing_folder}_1of2.zip",
+        destination => "${download_dir}/${containing_folder}_1of2.zip",
+        before      => Oradb::Installdb["${version}_${::kernel}"],
+        require     => File[$download_dir],
+      }
+      wget::fetch { "${containing_folder}_2of2.zip":
+        source      => "${source_baseurl}/${containing_folder}_2of2.zip",
+        destination => "${download_dir}/${containing_folder}_2of2.zip",
+        before      => Oradb::Installdb["${version}_${::kernel}"],
+        require     => File[$download_dir],
+      }
+    }
+
+    file { $download_dir:
+      ensure => directory,
+    }
+
+    oradb::installdb { "${version}_${::kernel}":
+      version                => $version,
+      file                   => $containing_folder,
+      databaseType           => $database_type,
+      oracleBase             => $oracle_base,
+      oracleHome             => $oracle_home,
+      user                   => $oracle_user,
+      group                  => $oracle_group,
+      group_install          => $install_group,
+      group_oper             => $oper_group,
+      downloadDir            => $download_dir,
+      remoteFile             => true,
+      puppetDownloadMntPoint => $install_source,
+      cleanup_installfiles   => $cleanup_installfiles,
     }
   }
-
-  file { $download_dir:
-    ensure => directory,
-  }
-
-  oradb::installdb { "${version}_${::kernel}":
-    version                => $version,
-    file                   => $containing_folder,
-    databaseType           => $database_type,
-    oracleBase             => $oracle_base,
-    oracleHome             => $oracle_home,
-    user                   => $oracle_user,
-    group                  => $oracle_group,
-    group_install          => $install_group,
-    group_oper             => $oper_group,
-    downloadDir            => $download_dir,
-    remoteFile             => true,
-    puppetDownloadMntPoint => $install_source,
-    cleanup_installfiles   => $cleanup_installfiles,
-  }
-
 }

@@ -43,7 +43,7 @@ class psick::sudo (
         before => Exec['sudo_syntax_check'],
       }
       exec { 'sudo_syntax_check':
-        command     => 'visudo -c -f /etc/sudoers && ( cp -f /etc/sudoers /etc/sudoers.lastgood ) || ( mv -f /etc/sudoers /etc/sudoers.broken ; cp /etc/sudoers.lastgood /etc/sudoers ; exit 1) ',
+        command     => 'visudo -c -f /etc/sudoers && ( cp -f /etc/sudoers /etc/sudoers.lastgood ) || ( mv -f /etc/sudoers /etc/sudoers.broken ; cp /etc/sudoers.lastgood /etc/sudoers ; exit 1) ', # lint:ignore:140chars
         refreshonly => true,
       }
     }

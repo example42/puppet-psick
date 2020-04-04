@@ -4,7 +4,7 @@ class psick::virtualbox (
 
   Psick::Ensure   $ensure                   = 'present',
 
-  String          $module                   = 'psick',
+  String          $module                   = 'tp_profile',
 
   Optional[Psick::Password]  $root_password = undef,
 
@@ -25,9 +25,6 @@ class psick::virtualbox (
 
     # Intallation management
     case $module {
-      'psick': {
-        contain psick::virtualbox::tp
-      }
       'tp_profile': {
         contain tp_profile::virtualbox
       }
