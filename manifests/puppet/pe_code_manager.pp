@@ -44,7 +44,7 @@ class psick::puppet::pe_code_manager (
     if $generate_ssh_keys {
       file { '/etc/puppetlabs/ssh':
         ensure => directory,
-        path   => '/etc/puppetlabs/ssh', 
+        path   => '/etc/puppetlabs/ssh',
         owner  => $puppet_user,
       }
 
