@@ -53,6 +53,7 @@ define psick::openssh::keygen (
     command => "ssh-keygen${type_opt}${bits_opt}${filename_opt}${n_passphrase_opt}${comment_opt}${options_opt}",
     user    => $user_real,
     creates => $filename_real,
+    path    => '/bin:/sbin:/usr/bin:/usr/sbin',
   }
 
   if $create_ssh_dir {
