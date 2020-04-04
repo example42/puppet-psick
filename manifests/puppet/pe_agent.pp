@@ -2,16 +2,23 @@
 #
 class psick::puppet::pe_agent (
   Boolean $test_enable        = false,
+
   Boolean $manage_environment = false,
+  String $environment_setting = $environment,
+
   Boolean $manage_noop        = false,
+  Boolean $noop_setting       = false,
+
   Boolean $manage_service     = false,
+
   Hash $settings              = {},
   String $config_file_path    = '/etc/puppetlabs/puppet/puppet.conf',
 
-  Boolean $manage                  = $::psick::manage,
-  Boolean $noop_manage             = $::psick::noop_manage,
-  Boolean $noop_value              = $::psick::noop_value,
+  Boolean $manage             = $::psick::manage,
+  Boolean $noop_manage        = $::psick::noop_manage,
+  Boolean $noop_value         = $::psick::noop_value,
 ) {
+
   if $manage {
     if $noop_manage {
       noop($noop_value)
@@ -43,7 +50,7 @@ class psick::puppet::pe_agent (
         path    => $config_file_path,
         section => 'agent',
         setting => 'environment',
-        value   => $environment,
+        value   => $environment_setting,
         notify  => $service_notify,
       }
     }
@@ -55,7 +62,7 @@ class psick::puppet::pe_agent (
         path    => $config_file_path,
         section => 'agent',
         setting => 'noop',
-        value   => $noop_mode,
+        value   => $noop_setting,
         notify  => $service_notify,
       }
     }

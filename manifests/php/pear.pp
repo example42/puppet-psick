@@ -14,10 +14,10 @@
 class psick::php::pear (
   Psick::Ensure $ensure = 'present',
   String $package       = 'php-pear',
-  Hash $package_options = {}
-  Boolean $manage                  = $::psick::manage,
-  Boolean $noop_manage             = $::psick::noop_manage,
-  Boolean $noop_value              = $::psick::noop_value,
+  Hash $package_options = {},
+  Boolean $manage       = $::psick::manage,
+  Boolean $noop_manage  = $::psick::noop_manage,
+  Boolean $noop_value   = $::psick::noop_value,
 ) {
   if $manage {
     if $noop_manage {
