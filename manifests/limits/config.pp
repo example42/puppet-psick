@@ -32,8 +32,8 @@ define psick::limits::config (
     source  => $source,
   }
   file { $file_path:
-    * => $file_params_default + $file_params,
+    * => $file_params_default + $file_params, 
   }
- 
+
 }
 
