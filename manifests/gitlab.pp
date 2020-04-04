@@ -20,41 +20,70 @@
 # @param users An hash used to create psick::gitlab::user resources
 # @param groups An hash used to create psick::gitlab::group resources
 # @param projects An hash used to create psick::gitlab::project resources
+# @param manage If to actually manage any resource in this class. If false no
+#               resource is managed. Default value is taken from main psick class.
+# @param noop_manage If to use the noop() function for all the resources provided
+#                    by this class. If this is true the noop function is called
+#                    with $noop_value argument. This overrides any other noop setting
+#                    (either set on client's puppet.conf or by noop() function in
+#                    main psick class). Default from psick class.
+# @param noop_value The value to pass to noop() function if noop_manage is true.
+#                   It applies to all the resources (and classes) declared in this class
+#                   If true: noop metaparamenter is set to true, resources are not applied
+#                   If false: noop metaparameter is set to false, and any eventual noop
+#                   setting is overridden: resources are always applied.
+#                   Default from psick class.
 #
 class psick::gitlab (
-  String                $ensure      = 'present',
+  String $ensure                       = 'present',
 
-  Variant[Undef,String] $template    = undef,
-  Hash $options_hash                 = { },
+  Variant[Undef,String] $template      = undef,
+  Hash $options_hash                   = { },
 
-  Boolean $manage_installation       = true,
+  Boolean $manage_installation         = true,
+  Boolean $manage_inline_configuration = false,
 
-  Boolean $use_https                 = true,
-  String $server_name                = $::fqdn,
-  String $ca_file_source             = 'file:///etc/puppetlabs/puppet/ssl/certs/ca.pem',
-  String $key_file_source            = "file:///etc/puppetlabs/puppet/ssl/private_keys/${trusted['certname']}.pem",
-  String $cert_file_source           = "file:///etc/puppetlabs/puppet/ssl/certs/${trusted['certname']}.pem",
+  Boolean $use_https                   = true,
+  String $server_name                  = $::fqdn,
+  String $ca_file_source               = 'file:///etc/puppetlabs/puppet/ssl/certs/ca.pem',
+  String $key_file_source              = "file:///etc/puppetlabs/puppet/ssl/private_keys/${trusted['certname']}.pem",
+  String $cert_file_source             = "file:///etc/puppetlabs/puppet/ssl/certs/${trusted['certname']}.pem",
 
-  Hash     $tp_install_options       = { },
-  Hash                  $users       = { },
-  Hash                  $groups      = { },
-  Hash                  $projects    = { },
+  Hash $tp_install_options             = { },
+  Hash $users                          = { },
+  Hash $groups                         = { },
+  Hash $projects                       = { },
+
+  Boolean $manage                      = $::psick::manage,
+  Boolean $noop_manage                 = $::psick::noop_manage,
+  Boolean $noop_value                  = $::psick::noop_value,
+
 ) {
 
-  if $manage_installation {
-    $options_default = {
-      external_url => $use_https ? {
-        true  => "https://${server_name}",
-        false => "http://${server_name}",
+  if $manage {
+    if $noop_manage {
+      noop($noop_value)
+    }
+
+    $external_url = $use_https ? {
+      true  => "https://${server_name}",
+      false => "http://${server_name}",
+    }
+    $options_default = $use_https ? {
+      true  => { 
+        "nginx['ssl_certificate']"     => "/etc/gitlab/ssl/${server_name}.crt",
+        "nginx['ssl_certificate_key']" => "/etc/gitlab/ssl/${server_name}.key",
       },
-      "nginx['ssl_certificate']" => "/etc/gitlab/ssl/${server_name}.crt",
-      "nginx['ssl_certificate_key']" => "/etc/gitlab/ssl/${server_name}.key",
+      false => {},
     }
     $options = $options_default + $options_hash
-    tp::install { 'gitlab-ce' :
-      ensure      => $ensure,
-      auto_prereq => true,
-      *           => $tp_install_options,
+
+    if $manage_installation {
+      tp::install { 'gitlab-ce' :
+        ensure      => $ensure,
+        auto_prereq => true,
+        *           => $tp_install_options,
+      }
     }
 
     if $template {
@@ -62,6 +91,32 @@ class psick::gitlab (
         ensure  => $ensure,
         content => template($template),
         notify  => Exec['gitlab-ctl reconfigure'],
+      }
+    } else {
+      if $manage_inline_configuration {
+        file { '/etc/gitlab/gitlab.rb':
+          ensure => present,
+        }
+        file_line { 'gitlab external_url':
+          path    => '/etc/gitlab/gitlab.rb',
+          line    => "external_url '${external_url}'",
+          match   => '^external_url',
+          notify  => Exec['gitlab-ctl reconfigure'],
+          require => File['/etc/gitlab/gitlab.rb'],
+        }
+        $options.each | $k,$v | {
+          $real_value = $v ? {
+            String  => "'${v}'",
+            default => $v
+          }
+          ini_setting { "gitlab ${k}":
+            ensure  => present,
+            path    => '/etc/gitlab/gitlab.rb',
+            setting => $k,
+            value   => $real_value,
+            notify => Exec['gitlab-ctl reconfigure'],
+          }
+        }
       }
     }
 
@@ -97,35 +152,35 @@ class psick::gitlab (
         notify => Exec['gitlab-ctl reconfigure'],
       }
     }
-  }
 
-  # Create GitLab resources, if defined
-  if $groups != {} {
-    $groups.each |$k,$v| {
-      psick::gitlab::group { $k:
-        * => $v,
+    # Create GitLab resources, if defined
+    if $groups != {} {
+      $groups.each |$k,$v| {
+        psick::gitlab::group { $k:
+          * => $v,
+        }
       }
     }
-  }
-  if $users != {} {
-    $users.each |$k,$v| {
-      psick::gitlab::user { $k:
-        * => $v,
+    if $users != {} {
+      $users.each |$k,$v| {
+        psick::gitlab::user { $k:
+          * => $v,
+        }
       }
     }
-  }
-  if $projects != {} {
-    $projects.each |$k,$v| {
-      psick::gitlab::project { $k:
-        * => $v,
+    if $projects != {} {
+      $projects.each |$k,$v| {
+        psick::gitlab::project { $k:
+          * => $v,
+        }
       }
     }
-  }
 
-  # Add tp test if cli enabled
-  if any2bool($::psick::tp['cli_enable']) {
-    tp::test { 'gitlab-ce':
-      content => 'gitlab-ctl status',
+    # Add tp test if cli enabled
+    if any2bool($::psick::tp['cli_enable']) {
+      tp::test { 'gitlab-ce':
+        content => 'gitlab-ctl status',
+      }
     }
   }
 }
