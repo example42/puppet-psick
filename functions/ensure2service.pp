@@ -18,5 +18,6 @@ function psick::ensure2service (
         default   => true,
       }
     }
+    default: {}
   }
 }
