@@ -14,3 +14,4 @@ fixtures:
     "hieradata": "https://github.com/example42/psick-hieradata"
     "yumrepo": "https://github.com/puppetlabs/puppetlabs-yumrepo_core"
     "host": "https://github.com/puppetlabs/puppetlabs-host_core"
+    "icinga2": "https://github.com/icinga/puppet-icinga2"

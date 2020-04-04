@@ -33,7 +33,6 @@ describe 'psick', type: :class do
         it { is_expected.to compile.with_all_deps }
         it { is_expected.to contain_class('psick::sysctl') }
         it { is_expected.to contain_class('psick::update') }
-        it { is_expected.to contain_class('psick::openssh::tp') }
         it { is_expected.to contain_class('psick::hardening') }
       end
 

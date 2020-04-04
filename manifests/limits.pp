@@ -74,6 +74,7 @@ class psick::limits (
       group   => 'root',
       mode    => '0644',
       source  => $limits_conf_source,
+      path    => $limits_conf_path,
       content => psick::template($limits_conf_template , $parameters),
     }
     file { $limits_conf_path:
@@ -86,6 +87,7 @@ class psick::limits (
       group   => 'root',
       mode    => '0755',
       recurse => true,
+      path    => $limits_dir_path,
       source  => $limits_dir_source,
     }
     file { $limits_dir_path:
