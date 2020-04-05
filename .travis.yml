@@ -16,7 +16,7 @@ stages:
 - static
 - spec
 - acceptance
-- if: tag =~ ^v\d
+- if: tag =~ ^\d
   name: deploy
 matrix:
   fast_finish: true
@@ -35,6 +35,8 @@ matrix:
   - env: PUPPET_GEM_VERSION="~> 6.0" CHECK=spec
     rvm: 2.5.3
     stage: spec
+  - env: DEPLOY_TO_FORGE=yes
+    stage: deploy
 branches:
   only:
   - master
@@ -44,5 +46,8 @@ deploy:
   user: example42
   password:
     secure: BrJQo9HLgpGGqfb3sPwSycg+BvIaee2mNmPZri575DCGMzCkVX6rqkpiJh1dT8HA6BsYo7YbVRez6Qso4GKUcD54XY0PodeOAI+RjNirV9Vaqz8AUopbW0TZN6uRTU/6J5Whcv6oYQLPdBupBt1FnX5zdgMpzAeqGrAiZXaf5myJAfU45/soS/9dSHAAKo1G1u0JrJumuoBKS97mdVhfqXhVqge5/1BTdqbY7ZeXkjTWW18G+VD+gJtPIjXCoWXWpjordGMgRVA65NcULT77tQn2ZRZM09RDyKmIVmaMda8qTNVaWkZvMLgmxp0vTADprRsTrqGFqVuuTNRoDhtJKzog44KVyuUYTX0Wty8guQs+LTrBhxnYrWGLP6u6zRnS0oC0tuR49WNT6IxsRbLrWTkamnxr2fzi85PvyHepee7Cy2IEz6tJWNvJW0V2f3ENbQlQvS0HKNfK/RF1GsV/RwSL/bNRchAfmaE0BBhJqSGCDcAWkknlQu6azW6LmI/YiwQMp2OPBrKdYr82iqxWxTdzFApgZ4KCWZNsZjPwbvXKSeF5W7ZqlbxsWLzgEaM+ex6W61Df/a8oEEA2DAu0pGYm8EEzPVXzs0FRtyOXk8xaKnlldHgI1qywY9hvP5IJDdC6LdySEeeu6MDtcHxctm3Sw/sh+FOSowmHAQEC6VY=
+  on:
+    tags: true
+    condition: "$DEPLOY_TO_FORGE = yes"
 notifications:
   email: false
