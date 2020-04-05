@@ -48,9 +48,6 @@
 # @example Disable the whole class (no resource from this class is declared)
 #     psick::firstrun::manage: false
 #
-# @param manage If to actually manage any resource. Set to false to disable
-#   any effect of this psick::firstrun class.
-#
 # @param linux_classes Hash with the list of classes to include
 #   in the first Puppet run when $::kernel is Linux. Of each key-value
 #   of the hash, the key is used as marker to eventually override
@@ -75,9 +72,18 @@
 # @param reboot_name The name of the reboot type
 # @param reboot_timeout The timeout parameter to pass to reboot type
 #
+# @param noop_manage If to use the noop() function for all the resources provided
+#                    by this class. If this is true the noop function is called
+#                    with $noop_value argument. This overrides any other noop setting
+#                    (either set on client's puppet.conf or by noop() function in
+#                    main psick class). Default from psick class.
+# @param noop_value The value to pass to noop() function if noop_manage is true.
+#                   It applies to all the resources (and classes) declared in this class
+#                   If true: noop metaparamenter is set to true, resources are not applied
+#                   If false: noop metaparameter is set to false, and any eventual noop
+#                   setting is overridden: resources are always applied.
+#                   Default from psick class.
 class psick::firstrun (
-
-  Boolean $manage = $::psick::manage,
 
   Psick::Class $linux_classes   = {},
   Psick::Class $windows_classes = {},
@@ -94,9 +100,18 @@ class psick::firstrun (
   String $reboot_message  = 'firstboot mode enabled, rebooting after first Puppet run',
   String $reboot_name     = 'Rebooting',
   Integer $reboot_timeout = 60,
+
+  Boolean          $manage               = $::psick::manage,
+  Boolean          $noop_manage          = $::psick::noop_manage,
+  Boolean          $noop_value           = $::psick::noop_value,
 ) {
 
   if $manage {
+
+    if $noop_manage {
+      noop($noop_value)
+    }
+
     if !empty($linux_classes) and $::kernel == 'Linux' {
       $linux_classes.each |$n,$c| {
         if $c != '' {
@@ -151,6 +166,5 @@ class psick::firstrun (
         timeout => $reboot_timeout,
       }
     }
-
   }
 }

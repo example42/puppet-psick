@@ -1,7 +1,6 @@
 # This class manages the installation and initialisation of icingaweb2
 #
 # @param ensure If to install or remove icingaweb2
-# @param manage If to actually manage any resource in this profile or not
 # @param module What module to use to install icingaweb2: psick or icingaweb2
 # @param auto_prereq If to automatically install all the prerequisites
 #                    resources needed to install Icingaweb2
@@ -21,13 +20,22 @@
 # @param db_backend What database backend to use for icingaweb2. If set,
 #                   relevant client packages are installed
 # @param fix_php_timezone If to set the timezone as in $::psick::timezone on php.ini
-# @param no_noop Set noop metaparameter to false to all the resources of this class.
-#   This overrides client site noop setting but not $psick::noop_mode.
-#
+# @param manage If to actually manage any resource in this class. If false no
+#               resource is managed. Default value is taken from main psick class.
+# @param noop_manage If to use the noop() function for all the resources provided
+#                    by this class. If this is true the noop function is called
+#                    with $noop_value argument. This overrides any other noop setting
+#                    (either set on client's puppet.conf or by noop() function in
+#                    main psick class). Default from psick class.
+# @param noop_value The value to pass to noop() function if noop_manage is true.
+#                   It applies to all the resources (and classes) declared in this class
+#                   If true: noop metaparamenter is set to true, resources are not applied
+#                   If false: noop metaparameter is set to false, and any eventual noop
+#                   setting is overridden: resources are always applied.
+#                   Default from psick class.
 class psick::icingaweb2 (
   String                 $ensure          = 'present',
-  Boolean                $manage          = $::psick::manage,
-  Enum['psick','icinga'] $module          = 'psick',
+  Enum['psick','icinga'] $module          = 'icinga',
   Boolean                $auto_prereq     = $::psick::auto_prereq,
   Hash                $icingaweb2_params = {},
 
@@ -81,13 +89,14 @@ class psick::icingaweb2 (
 
   Boolean $git_manage                     = true,
 
-  Boolean $no_noop                        = false,
+  Boolean          $manage               = $::psick::manage,
+  Boolean          $noop_manage          = $::psick::noop_manage,
+  Boolean          $noop_value           = $::psick::noop_value,
 ) {
 
   if $manage {
-    if !$::psick::noop_mode and $no_noop {
-      info('Forced no-noop mode in psick::icingaweb2')
-      noop(false)
+    if $noop_manage {
+      noop($noop_value)
     }
     if $webserver_class and $webserver_class != '' {
       contain $webserver_class

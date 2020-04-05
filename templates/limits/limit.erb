@@ -1,0 +1,13 @@
+# File managed by Puppet
+
+#<domain>    <type> <item>          <value>
+<% if @both then -%>
+<%= "%-12s" % @real_domain %>  -     <%= "%-14s" % @real_item %>  <%= @both %>
+<% else -%>
+<% if @hard then -%>
+<%= "%-12s" % @real_domain %>  hard  <%= "%-14s" % @real_item %>  <%= @hard %>
+<% end -%>
+<% if @soft then -%>
+<%= "%-12s" % @real_domain %>  soft  <%= "%-14s" % @real_item %>  <%= @soft %>
+<% end -%>
+<% end -%>

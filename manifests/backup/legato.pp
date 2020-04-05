@@ -7,21 +7,31 @@
 class psick::backup::legato (
   Array $packages,
   String $ports_range = '7937-8050',
+
+  Boolean          $manage               = $::psick::manage,
+  Boolean          $noop_manage          = $::psick::noop_manage,
+  Boolean          $noop_value           = $::psick::noop_value,
 ) {
 
-  $packages.each |$pkg| {
-    ensure_packages($pkg)
-  }
-
-  if $packages != [] {
-    service { 'networker':
-      ensure => 'running',
-      enable => true,
+  if $manage {
+    if $noop_manage {
+      noop($noop_value)
     }
 
-    exec { "nsrports -S ${ports_range}":
-      unless  => "nsrports | grep ${ports_range}",
-      require => Service['networker'],
+    $packages.each |$pkg| {
+      ensure_packages($pkg)
+    }
+
+    if $packages != [] {
+      service { 'networker':
+        ensure => 'running',
+        enable => true,
+      }
+
+      exec { "nsrports -S ${ports_range}":
+        unless  => "nsrports | grep ${ports_range}",
+        require => Service['networker'],
+      }
     }
   }
 }

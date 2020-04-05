@@ -34,69 +34,78 @@ class psick::firewall::iptables (
   Enum['DROP','ACCEPT'] $default_forward_v6 = 'ACCEPT',
   Boolean $log_filter_defaults              = true,
   Boolean $manage_ipv6                      = true,
+
+  Boolean          $manage               = $::psick::manage,
+  Boolean          $noop_manage          = $::psick::noop_manage,
+  Boolean          $noop_value           = $::psick::noop_value,
 ) {
 
-  package { $package_name:
-    ensure => present,
-    before => Service[$service_name],
-  }
-
-  file { $config_file_path:
-    ensure  => file,
-    notify  => Service[$service_name],
-    content => template($rules_template),
-    mode    => '0640',
-  }
-
-  service { $service_name:
-    ensure => running,
-    enable => true,
-  }
-
-  if $manage_ipv6 {
-    if $service_name_v6 {
-      service { $service_name_v6:
-        ensure => running,
-        enable => true,
-      }
+  if $manage {
+    if $noop_manage {
+      noop($noop_value)
     }
 
-    file { $config_file_path_v6:
+    package { $package_name:
+      ensure => present,
+      before => Service[$service_name],
+    }
+
+    file { $config_file_path:
       ensure  => file,
-      notify  => Service[$service_name_v6],
-      content => template($rules_template_v6),
+      notify  => Service[$service_name],
+      content => template($rules_template),
       mode    => '0640',
     }
-  }
 
-  case $::osfamily {
-    'RedHat': {
-      service { 'firewalld':
-        ensure => stopped,
-        enable => false,
-      }
+    service { $service_name:
+      ensure => running,
+      enable => true,
     }
-    'Debian': {
-      file { '/etc/iptables':
-        ensure => directory,
-      }
-    }
-    'Suse': {
-      file { '/usr/lib/systemd/system/iptables.service':
-        ensure  => file,
-        content => template('psick/firewall/iptables.service.erb'),
-        notify  => Service[$service_name],
-      }
-      file { '/etc/sysconfig/iptables.stop':
-        ensure  => file,
-        content => template('psick/firewall/iptables.stop.erb'),
-        notify  => Service[$service_name],
-      }
-      package { 'SuSEfirewall2':
-        ensure => absent,
-      }
-    }
-    default: {}
-  }
 
+    if $manage_ipv6 {
+      if $service_name_v6 {
+        service { $service_name_v6:
+          ensure => running,
+          enable => true,
+        }
+      }
+
+      file { $config_file_path_v6:
+        ensure  => file,
+        notify  => Service[$service_name_v6],
+        content => template($rules_template_v6),
+        mode    => '0640',
+      }
+    }
+
+    case $::osfamily {
+      'RedHat': {
+        service { 'firewalld':
+          ensure => stopped,
+          enable => false,
+        }
+      }
+      'Debian': {
+        file { '/etc/iptables':
+          ensure => directory,
+        }
+      }
+      'Suse': {
+        file { '/usr/lib/systemd/system/iptables.service':
+          ensure  => file,
+          content => template('psick/firewall/iptables.service.erb'),
+          notify  => Service[$service_name],
+        }
+        file { '/etc/sysconfig/iptables.stop':
+          ensure  => file,
+          content => template('psick/firewall/iptables.stop.erb'),
+          notify  => Service[$service_name],
+        }
+        package { 'SuSEfirewall2':
+          ensure => absent,
+        }
+      }
+      default: {}
+    }
+  }
 }

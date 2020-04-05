@@ -13,30 +13,40 @@ class psick::time (
   Array $servers                            = [],
   Optional[String] $timezone                = $::psick::timezone,
   Enum['chrony','ntpdate','ntp',''] $method = 'ntpdate',
+
+  Boolean             $manage               = $::psick::manage,
+  Boolean             $noop_manage          = $::psick::noop_manage,
+  Boolean             $noop_value           = $::psick::noop_value,
 ) {
 
-  if $::kernel != 'windows' and $timezone {
-    contain ::psick::timezone
-  }
-
-  if $::kernel == 'Linux' and $method == 'chrony' {
-    class { '::chrony':
-      servers => $servers,
+  if $manage {
+    if $noop_manage {
+      noop($noop_value)
     }
-  }
 
-  if $::kernel == 'Linux' and $method == 'ntpdate' {
-    contain ::psick::time::ntpdate
-  }
-
-  if $::kernel != 'Windows' and $method == 'ntp' {
-    class { '::ntp':
-      servers => $servers,
+    if $::kernel != 'windows' and $timezone {
+      contain ::psick::timezone
     }
-  }
 
-  if $::osfamily == 'Windows' {
-    contain ::psick::time::windows
-  }
+    if $::kernel == 'Linux' and $method == 'chrony' {
+      class { '::chrony':
+        servers => $servers,
+      }
+    }
 
+    if $::kernel == 'Linux' and $method == 'ntpdate' {
+      contain ::psick::time::ntpdate
+    }
+
+    if $::kernel != 'Windows' and $method == 'ntp' {
+      class { '::ntp':
+        servers => $servers,
+      }
+    }
+
+    if $::osfamily == 'Windows' {
+      contain ::psick::time::windows
+    }
+
+  }
 }

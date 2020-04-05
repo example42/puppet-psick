@@ -6,17 +6,16 @@
 class psick::mysql::root_password (
   String $root_cnf_template = 'psick/mysql/root.my.cnf.erb',
   Optional[Psick::Password] $password = $::psick::mysql::root_password,
-  Boolean $manage                      = $::psick::manage,
-  Boolean $auto_prereq                 = $::psick::auto_prereq,
-  Boolean $no_noop                     = false,
+  Boolean $manage                     = $::psick::manage,
+  Boolean $auto_prereq                = $::psick::auto_prereq,
+  Boolean $noop_manage                = $::psick::noop_manage,
+  Boolean $noop_value                 = $::psick::noop_value,
 ) {
 
   if $manage {
-    if !$::psick::noop_mode and $no_noop {
-      info('Forced no-noop mode.')
-      noop(false)
+    if $noop_manage {
+      noop($noop_value)
     }
-
     if ! defined(File['/root/.my.cnf']) {
       file { '/root/.my.cnf':
         ensure  => 'present',

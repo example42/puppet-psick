@@ -15,17 +15,18 @@ class psick::hosts::file (
   String $hostname              = $::hostname,
   Array $extra_hosts            = [],
 
-  Boolean $no_noop              = false,
+  Boolean $manage               = $::psick::manage,
+  Boolean $noop_manage          = $::psick::noop_manage,
+  Boolean $noop_value           = $::psick::noop_value,
 ) {
+  if $manage {
+    if $noop_manage {
+      noop($noop_value)
+    }
 
-  if !$::psick::noop_mode and $no_noop {
-    info('Forced no-noop mode.')
-    noop(false)
+    file { '/etc/hosts':
+      ensure  => file,
+      content => template($template),
+    }
   }
-
-  file { '/etc/hosts':
-    ensure  => file,
-    content => template($template),
-  }
-
 }

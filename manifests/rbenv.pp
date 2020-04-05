@@ -11,14 +11,22 @@
 # @param plugin_hash An hash of resources data to be passed to rbenv::plugin
 # @param build_hash An hash of resources data to be passed to rbenv::build
 # @param gem_hash An hash of resources data to be passed to rbenv::gem
-# @param manage If to actually manage ANY resource from this class.
-#   When set to false, no resource from this class is managed whatever are
-#   the other parameters.
 # @param auto_prereq If to automatically install eventual dependencies required
 #   by this class. Set to false if you have problems with duplicated resources.
 #   If so, you'll need to ensure the needed prerequisites are present.
-# @param no_noop Set noop metaparameter to false to all the resources of this class.
-#   This overrides any noop setting which might be in place.
+# @param manage If to actually manage any resource in this class. If false no
+#               resource is managed. Default value is taken from main psick class.
+# @param noop_manage If to use the noop() function for all the resources provided
+#                    by this class. If this is true the noop function is called
+#                    with $noop_value argument. This overrides any other noop setting
+#                    (either set on client's puppet.conf or by noop() function in
+#                    main psick class). Default from psick class.
+# @param noop_value The value to pass to noop() function if noop_manage is true.
+#                   It applies to all the resources (and classes) declared in this class
+#                   If true: noop metaparamenter is set to true, resources are not applied
+#                   If false: noop metaparameter is set to false, and any eventual noop
+#                   setting is overridden: resources are always applied.
+#                   Default from psick class.
 #
 class psick::rbenv (
 
@@ -37,13 +45,13 @@ class psick::rbenv (
 
   Boolean $manage                        = $::psick::manage,
   Boolean $auto_prereq                   = $::psick::auto_prereq,
-  Boolean $no_noop                       = false,
+  Boolean $noop_manage                   = $::psick::noop_manage,
+  Boolean $noop_value                    = $::psick::noop_value,
 ) {
 
   if $manage {
-    if !$::psick::noop_mode and $no_noop {
-      info('Forced no-noop mode.')
-      noop(false)
+    if $noop_manage {
+      noop($noop_value)
     }
 
     # Installation management

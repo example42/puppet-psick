@@ -18,48 +18,58 @@ class psick::sudo (
   String                   $sudoers_owner     = 'root',
   String                   $sudoers_group     = 'root',
   Boolean                  $purge_sudoers_dir = false,
+
+  Boolean                  $manage            = $::psick::manage,
+  Boolean                  $noop_manage       = $::psick::noop_manage,
+  Boolean                  $noop_value        = $::psick::noop_value,
 ) {
 
-  if $sudoers_template != '' {
-    file { '/etc/sudoers':
-      ensure  => file,
+  if $manage {
+    if $noop_manage {
+      noop($noop_value)
+    }
+
+    if $sudoers_template != '' {
+      file { '/etc/sudoers':
+        ensure  => file,
+        mode    => '0440',
+        owner   => $sudoers_owner,
+        group   => $sudoers_group,
+        content => template($sudoers_template),
+        notify  => Exec['sudo_syntax_check'],
+      }
+      file { '/etc/sudoers.broken':
+        ensure => absent,
+        before => Exec['sudo_syntax_check'],
+      }
+      exec { 'sudo_syntax_check':
+        command     => 'visudo -c -f /etc/sudoers && ( cp -f /etc/sudoers /etc/sudoers.lastgood ) || ( mv -f /etc/sudoers /etc/sudoers.broken ; cp /etc/sudoers.lastgood /etc/sudoers ; exit 1) ', # lint:ignore:140chars
+        refreshonly => true,
+      }
+    }
+
+    file { '/etc/sudoers.d':
+      ensure  => directory,
       mode    => '0440',
       owner   => $sudoers_owner,
       group   => $sudoers_group,
-      content => template($sudoers_template),
-      notify  => Exec['sudo_syntax_check'],
+      source  => $sudoers_d_source,
+      recurse => true,
+      purge   => $purge_sudoers_dir,
     }
-    file { '/etc/sudoers.broken':
-      ensure => absent,
-      before => Exec['sudo_syntax_check'],
-    }
-    exec { 'sudo_syntax_check':
-      command     => 'visudo -c -f /etc/sudoers && ( cp -f /etc/sudoers /etc/sudoers.lastgood ) || ( mv -f /etc/sudoers /etc/sudoers.broken ; cp /etc/sudoers.lastgood /etc/sudoers ; exit 1) ',
-      refreshonly => true,
-    }
-  }
 
-  file { '/etc/sudoers.d':
-    ensure  => directory,
-    mode    => '0440',
-    owner   => $sudoers_owner,
-    group   => $sudoers_group,
-    source  => $sudoers_d_source,
-    recurse => true,
-    purge   => $purge_sudoers_dir,
-  }
-
-  $directives = lookup('psick::sudo::directives', Hash, 'deep', {})
-  $directives.each |$name,$opts| {
-    ::psick::sudo::directive { $name:
-      * => $opts,
+    $directives = lookup('psick::sudo::directives', Hash, 'deep', {})
+    $directives.each |$name,$opts| {
+      ::psick::sudo::directive { $name:
+        * => $opts,
+      }
     }
-  }
 
-  if $::virtual == 'virtualbox' and $purge_sudoers_dir {
-    psick::sudo::directive { 'vagrant':
-      source => 'puppet:///modules/psick/sudo/vagrant',
-      order  => 30,
+    if $::virtual == 'virtualbox' and $purge_sudoers_dir {
+      psick::sudo::directive { 'vagrant':
+        source => 'puppet:///modules/psick/sudo/vagrant',
+        order  => 30,
+      }
     }
   }
 }

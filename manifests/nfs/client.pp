@@ -13,19 +13,27 @@
 #        share: /data
 #        mountpoint: /mnt/data
 class psick::nfs::client (
-  Hash $mounts_hash = {},
+  Hash $mounts_hash    = {},
+  Boolean $manage      = true,
+  Boolean $noop_manage = false,
+  Boolean $noop_value  = false,
 ) {
-
-  # Workaround for rcpbind service handling.
-  tp::install { 'nfs-client':
-    settings_hash => {
-      service_enable => undef,
+  if $manage {
+    if $noop_manage {
+      noop($noop_value)
     }
-  }
 
-  $mounts_hash.each |$k,$v| {
-    psick::nfs::mount { $k:
-      * => $v,
+    # Workaround for rcpbind service handling.
+    tp::install { 'nfs-client':
+      settings_hash => {
+        service_enable => undef,
+      }
+    }
+
+    $mounts_hash.each |$k,$v| {
+      psick::nfs::mount { $k:
+        * => $v,
+      }
     }
   }
 }

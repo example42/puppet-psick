@@ -109,20 +109,6 @@ This is the classification part, since it's based on class parameters, it can be
 
 The pre -> base -> profiles order is strictly enforced, so we sure to place your class in the most appropriate phase (even if functionally they all do the same work: include the specified classes) and, to prevent dependency cycles, avoid to set the same class in two different phases.
 
-#### Auto configuration defaults
-
-If you are lazy or want to try some predefined defaults (always WIP) you can simply try to use one of our embedded sets of configurations, note that you can customise and override everything, in your control-repo hiera data.
-
-For example, to use Psick predefined defaults (as in ```data/default/*.yaml```):
-
-    psick::auto_conf: default
-
-To use, instead, some hardened defaults (as in ```data/hardened/*.yaml```):
-
-    psick::auto_conf: hardened
-
-The auto configuration settings are defined at module level hierarchy, so they can be overwritten in the environment's Hiera data.
-
 ### Psick tp profiles
 
 Psick provides out of the box profiles, based on ([Tiny Puppet](https://github.com/example42/puppet-tp), to manage common applications. They can replace or complement component modules when applications can be managed via packeages, services and files.
@@ -219,7 +205,7 @@ Some of psick class' parameters are used as defaults for all tp profiles and mos
 
 They are as follows, with their default values.
 
-Define if to actually manage any resource. Note that when used globally no class is actually included when cladsified via psick.
+Define if to actually manage any resource. This setting is the default entry point for the manage paramenter on each psick class.
 
     Boolean $manage            = true
 
@@ -228,15 +214,16 @@ Set to false, globally or in specific profiles, to cope with duplicated resource
 
     Boolean $auto_prereq       = true
 
-If to enable noop mode globally (for all the classes included via psick)
+If to use the noop() function for all the classes included in this module. This setting is the default for all the psick classes, and can be overridden in each of them. When true the value of the parameter noop_value is passed to the noop() function.
 
-    Boolean $noop_mode         = lookup('noop_mode', Boolean,'first',false)
+    Boolean $noop_manage       = false
+
+The value to pass to the noop function when $noop_manage is true. This value is the default, which can be overridden, in each psick class.
+
+    Boolean $noop_value        = false # No-noop is enforced on the class and overrides any noop settings
+    Boolean $noop_value        = true  # Noop is enforced on the class
 
 #### Special parameters in main psick class
-
-What set of auto configuration settings to use. This is currently not widely implemented, but it's possible to have different set of configurations (currently accepted values are: node, default, hardened) automatically loaded based on the local psick module data.
-
-    Psick::Autoconf $auto_conf = 'none'
 
 A generic, by default empty, hash of custom settings to use as needed in any class included by psick.
 No psick profile is using this.
@@ -268,10 +255,6 @@ A parameter that disables forced ordering of the classes included in psick diffe
 #### Common parameters in psick base and tp profiles
 
 Some other parameters can be found in psick profiles:
-
-If to override client side noop for the given class (it forces the application of its resources, even if the client runs in noop mode).
-
-    Boolean         $no_noop                  = false
 
 Generic hash of options which can be used in templates evaluated in the relevant profile. It's looked up in deep merge mode and in some profiles in can be merged with local default settings. In erb templates the keys used in the $options_hash can be generally referred with <%= @options['key'] %>, with the $options var being the merge of a local $options_default + $options_hash.
 

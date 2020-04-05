@@ -2,15 +2,15 @@
 # Used to code testing on different OS
 #
 class psick::ostest (
-  Boolean $manage        = $::psick::manage,
   Boolean $notify_enable = false,
   Hash $tp_profiles_hash = {},
-  Boolean $no_noop       = false,
+  Boolean $manage        = $::psick::manage,
+  Boolean $noop_manage   = $::psick::noop_manage,
+  Boolean $noop_value    = $::psick::noop_value,
 ) {
   if $manage {
-    if !$::psick::noop_mode and $no_noop {
-      info('Forced no-noop mode in psick::icinga2')
-      noop(false)
+    if $noop_manage {
+      noop($noop_value)
     }
 
     if $notify_enable {

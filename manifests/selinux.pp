@@ -1,6 +1,5 @@
 # This class manages selinux basic configuration
 #
-# @param manage If to actually manage any resource in this profile or not#
 # @param selinux_file_template The path of the template (with erb or epp suffix)
 #                           to use for the content of /etc/selinux/config.
 #                           If empty or selinux is missing the file is not managed.
@@ -12,10 +11,21 @@
 # @param selinux_dir_recurse The recurse param of the /etc/selinux dir resource
 # @param selinux_dir_force   The force param of the /etc/selinux dir resource
 # @param selinux_dir_purge   The purge param of the /etc/selinux dir resource
-# @param no_noop Set noop metaparameter to false to all the resources of this class.
+# @param manage If to actually manage any resource in this class. If false no
+#               resource is managed. Default value is taken from main psick class.
+# @param noop_manage If to use the noop() function for all the resources provided
+#                    by this class. If this is true the noop function is called
+#                    with $noop_value argument. This overrides any other noop setting
+#                    (either set on client's puppet.conf or by noop() function in
+#                    main psick class). Default from psick class.
+# @param noop_value The value to pass to noop() function if noop_manage is true.
+#                   It applies to all the resources (and classes) declared in this class
+#                   If true: noop metaparamenter is set to true, resources are not applied
+#                   If false: noop metaparameter is set to false, and any eventual noop
+#                   setting is overridden: resources are always applied.
+#                   Default from psick class.
 #
 class psick::selinux (
-  Boolean $manage                    = $::psick::manage,
   Enum['enforcing','permissive','disabled'] $state       = 'enforcing',
   Enum['targeted','minimum','mls','default','src'] $type = 'targeted',
   Enum['0','1'] $setlocaldefs        = '0',
@@ -24,13 +34,16 @@ class psick::selinux (
   Boolean $selinux_dir_recurse       = true,
   Boolean $selinux_dir_force         = true,
   Boolean $selinux_dir_purge         = false,
-  Boolean         $no_noop           = false,
+  Boolean $manage                    = $::psick::manage,
+  Boolean $noop_manage               = $::psick::noop_manage,
+  Boolean $noop_value                = $::psick::noop_value,
 ) {
+
   if $manage {
-    if !$::psick::noop_mode and $no_noop {
-      info('Forced no-noop mode in psick::icinga2')
-      noop(false)
+    if $noop_manage {
+      noop($noop_value)
     }
+
     $selinux_params = {
       state         => $state,
       type          => $type,

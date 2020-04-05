@@ -7,10 +7,20 @@
 #
 class psick::backup (
   String $legato_class   = '',
+
+  Boolean          $manage               = $::psick::manage,
+  Boolean          $noop_manage          = $::psick::noop_manage,
+  Boolean          $noop_value           = $::psick::noop_value,
 ) {
 
-  if $legato_class != '' {
-    include $legato_class
-  }
+  if $manage {
+    if $noop_manage {
+      noop($noop_value)
+    }
 
+    if $legato_class != '' {
+      include $legato_class
+    }
+
+  }
 }

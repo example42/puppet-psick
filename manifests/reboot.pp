@@ -9,7 +9,6 @@
 #   psick::firstrun::windows::reboot_class: psick::reboot
 #
 class psick::reboot (
-  Boolean $manage                       = true,
   Enum['immediately','finished'] $apply = 'finished',
   Enum['refreshed','pending'] $when     = 'pending',
   String $reboot_name                   = 'Psick Reboot',
@@ -18,15 +17,23 @@ class psick::reboot (
   Optional[Integer] $retries            = undef,
   Optional[Integer] $retries_interval   = undef,
   Boolean $refresh_reboot               = false,
+
+  Boolean          $manage               = $::psick::manage,
+  Boolean          $noop_manage          = $::psick::noop_manage,
+  Boolean          $noop_value           = $::psick::noop_value,
 ) {
 
-  $message = "Rebooting: when ${when} - apply ${apply} - timeout ${timeout}"
-
-  if $schedule_name {
-    include psick::schedule
-  }
-
   if $manage {
+    if $noop_manage {
+      noop($noop_value)
+    }
+
+    $message = "Rebooting: when ${when} - apply ${apply} - timeout ${timeout}"
+
+    if $schedule_name {
+      include psick::schedule
+    }
+
     $reboot_params = {
       apply           => $apply,
       message         => $message,
@@ -39,11 +46,12 @@ class psick::reboot (
     reboot { $reboot_name:
       * => delete_undef_values($reboot_params),
     }
-  }
-  if $refresh_reboot {
-    notify { 'reboot trigger':
-      notify   => Reboot[$reboot_name],
-      schedule => $schedule_name,
+
+    if $refresh_reboot {
+      notify { 'reboot trigger':
+        notify   => Reboot[$reboot_name],
+        schedule => $schedule_name,
+      }
     }
   }
 }

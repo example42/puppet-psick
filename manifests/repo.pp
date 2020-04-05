@@ -3,7 +3,6 @@
 # are looked up via lookup
 #
 class psick::repo (
-  Optional[String] $auto_conf = undef,
   Boolean $use_defaults       = true,
   String $yum_resource        = 'yumrepo',     # Native resource type
   Hash $yum_repos             = {},
@@ -11,36 +10,42 @@ class psick::repo (
   Hash $apt_repos             = {},
   String $zypper_resource     = 'zypprepo',    # From darin-zypprepo
   Hash $zypper_repos          = {},
+
+  Boolean $manage             = $::psick::manage,
+  Boolean $noop_manage        = $::psick::noop_manage,
+  Boolean $noop_value         = $::psick::noop_value,
+
 ) {
 
-  if $auto_conf {
-    deprecation('psick::repo::auto_conf', 'psick::repo: auto_conf parameter has been deprecated and been replaced by use_defaults')
-  }
+  if $manage {
+    if $noop_manage {
+      noop($noop_value)
+    }
 
-  # Default repos
-  if $use_defaults {
-    case $::osfamily {
-      'RedHat': {
-        tp::repo { 'epel': }
-      }
-      'Debian': {
-      }
-      'Suse': {
-      }
-      default: {
+    # Default repos
+    if $use_defaults {
+      case $::osfamily {
+        'RedHat': {
+          tp::repo { 'epel': }
+        }
+        'Debian': {
+        }
+        'Suse': {
+        }
+        default: {
+        }
       }
     }
-  }
 
-  # Not converted to Puppet 4 style for easier variables management.
-  if $yum_repos != {} {
-    create_resources($yum_resource, $yum_repos)
+    # Not converted to Puppet 4 style for easier variables management.
+    if $yum_repos != {} {
+      create_resources($yum_resource, $yum_repos)
+    }
+    if $apt_repos != {} {
+      create_resources($apt_resource, $apt_repos)
+    }
+    if $yum_repos != {} {
+      create_resources($zypper_resource, $yum_repos)
+    }
   }
-  if $apt_repos != {} {
-    create_resources($apt_resource, $apt_repos)
-  }
-  if $yum_repos != {} {
-    create_resources($zypper_resource, $yum_repos)
-  }
-
 }

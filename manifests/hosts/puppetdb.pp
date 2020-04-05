@@ -4,25 +4,23 @@
 #   include psick::hosts::puppetdb
 class psick::hosts::puppetdb (
   String          $ensure              = 'present',
-  Boolean         $manage              = $::psick::manage,
   String          $template            = 'psick/hosts/puppetdb/hosts.epp',
-  Hash $puppetdb_hosts_override_hash       = {},
-  String $puppetdb_fact_address            = 'networking.ip',
-  String $puppetdb_fact_address6           = 'networking.ip6',
-  String $puppetdb_fact_name               = 'networking.hostname',
-  String $puppetdb_fact_alias              = 'networking.fqdn',
+  Hash $puppetdb_hosts_override_hash   = {},
+  String $puppetdb_fact_address        = 'networking.ip',
+  String $puppetdb_fact_address6       = 'networking.ip6',
+  String $puppetdb_fact_name           = 'networking.hostname',
+  String $puppetdb_fact_alias          = 'networking.fqdn',
   String $localhost   = "127.0.0.1\tlocalhost\tlocalhost.localdomain",
   String $puppethost  = "${::serverip}\tpuppet\t${::servername}",
-  Array $extra_hosts            = [],
-  Boolean         $no_noop             = false,
+  Array $extra_hosts                   = [],
   StdLib::Absolutepath $path           = '/etc/hosts',
-
+  Boolean $manage                      = $::psick::manage,
+  Boolean $noop_manage                 = $::psick::noop_manage,
+  Boolean $noop_value                  = $::psick::noop_value,
 ) {
-
   if $manage {
-    if !$::psick::noop_mode and $no_noop {
-      info('Forced no-noop mode in psick::icinga2')
-      noop(false)
+    if $noop_manage {
+      noop($noop_value)
     }
 
     # PuppetDB query (TODO: Optimize inventory query)

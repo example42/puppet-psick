@@ -2,8 +2,17 @@
 #
 class psick::python::fabric (
   $ensure = 'present',
+
+  Boolean $manage      = $::psick::manage,
+  Boolean $noop_manage = $::psick::noop_manage,
+  Boolean $noop_value  = $::psick::noop_value,
 ) {
-  package { 'fabric':
-    ensure => $ensure,
+  if $manage {
+    if $noop_manage {
+      noop($noop_value)
+    }
+    package { 'fabric':
+      ensure => $ensure,
+    }
   }
 }

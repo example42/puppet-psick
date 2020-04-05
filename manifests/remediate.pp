@@ -1,6 +1,5 @@
 # This class manages Puppet remediate installation
 #
-# @param manage If to actually manage any resource in this profile or not#
 # @param compose_yml_source remediate_file_template The path of the template (with erb or epp suffix)
 #                           to use for the content of /etc/remediate/config.
 #                           If empty or remediate is missing the file is not managed.
@@ -16,10 +15,21 @@
 #   they are needed prerequisites for Puppet Remediate. If set to false you have
 #   to care about their installation in other profiles.
 # @param silence_notify Set to true to disable notify resources.
-# @param no_noop Set noop metaparameter to false to all the resources of this class.
+# @param manage If to actually manage any resource in this class. If false no
+#               resource is managed. Default value is taken from main psick class.
+# @param noop_manage If to use the noop() function for all the resources provided
+#                    by this class. If this is true the noop function is called
+#                    with $noop_value argument. This overrides any other noop setting
+#                    (either set on client's puppet.conf or by noop() function in
+#                    main psick class). Default from psick class.
+# @param noop_value The value to pass to noop() function if noop_manage is true.
+#                   It applies to all the resources (and classes) declared in this class
+#                   If true: noop metaparamenter is set to true, resources are not applied
+#                   If false: noop metaparameter is set to false, and any eventual noop
+#                   setting is overridden: resources are always applied.
+#                   Default from psick class.
 #
 class psick::remediate (
-  Boolean $manage            = $::psick::manage,
   String $compose_yml_source = 'https://storage.googleapis.com/remediate/stable/latest/docker-compose.yml',
   Optional[String] $license_json_source = undef,
   Optional[String] $base_dir = undef,
@@ -30,12 +40,14 @@ class psick::remediate (
   Boolean $swarm_init        = true,
   Boolean $auto_prereq       = true,
   Boolean $silence_notify    = false,
-  Boolean $no_noop           = false,
+
+  Boolean $manage            = $::psick::manage,
+  Boolean $noop_manage       = $::psick::noop_manage,
+  Boolean $noop_value        = $::psick::noop_value,
 ) {
   if $manage {
-    if !$::psick::noop_mode and $no_noop {
-      info('Forced no-noop mode in psick::icinga2')
-      noop(false)
+    if $noop_manage {
+      noop($noop_value)
     }
 
     if $auto_prereq {

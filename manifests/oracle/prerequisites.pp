@@ -14,19 +14,25 @@
 #   psick::oracle::prerequisites::dirs_class: 'psick::oracle::prerequisites::dirs' 
 #
 class psick::oracle::prerequisites (
-  Optional[String] $limits_class = undef,
-  Optional[String] $sysctl_class = undef,
-  Optional[String] $swap_class = undef,
+  Optional[String] $limits_class   = undef,
+  Optional[String] $sysctl_class   = undef,
+  Optional[String] $swap_class     = undef,
   Optional[String] $packages_class = undef,
-  Optional[String] $users_class = undef,
-  Optional[String] $dirs_class = undef,
+  Optional[String] $users_class    = undef,
+  Optional[String] $dirs_class     = undef,
+  Boolean $manage                  = $::psick::manage,
+  Boolean $noop_manage             = $::psick::noop_manage,
+  Boolean $noop_value              = $::psick::noop_value,
 ) {
-
-  if $limits_class and $limits_class != '' { contain $limits_class }
-  if $sysctl_class and $sysctl_class != '' { contain $sysctl_class }
-  if $swap_class and $swap_class != '' { contain $swap_class }
-  if $packages_class and $packages_class != '' { contain $packages_class }
-  if $users_class and $users_class != '' { contain $users_class }
-  if $dirs_class and $dirs_class != '' { contain $dirs_class }
-
+  if $manage {
+    if $noop_manage {
+      noop($noop_value)
+    }
+    if $limits_class and $limits_class != '' { contain $limits_class }
+    if $sysctl_class and $sysctl_class != '' { contain $sysctl_class }
+    if $swap_class and $swap_class != '' { contain $swap_class }
+    if $packages_class and $packages_class != '' { contain $packages_class }
+    if $users_class and $users_class != '' { contain $users_class }
+    if $dirs_class and $dirs_class != '' { contain $dirs_class }
+  }
 }

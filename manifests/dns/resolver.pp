@@ -9,21 +9,24 @@ class psick::dns::resolver (
   String $resolver_path        = '/etc/resolv.conf',
   String $resolver_template    = 'psick/dns/resolver/resolv.conf.erb',
 
-  Boolean $no_noop             = false,
+  Boolean $manage              = $::psick::manage,
+  Boolean $noop_manage         = $::psick::noop_manage,
+  Boolean $noop_value          = $::psick::noop_value,
 ) {
 
-  if !$::psick::noop_mode and $no_noop {
-    info('Forced no-noop mode.')
-    noop(false)
-  }
+  if $manage {
+    if $noop_manage {
+      noop($noop_value)
+    }
 
-  if $::virtual != 'docker' {
-    file { $resolver_path:
-      ensure  => file,
-      content => template($resolver_template),
-      owner   => 'root',
-      group   => 'root',
-      mode    => '0644',
+    if $::virtual != 'docker' {
+      file { $resolver_path:
+        ensure  => file,
+        content => template($resolver_template),
+        owner   => 'root',
+        group   => 'root',
+        mode    => '0644',
+      }
     }
   }
 }

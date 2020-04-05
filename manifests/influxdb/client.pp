@@ -16,14 +16,21 @@ class psick::influxdb::client (
   Psick::Ensure $ensure = 'present',
   String $package_name  = 'influxdb-client',
   Hash $package_params  = {},
+  Boolean $manage       = $::psick::manage,
+  Boolean $noop_manage  = $::psick::noop_manage,
+  Boolean $noop_value   = $::psick::noop_value,
 ) {
+  if $manage {
+    if $noop_manage {
+      noop($noop_value)
+    }
 
-  $package_default_options = {
-    'ensure' => $ensure,
+    $package_default_options = {
+      'ensure' => $ensure,
+    }
+
+    package { $package_name:
+      * => $package_default_options + $package_params,
+    }
   }
-
-  package { $package_name:
-    * => $package_default_options + $package_params,
-  }
-
 }

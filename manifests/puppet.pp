@@ -1,3 +1,4 @@
+#
 class psick::puppet (
 
   Optional[String] $agent_class    = undef,
@@ -6,27 +7,35 @@ class psick::puppet (
 
   Hash             $external_facts = {},
 
+  Boolean          $manage               = $::psick::manage,
+  Boolean          $noop_manage          = $::psick::noop_manage,
+  Boolean          $noop_value           = $::psick::noop_value,
 ) {
 
-  if has_key($facts,'pe_concat_basedir') {
-    $real_agent_class = pick($agent_class, '::psick::puppet::pe_agent')
-  } else {
-    $real_agent_class = pick($agent_class, '::psick::puppet::tp')
-  }
+  if $manage {
+    if $noop_manage {
+      noop($noop_value)
+    }
+    if has_key($facts,'pe_concat_basedir') {
+      $real_agent_class = pick($agent_class, '::psick::puppet::pe_agent')
+    } else {
+      $real_agent_class = pick($agent_class, '::psick::puppet::tp')
+    }
 
-  if $agent_class != '' {
-    include $real_agent_class
-  }
-  if $server_class != '' {
-    include $server_class
-  }
-  if $puppetdb_class != '' {
-    include $puppetdb_class
-  }
+    if $agent_class != '' {
+      include $real_agent_class
+    }
+    if $server_class != '' {
+      include $server_class
+    }
+    if $puppetdb_class != '' {
+      include $puppetdb_class
+    }
 
-  $external_facts.each | $k , $v | {
-    psick::puppet::set_external_fact { $k:
-      * => $v,
+    $external_facts.each | $k , $v | {
+      psick::puppet::set_external_fact { $k:
+        * => $v,
+      }
     }
   }
 }

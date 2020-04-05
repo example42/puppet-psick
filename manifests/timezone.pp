@@ -28,70 +28,81 @@ class psick::timezone(
   Boolean $hw_utc              = false,
   String $set_timezone_command = '',
   String $template             = "psick/timezone/timezone-${::operatingsystem}",
-  ) {
 
-  case $::osfamily {
-    'RedHat' : {
-      $redhat_command = $::operatingsystemmajrelease ? {
-        /7/     => "timedatectl set-timezone ${timezone}",
-        default => 'tzdata-update',
+  Boolean          $manage               = $::psick::manage,
+  Boolean          $noop_manage          = $::psick::noop_manage,
+  Boolean          $noop_value           = $::psick::noop_value,
+
+) {
+
+  if $manage {
+    if $noop_manage {
+      noop($noop_value)
+    }
+
+    case $::osfamily {
+      'RedHat' : {
+        $redhat_command = $::operatingsystemmajrelease ? {
+          /7/     => "timedatectl set-timezone ${timezone}",
+          default => 'tzdata-update',
+        }
       }
-    }
-    'Debian' : {
-      $debian_command = $::operatingsystemmajrelease ? {
-        /(16.04|16.10|17.04|17.10|18.04|18.10)/ => "timedatectl set-timezone ${timezone}",
-        /(9)/ => "ln -fs /usr/share/zoneinfo/${timezone} /etc/localtime ; dpkg-reconfigure -f noninteractive tzdata",
-        default                                 => 'dpkg-reconfigure -f noninteractive tzdata',
+      'Debian' : {
+        $debian_command = $::operatingsystemmajrelease ? {
+          /(16.04|16.10|17.04|17.10|18.04|18.10)/ => "timedatectl set-timezone ${timezone}",
+          /(9)/ => "ln -fs /usr/share/zoneinfo/${timezone} /etc/localtime ; dpkg-reconfigure -f noninteractive tzdata",
+          default                                 => 'dpkg-reconfigure -f noninteractive tzdata',
+        }
       }
+      default: { }
     }
-    default: { }
-  }
 
-  $real_set_timezone_command = $set_timezone_command ? {
-    ''      => $::operatingsystem ? {
-      /(?i:RedHat|Centos|Scientific|Fedora|Amazon|Linux)/ => $redhat_command,
-      /(?i:Ubuntu|Debian|Mint)/                           => $debian_command,
-      /(?i:SLES|OpenSuSE)/                                => "zic -l ${timezone}",
-      /(?i:OpenBSD)/                                      => "ln -fs /usr/share/zoneinfo/${timezone} /etc/localtime",
-      /(?i:FreeBSD)/                                      => "cp /usr/share/zoneinfo/${timezone} /etc/localtime && adjkerntz -a",
-      /(?i:Solaris)/                                      => "rtc -z ${timezone} && rtc -c",
-      /(?i:Windows)/                                      => "tzutil.exe /s \"${timezone_windows}\"",
-      /(?i:Darwin)/                                       => "systemsetup -settimezone ${timezone}",
-    },
-    default => $set_timezone_command,
-  }
-
-  $config_file = $::operatingsystem ? {
-    /(?i:RedHat|Centos|Scientific|Fedora|Amazon|Linux)/ => '/etc/sysconfig/clock',
-    /(?i:Ubuntu|Debian|Mint)/                           => '/etc/timezone',
-    /(?i:SLES|OpenSuSE)/                                => '/etc/sysconfig/clock',
-    /(?i:FreeBSD|OpenBSD|Darwin)/                       => '/etc/timezone-puppet',
-    /(?i:Solaris)/                                      => '/etc/default/init',
-    /(?i:Windows)/                                      => 'c:\temp\timezone',
-    default                                             => '',
-  }
-
-  $config_file_group = $::operatingsystem ? {
-    /(?i:FreeBSD|OpenBSD|Darwin)/ => 'wheel',
-    default                       => 'root',
-  }
-
-  if $::virtual != 'docker' and $config_file != '' {
-    file { 'timezone':
-      ensure  => file,
-      path    => $config_file,
-      mode    => '0644',
-      owner   => 'root',
-      group   => $config_file_group,
-      content => template($template),
+    $real_set_timezone_command = $set_timezone_command ? {
+      ''      => $::operatingsystem ? {
+        /(?i:RedHat|Centos|Scientific|Fedora|Amazon|Linux)/ => $redhat_command,
+        /(?i:Ubuntu|Debian|Mint)/                           => $debian_command,
+        /(?i:SLES|OpenSuSE)/                                => "zic -l ${timezone}",
+        /(?i:OpenBSD)/                                      => "ln -fs /usr/share/zoneinfo/${timezone} /etc/localtime",
+        /(?i:FreeBSD)/                                      => "cp /usr/share/zoneinfo/${timezone} /etc/localtime && adjkerntz -a",
+        /(?i:Solaris)/                                      => "rtc -z ${timezone} && rtc -c",
+        /(?i:Windows)/                                      => "tzutil.exe /s \"${timezone_windows}\"",
+        /(?i:Darwin)/                                       => "systemsetup -settimezone ${timezone}",
+      },
+      default => $set_timezone_command,
     }
-    if $::hardwareisa != 'sparc' and $::kernel != 'SunOS' {
-      exec { 'set-timezone':
-        command     => $real_set_timezone_command,
-        path        => $::path,
-        require     => File['timezone'],
-        subscribe   => File['timezone'],
-        refreshonly => true,
+
+    $config_file = $::operatingsystem ? {
+      /(?i:RedHat|Centos|Scientific|Fedora|Amazon|Linux)/ => '/etc/sysconfig/clock',
+      /(?i:Ubuntu|Debian|Mint)/                           => '/etc/timezone',
+      /(?i:SLES|OpenSuSE)/                                => '/etc/sysconfig/clock',
+      /(?i:FreeBSD|OpenBSD|Darwin)/                       => '/etc/timezone-puppet',
+      /(?i:Solaris)/                                      => '/etc/default/init',
+      /(?i:Windows)/                                      => 'c:\temp\timezone',
+      default                                             => '',
+    }
+
+    $config_file_group = $::operatingsystem ? {
+      /(?i:FreeBSD|OpenBSD|Darwin)/ => 'wheel',
+      default                       => 'root',
+    }
+
+    if $::virtual != 'docker' and $config_file != '' {
+      file { 'timezone':
+        ensure  => file,
+        path    => $config_file,
+        mode    => '0644',
+        owner   => 'root',
+        group   => $config_file_group,
+        content => template($template),
+      }
+      if $::hardwareisa != 'sparc' and $::kernel != 'SunOS' {
+        exec { 'set-timezone':
+          command     => $real_set_timezone_command,
+          path        => $::path,
+          require     => File['timezone'],
+          subscribe   => File['timezone'],
+          refreshonly => true,
+        }
       }
     }
   }

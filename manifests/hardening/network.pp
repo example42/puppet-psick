@@ -15,34 +15,41 @@ class psick::hardening::network (
   String $netconfig_template = '',
   String $blacklist_template = '',
   String $services_template  = '',
+  Boolean $manage            = $::psick::manage,
+  Boolean $noop_manage       = $::psick::noop_manage,
+  Boolean $noop_value        = $::psick::noop_value,
 ) {
+  if $manage {
+    if $noop_manage {
+      noop($noop_value)
+    }
 
-  if $::osfamily == 'RedHat' {
-    if $modprobe_template != '' {
-      file { '/etc/modprobe.d/hardening.conf':
-        ensure  => file,
-        content => template($modprobe_template),
+    if $::osfamily == 'RedHat' {
+      if $modprobe_template != '' {
+        file { '/etc/modprobe.d/hardening.conf':
+          ensure  => file,
+          content => template($modprobe_template),
+        }
+      }
+      if $blacklist_template != '' {
+        file { '/etc/modprobe.d/blacklist-nouveau.conf':
+          ensure  => file,
+          content => template($blacklist_template),
+        }
+      }
+      if $netconfig_template != '' {
+        file { '/etc/netconfig':
+          ensure  => file,
+          content => template($netconfig_template),
+        }
       }
     }
-    if $blacklist_template != '' {
-      file { '/etc/modprobe.d/blacklist-nouveau.conf':
+
+    if $services_template != '' {
+      file { '/etc/services':
         ensure  => file,
-        content => template($blacklist_template),
-      }
-    }
-    if $netconfig_template != '' {
-      file { '/etc/netconfig':
-        ensure  => file,
-        content => template($netconfig_template),
+        content => template($services_template),
       }
     }
   }
-
-  if $services_template != '' {
-    file { '/etc/services':
-      ensure  => file,
-      content => template($services_template),
-    }
-  }
-
 }

@@ -8,9 +8,17 @@
 # @param options An open hash of options you may use in your template
 #
 class psick::foreman (
-  Optional[String] $install_class = 'psick::foreman::tp',
+  Optional[String] $install_class = 'tp_profile::foreman',
+
+  Boolean          $manage               = $::psick::manage,
+  Boolean          $noop_manage          = $::psick::noop_manage,
+  Boolean          $noop_value           = $::psick::noop_value,
 ) {
 
-  if $install_class { contain $install_class }
-
+  if $manage {
+    if $noop_manage {
+      noop($noop_value)
+    }
+    if $install_class { contain $install_class }
+  }
 }

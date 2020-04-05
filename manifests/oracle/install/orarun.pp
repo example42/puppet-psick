@@ -11,18 +11,27 @@ class psick::oracle::install::orarun (
 
   $oracle_sid            = 'orcl', # TODO Paramtrize better
   $sysconfig_template    = 'psick::oracle/orarun/sysconfig.erb',
-  $psick_template      = 'psick::oracle/orarun/psick.erb',
+  $psick_template        = 'psick::oracle/orarun/psick.erb',
+
+  Boolean $manage        = $::psick::manage,
+  Boolean $noop_manage   = $::psick::noop_manage,
+  Boolean $noop_value    = $::psick::noop_value,
+
 ) inherits ::psick::oracle::params {
+  if $manage {
+    if $noop_manage {
+      noop($noop_value)
+    }
+    package { 'orarun': }
+    file { '/etc/sysconfig/oracle':
+      ensure  => file,
+      content => template($sysconfig_template),
+    }
+    file { '/etc/psick.d/oracle.sh':
+      ensure  => file,
+      content => template($psick_template),
+    }
 
-  package { 'orarun': }
-  file { '/etc/sysconfig/oracle':
-    ensure  => file,
-    content => template($sysconfig_template),
+    contain $psick::oracle::prerequisites::users_class
   }
-  file { '/etc/psick.d/oracle.sh':
-    ensure  => file,
-    content => template($psick_template),
-  }
-
-  contain $psick::oracle::prerequisites::users_class
 }
