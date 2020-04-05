@@ -23,6 +23,8 @@ matrix:
   allow_failures:
   - env: CHECK="rubocop"
     stage: static
+  - env: DEPLOY_TO_FORGE=yes
+    stage: deploy
   include:
   - env: CHECK="check:symlinks check:git_ignore check:dot_underscore check:test_file
       syntax lint metadata_lint"
@@ -33,8 +35,6 @@ matrix:
   - env: PUPPET_GEM_VERSION="~> 6.0" CHECK=spec
     rvm: 2.5.3
     stage: spec
-  - env: DEPLOY_TO_FORGE=yes
-    stage: deploy
 branches:
   only:
   - master
