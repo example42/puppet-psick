@@ -3,7 +3,6 @@
 # are looked up via lookup
 #
 class psick::repo (
-  Optional[String] $auto_conf = undef,
   Boolean $use_defaults       = true,
   String $yum_resource        = 'yumrepo',     # Native resource type
   Hash $yum_repos             = {},
@@ -21,9 +20,6 @@ class psick::repo (
   if $manage {
     if $noop_manage {
       noop($noop_value)
-    }
-    if $auto_conf {
-      deprecation('psick::repo::auto_conf', 'psick::repo: auto_conf parameter has been deprecated and been replaced by use_defaults')
     }
 
     # Default repos

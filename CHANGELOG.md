@@ -9,6 +9,7 @@
 * Added psick::mounts class
 * Added option to manage gitlab configs via in line settings
 * Cleaned up deprecations in logs
+* Removed deprecated auto_conf param
 
 ## Release 0.7.0
 * Deprecated local tp profiles. Preparing transition to tp_profile module

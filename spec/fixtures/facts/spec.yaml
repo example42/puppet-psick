@@ -1,3 +1,4 @@
+kernel: Linux
 networking:
   dhcp: 10.0.2.2
   domain: lan

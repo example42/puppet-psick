@@ -355,8 +355,11 @@ class psick::icinga2 (
 
     if $manage_api_feature {
       $icinga2_feature_api_defaults = {
-        endpoints => $client_endpoints_hash,
-        zones     => $client_zones_hash,
+        endpoints       => $client_endpoints_hash,
+        zones           => $client_zones_hash,
+        pki             => 'puppet',
+        accept_config   => true,
+        accept_commands => true,
       }
       class { 'icinga2::feature::api':
         * => $icinga2_feature_api_defaults + $icinga2_feature_api_class_params,

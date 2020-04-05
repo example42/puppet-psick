@@ -15,7 +15,6 @@ class psick::docker (
   Array                   $allowed_users    = [],
 
   Boolean                 $auto_restart     = true,
-  Boolean                 $auto_conf        = false,
 
   Variant[Undef,Hash]     $run              = undef,
   Variant[Undef,Hash]     $build            = undef,

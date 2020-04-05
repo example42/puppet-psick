@@ -12,8 +12,6 @@
 # @param auto_prereq If to automtically manage prerequisites. Set to false here to
 #   apply this value for all the PSICK profiles that honour this global
 #   setting. Use when you have duplicated resources.
-# @param auto_conf Which autoconfiguration layout to use. Default is 'none', if you
-#   set 'hardened' some hardened configurations are enforced by default
 # @param enable_firstrun If to enable firstrun mode, a special one-time only, Puppet
 #   run where some specific, prerequisites, classes are applied.
 # @param noop_mode This parameter is deprecated and has no effect any more.
@@ -79,7 +77,6 @@ class psick (
   # PSICK global vars
   Boolean $manage                                  = true,
   Boolean $auto_prereq                             = true,
-  Psick::Autoconf $auto_conf                       = 'none',
   Boolean $enable_firstrun                         = false,
 
   Optional[Boolean] $noop_mode                     = lookup('noop_mode',Optional[Boolean],'first',undef),

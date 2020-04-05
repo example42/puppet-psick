@@ -109,20 +109,6 @@ This is the classification part, since it's based on class parameters, it can be
 
 The pre -> base -> profiles order is strictly enforced, so we sure to place your class in the most appropriate phase (even if functionally they all do the same work: include the specified classes) and, to prevent dependency cycles, avoid to set the same class in two different phases.
 
-#### Auto configuration defaults
-
-If you are lazy or want to try some predefined defaults (always WIP) you can simply try to use one of our embedded sets of configurations, note that you can customise and override everything, in your control-repo hiera data.
-
-For example, to use Psick predefined defaults (as in ```data/default/*.yaml```):
-
-    psick::auto_conf: default
-
-To use, instead, some hardened defaults (as in ```data/hardened/*.yaml```):
-
-    psick::auto_conf: hardened
-
-The auto configuration settings are defined at module level hierarchy, so they can be overwritten in the environment's Hiera data.
-
 ### Psick tp profiles
 
 Psick provides out of the box profiles, based on ([Tiny Puppet](https://github.com/example42/puppet-tp), to manage common applications. They can replace or complement component modules when applications can be managed via packeages, services and files.
@@ -238,10 +224,6 @@ The value to pass to the noop function when $noop_manage is true. This value is 
     Boolean $noop_value        = true  # Noop is enforced on the class
 
 #### Special parameters in main psick class
-
-What set of auto configuration settings to use. This is currently not widely implemented, but it's possible to have different set of configurations (currently accepted values are: node, default, hardened) automatically loaded based on the local psick module data.
-
-    Psick::Autoconf $auto_conf = 'none'
 
 A generic, by default empty, hash of custom settings to use as needed in any class included by psick.
 No psick profile is using this.

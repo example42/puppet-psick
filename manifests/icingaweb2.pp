@@ -35,7 +35,7 @@
 #                   Default from psick class.
 class psick::icingaweb2 (
   String                 $ensure          = 'present',
-  Enum['psick','icinga'] $module          = 'psick',
+  Enum['psick','icinga'] $module          = 'icinga',
   Boolean                $auto_prereq     = $::psick::auto_prereq,
   Hash                $icingaweb2_params = {},
 

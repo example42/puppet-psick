@@ -2,6 +2,7 @@
 #
 # Facts specified here will override the values provided by rspec-puppet-facts.
 ---
+kernel: Linux
 ipaddress: "172.16.254.254"
 is_pe: false
 macaddress: "AA:AA:AA:AA:AA:AA"
@@ -37,4 +38,6 @@ networking:
   netmask: 255.255.255.0
   network: 10.0.2.0
   primary: eth0
-
+icinga2_puppet_hostprivkey: /etc/puppetlabs/puppet/ssl/private_keys/lab.psick.io.pem
+icinga2_puppet_hostcert: /etc/puppetlabs/puppet/ssl/certs/lab.psick.io.pem
+icinga2_puppet_localcacert: /etc/puppetlabs/puppet/ssl/certs/ca.pem

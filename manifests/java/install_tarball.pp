@@ -150,7 +150,7 @@ define psick::java::install_tarball (
 
   if !defined( File[$real_extract_path] ) {
     file { $real_extract_path:
-      before => Archive[$title],
+      before => Archive["java-install-${title}"],
     }
   }
   archive { "java-install-${title}":
@@ -170,7 +170,7 @@ define psick::java::install_tarball (
         altlink  => "/usr/bin/${a}",
         altname  => $a,
         priority => $alternatives_prio,
-        require  => Archive[$title],
+        require  => Archive["java-install-${title}"],
       }
     }
     $lib_alternatives.each | $a | {
@@ -179,7 +179,7 @@ define psick::java::install_tarball (
         altlink  => "/usr/bin/${a}",
         altname  => $a,
         priority => $alternatives_prio,
-        require  => Archive[$title],
+        require  => Archive["java-install-${title}"],
       }
     }
   }

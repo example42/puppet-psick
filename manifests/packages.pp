@@ -41,7 +41,7 @@
 #    
 # @param packages_list An array of custom extra packages to install
 # @param packages_default The packages installed by default (according to the
-#   underlying OS and auto_conf settings)
+#   underlying OS settings)
 # @param add_default_packages If to actually install the default packages
 # @param packages_hash An Hash passed to create packages resources. It has the
 #   same function of $packages_list array, but allows specification of
