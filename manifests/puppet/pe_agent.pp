@@ -10,6 +10,8 @@ class psick::puppet::pe_agent (
   Boolean $noop_setting       = false,
 
   Boolean $manage_service     = false,
+  Enum['running','stopped'] $service_ensure = 'running',
+  Boolean $service_enable     = true,
 
   Hash $settings              = {},
   String $config_file_path    = '/etc/puppetlabs/puppet/puppet.conf',
@@ -35,8 +37,8 @@ class psick::puppet::pe_agent (
     # Manage Puppet agent service
     if $manage_service {
       service { 'puppet':
-        ensure => 'running',
-        enable => true,
+        ensure => $service_ensure,
+        enable => $service_enable,
       }
       $service_notify = 'Service[puppet]'
     } else {
@@ -45,7 +47,7 @@ class psick::puppet::pe_agent (
 
     # Set environment
     if $manage_environment {
-      ini_setting { 'agent conf file environment':
+      pe_ini_setting { 'agent conf file environment':
         ensure  => present,
         path    => $config_file_path,
         section => 'agent',

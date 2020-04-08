@@ -14,7 +14,7 @@ class psick::puppet::pe_puppetdb (
       service_name => 'pe-puppetdb',
     }
     $postgresql_settings = {
-      package_name => 'pe-postgresql',
+      package_name => 'pe-postgresql11-server',
       service_name => 'pe-postgresql',
       log_dir_path => '/var/log/puppetlabs/postgresql',
       log_file_path => [ '/var/log/puppetlabs/postgresql/pgstartup.log' ,
