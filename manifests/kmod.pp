@@ -35,7 +35,6 @@ class psick::kmod (
 ) {
 
   if $manage {
-    
     if $noop_manage {
       noop($noop_value)
     }

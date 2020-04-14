@@ -52,10 +52,10 @@ define psick::kmod::module (
       case $::osfamily {
         'Debian': {
           file_line { "kernel load ${title}":
-            ensure  => $ensure,
-            path    => '/etc/kernel',
-            line    => "${module}",
-            match   => "^${module}",
+            ensure => $ensure,
+            path   => '/etc/kernel',
+            line   => $module,
+            match  => "^${module}",
           }
         }
         'RedHat': {
@@ -67,14 +67,14 @@ define psick::kmod::module (
         }
         'Suse': {
           file_line { "kernel load ${title}":
-            ensure  => $ensure,
-            path    => '/etc/sysconfig/kernel',
-            line    => "MODULES_LOADED_ON_BOOT=${module}",
-            match   => "^MODULES_LOADED_ON_BOOT=${module}",
+            ensure => $ensure,
+            path   => '/etc/sysconfig/kernel',
+            line   => "MODULES_LOADED_ON_BOOT=${module}",
+            match  => "^MODULES_LOADED_ON_BOOT=${module}",
           }
         }
         default: { }
       }
-    } 
+    }
   }
 }

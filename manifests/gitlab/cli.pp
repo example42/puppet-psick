@@ -53,7 +53,7 @@ class psick::gitlab::cli (
       prefix_source_label => 'FROM_',
     }
     $options = $default_hash + $config_hash
-    $yaml_options = { 'defaults' => $default_hash } + $multirepo_config_hash 
+    $yaml_options = { 'defaults' => $default_hash } + $multirepo_config_hash
 
     ::tp::install { 'gitlab-cli' :
       ensure      => $ensure,
