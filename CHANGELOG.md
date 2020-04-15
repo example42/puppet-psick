@@ -1,6 +1,8 @@
 ## Changelog
 
-* Your contribution here.
+* Added psick::kmod class
+* Better psick::gitlab::cli class
+* Updated psick profile generation script
 
 ## Release 0.8.0
 * Standardised manage, noop_manage and noop_value on all classes
