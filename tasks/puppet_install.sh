@@ -1,11 +1,10 @@
 #!/usr/bin/env bash
 breed=$PT_breed
-if [[ $EUID -ne 0 ]]; then
-  pre_command='sudo '
+if [ $USER == 'root' ]; then
+  sudo_command=''
 else
-  pre_command=''
+  sudo_command='sudo '
 fi
-
 which tput >/dev/null 2>&1
 if [ "x${?}" == "x0" ]; then
   SETCOLOR_NORMAL=$(tput sgr0)
@@ -21,98 +20,126 @@ echo_title () {
   echo "${SETCOLOR_BOLD}###${SETCOLOR_NORMAL} ${SETCOLOR_TITLE}${1}${SETCOLOR_NORMAL} ${SETCOLOR_BOLD}###${SETCOLOR_NORMAL}"
 }
 
+# Skip if Puppet 5 or higher is already installed
+if [ $(which puppet) ]; then
+  puppet --version | grep "^[5|6|7]"
+  if [ "x$?" == "x0" ]; then
+    echo_title "Puppet version 5 or higher present. Skipping installation."
+    exit 0
+  fi
+fi
+
 setup_redhat() {
   echo_title "Uninstalling existing Puppet"
-  $pre_command yum erase -y puppet puppetlabs-release >/dev/null
+  $sudo_command yum erase -y puppet-agent puppet puppetlabs-release puppetlabs-release-pc1 >/dev/null 2>&1
 
-  echo_title "Adding repo for Puppet 4"
-  $pre_command rpm -ivh https://yum.puppetlabs.com/puppetlabs-release-pc1-el-$1.noarch.rpm
+  echo_title "Adding repo for Puppet"
+  $sudo_command rpm -ivh https://yum.puppetlabs.com/puppet/puppet-release-el-$1.noarch.rpm >/dev/null 2>&1
 
   sleep 2
   echo_title "Installing Puppet"
-  $pre_command yum install -y puppet-agent >/dev/null
+  $sudo_command yum install -y puppet-agent >/dev/null 2>&1
 }
 
 setup_fedora() {
+  release=$1
   echo_title "Uninstalling existing Puppet"
-  $pre_command yum erase -y puppet puppetlabs-release
+  $sudo_command yum erase -y puppet-agent puppet puppetlabs-release puppetlabs-release-pc1 >/dev/null 2>&1
 
-  echo_title "Adding repo for Puppet 4"
-  $pre_command rpm -ivh https://yum.puppetlabs.com/puppetlabs-release-pc1-fedora-$1.noarch.rpm
+  echo_title "Adding repo for Puppet"
+  $sudo_command rpm -ivh https://yum.puppetlabs.com/puppet/puppet-release-fedora-${release}.noarch.rpm
 
   sleep 2
   echo_title "Installing Puppet"
-  $pre_command yum install -y puppet-agent
+  $sudo_command yum install -y puppet-agent
+}
+
+setup_amazon() {
+  echo_title "Uninstalling existing Puppet"
+  $sudo_command yum erase -y puppet-agent puppet puppetlabs-release puppetlabs-release-pc1 >/dev/null 2>&1
+
+  echo_title "Adding repo for Puppet 4"
+  $sudo_command rpm -ivh https://yum.puppetlabs.com/puppetlabs-release-pc1-el-6.noarch.rpm >/dev/null 2>&1
+  $sudo_command yum-config-manager --enable epel
+  $sudo_command yum-config-manager --setopt="puppetlabs-pc1.priority=1" --save
+
+  sleep 2
+  echo_title "Installing Puppet"
+  $sudo_command yum install -y puppet-agent >/dev/null 2>&1
 }
 
 setup_suse() {
   echo_title "Uninstalling existing Puppet"
-  $pre_command zypper remove -y puppet >/dev/null 2>&1
-  $pre_command zypper remove -y puppetlabs-release >/dev/null 2>&1
+  $sudo_command zypper remove -y puppet >/dev/null 2>&1
+  $sudo_command zypper remove -y puppet-agent >/dev/null 2>&1
+  $sudo_command zypper remove -y puppetlabs-release >/dev/null 2>&1
+  $sudo_command zypper remove -y puppetlabs-release-pc1 >/dev/null 2>&1
 
-  echo_title "Adding repo for Puppet 4"
-  $pre_command wget https://yum.puppetlabs.com/puppetlabs-release-pc1-sles-$1.noarch.rpm 2>&1
-  $pre_command rpm -ivh puppetlabs-release-pc1-sles-$1.noarch.rpm 2>&1
+  echo_title "Adding repo for Puppet"
+  $sudo_command wget https://yum.puppetlabs.com/puppet/puppet-release-sles-$1.noarch.rpm 2>&1
+  $sudo_command rpm -ivh puppet5-release-sles-$1.noarch.rpm 2>&1
 
   sleep 2
   echo_title "Installing Puppet"
-  $pre_command zypper --no-gpg-checks  --non-interactive install puppet-agent
+  $sudo_command zypper --no-gpg-checks  --non-interactive install puppet-agent
 }
 
 setup_apt() {
   case $1 in
     3*) codename=cumulus ;;
-    6) codename=squeeze ;;
-    7) codename=wheezy ;;
     8) codename=jessie  ;;
     9) codename=stretch  ;;
-    12.04) codename=precise ;;
+    10) codename=buster ;;
     14.04) codename=trusty  ;;
     16.04) codename=xenial ;;
+    18.04) codename=bionic ;;
+    18.10) codename=bionic ;;
+    19.04) codename=bionic ;;
+    19.10) codename=bionic ;;
     *) echo "Release not supported" ;;
   esac
 
-  echo_title "Adding repo for Puppet 4"
-  $pre_command wget -q "http://apt.puppetlabs.com/puppetlabs-release-pc1-${codename}.deb" >/dev/null
-  $pre_command dpkg -i "puppetlabs-release-pc1-${codename}.deb" >/dev/null
+  echo_title "Adding repo for Puppet"
+  $sudo_command wget -q "http://apt.puppetlabs.com/puppet-release-${codename}.deb" >/dev/null
+  $sudo_command dpkg -i "puppet-release-${codename}.deb" >/dev/null
 
   echo_title "Running apt-get update"
-  $pre_command apt-get update >/dev/null 2>&1
+  $sudo_command apt-get update >/dev/null 2>&1
 
   echo_title "Installing Puppet and its dependencies"
-  $pre_command apt-get install puppet-agent -y >/dev/null
-  $pre_command apt-get install apt-transport-https -y >/dev/null
+  $sudo_command apt-get install -y puppet-agent -y >/dev/null
+  $sudo_command apt-get install -y apt-transport-https -y >/dev/null
 }
 setup_alpine() {
-  echo "## Adding repo for Puppet 4 to /etc/apk/repositories"
+  echo "## Adding repo for Ruby to /etc/apk/repositories"
   echo http://dl-4.alpinelinux.org/alpine/edge/testing/ >> /etc/apk/repositories
   echo "## Running apk update"
-  $pre_command apk update
+  $sudo_command apk update
 
   echo "## Installing Puppet and its dependencies"
-  $pre_command apk add shadow ruby less bash
-  $pre_command gem install puppet --no-rdoc -no-ri
+  $sudo_command apk add shadow ruby less bash
+  $sudo_command gem install puppet --no-rdoc -no-ri
 }
 setup_solaris() {
   echo_title "Not yet supported"
 }
 setup_darwin() {
   majver=$(sw_vers -productVersion | cut -d '.' -f 1-2)
-  echo_title "Downloading package for version ${majver}"
-  $pre_command curl -s -o puppet-agent.dmg "https://downloads.puppetlabs.com/mac/${majver}/PC1/x86_64/puppet-agent-1.8.2-1.osx${majver}.dmg"
+  echo_title "Downloading package for MacOS version ${majver}"
+  curl -s -o puppet-agent.dmg "https://downloads.puppetlabs.com/mac/puppet/${majver}/x86_64/puppet-agent-latest.dmg"
 
   echo_title "Installing Puppet Agent"
-  $pre_command hdiutil mount puppet-agent.dmg
+  hdiutil mount puppet-agent.dmg
   package=$(find /Volumes/puppet-agent*  | grep pkg)
-  $pre_command installer -pkg $package -target /
-  $pre_command hdiutil unmount /Volumes/puppet-agent*
+  $sudo_command installer -pkg $package -target /
+  hdiutil unmount /Volumes/puppet-agent*
 }
 setup_bsd() {
   echo_title "Not yet supported"
 }
 setup_windows() {
-  $pre_command curl -s -o puppet-agent.msi "https://downloads.puppetlabs.com/windows/puppet-agent-x64-latest.msi"
-  $pre_command msiexec /qn /norestart /i puppet-agent.msi
+  curl -s -o puppet-agent.msi "https://downloads.puppetlabs.com/windows/puppet/puppet-agent-x64-latest.msi"
+  msiexec /qn /norestart /i puppet-agent.msi
   # msiexec /qn /norestart /i puppet-agent.msi PUPPET_AGENT_CERTNAME=me.example.com PUPPET_MASTER_SERVER=puppet.example.com \
 }
 setup_linux() {
@@ -155,9 +182,10 @@ setup_linux() {
     ubuntu) setup_apt $majver ;;
     redhat) setup_redhat $majver ;;
     fedora) setup_fedora $majver ;;
+    fedorarelease) setup_fedora $majver ;;
     centos) setup_redhat $majver ;;
     scientific) setup_redhat $majver ;;
-    amazon) setup_redhat $majver ;;
+    amzn) setup_amazon ;;
     sles) setup_suse $majver ;;
     cumulus-linux) setup_apt $majver ;;
     alpine) setup_alpine $majver ;;
@@ -178,11 +206,13 @@ os_detect() {
   esac
 }
 
+echo "Going to install Puppet (and eventually cleanup old version)"
+echo "If you are not root some commands will be run via sudo"
 if [ "x$breed" != "x" ]; then
   setup_$breed
 else
   os_detect
 fi
-[ -e /usr/bin/puppet ] || $pre_command ln -fs /opt/puppetlabs/puppet/bin/puppet /usr/bin/puppet
-[ -e /usr/bin/facter ] || $pre_command ln -fs /opt/puppetlabs/puppet/bin/facter /usr/bin/facter
+[ -e /usr/bin/puppet ] || $sudo_command ln -fs /opt/puppetlabs/puppet/bin/puppet /usr/bin/puppet
+[ -e /usr/bin/facter ] || $sudo_command ln -fs /opt/puppetlabs/puppet/bin/facter /usr/bin/facter
 
