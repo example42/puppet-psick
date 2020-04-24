@@ -14,6 +14,7 @@ class psick::puppet::pe_agent (
   Boolean $service_enable     = true,
 
   Hash $settings              = {},
+  Hash $ini_settings_hash     = {},
   String $config_file_path    = '/etc/puppetlabs/puppet/puppet.conf',
 
   Boolean $manage             = $::psick::manage,
@@ -66,6 +67,24 @@ class psick::puppet::pe_agent (
         setting => 'noop',
         value   => $noop_setting,
         notify  => $service_notify,
+      }
+    }
+
+    $default_ini_settings = {
+       ensure  => present,
+       path    => $config_file_path,
+       notify  => $service_notify,
+    }
+    $ini_settings_hash.each | $k,$v | {
+      $k.each | $kk,$vv | {
+        $ini_settings = {
+          section => $k,
+          setting => $kk,
+          value   => $vv,
+        }
+        pe_ini_setting { "puppet.conf $k - $kk":
+          * => $default_ini_settings + $ini_settings
+        }
       }
     }
   }

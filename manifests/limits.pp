@@ -69,16 +69,22 @@ class psick::limits (
       noop($noop_value)
     }
 
-    $limits_conf_params_default = {
-      owner   => 'root',
-      group   => 'root',
-      mode    => '0644',
-      source  => $limits_conf_source,
-      path    => $limits_conf_path,
-      content => psick::template($limits_conf_template , $parameters),
-    }
-    file { $limits_conf_path:
-      * => $limits_conf_params_default + $limits_conf_params,
+    if $limits_conf_source or $limits_conf_template {
+      $limits_conf_content = $limits_conf_template ? {
+        undef   => undef,
+        default => psick::template($limits_conf_template , $parameters), 
+      }
+      $limits_conf_params_default = {
+        owner   => 'root',
+        group   => 'root',
+        mode    => '0644',
+        source  => $limits_conf_source,
+        path    => $limits_conf_path,
+        content => $limits_conf_content,
+      }
+      file { $limits_conf_path:
+        * => $limits_conf_params_default + $limits_conf_params,
+      }
     }
 
     $limits_dir_params_default = {
