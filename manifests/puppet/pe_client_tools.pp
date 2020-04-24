@@ -23,10 +23,27 @@ class psick::puppet::pe_client_tools (
     }
 
     if $manage_pe_repo {
-      file { '/etc/yum.repos.d/pe_repo.repo':
-        ensure => $ensure,
-        source => "https://${puppet_server}:8140/packages/current/el-${operatingsystemmajrelease}-x86_64.repo",
-        before => Package['pe-client-tools'],
+      case $::osfamily {
+        'RedHat': {
+          yumrepo { 'pe_repo':
+            ensure    => $ensure,
+            baseurl   => "https://${puppet_server}:8140/packages/current/el-${operatingsystemmajrelease}-${architecture}",
+            descr     => 'Puppet Labs PE Packages \$releasever - \$basearch',
+            enabled   => '1',
+            gpgcheck  => '1',
+            gpgkey    => "https://${puppet_server}:8140/packages/GPG-KEY-puppet-2025-04-06\n       https://${puppet_server}:8140/packages/GPG-KEY-puppet",
+            sslverify => false,
+          }
+        }
+        'Debian': {
+          $debian_version = $operatingsystemmajrelease
+          file { '/apt/sources.list.d/pe_repo.repo':
+            ensure  => $ensure,
+            content => "deb https://${puppet_server}:8140/packages/latest/debian-${debian_version}-${::os['architecture']} ${::os['distro']['codename']} puppet6",
+            before  => Package['pe-client-tools'],
+          }
+        }
+        default: {}
       }
     }
     package { 'pe-client-tools':

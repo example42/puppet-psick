@@ -3,6 +3,8 @@
 * Added psick::kmod class
 * Better psick::gitlab::cli class
 * Updated psick profile generation script
+* Improved psick::puppet::pe_client_tools psick::puppet::pe_agent and psick::puppet::pe_server
+* Fixes to psick::limits
 
 ## Release 0.8.0
 * Standardised manage, noop_manage and noop_value on all classes
