@@ -19,7 +19,7 @@ class psick::puppet (
     if has_key($facts,'pe_concat_basedir') {
       $real_agent_class = pick($agent_class, '::psick::puppet::pe_agent')
     } else {
-      $real_agent_class = pick($agent_class, '::psick::puppet::tp')
+      $real_agent_class = pick($agent_class, '::tp_profile::puppet')
     }
 
     if $agent_class != '' {
