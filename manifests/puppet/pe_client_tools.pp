@@ -12,7 +12,7 @@ class psick::puppet::pe_client_tools (
   Hash $orchestrator_options       = {},
   Hash $puppet_access_options      = {},
   Hash $puppet_code_options        = {},
-  Hash $puppetdb_options           = {},  
+  Hash $puppetdb_options           = {},
   Boolean $manage                  = $::psick::manage,
   Boolean $noop_manage             = $::psick::noop_manage,
   Boolean $noop_value              = $::psick::noop_value,
@@ -27,7 +27,7 @@ class psick::puppet::pe_client_tools (
         'RedHat': {
           yumrepo { 'pe_repo':
             ensure    => $ensure,
-            baseurl   => "https://${puppet_server}:8140/packages/current/el-${operatingsystemmajrelease}-${architecture}",
+            baseurl   => "https://${puppet_server}:8140/packages/current/el-${::operatingsystemmajrelease}-${::architecture}",
             descr     => 'Puppet Labs PE Packages \$releasever - \$basearch',
             enabled   => '1',
             gpgcheck  => '1',
@@ -36,7 +36,7 @@ class psick::puppet::pe_client_tools (
           }
         }
         'Debian': {
-          $debian_version = $operatingsystemmajrelease
+          $debian_version = $::operatingsystemmajrelease
           file { '/apt/sources.list.d/pe_repo.repo':
             ensure  => $ensure,
             content => "deb https://${puppet_server}:8140/packages/latest/debian-${debian_version}-${::os['architecture']} ${::os['distro']['codename']} puppet6",
@@ -51,7 +51,7 @@ class psick::puppet::pe_client_tools (
     }
 
     if $token {
-      $puppetlabs_dir = $user ? {
+      $puppetlabs_dir = $token_user ? {
         'root'  => '/root/.puppetlabs/',
         default => "/home/${token_user}/.puppetlabs/",
       }
