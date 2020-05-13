@@ -1,5 +1,9 @@
 # Essential firewall class based on simple iptables-save file
 #
+# @param preserve_rules_on_restore When true the existing rules are not removed
+#   when changes are applied to the iptables configuration file. This is necessary
+#   on nodes where containers are running, where relevant rules are added by Docker,
+#   Kubernetes or similar services.
 class psick::firewall::iptables (
   String $package_name,
   String $service_name,
@@ -35,6 +39,7 @@ class psick::firewall::iptables (
   Boolean $log_filter_defaults              = true,
   Boolean $manage_ipv6                      = true,
 
+  Boolean $preserve_rules_on_restore        = false,
   Boolean          $manage               = $::psick::manage,
   Boolean          $noop_manage          = $::psick::noop_manage,
   Boolean          $noop_value           = $::psick::noop_value,
@@ -55,11 +60,6 @@ class psick::firewall::iptables (
       notify  => Service[$service_name],
       content => template($rules_template),
       mode    => '0640',
-    }
-
-    service { $service_name:
-      ensure => running,
-      enable => true,
     }
 
     if $manage_ipv6 {
@@ -84,10 +84,24 @@ class psick::firewall::iptables (
           ensure => stopped,
           enable => false,
         }
+        $os_service_options = $preserve_rules_on_restore ? {
+          true  => {
+            start   => "/sbin/iptables-restore -n ${config_file_path}",
+            restart => "/sbin/iptables-restore -n ${config_file_path}",
+          },
+          false => {},
+        }
       }
       'Debian': {
         file { '/etc/iptables':
           ensure => directory,
+        }
+        $os_service_options = $preserve_rules_on_restore ? {
+          true  => {
+            start   => "/sbin/iptables-restore -n ${config_file_path}",
+            restart => "/sbin/iptables-restore -n ${config_file_path}",
+          },
+          false => {},
         }
       }
       'Suse': {
@@ -104,8 +118,26 @@ class psick::firewall::iptables (
         package { 'SuSEfirewall2':
           ensure => absent,
         }
+        $os_service_options = $preserve_rules_on_restore ? {
+          true  => {
+            restart => "/usr/sbin/iptables-restore -n ${config_file_path}",
+          },
+          false => {},
+        }
       }
-      default: {}
+      default: {
+        $os_service_options = {}
+      }
     }
+
+    $default_service_options = {
+      ensure => running,
+      enable => true,
+    }
+
+    service { $service_name:
+      * => $default_service_options + $os_service_options,
+    }
+
   }
 }
