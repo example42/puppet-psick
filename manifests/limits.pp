@@ -72,7 +72,7 @@ class psick::limits (
     if $limits_conf_source or $limits_conf_template {
       $limits_conf_content = $limits_conf_template ? {
         undef   => undef,
-        default => psick::template($limits_conf_template , $parameters), 
+        default => psick::template($limits_conf_template , $parameters),
       }
       $limits_conf_params_default = {
         owner   => 'root',

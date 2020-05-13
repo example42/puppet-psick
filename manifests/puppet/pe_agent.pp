@@ -71,9 +71,9 @@ class psick::puppet::pe_agent (
     }
 
     $default_ini_settings = {
-       ensure  => present,
-       path    => $config_file_path,
-       notify  => $service_notify,
+      ensure  => present,
+      path    => $config_file_path,
+      notify  => $service_notify,
     }
     $ini_settings_hash.each | $k,$v | {
       $k.each | $kk,$vv | {
@@ -82,7 +82,7 @@ class psick::puppet::pe_agent (
           setting => $kk,
           value   => $vv,
         }
-        pe_ini_setting { "puppet.conf $k - $kk":
+        pe_ini_setting { "puppet.conf ${k} - ${kk}":
           * => $default_ini_settings + $ini_settings
         }
       }
