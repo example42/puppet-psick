@@ -69,39 +69,43 @@ class psick::puppet::pe_client_tools (
 
     $orchestrator_defaults = {
       'options' => {
-        'service_url' => "https://${puppet_server}:8143",
+        'service-url' => "https://${puppet_server}:8143",
       }
     }
     file { '/etc/puppetlabs/client-tools/orchestrator.conf':
       ensure  => $ensure,
       content => to_json($orchestrator_defaults + $orchestrator_options),
+      require => Package['pe-client-tools'],
     }
 
     $puppet_access_defaults = {
-      'service_url' => "https://${console_server}:8433/rbac-api",
+      'service-url' => "https://${console_server}:8433/rbac-api",
     }
     file { '/etc/puppetlabs/client-tools/puppet-access.conf':
       ensure  => $ensure,
       content => to_json($puppet_access_defaults + $puppet_access_options),
+      require => Package['pe-client-tools'],
     }
 
     $puppet_code_defaults = {
-      'service_url' => "https://${puppet_server}:8170/code-manager",
+      'service-url' => "https://${puppet_server}:8170/code-manager",
     }
     file { '/etc/puppetlabs/client-tools/puppet-code.conf':
       ensure  => $ensure,
       content => to_json($puppet_code_defaults + $puppet_code_options),
+      require => Package['pe-client-tools'],
     }
 
     $puppetdb_defaults = {
       'puppetdb' => {
-        'server_urls' => "https://${puppetdb_server}:8081",
+        'server-urls' => "https://${puppetdb_server}:8081",
         'cacert'      => '/etc/puppetlabs/puppet/ssl/certs/ca.pem',
       }
     }
     file { '/etc/puppetlabs/client-tools/puppetdb.conf':
       ensure  => $ensure,
       content => to_json($puppetdb_defaults + $puppetdb_options),
+      require => Package['pe-client-tools'],
     }
 
   }
