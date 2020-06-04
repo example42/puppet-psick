@@ -59,6 +59,21 @@
 #   ordering of the classes included in psick::pre -> psick::base ->
 #   psick::profiles. Disable only if you have unresolvable dependency loops or
 #   if you don't want the PSICK class provisioning staged in different phases.
+# @param resources An hash of an Hash of any Puppet resource type to apply.
+#   Consider it as a catch all way to set on Hiera any resource of any type.
+#   You can always specify for each resource type the default parameters via
+#   the psick::resources_defaults Hiera key.
+#   See below for a sample usage. 
+#   This is not actually a class parameter, but a Hiera key looked up using the
+#   merge behaviour configured via $resources_merge_behaviour
+# @param resources_merge_behaviour Defines the lookup method to use to
+#   retrieve via hiera the psick::resources key
+# @param resources_defaults An Hash of resources with an Hash of default
+#   parameters to apply to the relevant resources.
+#   This is not actually a class parameter, but a key looked up using the
+#   merge behaviour configured via $resources_defaults_merge_behaviour
+# @param resources_defaults_merge_behaviour Defines the lookup method to use to
+#   retrieve via hiera the psick::resources_defaults key
 #
 # @example Sample data for proxy server hash
 #     psick::servers:
@@ -72,6 +87,24 @@
 #           - "%{::domain}"
 #         scheme: http
 #
+# @example Define arbitrary resources, with some defaults
+#     psick::resources:
+#       file:
+#         /usr/local/bin/eyaml:
+#           target: /opt/puppetlabs/puppet/bin/eyaml
+#       package:
+#         zsh: {}
+#         ksh: {}
+#         nrpe:
+#           ensure: absent
+#       psick::users::managed:
+#         test:
+#           ensure: present
+#     psick::resources_defaults:
+#       package:
+#         ensure: present
+#       psick::users::managed:
+#         shell: /bin/bash
 class psick (
 
   # PSICK global vars
@@ -98,6 +131,11 @@ class psick (
   Hash $monitor                                    = {},
   Boolean $force_ordering                          = true,
 
+  # General resources
+  # Hash $resources (lookup with $resources_merge_behaviour)                   = {},
+  # Hash $resources_defaults (lookup with $resources_defaults_merge_behaviour) = {},
+  Enum['first','hash','deep'] $resources_merge_behaviour          = 'deep',
+  Enum['first','hash','deep'] $resources_defaults_merge_behaviour = 'deep',
 ) {
 
   if $noop_mode != undef {
@@ -167,4 +205,16 @@ class psick (
     notify { "This catalog should be applied only at the first Puppen run\n": }
   }
 
+  # Custom Resources management
+  $resources = lookup('psick::resources',Hash,$resources_merge_behaviour,{})
+  $resources_defaults = lookup('psick::resources_defaults',Hash,$resources_defaults_merge_behaviour,{})
+
+  $resources.each |$k,$v| {
+    if $k in keys($resources_defaults) {
+      $resource_defaults = $resources_defaults[$k]
+    } else {
+      $resource_defaults = {}
+    }
+    create_resources( $k, $v, $resource_defaults )
+  }
 }
