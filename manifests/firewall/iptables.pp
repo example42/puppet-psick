@@ -38,6 +38,7 @@ class psick::firewall::iptables (
   Enum['DROP','ACCEPT'] $default_forward_v6 = 'ACCEPT',
   Boolean $log_filter_defaults              = true,
   Boolean $manage_ipv6                      = true,
+  Boolean $manage_firewalld                 = true,
 
   Boolean $preserve_rules_on_restore        = false,
   Boolean          $manage               = $::psick::manage,
@@ -80,9 +81,11 @@ class psick::firewall::iptables (
 
     case $::osfamily {
       'RedHat': {
-        service { 'firewalld':
-          ensure => stopped,
-          enable => false,
+        if $manage_firewalld {
+          service { 'firewalld':
+            ensure => stopped,
+            enable => false,
+          }
         }
         $os_service_options = $preserve_rules_on_restore ? {
           true  => {

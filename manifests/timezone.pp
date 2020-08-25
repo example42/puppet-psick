@@ -60,7 +60,7 @@ class psick::timezone(
     $real_set_timezone_command = $set_timezone_command ? {
       ''      => $::operatingsystem ? {
         /(?i:RedHat|Centos|Scientific|Fedora|Amazon|Linux)/ => $redhat_command,
-        /(?i:Ubuntu|Debian|Mint)/                           => $debian_command,
+        /(?i:Ubuntu|Debian|Mint|Raspbian)/                  => $debian_command,
         /(?i:SLES|OpenSuSE)/                                => "zic -l ${timezone}",
         /(?i:OpenBSD)/                                      => "ln -fs /usr/share/zoneinfo/${timezone} /etc/localtime",
         /(?i:FreeBSD)/                                      => "cp /usr/share/zoneinfo/${timezone} /etc/localtime && adjkerntz -a",
