@@ -6,6 +6,9 @@ class psick::puppet::pe_agent (
   Boolean $manage_environment = false,
   String $environment_setting = $environment,
 
+  Boolean $manage_noop        = false,
+  Boolean $noop_setting       = false,
+
   Boolean $manage_service     = false,
   Enum['running','stopped'] $service_ensure = 'running',
   Boolean $service_enable     = true,
