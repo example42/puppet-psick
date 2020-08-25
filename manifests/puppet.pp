@@ -16,10 +16,10 @@ class psick::puppet (
     if $noop_manage {
       noop($noop_value)
     }
-    if has_key($facts,'pe_concat_basedir') {
+    if $facts['pe_concat_basedir'] == '/opt/puppetlabs/puppet/cache/pe_concat' {
       $real_agent_class = pick($agent_class, '::psick::puppet::pe_agent')
     } else {
-      $real_agent_class = pick($agent_class, '::tp_profile::puppet')
+      $real_agent_class = pick($agent_class, '::psick::puppet::osp_agent')
     }
 
     if $agent_class != '' {
