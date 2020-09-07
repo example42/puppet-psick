@@ -136,6 +136,13 @@ class psick (
   # Hash $resources_defaults (lookup with $resources_defaults_merge_behaviour) = {},
   Enum['first','hash','deep'] $resources_merge_behaviour          = 'deep',
   Enum['first','hash','deep'] $resources_defaults_merge_behaviour = 'deep',
+
+  # $::osfamily based resources
+  # Hash $osfamily_resources (lookup with $osfamily_resources_merge_behaviour)                   = {},
+  # Hash $osfamily_resources_defaults (lookup with $osfamily_resources_defaults_merge_behaviour) = {},
+  Enum['first','hash','deep'] $osfamily_resources_merge_behaviour          = 'deep',
+  Enum['first','hash','deep'] $osfamily_resources_defaults_merge_behaviour = 'deep',
+
 ) {
 
   if $noop_mode != undef {
@@ -217,4 +224,21 @@ class psick (
     }
     create_resources( $k, $v, $resource_defaults )
   }
+
+
+  # Custom Resources management
+  $osfamily_resources = lookup('psick::osfamily_resources',Hash,$osfamily_resources_merge_behaviour,{})
+  $osfamily_resources_defaults = lookup('psick::osfamily_resources_defaults',Hash,$osfamily_resources_defaults_merge_behaviour,{})
+  $osfamily_resources.each |$k,$v| {
+    if $::osfamily == $k {
+      if has_key($osfamily_resources_defaults, $k) {
+        $os_defaults = $osfamily_resources_defaults[$k]
+      } else {
+        $os_defaults = {}
+      }
+
+      create_resources( $k, $v, $os_defaults )
+    }
+  }
+
 }

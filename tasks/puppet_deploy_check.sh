@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-
-cd /etc/puppetlabs/code/environments/$PT_environment
+environment=${PT_environment:-production}
+cd /etc/puppetlabs/code/environments/$environment
 
 [ -f .r10k-deploy.json  ] && cat .r10k-deploy.json | grep deploy_success
 [ -f .r10k-deploy.json  ] && cat .r10k-deploy.json | grep signature

@@ -4,7 +4,7 @@
   "parameters": {
     "environment": {
       "description": "The Environment to check. Default production",
-      "type": "String[1]"
+      "type": "Optional[String[1]]"
     }
   },
   "implementations": [
