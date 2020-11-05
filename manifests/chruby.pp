@@ -29,10 +29,10 @@
 #                   Default from psick class.
 class psick::chruby (
   Psick::Ensure $ensure             = 'present',
-  String $version                   = '0.3.7',
+  String $version                   = '0.3.9',
   String $default_ruby_version      = '2.4.3',
   StdLib::AbsolutePath $ruby_prefix = '/opt/rubies',
-  String $user                      = 'puppet',
+  Optional[String] $user            = undef,
   Optional[String] $group           = undef,
   Optional[String] $sources_root    = undef,
   Optional[String] $download_root   = undef,
