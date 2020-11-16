@@ -1,0 +1,30 @@
+{
+  "description": "Run Puppet apply on a manifest present on a node",
+  "supports_noop": false,
+  "parameters": {
+    "manifest": {
+     "description": "Specify the path of the manifest to apply",
+     "type": "String"
+    },
+    "modulepath": {
+     "description": "Specify the moduletpath to use",
+     "type": "Optional[String[1]]"
+    },
+    "tags": {
+     "description": "Specify a comma separated list of tags to apply",
+     "type": "Optional[String[1]]"
+    },
+    "verbose": {
+     "description": "Enable verbose mode in Puppet apply run",
+     "type": "Optional[Boolean]"
+    },
+    "debug": {
+     "description": "Enable debug mode in Puppet apply run",
+     "type": "Optional[Boolean]"
+    },
+    "noop": {
+     "description": "Run puppet apply in noop mode",
+     "type": "Optional[Boolean]"
+    }
+  }
+}
