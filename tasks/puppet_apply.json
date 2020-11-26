@@ -6,6 +6,30 @@
      "description": "Specify the path of the manifest to apply",
      "type": "String"
     },
+    "git_source": {
+     "description": "Specify an optional source of your manifests based on a remote git repo",
+     "type": "Optional[String]"
+    },
+    "zip_source": {
+     "description": "Specify an optional source of your manifests based on a remote zip archive url",
+     "type": "Optional[String]"
+    },
+    "tgz_source": {
+     "description": "Specify an optional source of your manifests based on a remote tgz archive url",
+     "type": "Optional[String]"
+    },
+    "puppet_source": {
+      "description": "Specify an optional source of your manifests based on a Puppet source to be applied via a file resource",
+      "type": "Optional[String]"
+     },
+    "puppet_source_tgz": {
+      "description": "Specify an optional source of your manifests based on a tarball retrived via Puppet source and expanded in description",
+      "type": "Optional[String]"
+     },
+    "destination": {
+      "description": "Specify the destination dir where to clone the git_source or extract the zip_source and tgz_source",
+     "type": "Optional[String]"
+    },
     "modulepath": {
      "description": "Specify the moduletpath to use",
      "type": "Optional[String[1]]"
@@ -20,6 +44,10 @@
     },
     "debug": {
      "description": "Enable debug mode in Puppet apply run",
+     "type": "Optional[Boolean]"
+    },
+    "no_noop": {
+     "description": "Run puppet apply in no-noop mode",
      "type": "Optional[Boolean]"
     },
     "noop": {
