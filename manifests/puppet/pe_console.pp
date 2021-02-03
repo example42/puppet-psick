@@ -12,7 +12,6 @@ class psick::puppet::pe_console (
 
     Tp::Test {
       cli_enable => true,
-      template   => '',
     }
 
     $nginx_settings = {

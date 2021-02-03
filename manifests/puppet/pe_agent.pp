@@ -30,7 +30,6 @@ class psick::puppet::pe_agent (
     if $test_enable {
       Tp::Test {
         cli_enable => true,
-        template   => '',
       }
       tp::test { 'puppet-agent': settings_hash => $settings }
     }

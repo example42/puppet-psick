@@ -7,15 +7,15 @@
     - psick::puppet::pe_code_manager
     - psick::gitlab::runner
 
-  puppet_enterprise::psick::puppetdb::whitelisted_certnames:
+  puppet_enterprise::profile::puppetdb::allowlisted_certnames:
     - cirunner.lan
     - git.lan
 
-  puppet_enterprise::psick::master::r10k_remote: 'git@git.lan:puppet/control-repo.git'
-  puppet_enterprise::psick::master::code_manager_auto_configure: true
-  puppet_enterprise::psick::master::r10k_private_key: '/etc/puppetlabs/puppetserver/ssh/id-control_repo.rsa'
+  puppet_enterprise::profile::master::r10k_remote: 'git@git.lan:puppet/control-repo.git'
+  puppet_enterprise::profile::master::code_manager_auto_configure: true
+  puppet_enterprise::profile::master::r10k_private_key: '/etc/puppetlabs/puppetserver/ssh/id-control_repo.rsa'
   #setup code_manager to update classes in the console after environment code deployment 
-  puppet_enterprise::master::code_manager::post_environment_hooks: 
+  puppet_enterprise::profile::master::code_manager::post_environment_hooks: 
     - url: 'https://puppet.lan:4433/classifier-api/v1/update-classes'    
       use-client-ssl: true 
 
@@ -36,11 +36,6 @@
       tls_ca_file: '/etc/puppetlabs/puppet/ssl/certs/ca.pem'
 
   # SUDO for gitlab-runner
-  psick::sudo::directives:
-    gitlab-runner:
-      source: 'puppet:///modules/psick/sudo/gitlab-runner'
-      order: 30
-
   psick::sudo::directives:
     gitlab-runner:
       source: 'puppet:///modules/psick/sudo/gitlab-runner'

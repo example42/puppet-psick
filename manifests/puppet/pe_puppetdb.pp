@@ -23,7 +23,6 @@ class psick::puppet::pe_puppetdb (
 
     Tp::Test {
       cli_enable => true,
-      template   => '',
     }
     tp::test { 'puppetdb': settings_hash => $puppetdb_settings }
     tp::test { 'postgresql': settings_hash => $postgresql_settings }

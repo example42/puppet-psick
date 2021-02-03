@@ -4,8 +4,8 @@ class psick::puppet::osp_agent (
   Boolean $manage_installation = true,
   Hash $tp_params              = {},
 
-  Boolean $cronjob_ensure     = 'absent',
-  String $cronjob_schedule    = '0,30 * * * *',
+  Enum['present','absent'] $cronjob_ensure = 'absent',
+  String $cronjob_schedule                 = '0,30 * * * *',
 
   Boolean                   $manage_service = true,
   Enum['running','stopped'] $service_ensure = 'running',

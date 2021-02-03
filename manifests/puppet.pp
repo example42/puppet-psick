@@ -1,11 +1,14 @@
 #
 class psick::puppet (
 
-  Optional[String] $agent_class    = undef,
-  String           $server_class   = '',
-  String           $puppetdb_class = '',
+  Optional[String] $agent_class     = undef,
+  String           $server_class    = '',
+  String           $puppetdb_class  = '',
 
-  Hash             $external_facts = {},
+  Hash             $external_facts  = {},
+
+  String           $facts_file_path = '',
+  Regexp           $facts_file_exclude_regex = /^(.*uptime.*|system_uptime|_timestamp|memoryfree.*|swapfree.*|puppet_inventory_metadata|last_run.*|load_averages.*|memory.*|mountpoints.*|physical_volumes.*|volume_groups.*)$/,
 
   Boolean          $manage               = $::psick::manage,
   Boolean          $noop_manage          = $::psick::noop_manage,
@@ -35,6 +38,12 @@ class psick::puppet (
     $external_facts.each | $k , $v | {
       psick::puppet::set_external_fact { $k:
         * => $v,
+      }
+    }
+
+    if $facts_file_path != '' {
+      file { $facts_file_path:
+        content => template('psick/puppet/facts.yaml.erb'),
       }
     }
   }

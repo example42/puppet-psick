@@ -1,0 +1,1 @@
+<%= scope.to_hash.reject { |k,v| k.to_s =~ /(uptime.*|path|timestamp|free|.*password.*)/ }.sort.to_yaml %>
