@@ -1,0 +1,21 @@
+# File managed by Puppet
+<Directory <%= @options['DocumentRoot'] %>>
+    Require all granted
+</Directory>
+<VirtualHost *:80>
+    ServerAdmin webmaster@example.com
+    ServerName <%= @options['ServerName'] %>
+    ServerAlias <%= @options['ServerAlias'] %>
+    DocumentRoot <%= @options['DocumentRoot'] %>
+    ErrorLog <%= @settings['log_dir_path'] %>/wordpress-error.log
+    CustomLog <%= @settings['log_dir_path'] %>/wordpress-access.log combined
+    DirectoryIndex index.php
+    <IfModule mod_fcgid.c>
+        Options +ExecCGI
+        FcgidConnectTimeout 20
+        AddType  application/x-httpd-php .php
+        AddHandler application/x-httpd-php .php
+        Alias /php7-fcgi /usr/lib/cgi-bin/php7-fcgi
+        ProxyPassMatch " ^/(.*\.php(/.*)?)$" "unix:///var/run/php-fpm/www.sock|fcgi://localhost<%= @options['DocumentRoot'] %>"
+    </IfModule>
+</VirtualHost>

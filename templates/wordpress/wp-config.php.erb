@@ -1,0 +1,56 @@
+<?php
+
+// ** File Managed by Puppet ** //
+
+/** The name of the database for WordPress */
+define( 'DB_NAME', '<%= @db_name %>' );
+
+/** MySQL database username */
+define( 'DB_USER', '<%= @db_user %>' );
+
+/** MySQL database password */
+define( 'DB_PASSWORD', '<%= @db_password %>' );
+
+/** MySQL hostname */
+define( 'DB_HOST', '<%= @db_host %>' );
+
+/** Database Charset to use in creating database tables. */
+define( 'DB_CHARSET', 'utf8' );
+
+/** The Database Collate type. Don't change this if in doubt. */
+define( 'DB_COLLATE', '' );
+
+<% if @wordpress_multisite -%>
+/* Multisite */
+define('WP_ALLOW_MULTISITE', true);
+define('MULTISITE', true);
+define('SUBDOMAIN_INSTALL', false);
+define('DOMAIN_CURRENT_SITE', '<%= @wordpress_sitename %>');
+define('PATH_CURRENT_SITE', '/');
+define('SITE_ID_CURRENT_SITE', 1);
+define('BLOG_ID_CURRENT_SITE', 1);
+<% end -%>
+
+/** Authentication Unique Keys and Salts. */
+define( 'AUTH_KEY',         '' );
+define( 'SECURE_AUTH_KEY',  '' );
+define( 'LOGGED_IN_KEY',    '' );
+define( 'NONCE_KEY',        '' );
+define( 'AUTH_SALT',        '' );
+define( 'SECURE_AUTH_SALT', '' );
+define( 'LOGGED_IN_SALT',   '' );
+define( 'NONCE_SALT',       '' );
+
+/** WordPress Database Table prefix. */
+$table_prefix = 'wp_';
+
+/** For developers: WordPress debugging mode. */
+define( 'WP_DEBUG', false );
+
+/** Absolute path to the WordPress directory. */
+if ( ! defined( 'ABSPATH' ) ) {
+        define( 'ABSPATH', __DIR__ . '/' );
+}
+
+/** Sets up WordPress vars and included files. */
+require_once ABSPATH . 'wp-settings.php';

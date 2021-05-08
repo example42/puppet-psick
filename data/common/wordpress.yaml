@@ -1,0 +1,19 @@
+---
+# psick::wordpress
+psick::wordpress::php_modules_hash:
+  mysqlnd: {}
+  dom: {}
+  simplexml: {}
+  xml: {}
+  xmlreader: {}
+  curl: {}
+  exif: {}
+  ftp: {}
+  gd: {}
+  iconv: {}
+  json: {}
+  mbstring: {}
+  posix: {}
+  sockets: {}
+  tokenizer: {}
+
