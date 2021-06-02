@@ -28,7 +28,8 @@ define psick::wordpress::instance (
   Hash            $web_options              = {},
   Hash            $php_modules_hash         = {},
   String          $php_fpm_pool_template    = 'psick/wordpress/php-fpm-pool.conf.erb',
-
+  Boolean         $web_ssl                  = false,
+  Optional[Integer] $web_port               = undef,
   Boolean         $ftp_manage               = true,
 
 ) {
@@ -49,7 +50,7 @@ define psick::wordpress::instance (
       require => Psick::Netinstall["wordpress-${title}"],
       before  => Exec["chown -R ${web_server_user}:${web_server_group} ${web_base_dir}/wordpress-${title}"],
     }
-    tp::conf { "php::wp-config.php-${title}":
+    tp::conf { "apache::wp-config.php-${title}":
       ensure  => $ensure,
       path    => "${web_base_dir}/wordpress-${title}/wp-config.php",
       require => Exec["mv ${web_base_dir}/wordpress ${web_base_dir}/wordpress-${title}"],
@@ -60,48 +61,48 @@ define psick::wordpress::instance (
       ensure  => $ensure,
       path    => "${web_base_dir}/wordpress-${title}/wp-config.php",
       line    => '<?php',
-      require => Tp::Conf["php::wp-config.php-${title}"],
+      require => Tp::Conf["apache::wp-config.php-${title}"],
     }
     file_line { "wp-config.php-${title}-DB_NAME":
       ensure  => $ensure,
       path    => "${web_base_dir}/wordpress-${title}/wp-config.php",
       line    => "define( 'DB_NAME', '${db_name}' );",
-      require => Tp::Conf["php::wp-config.php-${title}"],
+      require => Tp::Conf["apache::wp-config.php-${title}"],
       after   => '^<?php',
     }
     file_line { "wp-config.php-${title}-DB_USER":
       ensure  => $ensure,
       path    => "${web_base_dir}/wordpress-${title}/wp-config.php",
       line    => "define( 'DB_USER', '${db_user}' );",
-      require => Tp::Conf["php::wp-config.php-${title}"],
+      require => Tp::Conf["apache::wp-config.php-${title}"],
       after   => '^<?php',
     }
     file_line { "wp-config.php-${title}-DB_PASSWORD":
       ensure  => $ensure,
       path    => "${web_base_dir}/wordpress-${title}/wp-config.php",
       line    => "define( 'DB_PASSWORD', '${db_password}' );",
-      require => Tp::Conf["php::wp-config.php-${title}"],
+      require => Tp::Conf["apache::wp-config.php-${title}"],
       after   => '^<?php',
     }
     file_line { "wp-config.php-${title}-DB_HOST":
       ensure  => $ensure,
       path    => "${web_base_dir}/wordpress-${title}/wp-config.php",
       line    => "define( 'DB_HOST', '${db_host}' );",
-      require => Tp::Conf["php::wp-config.php-${title}"],
+      require => Tp::Conf["apache::wp-config.php-${title}"],
       after   => '^<?php',
     }
     file_line { "wp-config.php-${title}-table_prefix":
       ensure  => $ensure,
       path    => "${web_base_dir}/wordpress-${title}/wp-config.php",
       line    => "\$table_prefix = 'wp_';",
-      require => Tp::Conf["php::wp-config.php-${title}"],
+      require => Tp::Conf["apache::wp-config.php-${title}"],
       after   => '^<?php',
     }
     file_line { "wp-config.php-${title}-ABSPATH":
       ensure  => $ensure,
       path    => "${web_base_dir}/wordpress-${title}/wp-config.php",
       line    => "require_once ABSPATH . 'wp-settings.php';",
-      require => Tp::Conf["php::wp-config.php-${title}"],
+      require => Tp::Conf["apache::wp-config.php-${title}"],
       after   => '^<?php',
     }
 
@@ -117,7 +118,7 @@ define psick::wordpress::instance (
         ensure   => $ensure,
         path     => "${web_base_dir}/wordpress-${title}/.htaccess",
         content  => template($wordpress_htaccess_template),
-        require => Exec["mv ${web_base_dir}/wordpress ${web_base_dir}/wordpress-${title}"],
+        require  => Exec["mv ${web_base_dir}/wordpress ${web_base_dir}/wordpress-${title}"],
         owner    => $web_server_user,
         group    => $web_server_group,
         base_dir => 'conf',
@@ -126,10 +127,20 @@ define psick::wordpress::instance (
   }
 
   if $web_manage {
+    $web_real_port = $web_port ? {
+      undef   => $web_ssl ? {
+        true  => 443,
+        false => 80,
+      },
+      default => $web_port,
+    }
     $apache_options_hash = {
+      'ServerAdmin'  => "webmaster@${facts['domain']}",
       'DocumentRoot' => "${web_base_dir}/wordpress-${title}",
       'ServerName'   => $wordpress_sitename,
       'ServerAlias'  => $wordpress_alias,
+      'port'         => $web_real_port,
+      'web_ssl'      => $web_ssl,
     } + $web_options
 
     tp::conf { "php-fpm::wordpress-${title}.conf":
@@ -152,7 +163,7 @@ define psick::wordpress::instance (
       db         => $db_name,
       create_db  => true,
       privileges => 'ALL',
-      host       => $web_host,
+      host       => $db_host,
     }
   }
 }

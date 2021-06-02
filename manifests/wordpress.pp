@@ -53,8 +53,12 @@ class psick::wordpress (
   String          $web_template             = 'psick/wordpress/httpd.conf.erb',
   String          $web_virtualhost_template = 'psick/wordpress/wordpress.conf.erb',
   Hash            $web_options              = {},
+
+  Boolean         $php_manage               = true,
+  Array           $php_tp_installs          = [ 'php', 'php-fpm' ],
   Hash            $php_modules_hash         = {},
   String          $php_fpm_pool_template    = 'psick/wordpress/php-fpm-pool.conf.erb',
+  Optional[String] $php_modules_prefix      = 'php-',
 
   Boolean         $ftp_manage               = true,
 
@@ -79,16 +83,30 @@ class psick::wordpress (
       tp::install { 'apache':
         ensure => $ensure,
       }
-      tp::install { 'php-fpm':
-        ensure => $ensure,
-      }
       tp::conf { 'apache':
         ensure       => $ensure,
         template     => $web_template,
-        options_hash => $apache_options_hash,
+        options_hash => $web_options,
       }
-      class { 'psick::php':
-        module_hash => $php_modules_hash,
+      tp::install { 'mod_ssl':
+        ensure => $ensure,
+      }
+    }
+
+    if $web_manage and $auto_prereq {
+      $php_tp_installs.each | $k | {
+        tp::install { $k:
+          ensure => $ensure,
+        }
+      }
+      $php_modules_defaults = {
+        ensure => $ensure,
+        prefix => $php_modules_prefix,
+      }
+      $php_modules_hash.each |$k,$v| {
+        psick::php::module { $k:
+          * => $php_modules_defaults + $v,
+        }
       }
     }
 

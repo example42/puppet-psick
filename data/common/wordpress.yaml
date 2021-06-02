@@ -11,9 +11,11 @@ psick::wordpress::php_modules_hash:
   ftp: {}
   gd: {}
   iconv: {}
+#  imagick: {}
   json: {}
   mbstring: {}
   posix: {}
   sockets: {}
   tokenizer: {}
+  zip: {}
 

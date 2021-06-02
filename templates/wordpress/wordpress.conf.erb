@@ -1,9 +1,10 @@
 # File managed by Puppet
 <Directory <%= @options['DocumentRoot'] %>>
     Require all granted
+    LimitRequestBody 134217728
 </Directory>
-<VirtualHost *:80>
-    ServerAdmin webmaster@example.com
+<VirtualHost *:<%= @options['port'] %>>
+    ServerAdmin <%= @options['ServerAdmin'] %>
     ServerName <%= @options['ServerName'] %>
     ServerAlias <%= @options['ServerAlias'] %>
     DocumentRoot <%= @options['DocumentRoot'] %>
@@ -18,4 +19,10 @@
         Alias /php7-fcgi /usr/lib/cgi-bin/php7-fcgi
         ProxyPassMatch " ^/(.*\.php(/.*)?)$" "unix:///var/run/php-fpm/www.sock|fcgi://localhost<%= @options['DocumentRoot'] %>"
     </IfModule>
+
+    <% if @options['web_ssl'] -%>
+    SSLEngine on
+    SSLCertificateFile  <%= @settings['config_dir_path'] %>/ssl/<%= @options['ServerName'] %>.crt
+    SSLCertificateKeyFile  <%= @settings['config_dir_path'] %>/ssl/<%= @options['ServerName'] %>.key
+    <% end %>
 </VirtualHost>
