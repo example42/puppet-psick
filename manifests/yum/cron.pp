@@ -5,7 +5,7 @@
 #                             used for the content of yum-cron config file.
 # @param options An hash of custon options to use in the config_file_template
 #                Note: This is not a class parameter but a key lookup up via:
-#                lookup('psick::yum_cron::options', {} ) and merged with
+#                lookup('psick::yum::cron::options', {} ) and merged with
 #                a default hash of options
 # @param manage If to actually manage any resource in this class. If false no
 #               resource is managed. Default value is taken from main psick class.
@@ -20,7 +20,7 @@
 #                   If false: noop metaparameter is set to false, and any eventual noop
 #                   setting is overridden: resources are always applied.
 #                   Default from psick class.
-class psick::yum_cron (
+class psick::yum::cron (
   Enum['present','absent'] $ensure = 'present',
   String $config_file_template     = 'psick/yum_cron/yum-cron.conf.erb',
 
@@ -50,7 +50,7 @@ class psick::yum_cron (
       'debuglevel' => '-2',
       'mdpolicy' => 'group:main',
     }
-    $options_user=lookup('psick::yum_cron::options', Hash, 'deep', {} )
+    $options_user=lookup('psick::yum::cron::options', Hash, 'deep', {} )
     $options=merge($options_default,$options_user)
 
     ::tp::install { 'yum-cron':
