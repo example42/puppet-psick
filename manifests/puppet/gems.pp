@@ -20,7 +20,7 @@
 # @param default_set Define a set of default gems to install for different
 #   use cases. Possible values: 'none','client','master','developer','citest',
 #   'cideploy','integration'. Gems defined here are installed under all the
-#   environments set by install_*_gems params. 
+#   environments set by install_*_gems params.
 # @param install_gems Array of additional custom gems to install under all the
 #   environments set by install_*_gems params.
 # @param install_options Optional optional to add to the package provider when
@@ -39,7 +39,7 @@
 # @param additional_rbenv_gems Array of additional gems to install under rbenv
 # @param additional_chruby_gems Array of additional gems to install under chruby
 # @param rbenv_ruby_version Ruby version to use under rbenv. Default is from
-#   $::psick::rbenv::default_ruby_version
+#   $::psick::ruby::rbenv::default_ruby_version
 # @param chruby_ruby_version Ruby version to use under chruby. Default is from
 #   $::psick::chruby::default_ruby_version
 # @param auto_prereq If to automatically install eventual dependencies required
@@ -141,10 +141,10 @@ class psick::puppet::gems (
     }
     if $install_rbenv_gems {
       if $auto_prereq {
-        include ::psick::rbenv
+        include ::psick::ruby::rbenv
       }
       $rbenv_require = $auto_prereq ? {
-        true  => Class['psick::rbenv'],
+        true  => Class['psick::ruby::rbenv'],
         false => undef,
       }
       $rbenv_gems = $all_gems + $additional_rbenv_gems
@@ -152,7 +152,7 @@ class psick::puppet::gems (
         # bundler gem already installed by rbenv module
         if $gem != 'bundler' {
           rbenv::gem { $gem:
-            ruby_version => pick($rbenv_ruby_version,$::psick::rbenv::default_ruby_version),
+            ruby_version => pick($rbenv_ruby_version,$::psick::ruby::rbenv::default_ruby_version),
             skip_docs    => true,
             require      => $rbenv_require,
           }

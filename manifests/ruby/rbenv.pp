@@ -28,7 +28,7 @@
 #                   setting is overridden: resources are always applied.
 #                   Default from psick class.
 #
-class psick::rbenv (
+class psick::ruby::rbenv (
 
   Variant[Boolean,String] $ensure        = present,
   Enum['jdowning'] $module               = 'jdowning',

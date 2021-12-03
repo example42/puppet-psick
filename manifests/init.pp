@@ -33,8 +33,6 @@
 #                   If true: noop metaparamenter is set to true, resources are not applied
 #                   If false: noop metaparameter is set to false, and any eventual noop
 #                   setting is overridden: resources are always applied.
-# @param is_cluster Defines if the server is a cluster member. Some PSICK profiles
-#   may use this value.
 # @param primary_ip The server primary IP address. Default value is
 #   the value of the $::networking['ip'] fact.
 # @param mgmt_interface The management interface of the server. Default value is
@@ -63,7 +61,7 @@
 #   Consider it as a catch all way to set on Hiera any resource of any type.
 #   You can always specify for each resource type the default parameters via
 #   the psick::resources_defaults Hiera key.
-#   See below for a sample usage. 
+#   See below for a sample usage.
 #   This is not actually a class parameter, but a Hiera key looked up using the
 #   merge behaviour configured via $resources_merge_behaviour
 # @param resources_merge_behaviour Defines the lookup method to use to
@@ -117,7 +115,6 @@ class psick (
   Boolean $noop_value                              = false,
 
   # General network settings
-  Boolean $is_cluster = false,
   Optional[Stdlib::Compat::Ip_address] $primary_ip = fact('networking.ip'),
   Optional[String] $mgmt_interface                 = fact('networking.primary'),
   Optional[String] $timezone                       = undef,

@@ -1,8 +1,8 @@
-# @summary Manages Ansible configurations on nodes
+# @summary Manages admin configurations on nodes
 #
-class psick::ansible::node (
+class psick::admin::node (
 
-  Variant[Boolean,String] $ensure          = pick($::psick::ansible::ensure, 'present'),
+  Variant[Boolean,String] $ensure        = pick($::psick::admin::ensure, 'present'),
   Boolean          $manage               = $::psick::manage,
   Boolean          $noop_manage          = $::psick::noop_manage,
   Boolean          $noop_value           = $::psick::noop_value,
@@ -12,18 +12,18 @@ class psick::ansible::node (
     if $noop_manage {
       noop($noop_value)
     }
-    include ::psick::ansible
+    include ::psick::admin
 
-    if $::psick::ansible::keyshare_method == 'storeconfigs' {
-      @@sshkey { "ansible_${::fqdn}_rsa":
+    if $::psick::admin::keyshare_method == 'storeconfigs' {
+      @@sshkey { "admin_${::fqdn}_rsa":
         ensure       => $ensure,
         host_aliases => [ $::fqdn, $::hostname, $::ipaddress ],
         type         => 'ssh-rsa',
         key          => $::sshrsakey,
-        tag          => "ansible_node_${::psick::ansible::master}_rsa"
+        tag          => "admin_node_${::psick::admin::master}_rsa"
       }
       # Authorize master host ssh key for remote connection
-      Ssh_authorized_key <<| tag == "ansible_master_${::psick::ansible::master}" |>>
+      Ssh_authorized_key <<| tag == "admin_master_${::psick::admin::master}" |>>
     }
   }
 }

@@ -11,8 +11,6 @@
 #                up with lookup('psick::logs::snmpd::options', {} )
 # @param serverif The primary server IP. Default value is from
 #                 $::psick::primary_ip
-# @param is_cluster If the server is a cluster member. If so extra configs are
-#                   added to the default template
 # @param extra_packages An array of extra snmdp related packages to install
 #
 class psick::monitor::snmpd (
