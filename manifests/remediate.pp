@@ -94,7 +94,7 @@ class psick::remediate (
     }
     if $swarm_init {
       exec { 'docker swarm init remediate':
-        command => "docker swarm init ; touch ${remediate_dir}/.docker-swarn-init-remediate.lock",
+        command => "docker swarm init && touch ${remediate_dir}/.docker-swarn-init-remediate.lock",
         path    => $::path,
         user    => $user,
         cwd     => $remediate_dir,
