@@ -1,16 +1,6 @@
+---
 psick::linux::pre_classes:
   'repo': '::psick::repo'
-
-psick::icinga2::ido_backend: mariadb
-
-psick::monitor::snmpd::extra_packages:
-  - 'net-snmp-conf-dtnp'
-  - 'net-snmp-utils'
-
-psick::monitor::ganglia::packages:
-  - 'ganglia-gmond'
-  - 'ganglia-gmond-modules-python'
-  - 'libganglia-3_1_0'
 
 psick::puppet::install_ca::ca_ssl_dir: '/etc/pki/ca-trust/source/anchors'
 psick::puppet::install_ca::ca_setup_command: 'update-ca-trust force-enable'

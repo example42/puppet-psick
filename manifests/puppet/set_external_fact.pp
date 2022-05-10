@@ -21,7 +21,7 @@ define psick::puppet::set_external_fact (
     default   => '/etc/puppetlabs/facter/facts.d',
   }
   $file_content = $value ? {
-    undef   => template($template),
+    undef   => psick::template($template),
     default => "---\n  ${title}: ${value}\n",
   }
   $file_path = $value ? {

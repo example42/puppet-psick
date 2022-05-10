@@ -47,7 +47,7 @@
 #
 # [*extract_command*]
 #   The command used to extract the downloaded file.
-#   By default is autocalculated accoring to the file extension
+#   By default is autocalculated according to the file extension
 #   Set 'rsync' if the file has to be placed in the destination_dir
 #   as is (for example for war files)
 #
@@ -137,24 +137,26 @@ define psick::netinstall (
     environment => $exec_env,
   }
 
-  exec { "Extract ${source_filename} from ${work_dir} - ${title}":
-    command     => "mkdir -p ${destination_dir} && cd ${destination_dir} && ${real_extract_command} ${work_dir}/${source_filename} ${extract_command_second_arg}", # lint:ignore:140chars
-    unless      => "ls ${destination_dir}/${real_extracted_dir}",
-    creates     => $real_creates,
-    timeout     => $timeout,
-    require     => Exec["Retrieve ${url} in ${work_dir} - ${title}"],
-    path        => $path,
-    environment => $exec_env,
-    notify      => Exec["Chown ${source_filename} in ${destination_dir} - ${title}"],
-  }
+  if $extract_command {
+    exec { "Extract ${source_filename} from ${work_dir} - ${title}":
+      command     => "mkdir -p ${destination_dir} && cd ${destination_dir} && ${real_extract_command} ${work_dir}/${source_filename} ${extract_command_second_arg}", # lint:ignore:140chars
+      unless      => "ls ${destination_dir}/${real_extracted_dir}",
+      creates     => $real_creates,
+      timeout     => $timeout,
+      require     => Exec["Retrieve ${url} in ${work_dir} - ${title}"],
+      path        => $path,
+      environment => $exec_env,
+      notify      => Exec["Chown ${source_filename} in ${destination_dir} - ${title}"],
+    }
 
-  exec { "Chown ${source_filename} in ${destination_dir} - ${title}":
-    command     => "chown -R ${owner}:${group} ${destination_dir}/${real_extracted_dir}",
-    refreshonly => true,
-    timeout     => $timeout,
-    require     => Exec["Extract ${source_filename} from ${work_dir} - ${title}"],
-    path        => $path,
-    environment => $exec_env,
+    exec { "Chown ${source_filename} in ${destination_dir} - ${title}":
+      command     => "chown -R ${owner}:${group} ${destination_dir}/${real_extracted_dir}",
+      refreshonly => true,
+      timeout     => $timeout,
+      require     => Exec["Extract ${source_filename} from ${work_dir} - ${title}"],
+      path        => $path,
+      environment => $exec_env,
+    }
   }
 
   if $postextract_command and $postextract_command != '' {
@@ -170,4 +172,3 @@ define psick::netinstall (
     }
   }
 }
-

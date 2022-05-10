@@ -42,11 +42,6 @@ psick::hosts::resource::hosts: {}
 psick::hosts::resource::defaults: {}
 psick::hosts::resource::use_defaults: true
 
-# psick::monitor::ganglia
-psick::monitor::ganglia::packages: []
-
-# psick::monitor::snmpd
-psick::monitor::snmpd::extra_packages: []
 
 # psick::packages
 psick::packages::packages_default: []

@@ -1,0 +1,5 @@
+#!/bin/bash
+if [ -f '/home/<%= $::psick::admin::user_name %>/.ssh/id_rsa.pub' ]; then
+  key=$(cat /home/<%= $::psick::admin::user_name %>/.ssh/id_rsa.pub | cut -d ' ' -f 2)
+  echo "admin_user_key=${key}"
+fi

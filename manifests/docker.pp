@@ -3,7 +3,7 @@ class psick::docker (
 
   Variant[Boolean,String] $ensure           = present,
 
-  String                  $install_class    = 'tp_profile::docker',
+  String                  $install_class    = 'psick::docker::install',
 
   String[1]               $username         = 'example42',
 

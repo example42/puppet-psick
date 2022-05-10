@@ -1,0 +1,18 @@
+{
+  "description": "Lookup for a given Hiera key",
+  "supports_noop": false,
+  "parameters": {
+    "environment": {
+     "description": "Specify the puppet environment to use",
+     "type": "String"
+    },
+    "verbose": {
+     "description": "Show the describe output",
+     "type": "Optional[Boolean]"
+    },
+    "key": {
+     "description": "The Hiera key to loop for",
+     "type": "String"
+    }
+  }
+}

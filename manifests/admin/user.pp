@@ -43,7 +43,7 @@ class psick::admin::user (
         require => File["/home/${::psick::admin::user_name}/.ssh"],
       }
       psick::puppet::set_external_fact { 'admin_user_key.sh':
-        template => 'psick/admin/admin_user_key.sh.erb',
+        template => 'psick/admin/admin_user_key.sh.epp',
         mode     => '0755',
       }
     }

@@ -2,8 +2,8 @@
 #
 class psick::mysql (
 
-  Variant[Boolean,String]    $ensure = present,
-  Enum['tp_profile','puppetlabs'] $module   = 'tp_profile',
+  Variant[Boolean,String]    $ensure   = present,
+  Enum['psick','puppetlabs'] $module   = 'psick',
 
   Optional[Psick::Password]  $root_password = undef,
 
@@ -24,8 +24,8 @@ class psick::mysql (
     }
     # Intallation management
     case $module {
-      'tp_profile': {
-        contain ::tp_profile::mysql
+      'psick': {
+        contain ::psick::mysql::install
         contain ::psick::mysql::root_password
         $user_hash.each |$k,$v| {
           psick::mysql::user { $k:
