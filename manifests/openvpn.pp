@@ -1,6 +1,6 @@
 # @class openvpn
 #
-class psick::openvpn (
+class psick_profile::openvpn (
 
   Variant[Boolean,String]    $ensure         = 'present',
   Enum['tp_profile','openvpn'] $module       = 'tp_profile',
@@ -47,7 +47,7 @@ class psick::openvpn (
       'tp_profile': {
         contain ::tp_profile::openvpn
         $connections.each |$k,$v| {
-          psick::openvpn::connection { $k:
+          psick_profile::openvpn::connection { $k:
             * => $v,
           }
         }
@@ -103,4 +103,3 @@ class psick::openvpn (
     }
   }
 }
-

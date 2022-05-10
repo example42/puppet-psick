@@ -190,9 +190,9 @@ For some applications, besides standard tp profiles, there are dedicated profile
 - [psick::gitlab](docs/gitlab.md) - GitLab installation and configuration
 - [psick::mariadb](docs/mysql.md) - Manage Mariadb
 - [psick::mysql](docs/mysql.md) - Manage Mysql
-- [psick::mongo](docs/mongo.md) - Manage Mongo
+- [psick_profile::mongo](docs/mongo.md) - Manage Mongo
 - [psick::php](docs/php.md) - Manage php and modules
-- [psick::oracle](docs/oracle.md) - Manage Oracle prerequisites and installation
+- [psick_profile::oracle](docs/oracle.md) - Manage Oracle prerequisites and installation
 - [psick::sensu](docs/sensu.md) - Manage Sensu
 
 ### Main variables and common paraters
