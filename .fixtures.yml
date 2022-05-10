@@ -6,6 +6,7 @@ fixtures:
     "concat": "https://github.com/puppetlabs/puppetlabs-concat.git"
     "tp": "https://github.com/example42/puppet-tp"
     "tp_profile": "https://github.com/example42/puppet-tp_profile"
+    "psick_profile": "https://github.com/example42/psick_profile.git"
     "tinydata": "https://github.com/example42/tinydata"
     "prometheus": "https://github.com/voxpupuli/puppet-prometheus"
     "systemd": "https://github.com/camptocamp/puppet-systemd"
