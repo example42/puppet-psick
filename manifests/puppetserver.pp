@@ -2,13 +2,13 @@
 #
 class psick::puppetserver (
 
-  Variant[Boolean,String]       $ensure = present,
-  Enum['tp_profile', 'puppetserver'] $module = 'tp_profile',
+  Variant[Boolean,String]         $ensure = present,
+  String                          $module = 'psick',
 
   Optional[String]  $r10k_remote_repo     = undef,
   Optional[String]  $r10k_template        = 'psick/puppet/r10k/r10k.yaml.erb',
   Hash $r10k_options                      = {},
-  Boolean $r10k_configure_webhook         = true,
+  Boolean $r10k_configure_webhook          = true,
   Boolean $r10k_autodeploy                = true,
   String $r10k_postrun_command            = '/usr/local/bin/generate_types.sh',
   String[1] $r10k_postrun_source          = 'puppet:///modules/psick/puppet/generate_types.sh',
@@ -30,12 +30,16 @@ class psick::puppetserver (
     # Installation management
     case $module {
       'tp_profile': {
-        contain tp_profile::puppetserver
         $puppetserver_class = 'tp_profile::puppetserver'
+        contain tp_profile::puppetserver
+      }
+      'psick': {
+        $puppetserver_class = 'psick::puppetserver::install'
+        contain psick::puppetserver::install
       }
       'puppetserver': {
-        contain ::puppetserver
         $puppetserver_class = 'puppetserver'
+        contain ::puppetserver
       }
       default: {}
     }
