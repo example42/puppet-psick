@@ -61,8 +61,8 @@
 class psick::puppet::gems (
   Enum['present','absent'] $ensure     = 'present',
   Enum['none','client','master','developer','citest','cideploy','integration'] $default_set = 'none',
-  Array $install_gems                  = [ ],
-  Array $install_options               = [ ],
+  Array $install_gems                  = [],
+  Array $install_options               = [],
   Boolean $install_system_gems         = false,
   Boolean $install_puppet_gems         = true,
   Boolean $install_puppetserver_gems   = false,
@@ -75,10 +75,10 @@ class psick::puppet::gems (
   Array $additional_chruby_gems        = [],
   Optional[String] $rbenv_ruby_version  = undef,
   Optional[String] $chruby_ruby_version = undef,
-  Boolean $auto_prereq             = $::psick::auto_prereq,
-  Boolean $manage                  = $::psick::manage,
-  Boolean $noop_manage             = $::psick::noop_manage,
-  Boolean $noop_value              = $::psick::noop_value,
+  Boolean $auto_prereq             = $psick::auto_prereq,
+  Boolean $manage                  = $psick::manage,
+  Boolean $noop_manage             = $psick::noop_manage,
+  Boolean $noop_value              = $psick::noop_value,
 ) {
   if $manage {
     if $noop_manage {
@@ -99,7 +99,7 @@ class psick::puppet::gems (
     $all_gems = $default_gems + $install_gems
     if $install_system_gems {
       if $auto_prereq {
-        include ::psick::ruby
+        include psick::ruby
       }
       $system_gems = $all_gems + $additional_system_gems
       $system_gems.each | $gem | {
@@ -113,7 +113,7 @@ class psick::puppet::gems (
     }
     if $install_puppet_gems {
       if $auto_prereq {
-        include ::psick::ruby::buildgems
+        include psick::ruby::buildgems
       }
       $puppet_gems = $all_gems + $additional_puppet_gems
       $puppet_gems.each | $gem | {
@@ -141,7 +141,7 @@ class psick::puppet::gems (
     }
     if $install_rbenv_gems {
       if $auto_prereq {
-        include ::psick::ruby::rbenv
+        include psick::ruby::rbenv
       }
       $rbenv_require = $auto_prereq ? {
         true  => Class['psick::ruby::rbenv'],
@@ -152,7 +152,7 @@ class psick::puppet::gems (
         # bundler gem already installed by rbenv module
         if $gem != 'bundler' {
           rbenv::gem { $gem:
-            ruby_version => pick($rbenv_ruby_version,$::psick::ruby::rbenv::default_ruby_version),
+            ruby_version => pick($rbenv_ruby_version,$psick::ruby::rbenv::default_ruby_version),
             skip_docs    => true,
             require      => $rbenv_require,
           }
@@ -161,7 +161,7 @@ class psick::puppet::gems (
     }
     if $install_chruby_gems {
       if $auto_prereq {
-        include ::psick::chruby
+        include psick::chruby
       }
       $chruby_require = $auto_prereq ? {
         true  => Class['psick::chruby'],
@@ -170,7 +170,7 @@ class psick::puppet::gems (
       $chruby_gems = $all_gems + $additional_chruby_gems
       $chruby_gems.each | $gem | {
         psick::chruby::gem { $gem:
-          ruby_version => pick($chruby_ruby_version,$::psick::chruby::default_ruby_version),
+          ruby_version => pick($chruby_ruby_version,$psick::chruby::default_ruby_version),
           require      => $chruby_require,
         }
       }

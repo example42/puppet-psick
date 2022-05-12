@@ -2,7 +2,6 @@ function psick::ensure2service (
   Psick::Ensure $ensure = 'present',
   Enum['ensure','enable'] $param  = 'ensure',
 ) {
-
   case $param {
     'ensure': {
       $output = $ensure ? {

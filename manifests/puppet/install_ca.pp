@@ -6,9 +6,9 @@ class psick::puppet::install_ca (
   Optional[String] $ca_setup_command  = undef,
   Optional[String] $ca_update_command = undef,
   Optional[String] $ca_package        = undef,
-  Boolean $manage                  = $::psick::manage,
-  Boolean $noop_manage             = $::psick::noop_manage,
-  Boolean $noop_value              = $::psick::noop_value,
+  Boolean $manage                  = $psick::manage,
+  Boolean $noop_manage             = $psick::noop_manage,
+  Boolean $noop_value              = $psick::noop_value,
 ) {
   if $manage {
     if $noop_manage {
@@ -32,7 +32,7 @@ class psick::puppet::install_ca (
     }
     if $ca_ssl_dir {
       file { "${ca_ssl_dir}/Puppet_CA.crt":
-        ensure => present,
+        ensure => file,
         source => 'file:///etc/puppetlabs/puppet/ssl/certs/ca.pem',
         notify => Exec['update ca certs'],
       }

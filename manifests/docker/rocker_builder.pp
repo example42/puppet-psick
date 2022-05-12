@@ -10,8 +10,8 @@ class psick::docker::rocker_builder (
   Variant[Undef,String]   $maintainer          = undef,
   String                  $from                = '',
 
-  Variant[Undef,String]   $default_image_os        = downcase($::operatingsystem),
-  Variant[Undef,String]   $default_image_osversion = $::operatingsystemmajrelease,
+  Variant[Undef,String]   $default_image_os        = downcase($facts['os']['name']),
+  Variant[Undef,String]   $default_image_osversion = $facts['os']['release']['major'],
 
   Variant[Undef,String]   $repository_tag      = undef,
 
@@ -27,18 +27,17 @@ class psick::docker::rocker_builder (
 
   Boolean                 $push                = false,
 
-  Boolean          $manage               = $::psick::manage,
-  Boolean          $noop_manage          = $::psick::noop_manage,
-  Boolean          $noop_value           = $::psick::noop_value,
+  Boolean          $manage               = $psick::manage,
+  Boolean          $noop_manage          = $psick::noop_manage,
+  Boolean          $noop_value           = $psick::noop_value,
 
 ) {
-
   if $manage {
     if $noop_manage {
       noop($noop_value)
     }
 
-    include ::psick::docker
+    include psick::docker
 
     $real_repository_tag=$repository_tag ? {
       undef   => "${default_image_os}-${default_image_osversion}",
@@ -78,7 +77,7 @@ class psick::docker::rocker_builder (
             repository       => pick($opts['repository'],$image),
             repository_tag   => pick($opts['repository_tag'],$real_repository_tag),
             exec_environment => pick($opts['exec_environment'],$exec_environment),
-            data_module      => $::psick::docker::data_module,
+            data_module      => $psick::docker::data_module,
           }
         }
       }

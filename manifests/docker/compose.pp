@@ -13,26 +13,25 @@
 # [*version*]
 #   The real_version of Docker Compose to install.
 #
-class psick::docker::compose(
+class psick::docker::compose (
   Variant[Boolean,String]  $ensure           = present,
-  Hash                     $options          = { },
+  Hash                     $options          = {},
   Variant[Undef,String[1]] $template         = undef,
   String                   $version          = '',
 
-  Boolean          $manage               = $::psick::manage,
-  Boolean          $noop_manage          = $::psick::noop_manage,
-  Boolean          $noop_value           = $::psick::noop_value,
+  Boolean          $manage               = $psick::manage,
+  Boolean          $noop_manage          = $psick::noop_manage,
+  Boolean          $noop_value           = $psick::noop_value,
 ) {
-
   if $manage {
     if $noop_manage {
       noop($noop_value)
     }
 
-    include ::psick::docker
+    include psick::docker
 
     $real_version = $version ? {
-      ''      => $::psick::docker::module_settings['compose_version'],
+      ''      => $psick::docker::module_settings['compose_version'],
       default => $version,
     }
 
@@ -40,12 +39,12 @@ class psick::docker::compose(
       exec { "Install Docker Compose ${real_version}":
         path    => '/usr/bin/',
         cwd     => '/tmp',
-        command => "curl -s -L https://github.com/docker/compose/releases/download/${real_version}/docker-compose-${::kernel}-x86_64 > /usr/local/bin/docker-compose-${real_version}",
-        creates => "/usr/local/bin/docker-compose-${real_version}"
+        command => "curl -s -L https://github.com/docker/compose/releases/download/${real_version}/docker-compose-${facts['kernel']}-x86_64 > /usr/local/bin/docker-compose-${real_version}",
+        creates => "/usr/local/bin/docker-compose-${real_version}",
       }
       -> file { "/usr/local/bin/docker-compose-${real_version}":
         owner => 'root',
-        mode  => '0755'
+        mode  => '0755',
       }
       -> file { '/usr/local/bin/docker-compose':
         ensure => 'link',
@@ -53,10 +52,10 @@ class psick::docker::compose(
       }
     } else {
       file { [
-        "/usr/local/bin/docker-compose-${real_version}",
-        '/usr/local/bin/docker-compose'
-      ]:
-        ensure => absent,
+          "/usr/local/bin/docker-compose-${real_version}",
+          '/usr/local/bin/docker-compose',
+        ]:
+          ensure => absent,
       }
     }
   }

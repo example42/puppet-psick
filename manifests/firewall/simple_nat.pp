@@ -6,17 +6,16 @@
 # puppetlabs/firewall
 #
 class psick::firewall::simple_nat (
-  $source_net = "${::network}/${::netmask}",
-  Boolean          $manage               = $::psick::manage,
-  Boolean          $noop_manage          = $::psick::noop_manage,
-  Boolean          $noop_value           = $::psick::noop_value,
+  $source_net = "${facts['networking']['network']}/${facts['networking']['netmask']}",
+  Boolean          $manage               = $psick::manage,
+  Boolean          $noop_manage          = $psick::noop_manage,
+  Boolean          $noop_value           = $psick::noop_value,
 ) {
-
   if $manage {
     if $noop_manage {
       noop($noop_value)
     }
-    sysctl::value { 'net/ipv4/ip_forward': value => '1'}
+    sysctl::value { 'net/ipv4/ip_forward': value => '1' }
     firewall { "100 snat for network ${source_net}":
       chain  => 'POSTROUTING',
       jump   => 'MASQUERADE',

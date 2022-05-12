@@ -5,10 +5,10 @@
 #
 class psick::mariadb::root_password (
   String $root_cnf_template = 'psick/mariadb/root.my.cnf.erb',
-  Optional[Psick::Password] $password = $::psick::mariadb::root_password,
-  Boolean $manage             = $::psick::manage,
-  Boolean $noop_manage        = $::psick::noop_manage,
-  Boolean $noop_value         = $::psick::noop_value,
+  Optional[Psick::Password] $password = $psick::mariadb::root_password,
+  Boolean $manage             = $psick::manage,
+  Boolean $noop_manage        = $psick::noop_manage,
+  Boolean $noop_value         = $psick::noop_value,
 ) {
   if $manage {
     if $noop_manage {
@@ -16,7 +16,7 @@ class psick::mariadb::root_password (
     }
     if ! defined(File['/root/.my.cnf']) {
       file { '/root/.my.cnf':
-        ensure  => 'present',
+        ensure  => 'file',
         path    => '/root/.my.cnf',
         mode    => '0400',
         content => template($root_cnf_template),
@@ -24,13 +24,13 @@ class psick::mariadb::root_password (
     }
 
     file { '/root/.my.cnf.backup':
-      ensure  => 'present',
+      ensure  => 'file',
       path    => '/root/.my.cnf.backup',
       mode    => '0400',
       content => template('psick/mariadb/root.my.cnf.backup.erb'),
       replace => false,
       before  => [Exec['mariadb_root_password'],
-                  Exec['mariadb_backup_root_my_cnf'] ],
+      Exec['mariadb_backup_root_my_cnf']],
     }
 
     exec { 'mariadb_backup_root_my_cnf':

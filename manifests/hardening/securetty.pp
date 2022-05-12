@@ -9,9 +9,9 @@
 class psick::hardening::securetty (
   Array $root_ttys           = ['console','tty1','tty2','tty3','tty4','tty5','tty6'],
   String $securetty_template = 'psick/hardening/securetty/securetty.erb',
-  Boolean $manage            = $::psick::manage,
-  Boolean $noop_manage       = $::psick::noop_manage,
-  Boolean $noop_value        = $::psick::noop_value,
+  Boolean $manage            = $psick::manage,
+  Boolean $noop_manage       = $psick::noop_manage,
+  Boolean $noop_value        = $psick::noop_value,
 ) {
   if $manage {
     if $noop_manage {

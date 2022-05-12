@@ -12,12 +12,11 @@ class psick::mysql (
   Hash                       $user_hash     = {},
   Hash                       $query_hash    = {},
 
-  Boolean             $manage               = $::psick::manage,
-  Boolean             $noop_manage          = $::psick::noop_manage,
-  Boolean             $noop_value           = $::psick::noop_value,
+  Boolean             $manage               = $psick::manage,
+  Boolean             $noop_manage          = $psick::noop_manage,
+  Boolean             $noop_value           = $psick::noop_value,
 
 ) {
-
   if $manage {
     if $noop_manage {
       noop($noop_value)
@@ -25,8 +24,8 @@ class psick::mysql (
     # Intallation management
     case $module {
       'psick': {
-        contain ::psick::mysql::install
-        contain ::psick::mysql::root_password
+        contain psick::mysql::install
+        contain psick::mysql::root_password
         $user_hash.each |$k,$v| {
           psick::mysql::user { $k:
             * => $v,
@@ -49,7 +48,7 @@ class psick::mysql (
         }
       }
       default: {
-        contain ::mysql
+        contain mysql
       }
     }
   }

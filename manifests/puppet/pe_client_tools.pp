@@ -23,9 +23,9 @@ class psick::puppet::pe_client_tools (
   Hash $puppet_access_options      = {},
   Hash $puppet_code_options        = {},
   Hash $puppetdb_options           = {},
-  Boolean $manage                  = $::psick::manage,
-  Boolean $noop_manage             = $::psick::noop_manage,
-  Boolean $noop_value              = $::psick::noop_value,
+  Boolean $manage                  = $psick::manage,
+  Boolean $noop_manage             = $psick::noop_manage,
+  Boolean $noop_value              = $psick::noop_value,
 ) {
   if $manage {
     if $noop_manage {
@@ -52,7 +52,7 @@ class psick::puppet::pe_client_tools (
       default => $package_name,
     }
 
-    $package_provider = $::osfamily ? {
+    $package_provider = $facts['os']['family'] ? {
       'RedHat'  => 'rpm',
       'Debian'  => 'dpkg',
       'Suse'    => 'rpm',
@@ -97,7 +97,7 @@ class psick::puppet::pe_client_tools (
     $orchestrator_defaults = {
       'options' => {
         'service-url' => "https://${puppet_server}:8143",
-      }
+      },
     }
     file { '/etc/puppetlabs/client-tools/orchestrator.conf':
       ensure  => $ensure,
@@ -127,13 +127,12 @@ class psick::puppet::pe_client_tools (
       'puppetdb' => {
         'server-urls' => "https://${puppetdb_server}:8081",
         'cacert'      => '/etc/puppetlabs/puppet/ssl/certs/ca.pem',
-      }
+      },
     }
     file { '/etc/puppetlabs/client-tools/puppetdb.conf':
       ensure  => $ensure,
       content => to_json($puppetdb_defaults + $puppetdb_options),
       require => Package['pe-client-tools'],
     }
-
   }
 }

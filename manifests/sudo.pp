@@ -13,17 +13,16 @@
 #
 class psick::sudo (
   String                   $sudoers_template  = '',
-  Array                    $admins            = [ ],
+  Array                    $admins            = [],
   Variant[String[1],Undef] $sudoers_d_source  = undef,
   String                   $sudoers_owner     = 'root',
   String                   $sudoers_group     = 'root',
   Boolean                  $purge_sudoers_dir = false,
 
-  Boolean                  $manage            = $::psick::manage,
-  Boolean                  $noop_manage       = $::psick::noop_manage,
-  Boolean                  $noop_value        = $::psick::noop_value,
+  Boolean                  $manage            = $psick::manage,
+  Boolean                  $noop_manage       = $psick::noop_manage,
+  Boolean                  $noop_value        = $psick::noop_value,
 ) {
-
   if $manage {
     if $noop_manage {
       noop($noop_value)

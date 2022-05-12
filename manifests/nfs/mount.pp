@@ -7,13 +7,12 @@ define psick::nfs::mount (
   String $mountpoint = '',
   String $client_options = 'auto',
 ) {
-
   $real_mountpoint = $mountpoint ? {
     ''      => $name,
     default => $mountpoint
   }
 
-  mount {"shared ${share} by ${server}":
+  mount { "shared ${share} by ${server}":
     device   => "${server}:${share}",
     fstype   => 'nfs',
     name     => $real_mountpoint,
@@ -24,7 +23,7 @@ define psick::nfs::mount (
 
   case $ensure {
     'present': {
-      exec {"create ${real_mountpoint} and parents":
+      exec { "create ${real_mountpoint} and parents":
         command => "mkdir -p ${real_mountpoint}",
         unless  => "test -d ${real_mountpoint}",
         path    => '/bin:/usr/bin:/usr/local/bin',
@@ -41,7 +40,6 @@ define psick::nfs::mount (
       }
     }
 
-    default: { }
+    default: {}
   }
-
 }

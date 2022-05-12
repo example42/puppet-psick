@@ -8,8 +8,7 @@
 define psick::network::set_lo_ip (
   String $interfaces_path = '/etc/network/interfaces_lo',
 ) {
-
-  case $::osfamily {
+  case $facts['os']['family'] {
     'Debian': {
       if !defined(Concat[$interfaces_path]) {
         concat { $interfaces_path:

@@ -11,7 +11,6 @@ define psick::puppet::set_external_fact (
   String $mode                     = '0644',
   Hash $options                    = {},
 ) {
-
   if ! $value and ! $template {
     fail('You must specify either a value or a template to use')
   }
@@ -39,5 +38,4 @@ define psick::puppet::set_external_fact (
     content => $file_content,
     mode    => $mode,
   }
-
 }

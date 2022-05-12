@@ -116,7 +116,6 @@ class psick::mariadb::install (
   Boolean            $noop_manage              = false,
   Boolean            $noop_value               = false,
 ) {
-
   $options=lookup('psick::mariadb::install::options', Hash, $options_lookup_method, {})
 
   if $manage {

@@ -28,7 +28,6 @@ define psick::openssh::keypair (
   Boolean $create_ssh_dir                   = true,
 
 ) {
-
   $ssh_dir_path = $dir_path ? {
     undef   => $user ? {
       'root'  => "/${user}/.ssh",

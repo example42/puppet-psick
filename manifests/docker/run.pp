@@ -33,17 +33,16 @@ define psick::docker::run (
   Boolean                 $mount_data_dir      = true,
   Boolean                 $mount_log_dir       = true,
 
-  Hash                    $settings            = { },
+  Hash                    $settings            = {},
 
-  ) {
-
+) {
   $sanitised_title = $title
   # $sanitised_title = regsubst($title, '/', '-', 'G')
 
   $username_prefix = $username ? {
-    ''      => $::psick::docker::username ? {
+    ''      => $psick::docker::username ? {
       ''      => '',
-      default => "${::psick::docker::username}/",
+      default => "${facts['psick::docker::username']}/",
     },
     default => "${username}/",
   }
@@ -95,7 +94,7 @@ define psick::docker::run (
       false    => false,
       default  => true,
     }
-    case $::psick::docker::module_settings['init_system'] {
+    case $psick::docker::module_settings['init_system'] {
       'upstart': {
         $initscript_file_path = "/etc/init/${service_prefix}${sanitised_title}.conf"
         $default_template = 'psick/docker/run/upstart.erb'
@@ -129,7 +128,7 @@ define psick::docker::run (
       ensure   => $service_ensure,
       enable   => $service_enable,
       provider => $service_provider,
-      require  => Service[$::psick::docker::module_settings['service_name']],
+      require  => Service[$psick::docker::module_settings['service_name']],
     }
   }
 }

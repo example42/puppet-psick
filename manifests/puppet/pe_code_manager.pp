@@ -15,9 +15,9 @@ class psick::puppet::pe_code_manager (
   Optional[String] $puppet_group              = 'pe-puppet',
   Optional[String] $puppet_user_home          = undef,
   Optional[String] $lifetime                  = '5y',
-  Boolean $manage                  = $::psick::manage,
-  Boolean $noop_manage             = $::psick::noop_manage,
-  Boolean $noop_value              = $::psick::noop_value,
+  Boolean $manage                  = $psick::manage,
+  Boolean $noop_manage             = $psick::noop_manage,
+  Boolean $noop_value              = $psick::noop_value,
 ) {
   if $manage {
     if $noop_manage {
@@ -31,7 +31,7 @@ class psick::puppet::pe_code_manager (
         display_name => 'Puppet code deploy user',
         email        => $pe_email,
         password     => $pe_password,
-        roles        => [ 'Code Deployers' ],
+        roles        => ['Code Deployers'],
         before       => Psick::Puppet::Access[$pe_user],
       }
       psick::puppet::access { $pe_user:
@@ -78,6 +78,5 @@ class psick::puppet::pe_code_manager (
     #  psick::gitlab::deploy_key { :
     #    sshkey => $deploy_ssh_public_key
     #  }
-
   }
 }

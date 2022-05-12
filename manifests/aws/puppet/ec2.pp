@@ -21,14 +21,14 @@ class psick::aws::puppet::ec2 (
   String  $default_key_name,
   String  $ensure                  = 'present',
 
-  String $region                    = $::psick::aws::region,
-  String $default_vpc_name          = $::psick::aws::default_vpc_name,
-  Boolean $create_defaults          = $::psick::aws::create_defaults,
+  String $region                    = $psick::aws::region,
+  String $default_vpc_name          = $psick::aws::default_vpc_name,
+  Boolean $create_defaults          = $psick::aws::create_defaults,
 
   # Hashes of resources to create
-  Hash    $ec2_instances           = { },
-  Hash    $ec2_launchconfigurations   = { },
-  Hash    $ec2_autoscalinggroups = { },
+  Hash    $ec2_instances           = {},
+  Hash    $ec2_launchconfigurations   = {},
+  Hash    $ec2_autoscalinggroups = {},
 
   # Default settings
   String  $default_instance_type              = 't2.nano',
@@ -45,28 +45,27 @@ class psick::aws::puppet::ec2 (
   Boolean $default_ebs_optimized       = false,
   Boolean $default_monitoring          = false,
 
-  Boolean          $manage               = $::psick::manage,
-  Boolean          $noop_manage          = $::psick::noop_manage,
-  Boolean          $noop_value           = $::psick::noop_value,
+  Boolean          $manage               = $psick::manage,
+  Boolean          $noop_manage          = $psick::noop_manage,
+  Boolean          $noop_value           = $psick::noop_value,
 ) {
-
   if $manage {
     if $noop_manage {
       noop($noop_value)
     }
 
     # Find the AMI to use if none specified
-    contain ::psick::aws::ami
+    contain psick::aws::ami
     $calculated_image_id = getvar("::psick::aws::ami::calculated_image_id_${default_os}")
     $calculated_autoscaling_image_id =
-    getvar("::psick::aws::ami::calculated_autoscaling_image_id_${default_autoscaling_os}")
+      getvar("::psick::aws::ami::calculated_autoscaling_image_id_${default_autoscaling_os}")
 
     $plain_ensure = $ensure ? {
       'absent' => 'absent',
       default  => 'present',
     }
     if $ensure == 'absent' {
-    # Rds_db_securitygroup<|name == $title|> ->
+      # Rds_db_securitygroup<|name == $title|> ->
       Rds_instance<|name == $title|>
     }
 
@@ -77,20 +76,20 @@ class psick::aws::puppet::ec2 (
         "${default_vpc_name}-bastion" => {
           subnet                      => "${default_vpc_name}_dmz_a",
           associate_public_ip_address => true,
-          security_groups             => [ 'public-ssh' ],
+          security_groups             => ['public-ssh'],
         },
         "${default_vpc_name}-ci" => {
           subnet          => "${default_vpc_name}_mgmt_a",
-          security_groups => [ 'private-ssh' , 'private-ci' ],
+          security_groups => ['private-ssh' , 'private-ci'],
         },
         "${default_vpc_name}-mon" => {
           subnet          => "${default_vpc_name}_mgmt_a",
-          security_groups => [ 'private-ssh' , 'public-http' ],
+          security_groups => ['private-ssh' , 'public-http'],
         },
       }
       $default_ec2_launchconfigurations = {
         "${default_vpc_name}-ecs" => {
-          security_groups => [ 'private-ssh' , 'public-http' ],
+          security_groups => ['private-ssh' , 'public-http'],
         },
       }
       $default_ec2_autoscalinggroups = {
@@ -101,7 +100,6 @@ class psick::aws::puppet::ec2 (
           launch_configuration => "${default_vpc_name}-ecs",
         },
       }
-
     } else {
       $default_ec2_instances = {}
       $default_ec2_launchconfigurations = {}
@@ -123,10 +121,9 @@ class psick::aws::puppet::ec2 (
       key_name             => $default_key_name,
     }
 
-    if $all_ec2_instances != { } {
+    if $all_ec2_instances != {} {
       create_resources('ec2_instance',$all_ec2_instances,$ec2_instances_defaults)
     }
-
 
     # EC2 AUTOSCALING
     $ec2_launchconfigurations_defaults = {
@@ -136,10 +133,9 @@ class psick::aws::puppet::ec2 (
       instance_type => $default_autoscaling_instance_type,
       key_name      => $default_key_name,
     }
-    if $all_ec2_launchconfigurations != { } {
+    if $all_ec2_launchconfigurations != {} {
       create_resources('ec2_launchconfiguration',$all_ec2_launchconfigurations,$ec2_launchconfigurations_defaults)
     }
-
 
     $ec2_autoscalinggroups_defaults = {
       ensure   => $plain_ensure,
@@ -147,7 +143,7 @@ class psick::aws::puppet::ec2 (
       max_size => $default_autoscaling_max_size,
       min_size => $default_autoscaling_min_size,
     }
-    if $all_ec2_autoscalinggroups != { } {
+    if $all_ec2_autoscalinggroups != {} {
       create_resources('ec2_autoscalinggroup',$all_ec2_autoscalinggroups,$ec2_autoscalinggroups_defaults)
     }
   }

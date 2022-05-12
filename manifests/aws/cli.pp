@@ -1,25 +1,24 @@
 #
 class psick::aws::cli (
   String $ensure                = 'present',
-  String $region                = $::psick::aws::region,
+  String $region                = $psick::aws::region,
   String $aws_access_key_id     = '',
   String $aws_secret_access_key = '',
   String $config_template       = 'psick/aws/credentials.erb',
-  Array $install_gems           = [ 'aws-sdk-core' , 'retries' ],
+  Array $install_gems           = ['aws-sdk-core' , 'retries'],
   Boolean $install_system_gems  = true,
   Boolean $install_puppet_gems  = true,
 
-  Boolean $manage               = $::psick::manage,
-  Boolean $noop_manage          = $::psick::noop_manage,
-  Boolean $noop_value           = $::psick::noop_value,
+  Boolean $manage               = $psick::manage,
+  Boolean $noop_manage          = $psick::noop_manage,
+  Boolean $noop_value           = $psick::noop_value,
 ) {
-
   if $manage {
     if $noop_manage {
       noop($noop_value)
     }
-    contain ::psick::python::pip
-    contain ::psick::ruby
+    contain psick::python::pip
+    contain psick::ruby
 
     tp::install { 'awscli':
       ensure => $ensure,

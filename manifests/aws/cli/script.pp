@@ -7,7 +7,6 @@ define psick::aws::cli::script (
   Variant[Undef,String] $region = undef,
   String $command = '',
 ) {
-
   $script_path = "${destination_dir}/${title}"
   $exec_command = $command ? {
     # ''      => "${script_path} || rm ${script_path}",
@@ -30,5 +29,4 @@ define psick::aws::cli::script (
       subscribe   => File[$script_path],
     }
   }
-
 }

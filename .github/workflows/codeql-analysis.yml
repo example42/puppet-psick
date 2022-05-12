@@ -13,12 +13,21 @@ name: "CodeQL"
 
 on:
   push:
+<<<<<<< HEAD
     branches: [ master ]
   pull_request:
     # The branches below must be a subset of the branches above
     branches: [ master ]
   schedule:
     - cron: '38 21 * * 1'
+=======
+    branches: [ main ]
+  pull_request:
+    # The branches below must be a subset of the branches above
+    branches: [ main ]
+  schedule:
+    - cron: '45 0 * * 0'
+>>>>>>> Diffs and CI
 
 jobs:
   analyze:
@@ -32,7 +41,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+<<<<<<< HEAD
         language: [ 'javascript', 'ruby' ]
+=======
+        language: [ 'ruby' ]
+>>>>>>> Diffs and CI
         # CodeQL supports [ 'cpp', 'csharp', 'go', 'java', 'javascript', 'python', 'ruby' ]
         # Learn more about CodeQL language support at https://aka.ms/codeql-docs/language-support
 

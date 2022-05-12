@@ -6,7 +6,7 @@
 #  $home_dir_path = psick::get_user_home($user)
 #
 function psick::get_user_home ( String[1] $user ) >> String {
-  case $::osfamily {
+  case $facts['os']['family'] {
     'RedHat', 'Suse': {
       if $user == 'root' {
         $home_dir = '/root'
@@ -36,4 +36,3 @@ function psick::get_user_home ( String[1] $user ) >> String {
     }
   }
 }
-

@@ -5,12 +5,12 @@
 class psick::hosts::dynamic (
   String $dynamic_magicvar = '',
   Boolean $dynamic_exclude = false,
-  String  $dynamic_ip      = $::ipaddress,
-  Array  $dynamic_alias    = [ $::hostname ],
-  Hash  $extra_hosts       = { },
-  Boolean $manage          = $::psick::manage,
-  Boolean $noop_manage     = $::psick::noop_manage,
-  Boolean $noop_value      = $::psick::noop_value,
+  String  $dynamic_ip      = $facts['networking']['ip'],
+  Array  $dynamic_alias    = [$facts['networking']['hostname']],
+  Hash  $extra_hosts       = {},
+  Boolean $manage          = $psick::manage,
+  Boolean $noop_manage     = $psick::noop_manage,
+  Boolean $noop_value      = $psick::noop_value,
 ) {
   if $manage {
     if $noop_manage {
@@ -23,7 +23,7 @@ class psick::hosts::dynamic (
       default => "env-${magic_tag}",
     }
 
-    @@host { $::fqdn:
+    @@host { $facts['networking']['fqdn']:
       ip           => $hosts::dynamic_ip,
       host_aliases => $hosts::dynamic_alias,
       tag          => $real_tag,

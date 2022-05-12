@@ -28,15 +28,15 @@ class psick::hardening::pam (
   String $system_auth_template   = '',
   String $password_auth_template = '',
   String $login_defs_template    = '',
-  Boolean $manage                = $::psick::manage,
-  Boolean $noop_manage           = $::psick::noop_manage,
-  Boolean $noop_value            = $::psick::noop_value,
+  Boolean $manage                = $psick::manage,
+  Boolean $noop_manage           = $psick::noop_manage,
+  Boolean $noop_value            = $psick::noop_value,
 ) {
   if $manage {
     if $noop_manage {
       noop($noop_value)
     }
-    $options_user=lookup('psick::hardening::pam::options', Hash, 'deep', {} )
+    $options_user=lookup('psick::hardening::pam::options', Hash, 'deep', {})
     $options_default = {
       umask                    => '027',
       password_max_age         => 60,
@@ -59,11 +59,11 @@ class psick::hardening::pam (
     $options=merge($options_default,$options_user)
 
     $real_system_auth_template = $system_auth_template ? {
-      ''     => "psick/hardening/pam/system-auth_${::os['family']}${::os['release']['major']}",
+      ''     => "psick/hardening/pam/system-auth_${facts['os']['family']}${facts['os']['release']['major']}",
       default => $system_auth_template,
     }
     $real_password_auth_template = $password_auth_template ? {
-      ''     => "psick/hardening/pam/password-auth_${::os['family']}${::os['release']['major']}",
+      ''     => "psick/hardening/pam/password-auth_${facts['os']['family']}${facts['os']['release']['major']}",
       default => $password_auth_template,
     }
 

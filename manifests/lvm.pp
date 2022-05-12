@@ -12,18 +12,17 @@ class psick::lvm (
   Boolean $default_createfs  = false,
   Boolean $install_package   = true,
 
-  Boolean $manage            = $::psick::manage,
-  Boolean $noop_manage       = $::psick::noop_manage,
-  Boolean $noop_value        = $::psick::noop_value,
+  Boolean $manage            = $psick::manage,
+  Boolean $noop_manage       = $psick::noop_manage,
+  Boolean $noop_value        = $psick::noop_value,
 
 ) {
-
   if $manage {
     if $noop_manage {
       noop($noop_value)
     }
 
-    if $install_package  {
+    if $install_package {
       package { 'lvm2':
         ensure => $ensure,
       }

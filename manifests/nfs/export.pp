@@ -14,7 +14,6 @@ define psick::nfs::export (
 
   Boolean $use_exportsd         = false,
 ) {
-
   if $options != '' {
     $auto_content = "${share} ${guest}(${options})\n"
   } else {
@@ -59,5 +58,4 @@ define psick::nfs::export (
       creates => $share,
     }
   }
-
 }

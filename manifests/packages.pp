@@ -81,12 +81,11 @@ class psick::packages (
   Hash $resource_default_arguments = {},
   Boolean $delete_unmanaged        = false,
 
-  Boolean $manage                  = $::psick::manage,
-  Boolean $noop_manage             = $::psick::noop_manage,
-  Boolean $noop_value              = $::psick::noop_value,
+  Boolean $manage                  = $psick::manage,
+  Boolean $noop_manage             = $psick::noop_manage,
+  Boolean $noop_value              = $psick::noop_value,
 
 ) {
-
   if $manage {
     if $noop_manage {
       noop($noop_value)
@@ -121,7 +120,7 @@ class psick::packages (
 
     # Packages management based on $packages_osfamily_hash
     $packages_osfamily_hash.each |$k,$v| {
-      if $::osfamily == $k {
+      if $facts['os']['family'] == $k {
         case $v {
           Array: {
             ensure_packages($v)

@@ -7,8 +7,7 @@ define psick::mariadb::query (
   $password       = '',
   $host           = '',
   $query_filepath = '/root/puppet-mariadb'
-  ) {
-
+) {
   if ! defined(File[$query_filepath]) {
     file { $query_filepath:
       ensure => directory,
@@ -16,7 +15,7 @@ define psick::mariadb::query (
   }
 
   file { "mariadbquery-${name}.sql":
-    ensure  => present,
+    ensure  => file,
     mode    => '0600',
     path    => "${query_filepath}/mariadbquery-${name}.sql",
     content => template('psick/mariadb/query.erb'),
@@ -49,7 +48,7 @@ define psick::mariadb::query (
   exec { "remove_${exec_flagfile}":
     command     => "rm -f '${exec_flagfile}'",
     subscribe   => File["mariadbquery-${name}.sql"],
-    path        => [ '/usr/bin' , '/usr/sbin' ],
+    path        => ['/usr/bin' , '/usr/sbin'],
     refreshonly => true,
     before      => Exec["mariadbquery-${name}"],
   }
@@ -59,8 +58,7 @@ define psick::mariadb::query (
   exec { "mariadbquery-${name}":
     command   => "${exec_command} && touch ${exec_flagfile}",
     subscribe => File["mariadbquery-${name}.sql"],
-    path      => [ '/usr/bin' , '/usr/sbin' ],
+    path      => ['/usr/bin' , '/usr/sbin'],
     creates   => $exec_flagfile,
   }
-
 }

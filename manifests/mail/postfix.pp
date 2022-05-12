@@ -14,21 +14,21 @@ class psick::mail::postfix (
 
   Variant[String[1],Undef] $config_dir_source          = undef,
   String                   $config_file_template       = '',
-  Boolean $manage             = $::psick::manage,
-  Boolean $noop_manage        = $::psick::noop_manage,
-  Boolean $noop_value         = $::psick::noop_value,
+  Boolean $manage             = $psick::manage,
+  Boolean $noop_manage        = $psick::noop_manage,
+  Boolean $noop_value         = $psick::noop_value,
 ) {
   if $manage {
     if $noop_manage {
       noop($noop_value)
     }
     $options_default = {
-      'mydomain'        => $::domain,
+      'mydomain'        => $facts['networking']['domain'],
       'inet_interfaces' => 'localhost',
       'inet_protocols'  => 'all',
       'my_destination'  => '$myhostname, localhost.$mydomain, localhost',
     }
-    $options_user=lookup('psick::mail::postfix::options', Hash, 'deep', {} )
+    $options_user=lookup('psick::mail::postfix::options', Hash, 'deep', {})
     $options=merge($options_default,$options_user)
 
     # Postfix as local mailer

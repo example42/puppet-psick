@@ -14,14 +14,13 @@ class psick::puppetserver (
   String[1] $r10k_postrun_source          = 'puppet:///modules/psick/puppet/generate_types.sh',
 
   Optional[String]  $git_remote_repo      = undef,
-  String            $dns_alt_names        = "puppet,puppet.${::domain}",
+  String            $dns_alt_names        = "puppet,puppet.${facts['networking']['domain']}",
   Boolean           $remove_global_hiera_yaml = false,
 
-  Boolean           $manage               = $::psick::manage,
-  Boolean           $noop_manage          = $::psick::noop_manage,
-  Boolean           $noop_value           = $::psick::noop_value,
+  Boolean           $manage               = $psick::manage,
+  Boolean           $noop_manage          = $psick::noop_manage,
+  Boolean           $noop_value           = $psick::noop_value,
 ) {
-
   if $manage {
     if $noop_manage {
       noop($noop_value)
@@ -39,7 +38,7 @@ class psick::puppetserver (
       }
       'puppetserver': {
         $puppetserver_class = 'puppetserver'
-        contain ::puppetserver
+        contain puppetserver
       }
       default: {}
     }
@@ -59,13 +58,13 @@ class psick::puppetserver (
         exec { '/opt/puppetlabs/puppet/bin/puppet cert list --all --allow-dns-alt-names':
           creates   => '/etc/puppetlabs/puppet/ssl/ca/ca_key.pem',
           logoutput => true,
-          require   => [ Package['puppetserver'], Ini_setting['puppet master dns alt names'] ],
+          require   => [Package['puppetserver'], Ini_setting['puppet master dns alt names']],
         }
         # step 2: generate host certificate
         exec { "/opt/puppetlabs/puppet/bin/puppet cert generate ${::facts['networking']['fqdn']}":
           creates   => "/etc/puppetlabs/puppet/ssl/certs/${::facts['networking']['fqdn']}.pem",
           logoutput => true,
-          require   => [ Package['puppetserver'], Ini_setting['puppet master dns alt names'] ],
+          require   => [Package['puppetserver'], Ini_setting['puppet master dns alt names']],
         }
       }
       /^(6)/: {
@@ -73,10 +72,10 @@ class psick::puppetserver (
         exec { "/opt/puppetlabs/bin/puppetserver ca setup --subject-alt-names ${dns_alt_names} --certname ${::facts['networking']['fqdn']}":
           creates   => '/etc/puppetlabs/puppet/ssl/ca/ca_key.pem',
           logoutput => true,
-          require   => [ Package['puppetserver'], Ini_setting['puppet master dns alt names'] ],
+          require   => [Package['puppetserver'], Ini_setting['puppet master dns alt names']],
         }
       }
-      default: { }
+      default: {}
     }
 
     if $r10k_remote_repo or $r10k_options {
@@ -88,7 +87,7 @@ class psick::puppetserver (
         'puppet' => {
           'remote'  => $r10k_remote_repo,
           'basedir' => '/etc/puppetlabs/code/environments',
-        }
+        },
       }
       $r10k_default_options = {
         postrun         => [$r10k_postrun_command],
@@ -105,7 +104,7 @@ class psick::puppetserver (
           ensure => directory,
         }
         file { '/etc/puppetlabs/r10k/r10k.yaml':
-          ensure  => present,
+          ensure  => file,
           content => template($r10k_template),
         }
         file { $r10k_postrun_command:
@@ -122,12 +121,12 @@ class psick::puppetserver (
         }
       }
       if $r10k_configure_webhook {
-        class {'r10k::webhook::config':
+        class { 'r10k::webhook::config':
           enable_ssl      => false,
           use_mcollective => false,
           require         => Class['r10k'],
         }
-        class {'r10k::webhook':
+        class { 'r10k::webhook':
           use_mcollective => false,
           user            => 'root',
           group           => '0',

@@ -116,7 +116,6 @@ class psick::apache::install (
   Boolean            $noop_manage              = false,
   Boolean            $noop_value               = false,
 ) {
-
   $options=lookup('psick::apache::install::options', Hash, $options_lookup_method, {})
 
   if $manage {

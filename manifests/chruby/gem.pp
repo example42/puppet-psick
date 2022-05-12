@@ -5,7 +5,6 @@ define psick::chruby::gem (
   Optional[String] $gem_version = undef,
   String $ruby_version = '1.9'
 ) {
-
   if $gem_version {
     $version_check  = "| grep ${gem_version}"
     $version_string = "-v${gem_version}"
@@ -23,4 +22,3 @@ define psick::chruby::gem (
     unless  => "${chruby} ${ruby_version} -- gem list | ${grep}",
   }
 }
-

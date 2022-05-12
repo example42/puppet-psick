@@ -51,11 +51,10 @@ class psick::users (
   Boolean $delete_unmanaged     = false,
   Optional[String] $skel_dir_source = undef,
 
-  Boolean $manage               = $::psick::manage,
-  Boolean $noop_manage          = $::psick::noop_manage,
-  Boolean $noop_value           = $::psick::noop_value,
+  Boolean $manage               = $psick::manage,
+  Boolean $noop_manage          = $psick::noop_manage,
+  Boolean $noop_value           = $psick::noop_value,
 ) {
-
   if $manage {
     if $noop_manage {
       noop($noop_value)
@@ -70,7 +69,7 @@ class psick::users (
       File['/etc/skel'] -> User<||>
     }
 
-    if $root_pw or $root_params != {}  {
+    if $root_pw or $root_params != {} {
       user { 'root':
         password => $root_pw,
         *        => $root_params,
@@ -88,12 +87,12 @@ class psick::users (
         if $v['home'] {
           $home_real = $v['home']
         } elsif $u == 'root' {
-          $home_real = $::osfamily ? {
+          $home_real = $facts['os']['family'] ? {
             'Solaris' => '/',
             default   => '/root',
           }
         } else {
-          $home_real = $::osfamily ? {
+          $home_real = $facts['os']['family'] ? {
             'Solaris' => "/export/home/${u}",
             default   => "/home/${u}",
           }

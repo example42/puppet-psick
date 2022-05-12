@@ -7,8 +7,7 @@ define psick::mysql::query (
   $password       = '',
   $host           = '',
   $query_filepath = '/root/puppet-mysql'
-  ) {
-
+) {
   if ! defined(File[$query_filepath]) {
     file { $query_filepath:
       ensure => directory,
@@ -16,7 +15,7 @@ define psick::mysql::query (
   }
 
   file { "mysqlquery-${name}.sql":
-    ensure  => present,
+    ensure  => file,
     mode    => '0600',
     path    => "${query_filepath}/mysqlquery-${name}.sql",
     content => template('psick/mysql/query.erb'),
@@ -30,8 +29,8 @@ define psick::mysql::query (
   }
 
   $arg_host = $host ? {
-  ''      => '',
-  default => "-h ${host}",
+    ''      => '',
+    default => "-h ${host}",
   }
 
   $arg_password = $password ? {
@@ -48,7 +47,7 @@ define psick::mysql::query (
   exec { "remove_${exec_flagfile}":
     command     => "rm -f '${exec_flagfile}'",
     subscribe   => File["mysqlquery-${name}.sql"],
-    path        => [ '/usr/bin' , '/usr/sbin' ],
+    path        => ['/usr/bin' , '/usr/sbin'],
     refreshonly => true,
     before      => Exec["mysqlquery-${name}"],
   }
@@ -58,8 +57,7 @@ define psick::mysql::query (
   exec { "mysqlquery-${name}":
     command   => "${exec_command} && touch ${exec_flagfile}",
     subscribe => File["mysqlquery-${name}.sql"],
-    path      => [ '/usr/bin' , '/usr/sbin' ],
+    path      => ['/usr/bin' , '/usr/sbin'],
     creates   => $exec_flagfile,
   }
-
 }
