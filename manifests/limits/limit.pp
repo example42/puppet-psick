@@ -36,8 +36,7 @@ define psick::limits::limit (
   Variant[Integer,String,Undef] $soft       = undef,
   Variant[Integer,String,Undef] $both       = undef,
 ) {
-
-  include ::psick::limits
+  include psick::limits
 
   if $ensure == 'present' {
     unless $hard or $soft or $both { fail('You have to define one of $hard, $soft or $both') }
@@ -51,12 +50,12 @@ define psick::limits::limit (
   $real_item = pick($item, $title_split[1])
 
   if $title !~ /\// {
-    $file_path = "${::psick::limits::limits_dir_path}/${title}.conf"
+    $file_path = "${psick::limits::limits_dir_path}/${title}.conf"
   } else {
     if $real_domain == '*' {
-      $file_path = "${::psick::limits::limits_dir_path}/default_${real_item}.conf"
+      $file_path = "${psick::limits::limits_dir_path}/default_${real_item}.conf"
     } else {
-      $file_path = "${::psick::limits::limits_dir_path}/${real_domain}_${real_item}.conf"
+      $file_path = "${psick::limits::limits_dir_path}/${real_domain}_${real_item}.conf"
     }
   }
 

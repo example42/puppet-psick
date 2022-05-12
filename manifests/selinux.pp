@@ -34,11 +34,10 @@ class psick::selinux (
   Boolean $selinux_dir_recurse       = true,
   Boolean $selinux_dir_force         = true,
   Boolean $selinux_dir_purge         = false,
-  Boolean $manage                    = $::psick::manage,
-  Boolean $noop_manage               = $::psick::noop_manage,
-  Boolean $noop_value                = $::psick::noop_value,
+  Boolean $manage                    = $psick::manage,
+  Boolean $noop_manage               = $psick::noop_manage,
+  Boolean $noop_value                = $psick::noop_value,
 ) {
-
   if $manage {
     if $noop_manage {
       noop($noop_value)
@@ -56,7 +55,7 @@ class psick::selinux (
     }
     if getvar('selinux')!= undef and $selinux_file_template != '' {
       file { '/etc/selinux/config':
-        ensure  => present,
+        ensure  => file,
         content => psick::template($selinux_file_template,$selinux_params),
         owner   => 'root',
         group   => 'root',
@@ -90,7 +89,7 @@ class psick::selinux (
     }
 
     # Relabeling required when switching from disabled to permissive or enforcing.
-    if $state in ['enforcing','permissive'] and $facts['selinux'] == false {
+    if $state in ['enforcing','permissive'] and $facts['os']['selinux']['enabled'] == false {
       file { '/.autorelabel':
         ensure  => 'file',
         owner   => 'root',
@@ -98,7 +97,7 @@ class psick::selinux (
         content => "# Created by Puppet for disabled to ${state} SELinux switch\n",
       }
     }
-    if $state in ['disabled'] and $facts['selinux'] == true {
+    if $state in ['disabled'] and $facts['os']['selinux']['enabled'] == true {
       notify { 'Reboot needed':
         message => 'You need to reboot the system to fully disable SElinux. Now operating in permissive mode',
       }

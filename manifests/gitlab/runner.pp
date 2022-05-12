@@ -18,8 +18,8 @@ class psick::gitlab::runner (
   String           $ensure            = 'present',
   Boolean          $auto_prereq       = true,
   Optional[String] $template          = undef,
-  Hash             $options           = { },
-  Hash             $runners           = { },
+  Hash             $options           = {},
+  Hash             $runners           = {},
   String           $sudo_template     = 'psick/gitlab/runner/sudo.erb',
   Optional[String] $pe_user           = undef,
   Optional[String] $pe_password       = undef,
@@ -27,9 +27,8 @@ class psick::gitlab::runner (
   Optional[String] $pe_token_lifetime = '5y',
   Boolean          $use_docker        = false,
 ) {
-
   if $use_docker {
-    contain ::psick::docker
+    contain psick::docker
     # Quick and very dirty
     exec { 'usermod -a -G docker gitlab-runner':
       unless    => 'grep docker /etc/group | grep gitlab-runner',

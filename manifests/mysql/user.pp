@@ -6,10 +6,9 @@ define psick::mysql::user (
   $password_hash  = '',
   $host           = 'localhost',
   $grant_filepath = '/root/puppet-mysql'
-  ) {
-
+) {
   if (!defined(File[$grant_filepath])) {
-    file {$grant_filepath:
+    file { $grant_filepath:
       ensure => directory,
       path   => $grant_filepath,
       mode   => '0700',
@@ -21,7 +20,7 @@ define psick::mysql::user (
   $exec_flagfile = "${grant_filepath}/${grant_file}.done"
 
   file { $grant_file:
-    ensure  => present,
+    ensure  => file,
     mode    => '0600',
     path    => "${grant_filepath}/${grant_file}",
     content => template('psick/mysql/user.erb'),
@@ -36,15 +35,14 @@ define psick::mysql::user (
   exec { "remove_${exec_flagfile}":
     command     => "rm -f '${exec_flagfile}'",
     subscribe   => File[$grant_file],
-    path        => [ '/usr/bin' , '/usr/sbin' ],
+    path        => ['/usr/bin' , '/usr/sbin'],
     refreshonly => true,
     before      => Exec["mysqluser-${user}-${nice_host}"],
   }
   exec { "mysqluser-${user}-${nice_host}":
     command   => "mysql ${my_cnf} -uroot < ${grant_filepath}/${grant_file} && touch ${exec_flagfile}",
     subscribe => File[$grant_file],
-    path      => [ '/usr/bin' , '/usr/sbin' ],
+    path      => ['/usr/bin' , '/usr/sbin'],
     creates   => $exec_flagfile,
   }
-
 }

@@ -3,9 +3,9 @@
 class psick::python::fabric (
   $ensure = 'present',
 
-  Boolean $manage      = $::psick::manage,
-  Boolean $noop_manage = $::psick::noop_manage,
-  Boolean $noop_value  = $::psick::noop_value,
+  Boolean $manage      = $psick::manage,
+  Boolean $noop_manage = $psick::noop_manage,
+  Boolean $noop_value  = $psick::noop_value,
 ) {
   if $manage {
     if $noop_manage {

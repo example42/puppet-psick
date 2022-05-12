@@ -17,11 +17,10 @@ class psick::puppet::pe_agent (
   Hash $ini_settings_hash     = {},
   String $config_file_path    = '/etc/puppetlabs/puppet/puppet.conf',
 
-  Boolean $manage             = $::psick::manage,
-  Boolean $noop_manage        = $::psick::noop_manage,
-  Boolean $noop_value         = $::psick::noop_value,
+  Boolean $manage             = $psick::manage,
+  Boolean $noop_manage        = $psick::noop_manage,
+  Boolean $noop_value         = $psick::noop_value,
 ) {
-
   if $manage {
     if $noop_manage {
       noop($noop_value)
@@ -82,7 +81,7 @@ class psick::puppet::pe_agent (
           value   => $vv,
         }
         pe_ini_setting { "puppet.conf ${k} - ${kk}":
-          * => $default_ini_settings + $ini_settings
+          * => $default_ini_settings + $ini_settings,
         }
       }
     }

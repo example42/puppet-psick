@@ -1,21 +1,20 @@
 # Setup a VPC
 class psick::aws::puppet::vpc (
-  String $region                    = $::psick::aws::region,
+  String $region                    = $psick::aws::region,
   String $ensure                    = 'present',
-  String $default_cidr_block_prefix = $::psick::aws::default_cidr_block_prefix,
-  String $default_vpc_name          = $::psick::aws::default_vpc_name,
-  Boolean $create_defaults          = $::psick::aws::create_defaults,
+  String $default_cidr_block_prefix = $psick::aws::default_cidr_block_prefix,
+  String $default_vpc_name          = $psick::aws::default_vpc_name,
+  Boolean $create_defaults          = $psick::aws::create_defaults,
 
-  Hash   $ec2_vpcs                  = { },
-  Hash   $ec2_vpc_subnets           = { },
-  Hash   $ec2_vpc_routetables       = { },
-  Hash   $ec2_vpc_internet_gateways = { },
+  Hash   $ec2_vpcs                  = {},
+  Hash   $ec2_vpc_subnets           = {},
+  Hash   $ec2_vpc_routetables       = {},
+  Hash   $ec2_vpc_internet_gateways = {},
 
-  Boolean     $manage               = $::psick::manage,
-  Boolean     $noop_manage          = $::psick::noop_manage,
-  Boolean     $noop_value           = $::psick::noop_value,
+  Boolean     $manage               = $psick::manage,
+  Boolean     $noop_manage          = $psick::noop_manage,
+  Boolean     $noop_value           = $psick::noop_value,
 ) {
-
   if $manage {
     if $noop_manage {
       noop($noop_value)
@@ -110,7 +109,7 @@ class psick::aws::puppet::vpc (
       ensure                  => $ensure,
       region                  => $region,
     }
-    if $all_ec2_vpcs != { } {
+    if $all_ec2_vpcs != {} {
       create_resources('Ec2_vpc',$all_ec2_vpcs,$ec2_vpcs_defaults)
     }
 
@@ -123,27 +122,25 @@ class psick::aws::puppet::vpc (
       map_public_ip_on_launch => false,
       route_table             => $default_vpc_name,
     }
-    if $all_ec2_vpc_subnets != { } {
+    if $all_ec2_vpc_subnets != {} {
       create_resources('ec2_vpc_subnet',$all_ec2_vpc_subnets,$ec2_vpc_subnets_defaults)
     }
-
 
     $ec2_vpc_internet_gateways_defaults = {
       ensure     => $ensure,
       region     => $region,
       vpc        => $default_vpc_name,
     }
-    if $all_ec2_vpc_internet_gateways != { } {
+    if $all_ec2_vpc_internet_gateways != {} {
       create_resources('ec2_vpc_internet_gateway',$all_ec2_vpc_internet_gateways,$ec2_vpc_internet_gateways_defaults)
     }
-
 
     $ec2_vpc_routetables_defaults = {
       ensure     => $ensure,
       region     => $region,
       vpc        => $default_vpc_name,
     }
-    if $all_ec2_vpc_routetables != { } {
+    if $all_ec2_vpc_routetables != {} {
       create_resources('ec2_vpc_routetable',$all_ec2_vpc_routetables,$ec2_vpc_routetables_defaults)
     }
   }

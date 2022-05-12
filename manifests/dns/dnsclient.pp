@@ -14,5 +14,5 @@
 # Note that all nameservers, options, search amd sortlist all require an array
 # as argument
 class psick::dns::dnsclient {
-  contain ::dnsclient
+  contain dnsclient
 }

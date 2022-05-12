@@ -28,11 +28,11 @@ class psick::puppet::foss_master (
   Boolean           $manage_puppetdb_repo     = true,
   Boolean           $enable_puppetdb_sslsetup = false,
   Boolean           $enable_puppetdb          = true,
-  String            $dns_alt_names            = "puppet,puppet.${::domain}",
+  String            $dns_alt_names            = "puppet,puppet.${facts['networking']['domain']}",
   Boolean           $remove_global_hiera_yaml = false,
-  Boolean $manage                  = $::psick::manage,
-  Boolean $noop_manage             = $::psick::noop_manage,
-  Boolean $noop_value              = $::psick::noop_value,
+  Boolean $manage                  = $psick::manage,
+  Boolean $noop_manage             = $psick::noop_manage,
+  Boolean $noop_value              = $psick::noop_value,
 ) {
   if $manage {
     if $noop_manage {
@@ -57,7 +57,7 @@ class psick::puppet::foss_master (
     case $facts['puppetversion'] {
       /^(3|4|5)/: {
         $cert_list_command = '/opt/puppetlabs/puppet/bin/puppet cert list --all --allow-dns-alt-names'
-        $cert_generate_command = "/opt/puppetlabs/puppet/bin/puppet cert generate ${::facts['networking']['fqdn']}"
+        $cert_generate_command = "/opt/puppetlabs/puppet/bin/puppet cert generate ${facts['networking']['fqdn']}"
       }
       default: {
         $cert_list_command = undef
@@ -69,14 +69,14 @@ class psick::puppet::foss_master (
       exec { $cert_list_command:
         creates   => '/etc/puppetlabs/puppet/ssl/ca/ca_key.pem',
         logoutput => true,
-        require   => [ Package['puppetserver'], Ini_setting['puppet master dns alt names'] ],
+        require   => [Package['puppetserver'], Ini_setting['puppet master dns alt names']],
       }
     }
     if $cert_generate_command {
       exec { $cert_generate_command:
-        creates   => "/etc/puppetlabs/puppet/ssl/certs/${::facts['networking']['fqdn']}.pem",
+        creates   => "/etc/puppetlabs/puppet/ssl/certs/${facts['networking']['fqdn']}.pem",
         logoutput => true,
-        require   => [ Package['puppetserver'], Ini_setting['puppet master dns alt names'] ],
+        require   => [Package['puppetserver'], Ini_setting['puppet master dns alt names']],
       }
     }
 
@@ -85,12 +85,12 @@ class psick::puppet::foss_master (
         remote   => $r10k_remote_repo,
         provider => 'puppet_gem',
       }
-      class {'r10k::webhook::config':
+      class { 'r10k::webhook::config':
         enable_ssl      => false,
         use_mcollective => false,
         require         => Class['r10k'],
       }
-      class {'r10k::webhook':
+      class { 'r10k::webhook':
         use_mcollective => false,
         user            => 'root',
         group           => '0',

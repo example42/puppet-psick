@@ -46,8 +46,7 @@ define psick::mariadb::grant (
   $remote_user        = '',
   $remote_password    = '',
   $require_ssl        = false,
-  ) {
-
+) {
   $dbname = $db ? {
     ''      => $name,
     default => $db,
@@ -102,7 +101,7 @@ define psick::mariadb::grant (
   }
 
   file { $grant_file:
-    ensure  => present,
+    ensure  => file,
     mode    => '0600',
     owner   => 'root',
     group   => 'root',
@@ -125,7 +124,7 @@ define psick::mariadb::grant (
   exec { "remove_${exec_flagfile}":
     command     => "rm -f '${exec_flagfile}'",
     subscribe   => File[$grant_file],
-    path        => [ '/usr/bin' , '/usr/sbin' ],
+    path        => ['/usr/bin' , '/usr/sbin'],
     refreshonly => true,
     before      => Exec["mariadbgrant-${user}-${nice_host}-${dbname}"],
   }
@@ -133,7 +132,7 @@ define psick::mariadb::grant (
   exec { "mariadbgrant-${user}-${nice_host}-${dbname}":
     command   => "${exec_command} && touch ${exec_flagfile}",
     subscribe => File[$grant_file],
-    path      => [ '/usr/bin' , '/usr/sbin' ],
+    path      => ['/usr/bin' , '/usr/sbin'],
     creates   => $exec_flagfile,
   }
 

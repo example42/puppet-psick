@@ -15,24 +15,22 @@ class psick::docker::host (
   Boolean                 $mount_data_dir      = true,
   Boolean                 $mount_log_dir       = true,
 
-  Boolean                $manage               = $::psick::manage,
-  Boolean                $noop_manage          = $::psick::noop_manage,
-  Boolean                $noop_value           = $::psick::noop_value,
+  Boolean                $manage               = $psick::manage,
+  Boolean                $noop_manage          = $psick::noop_manage,
+  Boolean                $noop_value           = $psick::noop_value,
 ) {
-
   if $manage {
     if $noop_manage {
       noop($noop_value)
     }
 
-    include ::psick::docker
+    include psick::docker
 
     $instances.each |$instance,$opts| {
-
       psick::docker::run { $instance:
         ensure           => pick_default($opts['ensure'],$ensure),
         image            => pick_default($opts['image'],''),
-        username         => pick_default($opts['username'],$::psick::docker::username),
+        username         => pick_default($opts['username'],$psick::docker::username),
         repository       => pick_default($opts['repository'],$instance),
         repository_tag   => pick_default($opts['repository_tag'],$repository_tag),
         exec_environment => pick_default($opts['exec_environment'],$exec_environment),

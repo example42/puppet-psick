@@ -24,11 +24,10 @@ class psick::yum::cron (
   Enum['present','absent'] $ensure = 'present',
   String $config_file_template     = 'psick/yum_cron/yum-cron.conf.erb',
 
-  Boolean $manage                  = $::psick::manage,
-  Boolean $noop_manage             = $::psick::noop_manage,
-  Boolean $noop_value              = $::psick::noop_value,
+  Boolean $manage                  = $psick::manage,
+  Boolean $noop_manage             = $psick::noop_manage,
+  Boolean $noop_value              = $psick::noop_value,
 ) {
-
   if $manage {
     if $noop_manage {
       noop($noop_value)
@@ -50,7 +49,7 @@ class psick::yum::cron (
       'debuglevel' => '-2',
       'mdpolicy' => 'group:main',
     }
-    $options_user=lookup('psick::yum::cron::options', Hash, 'deep', {} )
+    $options_user=lookup('psick::yum::cron::options', Hash, 'deep', {})
     $options=merge($options_default,$options_user)
 
     ::tp::install { 'yum-cron':

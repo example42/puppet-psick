@@ -17,8 +17,8 @@ define psick::docker::rocker_build (
   String                                 $username            = '',
 
   String                                 $image_name          = '',
-  String[1]                              $image_os            = downcase($::operatingsystem),
-  String[1]                              $image_osversion     = $::operatingsystemmajrelease,
+  String[1]                              $image_os            = downcase($facts['os']['name']),
+  String[1]                              $image_osversion     = $facts['os']['release']['major'],
 
   Variant[Undef,String]                  $maintainer          = undef,
   String                                 $from                = '',
@@ -31,7 +31,7 @@ define psick::docker::rocker_build (
   Any                                    $cmd                 = undef,
   Any                                    $expose              = undef,
   String                                 $env                 =
-  'PATH=/opt/puppetlabs/puppet/bin:/usr/bin:/bin:/sbin:/usr/sbin:$PATH',
+    'PATH=/opt/puppetlabs/puppet/bin:/usr/bin:/bin:/sbin:/usr/sbin:$PATH',
   String                                 $mount               = '/opt/puppetlabs /etc/puppetlabs /root/.gem',
   String                                 $label               = 'com.puppet.dockerfile="/Dockerfile"',
 
@@ -41,9 +41,8 @@ define psick::docker::rocker_build (
   Boolean                                $always_build        = true,
   String                                 $build_options       = '',
 
-  ) {
-
-  include ::psick::docker
+) {
+  include psick::docker
 
   $puppet_settings = tp_lookup('puppet-agent','settings','tinydata','merge')
   $image_codename = $puppet_settings['apt_release']
@@ -57,19 +56,19 @@ define psick::docker::rocker_build (
     default  => $copy,
   }
   $username_prefix = $username ? {
-    ''      => $::psick::docker::username ? {
+    ''      => $psick::docker::username ? {
       ''      => '',
-      default => "${::psick::docker::username}/",
+      default => "${psick::docker::username}/",
     },
     default => "${username}/",
   }
   $basedir_path =
-  "${workdir}/${username_prefix}${image_os}_${image_osversion}/${title}"
+    "${workdir}/${username_prefix}${image_os}_${image_osversion}/${title}"
   $real_image_name = $image_name ? {
     ''      => "${username_prefix}${repository}:${repository_tag}",
     default => $image_name,
   }
-  file { [ "${basedir_path}/Rockerfile" , "${basedir_path}/root/Dockerfile" ]:
+  file { ["${basedir_path}/Rockerfile" , "${basedir_path}/root/Dockerfile"]:
     ensure  => $ensure,
     content => template($template),
     require => Exec["mkdir -p ${basedir_path}/root"],
@@ -87,9 +86,9 @@ define psick::docker::rocker_build (
     true  => false,
     false => true,
   }
-  $exec_require = $::psick::docker::install_class ? {
+  $exec_require = $psick::docker::install_class ? {
     ''      => undef,
-    default => Class[$::psick::docker::install_class],
+    default => Class[$psick::docker::install_class],
   }
   exec { "bash -c rocker build ${title}":
     command     => "rocker build ${build_options}",
@@ -100,5 +99,4 @@ define psick::docker::rocker_build (
     refreshonly => $exec_refreshonly,
     require     => $exec_require,
   }
-
 }

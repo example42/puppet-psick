@@ -13,7 +13,6 @@ define psick::kmod::module (
   Optional[Hash] $conf_options     = {},
   Boolean $boot_load_configure     = true,
 ) {
-
   if $conf_source or $conf_content {
     file { "/etc/modprobe.d/${title}.conf":
       ensure  => $ensure,
@@ -38,7 +37,7 @@ define psick::kmod::module (
         onlyif  => "egrep -q '^${module} ' /proc/modules",
       }
     }
-    default: { }
+    default: {}
   }
 
   if $boot_load_configure {
@@ -49,7 +48,7 @@ define psick::kmod::module (
         content => "# File is managed by Puppet via psick::kmod::module \n${module}\n",
       }
     } else {
-      case $::osfamily {
+      case $facts['os']['family'] {
         'Debian': {
           file_line { "kernel load ${title}":
             ensure => $ensure,
@@ -73,7 +72,7 @@ define psick::kmod::module (
             match  => "^MODULES_LOADED_ON_BOOT=${module}",
           }
         }
-        default: { }
+        default: {}
       }
     }
   }

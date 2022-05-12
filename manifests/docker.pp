@@ -7,8 +7,8 @@ class psick::docker (
 
   String[1]               $username         = 'example42',
 
-  Hash                    $options          = { },
-  Hash                    $settings         = { },
+  Hash                    $options          = {},
+  Hash                    $settings         = {},
 
   Array                   $profiles         = [],
 
@@ -23,11 +23,10 @@ class psick::docker (
 
   String[1]               $data_module      = 'tinydata',
 
-  Boolean                 $manage           = $::psick::manage,
-  Boolean                 $noop_manage      = $::psick::noop_manage,
-  Boolean                 $noop_value       = $::psick::noop_value,
-  ) {
-
+  Boolean                 $manage           = $psick::manage,
+  Boolean                 $noop_manage      = $psick::noop_manage,
+  Boolean                 $noop_value       = $psick::noop_value,
+) {
   if $manage {
     if $noop_manage {
       noop($noop_value)

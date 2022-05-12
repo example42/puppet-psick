@@ -11,42 +11,40 @@
 #
 class psick::time (
   Array $servers                            = [],
-  Optional[String] $timezone                = $::psick::timezone,
+  Optional[String] $timezone                = $psick::timezone,
   Enum['chrony','ntpdate','ntp',''] $method = 'ntpdate',
 
-  Boolean             $manage               = $::psick::manage,
-  Boolean             $noop_manage          = $::psick::noop_manage,
-  Boolean             $noop_value           = $::psick::noop_value,
+  Boolean             $manage               = $psick::manage,
+  Boolean             $noop_manage          = $psick::noop_manage,
+  Boolean             $noop_value           = $psick::noop_value,
 ) {
-
   if $manage {
     if $noop_manage {
       noop($noop_value)
     }
 
     if $::kernel != 'windows' and $timezone {
-      contain ::psick::timezone
+      contain psick::timezone
     }
 
     if $::kernel == 'Linux' and $method == 'chrony' {
-      class { '::chrony':
+      class { 'chrony':
         servers => $servers,
       }
     }
 
     if $::kernel == 'Linux' and $method == 'ntpdate' {
-      contain ::psick::time::ntpdate
+      contain psick::time::ntpdate
     }
 
     if $::kernel != 'Windows' and $method == 'ntp' {
-      class { '::ntp':
+      class { 'ntp':
         servers => $servers,
       }
     }
 
-    if $::osfamily == 'Windows' {
-      contain ::psick::time::windows
+    if $facts['os']['family'] == 'Windows' {
+      contain psick::time::windows
     }
-
   }
 }

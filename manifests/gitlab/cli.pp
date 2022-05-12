@@ -19,7 +19,7 @@
 #
 class psick::gitlab::cli (
   String           $ensure      = 'present',
-  Boolean          $auto_prereq = $::psick::auto_prereq,
+  Boolean          $auto_prereq = $psick::auto_prereq,
   Optional[String] $epp         = 'psick/gitlab/cli/gitlab-cli.conf.epp',
   Hash             $config_hash = {},
   Hash   $multirepo_config_hash = {},
@@ -28,12 +28,11 @@ class psick::gitlab::cli (
   String $scripts_group         = 'gitlab-runner',
   String $scripts_mode          = '0550',
 
-  Boolean $manage               = $::psick::manage,
-  Boolean $noop_manage          = $::psick::noop_manage,
-  Boolean $noop_value           = $::psick::noop_value,
+  Boolean $manage               = $psick::manage,
+  Boolean $noop_manage          = $psick::noop_manage,
+  Boolean $noop_value           = $psick::noop_value,
 
 ) {
-
   if $manage {
     if $noop_manage {
       noop($noop_value)

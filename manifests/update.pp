@@ -30,18 +30,17 @@ class psick::update (
   String $update_script_path   = '/usr/local/sbin/update.sh',
   Boolean $use_yum_cron        = false,
 
-  Boolean          $manage               = $::psick::manage,
-  Boolean          $noop_manage          = $::psick::noop_manage,
-  Boolean          $noop_value           = $::psick::noop_value,
+  Boolean          $manage               = $psick::manage,
+  Boolean          $noop_manage          = $psick::noop_manage,
+  Boolean          $noop_value           = $psick::noop_value,
 
 ) {
-
   if $manage {
     if $noop_manage {
       noop($noop_value)
     }
-    if $::osfamily == 'RedHat' and $use_yum_cron {
-      contain ::psick::yum::cron
+    if $facts['os']['family'] == 'RedHat' and $use_yum_cron {
+      contain psick::yum::cron
       file { '/etc/cron.d/system_update':
         ensure  => absent,
       }

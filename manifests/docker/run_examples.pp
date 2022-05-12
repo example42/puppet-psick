@@ -3,17 +3,16 @@ class psick::docker::run_examples (
   Variant[Boolean,String] $ensure             = present,
   Enum['command','service'] $default_run_mode = command,
 
-  Boolean          $manage               = $::psick::manage,
-  Boolean          $noop_manage          = $::psick::noop_manage,
-  Boolean          $noop_value           = $::psick::noop_value,
+  Boolean          $manage               = $psick::manage,
+  Boolean          $noop_manage          = $psick::noop_manage,
+  Boolean          $noop_value           = $psick::noop_value,
 ) {
-
   if $manage {
     if $noop_manage {
       noop($noop_value)
     }
 
-    include ::psick::docker
+    include psick::docker
 
     Psick::Docker::Run {
       ensure   => $ensure,
@@ -27,11 +26,10 @@ class psick::docker::run_examples (
     }
 
     # Run a local image built with docker::push
-  #  ::psick::docker::run { 'puppet-agent': 
-  #  }
-  #  ::psick::docker::run { 'apache': 
-  #  }
-
+    #  ::psick::docker::run { 'puppet-agent':
+    #  }
+    #  ::psick::docker::run { 'apache':
+    #  }
 
     # Run, in service mode (an init file is created and a service started), an official redis instance
     ::psick::docker::run { 'redis':

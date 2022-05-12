@@ -52,7 +52,6 @@ define psick::java::install_tarball (
   Optional[String] $tarball_creates      = undef,
 
 ) {
-
   $java_array_version = split(pick($version,$title),'[.]')
   $java_major_version = $java_array_version[0]
 
@@ -148,7 +147,7 @@ define psick::java::install_tarball (
   $real_creates = pick($tarball_creates, $tar_creates)
   $java_home = "${real_extract_path}/${tar_dir}"
 
-  if !defined( File[$real_extract_path] ) {
+  if !defined( File[$real_extract_path]) {
     file { $real_extract_path:
       before => Archive["java-install-${title}"],
     }
@@ -190,5 +189,4 @@ define psick::java::install_tarball (
       target => $java_home,
     }
   }
-
 }

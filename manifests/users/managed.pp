@@ -50,8 +50,7 @@ define psick::users::managed (
   Hash $sshkey_content           = {},
   Array $sshkeys_content         = [],
   Boolean $generate_ssh_keypair  = false,
-){
-
+) {
   $real_homedir = $home ? {
     'absent' => $title ? {
       'root'  => '/root',
@@ -60,7 +59,7 @@ define psick::users::managed (
     default  => $home
   }
 
-  $real_managehome = $::osfamily ? {
+  $real_managehome = $facts['os']['family'] ? {
     'Darwin' => undef,
     default  => $managehome,
   }
@@ -159,7 +158,6 @@ define psick::users::managed (
     }
   }
 
-
   if $known_hosts_source != '' {
     file { "${real_homedir}/.ssh/known_hosts":
       mode   => '0600',
@@ -197,10 +195,10 @@ define psick::users::managed (
       case $gid {
         'absent','uid': {
           $file_group_option = {
-            group => $::osfamily ? {
+            group => $facts['os']['family'] ? {
               'Suse'  => 'users',
               default => $name,
-            }
+            },
           }
         }
         default: {
@@ -210,13 +208,13 @@ define psick::users::managed (
         }
       }
     }
-    file{ $real_homedir:
+    file { $real_homedir:
       * => $file_options + $file_group_option,
     }
   }
 
   if $uid != 'absent' {
-    User[$name]{
+    User[$name] {
       uid => $uid,
     }
   }
@@ -234,7 +232,7 @@ define psick::users::managed (
       $real_gid = $gid
     }
     if $real_gid {
-      User[$name]{
+      User[$name] {
         gid => $real_gid,
       }
     }
@@ -243,20 +241,20 @@ define psick::users::managed (
   if $name != 'root' {
     if $uid == 'absent' {
       if $manage_group and ($ensure == 'absent') {
-        group{$name:
-        ensure => absent,
+        group { $name:
+          ensure => absent,
         }
-        case $::operatingsystem {
-        'OpenBSD': {
-          Group[$name]{
-          before => User[$name],
+        case $facts['os']['name'] {
+          'OpenBSD': {
+            Group[$name] {
+              before => User[$name],
+            }
           }
-        }
-        default: {
-          Group[$name]{
-          require => User[$name],
+          default: {
+            Group[$name] {
+              require => User[$name],
+            }
           }
-        }
         }
       }
     } else {
@@ -266,26 +264,26 @@ define psick::users::managed (
           allowdupe => false,
         }
         if $real_gid {
-          Group[$name]{
+          Group[$name] {
             gid => $real_gid,
           }
         }
         if $ensure == 'absent' {
-          case $::operatingsystem {
-          'OpenBSD': {
-            Group[$name]{
-            before => User[$name],
+          case $facts['os']['name'] {
+            'OpenBSD': {
+              Group[$name] {
+                before => User[$name],
+              }
             }
-          }
-          default: {
-            Group[$name]{
-            require => User[$name],
+            default: {
+              Group[$name] {
+                require => User[$name],
+              }
             }
-          }
           }
         } else {
-          Group[$name]{
-          before => User[$name],
+          Group[$name] {
+            before => User[$name],
           }
         }
       }
@@ -293,14 +291,14 @@ define psick::users::managed (
   }
   if $ensure == 'present' {
     if $sshkey != 'absent' {
-      User[$name]{
+      User[$name] {
         before => Class[$sshkey],
       }
       include $sshkey
     }
 
     if $password != 'absent' {
-      case $::operatingsystem {
+      case $facts['os']['name'] {
         'OpenBSD': {
           exec { "setpass ${name}":
             unless  => "grep -q '^${name}:${password}:' /etc/master.passwd",
@@ -319,7 +317,7 @@ define psick::users::managed (
               fail('To use unencrypted passwords you have to define a variable \$password_salt to an 8 character salt for passwords!')
             }
           }
-          User[$name]{
+          User[$name] {
             password => $real_password,
           }
         }
@@ -327,4 +325,3 @@ define psick::users::managed (
     }
   }
 }
-

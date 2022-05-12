@@ -5,9 +5,9 @@ class psick::hardening::generic (
   Array $services_to_remove        = [],
   Boolean $remove_default_packages = false,
   Boolean $remove_default_services = false,
-  Boolean $manage                  = $::psick::manage,
-  Boolean $noop_manage             = $::psick::noop_manage,
-  Boolean $noop_value              = $::psick::noop_value,
+  Boolean $manage                  = $psick::manage,
+  Boolean $noop_manage             = $psick::noop_manage,
+  Boolean $noop_value              = $psick::noop_value,
 ) {
   if $manage {
     if $noop_manage {
@@ -15,23 +15,23 @@ class psick::hardening::generic (
     }
 
     $packages_default = []
-    $services_default = $::osfamily ? {
-      'RedHat'  => $::operatingsystemmajrelease ? {
-        '5'      => [ ],
-        '6'      => [ ],
-        '7'      => [ ],
-        default => [ ],
+    $services_default = $facts['os']['family'] ? {
+      'RedHat'  => $facts['os']['release']['major'] ? {
+        '5'      => [],
+        '6'      => [],
+        '7'      => [],
+        default => [],
       },
-      'Debian' => $::operatingsystemmajrelease ? {
-        '6'      => [ ],
-        '7'      => [ ],
-        '8'      => [ ],
-        '12.04'  => [ ],
-        '14.04'  => [ ],
-        '16.04'  => [ ],
-        default => [ ],
+      'Debian' => $facts['os']['release']['major'] ? {
+        '6'      => [],
+        '7'      => [],
+        '8'      => [],
+        '12.04'  => [],
+        '14.04'  => [],
+        '16.04'  => [],
+        default => [],
       },
-      default  => [ ],
+      default  => [],
     }
 
     $packages = $remove_default_packages ? {

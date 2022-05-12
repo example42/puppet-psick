@@ -141,7 +141,6 @@ class psick (
   Enum['first','hash','deep'] $osfamily_resources_defaults_merge_behaviour = 'deep',
 
 ) {
-
   if $noop_mode != undef {
     fail('psick::noop_mode parameter has been deprecated. Use $noop_manage and $noop_manage instead')
   }
@@ -189,23 +188,22 @@ class psick (
       netmask   => $facts['networking']['interfaces'][$mgmt_interface]['netmask'],
       network   => $facts['networking']['interfaces'][$mgmt_interface]['network'],
       hostname  => $facts['networking']['fqdn'],
-    }
+    },
   }
   $interfaces = deep_merge($interfaces_default, $interfaces_hash)
-
 
   # PSICK PRE, BASE CLASSES AND PROFILES + OPTIONAL FIRSTRUN MODE
   # The classes included here manage PSICK classification and
   # relevant class ordering
   if $facts['firstrun'] == 'done' or $enable_firstrun == false {
-    contain ::psick::pre
-    contain ::psick::base
-    contain ::psick::profiles
+    contain psick::pre
+    contain psick::base
+    contain psick::profiles
     if $force_ordering {
       Class['psick::pre'] -> Class['psick::base'] -> Class['psick::profiles']
     }
   } else {
-    contain ::psick::firstrun
+    contain psick::firstrun
     notify { "This catalog should be applied only at the first Puppen run\n": }
   }
 
@@ -222,12 +220,11 @@ class psick (
     create_resources( $k, $v, $resource_defaults )
   }
 
-
   # Custom Resources management
   $osfamily_resources = lookup('psick::osfamily_resources',Hash,$osfamily_resources_merge_behaviour,{})
   $osfamily_resources_defaults = lookup('psick::osfamily_resources_defaults',Hash,$osfamily_resources_defaults_merge_behaviour,{})
   $osfamily_resources.each |$k,$v| {
-    if $::osfamily == $k {
+    if $facts['os']['family'] == $k {
       if has_key($osfamily_resources_defaults, $k) {
         $os_defaults = $osfamily_resources_defaults[$k]
       } else {
@@ -237,5 +234,4 @@ class psick (
       create_resources( $k, $v, $os_defaults )
     }
   }
-
 }

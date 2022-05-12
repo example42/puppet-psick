@@ -4,7 +4,7 @@ define psick::docker::push (
 
   String[1]               $ensure              = 'present',
 
-  String[1]               $username            = $::psick::docker::username,
+  String[1]               $username            = $psick::docker::username,
 
   Variant[Undef,String]   $repository          = $title,
   Variant[Undef,String]   $repository_tag      = undef,
@@ -13,10 +13,9 @@ define psick::docker::push (
 
   Hash                    $settings_hash       = {},
 
-  String[1]               $data_module         = $::psick::docker::data_module,
+  String[1]               $data_module         = $psick::docker::data_module,
 
-  ) {
-
+) {
   Exec {
     path    => '/bin:/usr/bin:/sbin:/usr/sbin:/usr/local/bin',
     timeout => 3000,
@@ -27,5 +26,4 @@ define psick::docker::push (
       environment => $exec_environment,
     }
   }
-
 }

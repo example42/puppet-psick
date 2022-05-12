@@ -10,9 +10,9 @@
 class psick::hardening::tcpwrappers (
   String $hosts_allow_template = 'psick/hardening/tcpwrappers/hosts.allow.erb',
   String $hosts_deny_template  = 'psick/hardening/tcpwrappers/hosts.deny.erb',
-  Boolean $manage              = $::psick::manage,
-  Boolean $noop_manage         = $::psick::noop_manage,
-  Boolean $noop_value          = $::psick::noop_value,
+  Boolean $manage              = $psick::manage,
+  Boolean $noop_manage         = $psick::noop_manage,
+  Boolean $noop_value          = $psick::noop_value,
 ) {
   if $manage {
     if $noop_manage {

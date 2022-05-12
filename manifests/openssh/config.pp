@@ -42,7 +42,6 @@ define psick::openssh::config (
   Hash                     $options_hash   = {},
   Boolean                  $create_ssh_dir = false,
 ) {
-
   $user_real = $user ? {
     undef    => $title,
     default => $user,

@@ -32,7 +32,6 @@ define psick::sudo::directive (
   Variant[Undef,String]    $source   = undef,
   Integer                  $order    = 20,
 ) {
-
   # sudo skipping file names that contain a "."
   $dname = regsubst($name, '\.', '-', 'G')
 
@@ -65,10 +64,10 @@ define psick::sudo::directive (
   }
 
   # Remove the .broken file which can be left over by the sudo-syntax-check.
-    # This runs intentionally before the syntax-check to leave the file around for debugging.
+  # This runs intentionally before the syntax-check to leave the file around for debugging.
   file { "${base_name}.broken":
-      ensure => absent,
-      before => $syntax_check,
+    ensure => absent,
+    before => $syntax_check,
   }
 
   if $ensure == 'present' {
@@ -78,5 +77,4 @@ define psick::sudo::directive (
       path        => '/bin:/usr/bin:/sbin:/usr/sbin',
     }
   }
-
 }

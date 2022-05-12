@@ -15,16 +15,16 @@ class psick::users::ad (
   String $machine_ou,
   Boolean $create_machine_account = true,
 
-  Boolean $manage      = $::psick::manage,
-  Boolean $noop_manage = $::psick::noop_manage,
-  Boolean $noop_value  = $::psick::noop_value,
+  Boolean $manage      = $psick::manage,
+  Boolean $noop_manage = $psick::noop_manage,
+  Boolean $noop_value  = $psick::noop_value,
 ) {
   if $manage {
     if $noop_manage {
       noop($noop_value)
     }
     if $::kernel == 'Linux' {
-      class { '::sssd':
+      class { 'sssd':
         domains => $domain,
       }
     }
@@ -34,7 +34,7 @@ class psick::users::ad (
         false => '1',
       }
 
-      class { '::domain_membership':
+      class { 'domain_membership':
         domain       => $domain,
         username     => $username,
         password     => $password,

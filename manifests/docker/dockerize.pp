@@ -16,8 +16,8 @@ define psick::docker::dockerize (
 
   String[1]               $username            = 'example42',
 
-  String[1]               $os                  = downcase($::operatingsystem),
-  String[1]               $osversion           = $::operatingsystemmajrelease,
+  String[1]               $os                  = downcase($facts['os']['name']),
+  String[1]               $osversion           = $facts['os']['release']['major'],
 
   Variant[Undef,String]   $maintainer          = undef,
   Variant[Undef,String]   $from                = undef,
@@ -40,10 +40,9 @@ define psick::docker::dockerize (
 
   Hash                    $settings_hash       = {},
 
-  String[1]               $data_module         = $::psick::docker::data_module,
+  String[1]               $data_module         = $psick::docker::data_module,
 
-  ) {
-
+) {
   # Settings evaluation
   $app = $title
   $tp_settings = tp_lookup($app,'settings',$data_module,'merge')
@@ -103,5 +102,4 @@ define psick::docker::dockerize (
       run_mode         => $run_mode,
     }
   }
-
 }

@@ -6,9 +6,9 @@ class psick::time::ntpdate (
   # Server to sync to (just one)
   String $ntp_server = 'pool.ntp.org',
 
-  Boolean $manage      = $::psick::manage,
-  Boolean $noop_manage = $::psick::noop_manage,
-  Boolean $noop_value  = $::psick::noop_value,
+  Boolean $manage      = $psick::manage,
+  Boolean $noop_manage = $psick::noop_manage,
+  Boolean $noop_value  = $psick::noop_value,
 ) {
   if $manage {
     if $noop_manage {
@@ -20,7 +20,7 @@ class psick::time::ntpdate (
     exec { "ntpdate -s ${ntp_server}":
       subscribe   => Tp::Install['ntpdate'],
       refreshonly => true,
-      path        => $::path
+      path        => $::path,
     }
     if $crontab != '' and $::virtual != 'docker' {
       file { '/etc/cron.d/ntpdate':

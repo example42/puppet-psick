@@ -13,16 +13,15 @@ class psick::admin (
   String                  $master          = '',
   Variant[Undef,String]   $keyshare_method = 'storeconfigs',
 
-  Boolean                 $auto_prereq     = $::psick::auto_prereq,
+  Boolean                 $auto_prereq     = $psick::auto_prereq,
 
   Boolean                 $master_enable   = false,
   Boolean                 $node_enable     = true,
 
-  Boolean                 $manage          = $::psick::manage,
-  Boolean                 $noop_manage     = $::psick::noop_manage,
-  Boolean                 $noop_value      = $::psick::noop_value,
+  Boolean                 $manage          = $psick::manage,
+  Boolean                 $noop_manage     = $psick::noop_manage,
+  Boolean                 $noop_value      = $psick::noop_value,
 ) {
-
   if $manage {
     if $noop_manage {
       noop($noop_value)

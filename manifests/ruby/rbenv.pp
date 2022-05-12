@@ -43,12 +43,11 @@ class psick::ruby::rbenv (
   Hash $build_hash                       = {},
   Hash $gem_hash                         = {},
 
-  Boolean $manage                        = $::psick::manage,
-  Boolean $auto_prereq                   = $::psick::auto_prereq,
-  Boolean $noop_manage                   = $::psick::noop_manage,
-  Boolean $noop_value                    = $::psick::noop_value,
+  Boolean $manage                        = $psick::manage,
+  Boolean $auto_prereq                   = $psick::auto_prereq,
+  Boolean $noop_manage                   = $psick::noop_manage,
+  Boolean $noop_value                    = $psick::noop_value,
 ) {
-
   if $manage {
     if $noop_manage {
       noop($noop_value)
@@ -90,7 +89,7 @@ class psick::ruby::rbenv (
         }
       }
       default: {
-        contain ::rbenv
+        contain rbenv
       }
     }
   }

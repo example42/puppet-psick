@@ -74,8 +74,7 @@ define psick::netinstall (
   $postextract_cwd     = '',
   $exec_env            = [],
   $creates             = undef,
-  ) {
-
+) {
   $source_filename = parse_url($url,'filename')
   $source_filetype = parse_url($url,'filetype')
   $source_dirname = parse_url($url,'filedir')

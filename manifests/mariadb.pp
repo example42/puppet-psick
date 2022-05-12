@@ -12,12 +12,11 @@ class psick::mariadb (
   Hash                       $user_hash     = {},
   Hash                       $query_hash    = {},
 
-  Boolean             $manage               = $::psick::manage,
-  Boolean             $noop_manage          = $::psick::noop_manage,
-  Boolean             $noop_value           = $::psick::noop_value,
+  Boolean             $manage               = $psick::manage,
+  Boolean             $noop_manage          = $psick::noop_manage,
+  Boolean             $noop_value           = $psick::noop_value,
 
 ) {
-
   if $manage {
     if $noop_manage {
       noop($noop_value)
@@ -26,8 +25,8 @@ class psick::mariadb (
     # Intallation management
     case $module {
       'psick': {
-        contain ::psick::mariadb::install
-        contain ::psick::mariadb::root_password
+        contain psick::mariadb::install
+        contain psick::mariadb::root_password
         $user_hash.each |$k,$v| {
           psick::mariadb::user { $k:
             * => $v,
@@ -50,7 +49,7 @@ class psick::mariadb (
         }
       }
       default: {
-        contain ::mariadb
+        contain mariadb
       }
     }
   }

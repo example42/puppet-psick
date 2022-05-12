@@ -6,12 +6,12 @@ class psick::puppet::ci (
   String                $ensure           = 'present',
   String                $config_file_path = '/etc/puppetlabs/ci.conf',
   Variant[Undef,String] $template         = 'psick/puppet/ci/ci.conf.erb',
-  Hash                  $options          = { },
+  Hash                  $options          = {},
   Array                 $default_nodes    = [],
   Array                 $always_nodes     = [],
-  Boolean $manage                  = $::psick::manage,
-  Boolean $noop_manage             = $::psick::noop_manage,
-  Boolean $noop_value              = $::psick::noop_value,
+  Boolean $manage                  = $psick::manage,
+  Boolean $noop_manage             = $psick::noop_manage,
+  Boolean $noop_value              = $psick::noop_value,
 ) {
   if $manage {
     if $noop_manage {

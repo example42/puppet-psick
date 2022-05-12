@@ -1,8 +1,7 @@
 #
 class psick::aws::ami (
-  String $region                    = $::psick::aws::region,
+  String $region                    = $psick::aws::region,
 ) {
-
   # Amazon AMI used by default
 
   # Source: https://aws.amazon.com/marketplace/ordering?productId=b7ee8a69-ee97-4a49-9e68-afaee216db2e&ref_=dtl_psb_continue&region=
@@ -45,5 +44,4 @@ class psick::aws::ami (
     'ap-southeast-2' => 'ami-0bf2da68',
     default          => 'ami-ccd942bf',
   }
-
 }

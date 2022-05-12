@@ -15,16 +15,16 @@ class psick::hardening::network (
   String $netconfig_template = '',
   String $blacklist_template = '',
   String $services_template  = '',
-  Boolean $manage            = $::psick::manage,
-  Boolean $noop_manage       = $::psick::noop_manage,
-  Boolean $noop_value        = $::psick::noop_value,
+  Boolean $manage            = $psick::manage,
+  Boolean $noop_manage       = $psick::noop_manage,
+  Boolean $noop_value        = $psick::noop_value,
 ) {
   if $manage {
     if $noop_manage {
       noop($noop_value)
     }
 
-    if $::osfamily == 'RedHat' {
+    if $facts['os']['family'] == 'RedHat' {
       if $modprobe_template != '' {
         file { '/etc/modprobe.d/hardening.conf':
           ensure  => file,

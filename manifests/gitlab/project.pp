@@ -14,12 +14,11 @@ define psick::gitlab::project (
   Boolean $public         = true,
   Hash    $options        = {},
 
-  Array $exec_environment = [ "GITLAB_API_ENDPOINT=${::psick::gitlab::cli::api_endpoint}",
-                              "GITLAB_API_PRIVATE_TOKEN=${::psick::gitlab::cli::private_token}",
-                              "GITLAB_API_HTTPARTY_OPTIONS='{verify: false}'" ],
-                              # for self signed https certs
+  Array $exec_environment = ["GITLAB_API_ENDPOINT=${psick::gitlab::cli::api_endpoint}",
+    "GITLAB_API_PRIVATE_TOKEN=${psick::gitlab::cli::private_token}",
+  "GITLAB_API_HTTPARTY_OPTIONS='{verify: false}'"],
+  # for self signed https certs
 ) {
-
   $real_namespace_id=pick($namespace_id,gitlab_get_id('namespace',$namespace),undef)
   $real_owner_id=pick($owner_id,gitlab_get_id('user',$owner),undef)
   $public_id = $public ? {

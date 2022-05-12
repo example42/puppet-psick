@@ -116,7 +116,6 @@ class psick::mysql::install (
   Boolean            $noop_manage              = false,
   Boolean            $noop_value               = false,
 ) {
-
   $options=lookup('psick::mysql::install::options', Hash, $options_lookup_method, {})
 
   if $manage {

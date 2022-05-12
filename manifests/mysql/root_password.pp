@@ -5,20 +5,19 @@
 #
 class psick::mysql::root_password (
   String $root_cnf_template = 'psick/mysql/root.my.cnf.erb',
-  Optional[Psick::Password] $password = $::psick::mysql::root_password,
-  Boolean $manage                     = $::psick::manage,
-  Boolean $auto_prereq                = $::psick::auto_prereq,
-  Boolean $noop_manage                = $::psick::noop_manage,
-  Boolean $noop_value                 = $::psick::noop_value,
+  Optional[Psick::Password] $password = $psick::mysql::root_password,
+  Boolean $manage                     = $psick::manage,
+  Boolean $auto_prereq                = $psick::auto_prereq,
+  Boolean $noop_manage                = $psick::noop_manage,
+  Boolean $noop_value                 = $psick::noop_value,
 ) {
-
   if $manage {
     if $noop_manage {
       noop($noop_value)
     }
     if ! defined(File['/root/.my.cnf']) {
       file { '/root/.my.cnf':
-        ensure  => 'present',
+        ensure  => 'file',
         path    => '/root/.my.cnf',
         mode    => '0400',
         content => template($root_cnf_template),
@@ -26,13 +25,13 @@ class psick::mysql::root_password (
     }
 
     file { '/root/.my.cnf.backup':
-      ensure  => 'present',
+      ensure  => 'file',
       path    => '/root/.my.cnf.backup',
       mode    => '0400',
       content => template('psick/mysql/root.my.cnf.backup.erb'),
       replace => false,
       before  => [Exec['mysql_root_password'],
-                  Exec['mysql_backup_root_my_cnf'] ],
+      Exec['mysql_backup_root_my_cnf']],
     }
 
     exec { 'mysql_backup_root_my_cnf':

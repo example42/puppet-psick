@@ -6,9 +6,9 @@ class psick::openssh (
   Hash                     $keypairs_hash = {},
   Hash                     $keyscans_hash = {},
   String                   $module        = 'psick',
-  Boolean                  $manage        = $::psick::manage,
-  Boolean                  $noop_manage   = $::psick::noop_manage,
-  Boolean                  $noop_value    = $::psick::noop_value,
+  Boolean                  $manage        = $psick::manage,
+  Boolean                  $noop_manage   = $psick::noop_manage,
+  Boolean                  $noop_value    = $psick::noop_value,
 ) {
   if $manage {
     if $noop_manage {
@@ -17,13 +17,13 @@ class psick::openssh (
 
     case $module {
       'tp_profile': {
-        contain ::tp_profile::openssh
+        contain tp_profile::openssh
       }
       'psick': {
-        contain ::psick::openssh::install
+        contain psick::openssh::install
       }
       default: {
-        contain ::openssh
+        contain openssh
       }
     }
     $configs_hash.each |$k,$v| {

@@ -4,12 +4,10 @@ class psick::puppetdb (
   Optional[String]           $puppetdb_class   = 'psick::puppetdb::install',
   Optional[String]           $postgresql_class = undef,
 
-
-  Boolean          $manage               = $::psick::manage,
-  Boolean          $noop_manage          = $::psick::noop_manage,
-  Boolean          $noop_value           = $::psick::noop_value,
+  Boolean          $manage               = $psick::manage,
+  Boolean          $noop_manage          = $psick::noop_manage,
+  Boolean          $noop_value           = $psick::noop_value,
 ) {
-
   if $manage {
     if $noop_manage {
       noop($noop_value)

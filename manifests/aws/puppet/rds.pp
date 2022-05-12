@@ -4,16 +4,16 @@ class psick::aws::puppet::rds (
 
   String  $ensure                          = 'present',
 
-  String  $region                          = $::psick::aws::region,
-  String  $default_vpc_name                = $::psick::aws::default_vpc_name,
-  Boolean $create_defaults                 = $::psick::aws::create_defaults,
+  String  $region                          = $psick::aws::region,
+  String  $default_vpc_name                = $psick::aws::default_vpc_name,
+  Boolean $create_defaults                 = $psick::aws::create_defaults,
 
   Boolean $multi_az                        = false,
 
   # Hashes of resources to create
-  Hash    $rds_instances                   = { },
-  Hash    $rds_db_securitygroups           = { },
-  Hash    $rds_db_parameter_groups         = { },
+  Hash    $rds_instances                   = {},
+  Hash    $rds_db_securitygroups           = {},
+  Hash    $rds_db_parameter_groups         = {},
 
   # Default settings
   String  $default_db_name                 = 'db',
@@ -28,12 +28,11 @@ class psick::aws::puppet::rds (
 
   String  $default_family                  = 'mysql5.7',
 
-  Boolean            $manage               = $::psick::manage,
-  Boolean            $noop_manage          = $::psick::noop_manage,
-  Boolean            $noop_value           = $::psick::noop_value,
+  Boolean            $manage               = $psick::manage,
+  Boolean            $noop_manage          = $psick::noop_manage,
+  Boolean            $noop_value           = $psick::noop_value,
 
 ) {
-
   if $manage {
     if $noop_manage {
       noop($noop_value)
@@ -50,7 +49,7 @@ class psick::aws::puppet::rds (
         "${default_vpc_name}-rds" => {
           ensure    => present,
           db_subnet => "${default_vpc_name}-rds", # TODO: Automate creation of
-                                                    #       DB subnet groups
+          #       DB subnet groups
         },
       }
       $default_rds_db_securitygroups = {
@@ -60,7 +59,6 @@ class psick::aws::puppet::rds (
         #}
       }
       $default_rds_db_parameter_groups = {}
-
     } else {
       $default_rds_instances = {}
       $default_rds_db_securitygroups = {}
@@ -87,20 +85,18 @@ class psick::aws::puppet::rds (
       storage_type                    => $default_storage_type,
     }
 
-    if $all_rds_instances != { } {
+    if $all_rds_instances != {} {
       create_resources('rds_instance',$all_rds_instances,$rds_instances_defaults)
     }
-
 
     # RDS SECURITYGROUPS
     $rds_db_securitygroups_defaults = {
       ensure     => $ensure,
       region     => $region,
     }
-    if $all_rds_db_securitygroups != { } {
+    if $all_rds_db_securitygroups != {} {
       create_resources('rds_db_securitygroup',$all_rds_db_securitygroups,$rds_db_securitygroups_defaults)
     }
-
 
     # RDS PARAMETER GROUPS
     $rds_db_parameter_groups_defaults = {
@@ -108,7 +104,7 @@ class psick::aws::puppet::rds (
       region     => $region,
       family     => $default_family,
     }
-    if $all_rds_db_parameter_groups != { } {
+    if $all_rds_db_parameter_groups != {} {
       create_resources('rds_db_parameter_group',$all_rds_db_parameter_groups,$rds_db_parameter_groups_defaults)
     }
   }

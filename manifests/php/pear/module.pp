@@ -36,8 +36,7 @@ define psick::php::pear::module (
   $path                = '/usr/bin:/usr/sbin:/bin:/sbin',
   $ensure              = 'present',
   $timeout             = 300
-  ) {
-
+) {
   include psick::php::pear
 
   $bool_use_package = any2bool($use_package)
@@ -53,23 +52,23 @@ define psick::php::pear::module (
   }
 
   $pear_exec_command = $ensure ? {
-    present => "pear -d preferred_state=${preferred_state} install ${manage_alldeps} ${pear_source}",
-    absent  => "pear uninstall -n ${pear_source}",
+    'present' => "pear -d preferred_state=${preferred_state} install ${manage_alldeps} ${pear_source}",
+    'absent'  => "pear uninstall -n ${pear_source}",
   }
 
   $pear_exec_require = $repository ? {
     'pear.php.net' => Package['php-pear'],
-    default        => [ Package['php-pear'],Php::Pear::Config['auto_discover'] ],
+    default        => [Package['php-pear'],Php::Pear::Config['auto_discover']],
   }
 
   $pear_exec_unless = $ensure ? {
-    present => "pear shell-test ${pear_source} > 0",
-    absent  => undef
+    'present' => "pear shell-test ${pear_source} > 0",
+    'absent'  => undef
   }
 
   $pear_exec_onlyif = $ensure ? {
-    present => undef,
-    absent  => "pear shell-test ${pear_source} > 0",
+    'present' => undef,
+    'absent'  => "pear shell-test ${pear_source} > 0",
   }
 
   $real_service = $service ? {
@@ -96,7 +95,6 @@ define psick::php::pear::module (
     ''      => $psick::php::install_options,
     default => $install_options,
   }
-
 
   case $bool_use_package {
     true: {
@@ -125,5 +123,4 @@ define psick::php::pear::module (
       }
     }
   } # End Case
-
 }

@@ -101,13 +101,11 @@ class psick::firstrun (
   String $reboot_name     = 'Rebooting',
   Integer $reboot_timeout = 60,
 
-  Boolean          $manage               = $::psick::manage,
-  Boolean          $noop_manage          = $::psick::noop_manage,
-  Boolean          $noop_value           = $::psick::noop_value,
+  Boolean          $manage               = $psick::manage,
+  Boolean          $noop_manage          = $psick::noop_manage,
+  Boolean          $noop_value           = $psick::noop_value,
 ) {
-
   if $manage {
-
     if $noop_manage {
       noop($noop_value)
     }

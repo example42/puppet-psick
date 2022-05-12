@@ -7,8 +7,7 @@ define psick::mariadb::sqlfile (
   $password       = '',
   $host           = '',
   $query_filepath = '/root/puppet-mariadb'
-  ) {
-
+) {
   if ! defined(File[$query_filepath]) {
     file { $query_filepath:
       ensure => directory,
@@ -21,8 +20,8 @@ define psick::mariadb::sqlfile (
   }
 
   $arg_host = $host ? {
-  ''      => '',
-  default => "-h ${host}",
+    ''      => '',
+    default => "-h ${host}",
   }
 
   $arg_password = $password ? {
@@ -38,9 +37,8 @@ define psick::mariadb::sqlfile (
 
   exec { "mariadbqueryfile-${name}":
     command => "mysql ${my_cnf} ${arg_user} ${arg_password} ${arg_host} ${db} < ${file} && touch ${query_filepath}/mariadbqueryfile-${name}.run", # lint:ignore:140chars
-    path    => [ '/usr/bin' , '/usr/sbin' , '/bin' , '/sbin' ],
+    path    => ['/usr/bin' , '/usr/sbin' , '/bin' , '/sbin'],
     creates => "${query_filepath}/mariadbqueryfile-${name}.run",
     unless  => "ls ${query_filepath}/mariadbqueryfile-${name}.run",
   }
-
 }

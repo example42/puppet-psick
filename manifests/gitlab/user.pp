@@ -6,17 +6,16 @@
 #
 define psick::gitlab::user (
   String  $password,
-  String  $email          = "${title}@${::domain}",
+  String  $email          = "${title}@${facts['networking']['domain']}",
   String  $description    = $title,
   Hash    $options        = {},
 
   Array $ssh_keys         = [],
-  Array $exec_environment = [ "GITLAB_API_ENDPOINT=${::psick::gitlab::cli::api_endpoint}",
-                              "GITLAB_API_PRIVATE_TOKEN=${::psick::gitlab::cli::private_token}",
-                              "GITLAB_API_HTTPARTY_OPTIONS='{verify: false}'" ],
-                              # for self signed https certs
+  Array $exec_environment = ["GITLAB_API_ENDPOINT=${psick::gitlab::cli::api_endpoint}",
+    "GITLAB_API_PRIVATE_TOKEN=${psick::gitlab::cli::private_token}",
+  "GITLAB_API_HTTPARTY_OPTIONS='{verify: false}'"],
+  # for self signed https certs
 ) {
-
   $default_options = {
     name => $description,
   }

@@ -38,28 +38,27 @@ class psick::gitlab (
   String $ensure                       = 'present',
 
   Variant[Undef,String] $template      = undef,
-  Hash $options_hash                   = { },
+  Hash $options_hash                   = {},
 
   Boolean $manage_installation         = true,
   Boolean $manage_inline_configuration = false,
 
   Boolean $use_https                   = true,
-  String $server_name                  = $::fqdn,
+  String $server_name                  = $facts['networking']['fqdn'],
   String $ca_file_source               = 'file:///etc/puppetlabs/puppet/ssl/certs/ca.pem',
   String $key_file_source              = "file:///etc/puppetlabs/puppet/ssl/private_keys/${trusted['certname']}.pem",
   String $cert_file_source             = "file:///etc/puppetlabs/puppet/ssl/certs/${trusted['certname']}.pem",
 
-  Hash $tp_install_options             = { },
-  Hash $users                          = { },
-  Hash $groups                         = { },
-  Hash $projects                       = { },
+  Hash $tp_install_options             = {},
+  Hash $users                          = {},
+  Hash $groups                         = {},
+  Hash $projects                       = {},
 
-  Boolean $manage                      = $::psick::manage,
-  Boolean $noop_manage                 = $::psick::noop_manage,
-  Boolean $noop_value                  = $::psick::noop_value,
+  Boolean $manage                      = $psick::manage,
+  Boolean $noop_manage                 = $psick::noop_manage,
+  Boolean $noop_value                  = $psick::noop_value,
 
 ) {
-
   if $manage {
     if $noop_manage {
       noop($noop_value)
@@ -95,7 +94,7 @@ class psick::gitlab (
     } else {
       if $manage_inline_configuration {
         file { '/etc/gitlab/gitlab.rb':
-          ensure => present,
+          ensure => file,
         }
         file_line { 'gitlab external_url':
           path    => '/etc/gitlab/gitlab.rb',
@@ -177,7 +176,7 @@ class psick::gitlab (
     }
 
     # Add tp test if cli enabled
-    if any2bool($::psick::tp['cli_enable']) {
+    if any2bool($psick::tp['cli_enable']) {
       tp::test { 'gitlab-ce':
         content => 'gitlab-ctl status',
       }

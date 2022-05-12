@@ -22,12 +22,11 @@ class psick::bolt::master (
   Boolean $generate_nodes_list           = true,
   Hash $nodes_list_hash                  = {},
 
-  Boolean          $manage               = $::psick::manage,
-  Boolean          $noop_manage          = $::psick::noop_manage,
-  Boolean          $noop_value           = $::psick::noop_value,
+  Boolean          $manage               = $psick::manage,
+  Boolean          $noop_manage          = $psick::noop_manage,
+  Boolean          $noop_value           = $psick::noop_value,
 
 ) {
-
   if $manage {
     if $noop_manage {
       noop($noop_value)
@@ -35,18 +34,18 @@ class psick::bolt::master (
 
     $dir_ensure = ::tp::ensure2dir($ensure)
 
-    include ::psick::bolt
+    include psick::bolt
 
     # Bolt installation
     if $install_system_gems {
-      if $::psick::bolt::auto_prereq {
-        include ::psick::ruby
-        include ::psick::ruby::buildgems
+      if $psick::bolt::auto_prereq {
+        include psick::ruby
+        include psick::ruby::buildgems
       }
       package { 'bolt':
         ensure   => $ensure,
         provider => 'gem',
-        require  => [ Class['psick::ruby'],Class['psick::ruby::buildgems'] ],
+        require  => [Class['psick::ruby'],Class['psick::ruby::buildgems']],
       }
     }
     if $install_puppet_gems {
@@ -64,15 +63,15 @@ class psick::bolt::master (
 
     # Management of the user running bolt
     $user_home_dir = $user_home ? {
-      undef   => $::psick::bolt::bolt_user ? {
-        root    => '/root',
-        default => "/home/${::psick::bolt::bolt_user}",
+      undef   => $psick::bolt::bolt_user ? {
+        'root'    => '/root',
+        default => "/home/${psick::bolt::bolt_user}",
       },
       default => $user_home
     }
 
     if $create_bolt_user {
-      user { $::psick::bolt::bolt_user:
+      user { $psick::bolt::bolt_user:
         ensure     => $ensure,
         comment    => 'Puppet managed bolt user',
         managehome => true,
@@ -83,22 +82,22 @@ class psick::bolt::master (
     }
 
     $ssh_dir_require = $create_bolt_user ? {
-      true  => User[$::psick::bolt::bolt_user],
+      true  => User[$psick::bolt::bolt_user],
       false => undef,
     }
 
-    if $run_ssh_keygen or $::psick::bolt::bolt_user_pub_key {
+    if $run_ssh_keygen or $psick::bolt::bolt_user_pub_key {
       file { "${user_home_dir}/.ssh" :
         ensure  => $dir_ensure,
         mode    => '0700',
-        owner   => $::psick::bolt::bolt_user,
-        group   => $::psick::bolt::bolt_user,
+        owner   => $psick::bolt::bolt_user,
+        group   => $psick::bolt::bolt_user,
         require => $ssh_dir_require,
       }
     }
 
     if $run_ssh_keygen {
-      psick::openssh::keygen { $::psick::bolt::bolt_user:
+      psick::openssh::keygen { $psick::bolt::bolt_user:
         require => File["${user_home_dir}/.ssh"],
       }
       psick::puppet::set_external_fact { 'bolt_user_key.sh':
@@ -107,33 +106,33 @@ class psick::bolt::master (
       }
     }
 
-    if $::psick::bolt::keyshare_method == 'storeconfigs'
+    if $psick::bolt::keyshare_method == 'storeconfigs'
     and defined('psick::bolt::bolt_user_pub_key')
     or defined('bolt_user_key') {
-      @@ssh_authorized_key { "bolt_user_${::psick::bolt::ssh_user}_rsa-${clientcert}":
+      @@ssh_authorized_key { "bolt_user_${psick::bolt::ssh_user}_rsa-${clientcert}":
         ensure => $ensure,
-        key    => pick($::psick::bolt::bolt_user_pub_key,$::bolt_user_key),
-        user   => $::psick::bolt::ssh_user,
+        key    => pick($psick::bolt::bolt_user_pub_key,$::bolt_user_key),
+        user   => $psick::bolt::ssh_user,
         type   => 'rsa',
-        tag    => "bolt_master_${::psick::bolt::master}_${::psick::bolt::bolt_user}"
+        tag    => "bolt_master_${psick::bolt::master}_${psick::bolt::bolt_user}",
       }
-      Sshkey <<| tag == "bolt_node_${::psick::bolt::master}_rsa" |>>
+      Sshkey <<| tag == "bolt_node_${psick::bolt::master}_rsa" |>>
     }
 
-    if $::psick::bolt::bolt_user_pub_key and $::psick::bolt::bolt_user_priv_key {
+    if $psick::bolt::bolt_user_pub_key and $psick::bolt::bolt_user_priv_key {
       file { "${user_home_dir}/.ssh/id_rsa.pub":
         ensure  => $dir_ensure,
         mode    => '0700',
-        owner   => $::psick::bolt::bolt_user,
-        group   => $::psick::bolt::bolt_user,
-        content => $::psick::bolt::bolt_user_pub_key,
+        owner   => $psick::bolt::bolt_user,
+        group   => $psick::bolt::bolt_user,
+        content => $psick::bolt::bolt_user_pub_key,
       }
       file { "${user_home_dir}/.ssh/id_rsa":
         ensure  => $dir_ensure,
         mode    => '0700',
-        owner   => $::psick::bolt::bolt_user,
-        group   => $::psick::bolt::bolt_user,
-        content => $::psick::bolt::bolt_user_priv_key,
+        owner   => $psick::bolt::bolt_user,
+        group   => $psick::bolt::bolt_user,
+        content => $psick::bolt::bolt_user_priv_key,
       }
     }
 
@@ -145,18 +144,18 @@ class psick::bolt::master (
 
       file { "${user_home_dir}/nodes":
         ensure => $dir_ensure,
-        owner  => $::psick::bolt::bolt_user,
-        group  => $::psick::bolt::bolt_user,
+        owner  => $psick::bolt::bolt_user,
+        group  => $psick::bolt::bolt_user,
       }
       $default_file_options = {
         ensure => $ensure,
-        owner  => $::psick::bolt::bolt_user,
-        group  => $::psick::bolt::bolt_user,
+        owner  => $psick::bolt::bolt_user,
+        group  => $psick::bolt::bolt_user,
       }
       $default_nodes_lists_hash = {
         'all' => {
           content => $nodes_csv,
-        }
+        },
       }
       $full_nodes_list_hash = $default_nodes_lists_hash + $nodes_list_hash
       $full_nodes_list_hash.each | $k,$v | {
