@@ -8,12 +8,12 @@ define psick::sysctl::set (
     before => Exec["exec_sysctl_${key}"],
   }
 
-  $command = $::kernel ? {
+  $command = $facts['kernel'] ? {
     'openbsd' => "sysctl ${key}=\"${value}\"",
     default   => "sysctl -w ${key}=\"${value}\"",
   }
 
-  $unless = $::kernel ? {
+  $unless = $facts['kernel'] ? {
     'openbsd' => "sysctl ${key} | grep -q '=${value}\$'",
     default   => "sysctl ${key} | grep -q ' = ${value}'",
   }

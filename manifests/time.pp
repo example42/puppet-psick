@@ -1,6 +1,6 @@
 # Class psick::time
 # This class manages time on different OS in various ways:
-# 
+#
 # @param servers Arrays of ntp servers to set
 # @param method How to set time via ntp.
 #    chrony - use Chrony. Requires aboe/chrony module
@@ -23,21 +23,21 @@ class psick::time (
       noop($noop_value)
     }
 
-    if $::kernel != 'windows' and $timezone {
+    if $facts['kernel'] != 'windows' and $timezone {
       contain psick::timezone
     }
 
-    if $::kernel == 'Linux' and $method == 'chrony' {
+    if $facts['kernel'] == 'Linux' and $method == 'chrony' {
       class { 'chrony':
         servers => $servers,
       }
     }
 
-    if $::kernel == 'Linux' and $method == 'ntpdate' {
+    if $facts['kernel'] == 'Linux' and $method == 'ntpdate' {
       contain psick::time::ntpdate
     }
 
-    if $::kernel != 'Windows' and $method == 'ntp' {
+    if $facts['kernel'] != 'Windows' and $method == 'ntp' {
       class { 'ntp':
         servers => $servers,
       }

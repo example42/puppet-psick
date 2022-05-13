@@ -23,12 +23,12 @@ class psick::users::ad (
     if $noop_manage {
       noop($noop_value)
     }
-    if $::kernel == 'Linux' {
+    if $facts['kernel'] == 'Linux' {
       class { 'sssd':
         domains => $domain,
       }
     }
-    if $::kernel == 'Windows' {
+    if $facts['kernel'] == 'Windows' {
       $join_options = $create_machine_account ? {
         true  => '3',
         false => '1',

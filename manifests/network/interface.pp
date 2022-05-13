@@ -71,7 +71,7 @@ define psick::network::interface (
     },
     default => $reload_command,
   }
-  if $restart_all_nic == false and $::kernel == 'Linux' {
+  if $restart_all_nic == false and $facts['kernel'] == 'Linux' {
     exec { "network_restart_${name}":
       command     => $real_reload_command,
       path        => '/sbin',
@@ -140,7 +140,7 @@ define psick::network::interface (
         concat::fragment { "interface-${name}":
           target  => '/etc/network/interfaces',
           content => template($template),
-          order   => $manage_order,
+          order   => $order,
         }
       }
 

@@ -3,9 +3,9 @@
 # the base classes.
 # Is exposes parameters that allow to define any class (from Psick,
 # public modules or local profiles) to include as profile.
-# For each different $::kernel value a differet entrypoint is exposed.
+# For each different $facts['kernel'] value a differet entrypoint is exposed.
 #
-# For each of these $::kernel_classes parameters, it's expected an Hash of key-values:
+# For each of these $facts['kernel']_classes parameters, it's expected an Hash of key-values:
 # Keys can have any name, and are used as markers to allow overrides,
 # exceptions management and customisations across Hiera's hierarchies.
 # Values are actual class names to include in the node's catalog.
@@ -30,7 +30,7 @@
 #     psick::profiles::manage: false
 #
 # @param linux_classes Hash with the list of classes to include
-#   as added profiles when $::kernel is Linux. Of each key-value
+#   as added profiles when $facts['kernel'] is Linux. Of each key-value
 #   of the hash, the key is used as marker to eventually override
 #   across Hiera hierarchies and the value is the name of the class
 #   to actually include. Any key name can be used, but the value
@@ -38,11 +38,11 @@
 #   is set to empty string ('') then the class of the relevant marker
 #   is not included.
 # @param windows_classes Hash with the list of classes to include
-#   as added profiles when $::kernel is windows.
+#   as added profiles when $facts['kernel'] is windows.
 # @param solaris_classes Hash with the list of classes to include
-#   as added profiles when $::kernel is Solaris.
+#   as added profiles when $facts['kernel'] is Solaris.
 # @param darwin_classes Hash with the list of classes to include
-#   as added profiles when $::kernel is Darwin.
+#   as added profiles when $facts['kernel'] is Darwin.
 # @param manage If to actually manage any resource in this class. If false no
 #               resource is managed. Default value is taken from main psick class.
 # @param noop_manage If to use the noop() function for all the resources provided
@@ -68,28 +68,28 @@ class psick::profiles (
   Boolean $noop_value           = $psick::noop_value,
 ) {
   if $manage {
-    if !empty($linux_classes) and $::kernel == 'Linux' {
+    if !empty($linux_classes) and $facts['kernel'] == 'Linux' {
       $linux_classes.each |$n,$c| {
         if $c != '' {
           contain $c
         }
       }
     }
-    if !empty($windows_classes) and $::kernel == 'windows' {
+    if !empty($windows_classes) and $facts['kernel'] == 'windows' {
       $windows_classes.each |$n,$c| {
         if $c != '' {
           contain $c
         }
       }
     }
-    if !empty($darwin_classes) and $::kernel == 'Darwin' {
+    if !empty($darwin_classes) and $facts['kernel'] == 'Darwin' {
       $darwin_classes.each |$n,$c| {
         if $c != '' {
           contain $c
         }
       }
     }
-    if !empty($solaris_classes) and $::kernel == 'Solaris' {
+    if !empty($solaris_classes) and $facts['kernel'] == 'Solaris' {
       $solaris_classes.each |$n,$c| {
         if $c != '' {
           contain $c

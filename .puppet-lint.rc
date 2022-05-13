@@ -1,4 +1,4 @@
 --relative
---no-parameter_documentation
---no-file_ensure-check
---no-params-empty-string-assignment-check
+#--no-parameter_documentation
+#--no-file_ensure-check
+#--no-params-empty-string-assignment-check
