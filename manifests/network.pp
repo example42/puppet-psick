@@ -55,7 +55,6 @@ class psick::network (
   Hash $routes_hash      = {},
 
 ) {
-
   # We declare resources only if $manage = true
   if $manage {
     if $noop_manage {

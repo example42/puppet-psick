@@ -54,7 +54,7 @@ define psick::network::interface (
 
   Boolean $enable                  = true,
   Enum['present','absent'] $ensure = 'present',
-  String $template                 = "psick/network/interface/${::osfamily}.erb",
+  String $template                 = "psick/network/interface/${facts['os']['family']}.erb",
   Hash $options                    = {},
   String $interface                = $title,
   Boolean $restart_all_nic         = true,
@@ -62,14 +62,13 @@ define psick::network::interface (
 
   Boolean $enable_dhcp             = false,
 
-  ) {
-
+) {
   # Resources
   $real_reload_command = $reload_command ? {
-    undef => $::operatingsystem ? {
-        'CumulusLinux' => 'ifreload -a',
-        default        => "ifdown ${interface}; ifup ${interface}",
-      },
+    undef => $facts['os']['name'] ? {
+      'CumulusLinux' => 'ifreload -a',
+      default        => "ifdown ${interface}; ifup ${interface}",
+    },
     default => $reload_command,
   }
   if $restart_all_nic == false and $::kernel == 'Linux' {
@@ -83,8 +82,7 @@ define psick::network::interface (
     $network_notify = $network::manage_config_file_notify
   }
 
-  case $::osfamily {
-
+  case $facts['os']['family'] {
     'Debian': {
       if $network::config_file_per_interface {
         if ! defined(File['/etc/network/interfaces.d']) {
@@ -95,7 +93,7 @@ define psick::network::interface (
             group  => 'root',
           }
         }
-        if $::operatingsystem == 'CumulusLinux' {
+        if $facts['os']['name'] == 'CumulusLinux' {
           file { "interface-${name}":
             ensure  => $ensure,
             path    => "/etc/network/interfaces.d/${name}",
@@ -144,7 +142,6 @@ define psick::network::interface (
           content => template($template),
           order   => $manage_order,
         }
-
       }
 
       if ! defined(Network::Interface['lo']) {
@@ -198,7 +195,7 @@ define psick::network::interface (
     }
 
     'Solaris': {
-      if $::operatingsystemrelease == '5.11' {
+      if $facts['os']['release']['full'] == '5.11' {
         if ! defined(Service['svc:/network/physical:nwam']) {
           service { 'svc:/network/physical:nwam':
             ensure => stopped,
@@ -211,7 +208,7 @@ define psick::network::interface (
           }
         }
       }
-      case $::operatingsystemmajrelease {
+      case $facts['os']['release']['major'] {
         '11','5': {
           if $enable_dhcp {
             $create_ip_command = "ipadm create-addr -T dhcp ${title}/dhcp"
@@ -239,10 +236,10 @@ define psick::network::interface (
         require => Exec["create ipaddr ${title}"],
         tag     => 'solaris',
       }
-      host { $::fqdn:
+      host { $facts['networking']['fqdn']:
         ensure       => present,
         ip           => $ipaddress,
-        host_aliases => [$::hostname],
+        host_aliases => [$facts['networking']['hostname']],
         require      => File["hostname iface ${title}"],
       }
       if ! defined(Service['svc:/network/physical:default']) {
@@ -258,9 +255,7 @@ define psick::network::interface (
     }
 
     default: {
-      alert("${::operatingsystem} not supported. No changes done here.")
+      alert("${facts['os']['name']} not supported. No changes done here.")
     }
-
   }
-
 }

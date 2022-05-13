@@ -31,15 +31,10 @@
 define psick::network::route (
   Hash $routes,
   Integer $interface = $title,
-  $ensure            = 'present'
+  $ensure            = 'present',
+  Optional[ResouceRef] $route_notify = undef,
 ) {
-
-  $real_config_file_notify = $config_file_notify ? {
-    'class_default' => $::network::manage_config_file_notify,
-    default         => $config_file_notify,
-  }
-
-  case $::osfamily {
+  case $facts['os']['family'] {
     'RedHat': {
       file { "route-${interface}":
         ensure  => $ensure,
@@ -82,6 +77,6 @@ define psick::network::route (
         notify  => $route_notify,
       }
     }
-    default: { fail('Operating system not supported')  }
+    default: { fail('Operating system not supported') }
   }
 }

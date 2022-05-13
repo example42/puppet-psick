@@ -19,8 +19,7 @@ class psick::network::example42 (
   String $bonding_mode     = 'active-backup',
   String $network_template = 'psick/network/network.erb',
 ) {
-
-  contain ::network
+  contain network
 
   file { '/etc/modprobe.d/bonding.conf':
     ensure => file,
@@ -34,7 +33,7 @@ class psick::network::example42 (
   $default_options = {
     onboot     => 'yes',
     'type'     => 'Ethernet',
-    template   => "psick/network/interface-${::osfamily}.erb",
+    template   => "psick/network/interface-${facts['os']['family']}.erb",
     options    => {
       'IPV6INIT'           => 'no',
       'IPV4_FAILURE_FATAL' => 'yes',
@@ -64,7 +63,7 @@ class psick::network::example42 (
     }
   }
 
-  if $::osfamily == 'RedHat'
+  if $facts['os']['family'] == 'RedHat'
   and $network_template != '' {
     file { '/etc/sysconfig/network':
       ensure  => file,
