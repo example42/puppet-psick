@@ -1,5 +1,11 @@
 ## Changelog
 
+## Releae 1.0.0.alpha1
+
+* Preparing for release 1, backwards incompatible.
+* Moved most app profiles to psick_profile module
+* pdk update
+* Lint cleanup 
 * Added psick::kmod class
 * Better psick::gitlab::cli class
 * Updated psick profile generation script
