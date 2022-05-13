@@ -1,0 +1,4 @@
+---
+psick::php::module_prefix: php-
+psick::php::pear_module_prefix: pear
+psick::php::devel::package: php-devel

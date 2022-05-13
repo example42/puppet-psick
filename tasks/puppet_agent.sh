@@ -14,6 +14,7 @@ puppet_options="--detailed-exitcodes"
 [[ -n "${PT_noop}" ]] && puppet_options="${puppet_options} --noop"
 [[ -n "${PT_no_noop}" ]] && puppet_options="${puppet_options} --no-noop"
 [[ -n "${PT_environment}" ]] && puppet_options="${puppet_options} --environment ${PT_environment}"
+[[ -n "${PT_tags}" ]] && puppet_options="${puppet_options} --tags ${PT_tags}"
 readonly puppet_options
 
 $pre_command /opt/puppetlabs/puppet/bin/puppet agent -t $puppet_options

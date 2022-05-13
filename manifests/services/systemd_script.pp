@@ -15,7 +15,7 @@ define psick::services::systemd_script (
   String $systemd_template = 'psick/services/systemd.erb',
   Optional[String] $systemd_after    = 'network.target',
   Optional[String] $systemd_before   = undef,
-){
+) {
   $manage_content = tp_content($content, $template, $epp)
   file { $path:
     ensure  => $ensure,
@@ -37,7 +37,7 @@ define psick::services::systemd_script (
     service { $title:
       ensure    => $service_ensure,
       enable    => $service_enable,
-      subscribe => [ File["/etc/systemd/system/${title}.service"],File[$path] ],
+      subscribe => [File["/etc/systemd/system/${title}.service"],File[$path]],
     }
   }
 }

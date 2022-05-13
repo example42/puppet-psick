@@ -1,12 +1,59 @@
 ## Changelog
 
-* Your contribution here.
+## Releae 1.0.0.alpha1
+
+* Preparing for release 1, backwards incompatible.
+* Moved most app profiles to psick_profile module
+* pdk update
+* Lint cleanup 
+* Added psick::kmod class
+* Better psick::gitlab::cli class
+* Updated psick profile generation script
+* Improved psick::puppet::pe_client_tools psick::puppet::pe_agent and psick::puppet::pe_server
+* Fixes to psick::limits
+
+## Release 0.8.0
+* Standardised manage, noop_manage and noop_value on all classes
+* Removed local tp profiles (replaced by separated tp_profiles module)
+* Added psick::limits class
+* Added psick::mounts class
+* Added option to manage gitlab configs via in line settings
+* Cleaned up deprecations in logs
+* Removed deprecated auto_conf param
+
+## Release 0.7.0
+* Deprecated local tp profiles. Preparing transition to tp_profile module
+* Added psick::icinga2 profile, features full
+* Added psick::icingaweb2 profile, features full
+* Added psick::java:install_tarball define
+* Added psick::selinux class
+* Added psick::remediate profile to install Puppet Remediate
+* Added psick::ensure2* functions
+* Added psick::hosts::puppetdb profile.
+* psick::php::fpm profile
+* Improved psick::packages
+* Fixed mariadb and mysql defines
+* Puppetserver 6 has new ca commands - [@tuxmea](https://github.com/tuxmea).
+* Updated hiera.yaml with globs to split per profile hiera data
+
+## Release 0.6.2
+* Updated psick::puppet::foss_master to Puppet 6
+* Updated psick::puppetserver to Puppet 6
+* Added psick::jenkins::jcasc clsss
+* Updated .travis.yml
+
+## Release 0.6.1
+* Improved openssh defines
+* Added extra_packages_list to psick::git
+* Added extra options to default apache vhost template
+* Added update_hostname option to psick::hostname
+* Less default vagrant plugins
+* psick::virtualbox updated
 
 ## Release 0.6.0
-
 * Added no_noop parameter to tp profiles
 * Changed current no_noop params to not override server side noop_mode
-* Added psick::chroby profile
+* Added psick::chruby profile
 * Use correct puppet agent parameter for server - [@tuxmea](https://github.com/tuxmea).
 
 ## Release 0.5.8

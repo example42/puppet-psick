@@ -6,7 +6,6 @@ define psick::puppet::access (
   Optional[String] $pe_password     = undef,
   String $pe_console                = $servername,
 ) {
-
   $user_home = $run_as_user ? {
     'root'  => '/root',
     default => "/home/${run_as_user}",
@@ -31,7 +30,7 @@ define psick::puppet::access (
     creates     => "${user_home}/.puppetlabs/token",
     user        => $run_as_user,
     cwd         => $user_home,
-    environment => [ "HOME=${user_home}" ],
+    environment => ["HOME=${user_home}"],
     #   logoutput => false,
   }
 }

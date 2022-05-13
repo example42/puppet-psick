@@ -1,41 +1,50 @@
 # This class installs openssh using tp
 #
-# @param ensure Define if to install or remove openssh
-#
 class psick::openssh (
-  Enum['present','absent'] $ensure        = 'present',
-  Hash                     $configs_hash  = {},
+  Hash                     $configs_hash   = {},
   Hash                     $keygens_hash  = {},
   Hash                     $keypairs_hash = {},
+  Hash                     $keyscans_hash = {},
   String                   $module        = 'psick',
-  Boolean                  $use_tp        = true,
+  Boolean                  $manage        = $psick::manage,
+  Boolean                  $noop_manage   = $psick::noop_manage,
+  Boolean                  $noop_value    = $psick::noop_value,
 ) {
+  if $manage {
+    if $noop_manage {
+      noop($noop_value)
+    }
 
-  case $module {
-    'psick': {
-      if $use_tp {
-        tp::install { 'openssh':
-          ensure => $ensure,
-        }
+    case $module {
+      'tp_profile': {
+        contain tp_profile::openssh
       }
-      $configs_hash.each |$k,$v| {
-        psick::openssh::config { $k:
-          * => $v,
-        }
+      'psick': {
+        contain psick::openssh::install
       }
-      $keygens_hash.each |$k,$v| {
-        psick::openssh::keygen { $k:
-          * => $v,
-        }
-      }
-      $keypairs_hash.each |$k,$v| {
-        psick::openssh::keypair { $k:
-          * => $v,
-        }
+      default: {
+        contain openssh
       }
     }
-    default: {
-      contain ::openssh
+    $configs_hash.each |$k,$v| {
+      psick::openssh::config { $k:
+        * => $v,
+      }
+    }
+    $keygens_hash.each |$k,$v| {
+      psick::openssh::keygen { $k:
+        * => $v,
+      }
+    }
+    $keypairs_hash.each |$k,$v| {
+      psick::openssh::keypair { $k:
+        * => $v,
+      }
+    }
+    $keyscans_hash.each |$k,$v| {
+      psick::openssh::keyscan { $k:
+        * => $v,
+      }
     }
   }
 }

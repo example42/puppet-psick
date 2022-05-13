@@ -11,27 +11,37 @@ class psick::lvm (
   String $default_fs_type    = 'xfs',
   Boolean $default_createfs  = false,
   Boolean $install_package   = true,
+
+  Boolean $manage            = $psick::manage,
+  Boolean $noop_manage       = $psick::noop_manage,
+  Boolean $noop_value        = $psick::noop_value,
+
 ) {
-
-  if $install_package  {
-    package { 'lvm2':
-      ensure => $ensure,
+  if $manage {
+    if $noop_manage {
+      noop($noop_value)
     }
-  }
 
-  $all_disks = keys($facts['disks'])
-  $available_disks = delete($all_disks, $all_disks[0])
-  $real_pvs =  $available_disks.map|$k| { "/dev/${k}" }
-
-  if $available_disks != [] and $create_default_vg {
-    lvm::volume_group { $default_vg_name:
-      physical_volumes => $real_pvs,
+    if $install_package {
+      package { 'lvm2':
+        ensure => $ensure,
+      }
     }
-    lvm::logical_volume { $default_lv_name:
-      volume_group => $default_vg_name,
-      createfs     => $default_createfs,
-      fs_type      => $default_fs_type,
-      *            => $default_lv_options,
+
+    $all_disks = keys($facts['disks'])
+    $available_disks = delete($all_disks, $all_disks[0])
+    $real_pvs =  $available_disks.map|$k| { "/dev/${k}" }
+
+    if $available_disks != [] and $create_default_vg {
+      lvm::volume_group { $default_vg_name:
+        physical_volumes => $real_pvs,
+      }
+      lvm::logical_volume { $default_lv_name:
+        volume_group => $default_vg_name,
+        createfs     => $default_createfs,
+        fs_type      => $default_fs_type,
+        *            => $default_lv_options,
+      }
     }
   }
 }

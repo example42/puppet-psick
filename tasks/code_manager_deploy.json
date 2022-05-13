@@ -1,0 +1,13 @@
+{
+  "supports_noop": false,
+  "description": "Deploys a Puppet environment on Puppet Enterprise via Code Manager",
+  "parameters": {
+    "environment": {
+      "description": "The Environment to deploy. Use --all to deploy all environments",
+      "type": "String[1]"
+    }
+  },
+  "implementations": [
+    { "name": "code_manager_deploy.sh", "requirements": ["shell"]}
+  ]
+}

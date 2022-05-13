@@ -1,0 +1,12 @@
+<%=
+  filter=Regexp.new(@facts_file_exclude_regex)
+  facts = scope.to_hash.reject {|k,v| k.to_s =~ /^(.*uptime.*|rubysitedir|_timestamp|memoryfree.*|swapfree.*|title|name|caller_module_name|module_name|path|load_averages.*|memory.*|mountpoints.*|physical_volumes.*|volume_groups.*|facts|last_run|puppet_inventory_metadata|pe_patch)$/}.sort
+  output = "---\n"
+  facts.each do |fact|
+    line = {fact[0] => fact[1]}
+    output += line.to_yaml.lines.to_a[1..-1].join
+  end
+
+  output
+
+%>

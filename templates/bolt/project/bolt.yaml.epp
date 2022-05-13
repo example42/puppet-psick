@@ -1,0 +1,11 @@
+---
+# Sample bolt.yaml file to use the Puppet control-repo also as Bolt project,
+# sharing data and code. Here are outlined Bolt defaults
+modulepath: "modules:site-modules:site "
+inventoryfile: "inventory.yaml"
+puppetfile: "Puppetfile"
+concurrency: 100
+format: human # or json
+ssh:
+  host-key-check: false
+  private-key: ~/.ssh/id_rsa

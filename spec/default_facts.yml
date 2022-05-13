@@ -1,0 +1,43 @@
+# Use default_module_facts.yml for module specific facts.
+#
+# Facts specified here will override the values provided by rspec-puppet-facts.
+---
+kernel: Linux
+ipaddress: "172.16.254.254"
+is_pe: false
+macaddress: "AA:AA:AA:AA:AA:AA"
+serverip: "172.16.254.1"
+servername: "puppet.example.com"
+networking:
+  domain: lab.psick.io
+  fqdn: cirunner.lab.psick.io
+  hostname: cirunner
+  interfaces:
+    eth0:
+      bindings:
+        - address: 10.0.2.15
+          netmask: 255.255.255.0
+          network: 10.0.2.0
+      ip: 10.0.2.15
+      mac: "52:54:00:8a:fe:e6"
+      mtu: 1500
+      netmask: 255.255.255.0
+      network: 10.0.2.0
+    lo:
+      bindings:
+        - address: 127.0.0.1
+          netmask: 255.0.0.0
+          network: 127.0.0.0
+      ip: 127.0.0.1
+      mtu: 65536
+      netmask: 255.0.0.0
+      network: 127.0.0.0
+  ip: 10.0.2.15
+  mac: "52:54:00:8a:fe:e6"
+  mtu: 1500
+  netmask: 255.255.255.0
+  network: 10.0.2.0
+  primary: eth0
+icinga2_puppet_hostprivkey: /etc/puppetlabs/puppet/ssl/private_keys/lab.psick.io.pem
+icinga2_puppet_hostcert: /etc/puppetlabs/puppet/ssl/certs/lab.psick.io.pem
+icinga2_puppet_localcacert: /etc/puppetlabs/puppet/ssl/certs/ca.pem

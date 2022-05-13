@@ -12,31 +12,39 @@ class psick::puppet::postrun (
   Optional[String] $template = undef,
   Optional[String] $epp      = undef,
   Optional[String] $path     = undef,
-){
-
-  $manage_content = tp_content($content, $template, $epp)
-
-  File {
-    owner => 'root',
-    group => 'root',
-    mode  => '0644',
-  }
-  Ini_setting {
-    ensure  => $ensure,
-    path    => $puppet_conf_path,
-    section => 'agent',
-    setting => 'postrun_command',
-  }
-  if $command {
-    ini_setting { 'puppet_postrun_command':
-      value  => $command,
+  Boolean $manage                  = $psick::manage,
+  Boolean $noop_manage             = $psick::noop_manage,
+  Boolean $noop_value              = $psick::noop_value,
+) {
+  if $manage {
+    if $noop_manage {
+      noop($noop_value)
     }
-  }
-  if $path {
-    file { $path:
-      content => $manage_content,
-      source  => $source,
-      mode    => '0755',
+
+    $manage_content = tp_content($content, $template, $epp)
+
+    File {
+      owner => 'root',
+      group => 'root',
+      mode  => '0644',
+    }
+    Ini_setting {
+      ensure  => $ensure,
+      path    => $puppet_conf_path,
+      section => 'agent',
+      setting => 'postrun_command',
+    }
+    if $command {
+      ini_setting { 'puppet_postrun_command':
+        value  => $command,
+      }
+    }
+    if $path {
+      file { $path:
+        content => $manage_content,
+        source  => $source,
+        mode    => '0755',
+      }
     }
   }
 }

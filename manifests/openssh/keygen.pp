@@ -11,8 +11,8 @@ define psick::openssh::keygen (
   Optional[String] $filename = undef,
   Optional[String] $comment  = undef,
   Optional[String] $options  = undef,
+  Boolean $create_ssh_dir    = false,
 ) {
-
   $user_real = $user ? {
     undef   => $name,
     default => $user,
@@ -36,6 +36,8 @@ define psick::openssh::keygen (
     default => $filename,
   }
 
+  $base_dir = dirname($filename_real)
+
   $type_opt = " -t ${type_real}"
   if $bits { $bits_opt = " -b ${bits}" } else { $bits_opt = '' }
   $filename_opt = " -f '${filename_real}'"
@@ -50,7 +52,14 @@ define psick::openssh::keygen (
     command => "ssh-keygen${type_opt}${bits_opt}${filename_opt}${n_passphrase_opt}${comment_opt}${options_opt}",
     user    => $user_real,
     creates => $filename_real,
+    path    => '/bin:/sbin:/usr/bin:/usr/sbin',
   }
 
+  if $create_ssh_dir {
+    psick::tools::create_dir { "openssh_keygen_${base_dir}":
+      path   => $base_dir,
+      owner  => $user_real,
+      before => Exec["ssh_keygen-${name}"],
+    }
+  }
 }
-

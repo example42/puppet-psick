@@ -20,7 +20,7 @@
 # @param default_set Define a set of default gems to install for different
 #   use cases. Possible values: 'none','client','master','developer','citest',
 #   'cideploy','integration'. Gems defined here are installed under all the
-#   environments set by install_*_gems params. 
+#   environments set by install_*_gems params.
 # @param install_gems Array of additional custom gems to install under all the
 #   environments set by install_*_gems params.
 # @param install_options Optional optional to add to the package provider when
@@ -39,47 +39,54 @@
 # @param additional_rbenv_gems Array of additional gems to install under rbenv
 # @param additional_chruby_gems Array of additional gems to install under chruby
 # @param rbenv_ruby_version Ruby version to use under rbenv. Default is from
-#   $::psick::rbenv::default_ruby_version
+#   $::psick::ruby::rbenv::default_ruby_version
 # @param chruby_ruby_version Ruby version to use under chruby. Default is from
 #   $::psick::chruby::default_ruby_version
-# @param manage If to actually manage ANY resource from this class.
-#   When set to false, no resource from this class is managed whatever are
-#   the other parameters.
 # @param auto_prereq If to automatically install eventual dependencies required
 #   by this class. Set to false if you have problems with duplicated resources.
 #   If so, you'll need to ensure the needed prerequisites are present.
-# @param no_noop Set noop metaparameter to false to all the resources of this class.
-#   This overrides any noop setting which might be in place.
+# @param manage If to actually manage any resource in this class. If false no
+#               resource is managed.
+# @param noop_manage If to use the noop() function for all the resources provided
+#                    by this class. If this is true the noop function is called
+#                    with $noop_value argument. This overrides any other noop setting
+#                    (either set on client's puppet.conf or by noop() function in
+#                    main psick class).
+# @param noop_value The value to pass to noop() function if noop_manage is true.
+#                   It applies to all the resources (and classes) declared in this class
+#                   If true: noop metaparamenter is set to true, resources are not applied
+#                   If false: noop metaparameter is set to false, and any eventual noop
+#                   setting is overridden: resources are always applied.
 #
 class psick::puppet::gems (
   Enum['present','absent'] $ensure     = 'present',
   Enum['none','client','master','developer','citest','cideploy','integration'] $default_set = 'none',
-  Array $install_gems                  = [ ],
-  Array $install_options               = [ ],
+  Array $install_gems                  = [],
+  Array $install_options               = [],
   Boolean $install_system_gems         = false,
   Boolean $install_puppet_gems         = true,
   Boolean $install_puppetserver_gems   = false,
-  Boolean $install_rbenv_gems          = false, 
-  Boolean $install_chruby_gems         = false, 
+  Boolean $install_rbenv_gems          = false,
+  Boolean $install_chruby_gems         = false,
   Array $additional_system_gems        = [],
   Array $additional_puppet_gems        = [],
   Array $additional_puppetserver_gems  = [],
   Array $additional_rbenv_gems         = [],
   Array $additional_chruby_gems        = [],
-  Optional[String] $rbenv_ruby_version  = undef,       
-  Optional[String] $chruby_ruby_version = undef,       
-  Boolean $manage                      = $::psick::manage,
-  Boolean $auto_prereq                 = $::psick::auto_prereq,
-  Boolean $no_noop                     = false,
+  Optional[String] $rbenv_ruby_version  = undef,
+  Optional[String] $chruby_ruby_version = undef,
+  Boolean $auto_prereq             = $psick::auto_prereq,
+  Boolean $manage                  = $psick::manage,
+  Boolean $noop_manage             = $psick::noop_manage,
+  Boolean $noop_value              = $psick::noop_value,
 ) {
-
   if $manage {
-    if !$::psick::noop_mode and $no_noop {
-      info('Forced no-noop mode.')
-      noop(false)
+    if $noop_manage {
+      noop($noop_value)
     }
+
     $minimal_gems = ['r10k','hiera-eyaml','deep_merge']
-    $minimal_test_gems = ['puppet-lint','rspec-puppet','rake','bundler','simplecov','minitest','rspec-puppet-facts','puppetlabs_spec_helper','yaml-lint']
+    $minimal_test_gems = ['puppet-lint','rspec-puppet','rake','bundler','simplecov','minitest','puppetlabs_spec_helper','yaml-lint'] # lint:ignore:140chars
     $default_gems = $default_set ? {
       'none'      => [],
       'client'    => [],
@@ -92,7 +99,7 @@ class psick::puppet::gems (
     $all_gems = $default_gems + $install_gems
     if $install_system_gems {
       if $auto_prereq {
-        include ::psick::ruby
+        include psick::ruby
       }
       $system_gems = $all_gems + $additional_system_gems
       $system_gems.each | $gem | {
@@ -105,6 +112,9 @@ class psick::puppet::gems (
       }
     }
     if $install_puppet_gems {
+      if $auto_prereq {
+        include psick::ruby::buildgems
+      }
       $puppet_gems = $all_gems + $additional_puppet_gems
       $puppet_gems.each | $gem | {
         if !defined(Class['r10k']) {
@@ -113,6 +123,7 @@ class psick::puppet::gems (
             name            => $gem,
             install_options => $install_options,
             provider        => 'puppet_gem',
+            require         => Class['psick::ruby::buildgems'],
           }
         }
       }
@@ -130,10 +141,10 @@ class psick::puppet::gems (
     }
     if $install_rbenv_gems {
       if $auto_prereq {
-        include ::psick::rbenv
+        include psick::ruby::rbenv
       }
       $rbenv_require = $auto_prereq ? {
-        true  => Class['psick::rbenv'],
+        true  => Class['psick::ruby::rbenv'],
         false => undef,
       }
       $rbenv_gems = $all_gems + $additional_rbenv_gems
@@ -141,7 +152,7 @@ class psick::puppet::gems (
         # bundler gem already installed by rbenv module
         if $gem != 'bundler' {
           rbenv::gem { $gem:
-            ruby_version => pick($rbenv_ruby_version,$::psick::rbenv::default_ruby_version),
+            ruby_version => pick($rbenv_ruby_version,$psick::ruby::rbenv::default_ruby_version),
             skip_docs    => true,
             require      => $rbenv_require,
           }
@@ -150,7 +161,7 @@ class psick::puppet::gems (
     }
     if $install_chruby_gems {
       if $auto_prereq {
-        include ::psick::chruby
+        include psick::chruby
       }
       $chruby_require = $auto_prereq ? {
         true  => Class['psick::chruby'],
@@ -159,7 +170,7 @@ class psick::puppet::gems (
       $chruby_gems = $all_gems + $additional_chruby_gems
       $chruby_gems.each | $gem | {
         psick::chruby::gem { $gem:
-          ruby_version => pick($chruby_ruby_version,$::psick::chruby::default_ruby_version),
+          ruby_version => pick($chruby_ruby_version,$psick::chruby::default_ruby_version),
           require      => $chruby_require,
         }
       }

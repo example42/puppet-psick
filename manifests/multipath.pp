@@ -9,13 +9,21 @@
 class psick::multipath (
   String $config_file_template = 'psick/multipath/multipath.conf.erb',
   String $user_friendly_names  = 'yes',
+
+  Boolean $manage              = $psick::manage,
+  Boolean $noop_manage         = $psick::noop_manage,
+  Boolean $noop_value          = $psick::noop_value,
 ) {
-
-  if $config_file_template != '' and $::virtual == 'physical' {
-    tp::conf { 'multipath':
-      content => template($config_file_template),
+  if $manage {
+    if $noop_manage {
+      noop($noop_value)
     }
-    tp::install { 'multipath': }
-  }
 
+    if $config_file_template != '' and $facts['virtual'] == 'physical' {
+      tp::conf { 'multipath':
+        content => template($config_file_template),
+      }
+      tp::install { 'multipath': }
+    }
+  }
 }

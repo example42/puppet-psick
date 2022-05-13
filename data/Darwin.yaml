@@ -1,0 +1,4 @@
+---
+psick::sudo::sudoers_group: wheel
+psick::puppet::pe_client_tools::repo_path: 'apple/11/PC1/x86_64'
+psick::puppet::pe_client_tools::package_suffix: '.osx11.dmg'

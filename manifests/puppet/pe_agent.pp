@@ -2,61 +2,88 @@
 #
 class psick::puppet::pe_agent (
   Boolean $test_enable        = false,
+
   Boolean $manage_environment = false,
+  String $environment_setting = $environment,
+
   Boolean $manage_noop        = false,
+  Boolean $noop_setting       = false,
+
   Boolean $manage_service     = false,
-  Boolean $noop_mode          = false,
+  Enum['running','stopped'] $service_ensure = 'running',
+  Boolean $service_enable     = true,
+
   Hash $settings              = {},
+  Hash $ini_settings_hash     = {},
   String $config_file_path    = '/etc/puppetlabs/puppet/puppet.conf',
 
-  Boolean $no_noop            = false,
+  Boolean $manage             = $psick::manage,
+  Boolean $noop_manage        = $psick::noop_manage,
+  Boolean $noop_value         = $psick::noop_value,
 ) {
-
-  if !$::psick::noop_mode and $no_noop {
-    info('Forced no-noop mode.')
-    noop(false)
-  }
-
-  if $test_enable {
-    Tp::Test {
-      cli_enable => true,
-      template   => '',
+  if $manage {
+    if $noop_manage {
+      noop($noop_value)
     }
-    tp::test { 'puppet-agent': settings_hash => $settings }
-  }
 
-  # Manage Puppet agent service
-  if $manage_service {
-    service { 'puppet':
-      ensure => 'running',
-      enable => true,
+    if $test_enable {
+      Tp::Test {
+        cli_enable => true,
+      }
+      tp::test { 'puppet-agent': settings_hash => $settings }
     }
-    $service_notify = 'Service[puppet]'
-  } else {
-    $service_notify = undef
-  }
 
-  # Set environment
-  if $manage_environment {
-    ini_setting { 'agent conf file environment':
+    # Manage Puppet agent service
+    if $manage_service {
+      service { 'puppet':
+        ensure => $service_ensure,
+        enable => $service_enable,
+      }
+      $service_notify = 'Service[puppet]'
+    } else {
+      $service_notify = undef
+    }
+
+    # Set environment
+    if $manage_environment {
+      pe_ini_setting { 'agent conf file environment':
+        ensure  => present,
+        path    => $config_file_path,
+        section => 'agent',
+        setting => 'environment',
+        value   => $environment_setting,
+        notify  => $service_notify,
+      }
+    }
+
+    # Set noop mode
+    if $manage_noop {
+      pe_ini_setting { 'agent conf file noop':
+        ensure  => present,
+        path    => $config_file_path,
+        section => 'agent',
+        setting => 'noop',
+        value   => $noop_setting,
+        notify  => $service_notify,
+      }
+    }
+
+    $default_ini_settings = {
       ensure  => present,
       path    => $config_file_path,
-      section => 'agent',
-      setting => 'environment',
-      value   => $environment,
       notify  => $service_notify,
     }
-  }
-
-  # Set noop mode
-  if $manage_noop {
-    pe_ini_setting { 'agent conf file noop':
-      ensure  => present,
-      path    => $config_file_path,
-      section => 'agent',
-      setting => 'noop',
-      value   => $noop_mode,
-      notify  => $service_notify,
+    $ini_settings_hash.each | $k,$v | {
+      $k.each | $kk,$vv | {
+        $ini_settings = {
+          section => $k,
+          setting => $kk,
+          value   => $vv,
+        }
+        pe_ini_setting { "puppet.conf ${k} - ${kk}":
+          * => $default_ini_settings + $ini_settings,
+        }
+      }
     }
   }
 }

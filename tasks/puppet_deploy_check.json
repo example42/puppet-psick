@@ -1,0 +1,13 @@
+{
+  "supports_noop": false,
+  "description": "Checks the deployed version of the given Puppet environment. Expects Code Manager or r10k deployments.",
+  "parameters": {
+    "environment": {
+      "description": "The Environment to check. Default production",
+      "type": "Optional[String[1]]"
+    }
+  },
+  "implementations": [
+    { "name": "puppet_deploy_check.sh", "requirements": ["shell"]}
+  ]
+}

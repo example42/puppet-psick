@@ -10,6 +10,10 @@
      "description": "Specify the Puppet environment to use",
      "type": "Optional[String[1]]"
     },
+    "tags": {
+     "description": "Specify a comma separated list of tags to apply",
+     "type": "Optional[String[1]]"
+    },
     "verbose": {
      "description": "Enable verbose mode in Puppet agent run",
      "type": "Optional[Boolean]"

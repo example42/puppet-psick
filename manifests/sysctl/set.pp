@@ -3,7 +3,6 @@ define psick::sysctl::set (
   Any    $value,
   String $key = $title,
 ) {
-
   sysctl { $key :
     val    => $value,
     before => Exec["exec_sysctl_${key}"],

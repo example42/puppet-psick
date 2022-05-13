@@ -14,14 +14,20 @@
 class psick::php::devel (
   Psick::Ensure $ensure = 'present',
   String $package       = 'php-devel',
-  Hash $package_options = {}
-  ) {
-
-  $default_options = {
-    ensure          => $ensure,
+  Hash $package_options = {},
+  Boolean $manage       = $psick::manage,
+  Boolean $noop_manage  = $psick::noop_manage,
+  Boolean $noop_value   = $psick::noop_value,
+) {
+  if $manage {
+    if $noop_manage {
+      noop($noop_value)
+    }
+    $default_options = {
+      ensure          => $ensure,
+    }
+    package { $package:
+      * => $default_options + $package_options,
+    }
   }
-  package { $package:
-    * => $default_options + $package_options,
-  }
-
 }

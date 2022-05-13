@@ -10,7 +10,6 @@
 # Use it as reference
 #
 class psick::php::spec inherits psick::php {
-
   # This just a test to override the arguments of an existing resource
   # Note that you can achieve this same result with just:
   # class { "php": template => "php/spec.erb" }
@@ -18,5 +17,4 @@ class psick::php::spec inherits psick::php {
   File['php.conf'] {
     content => template('php/spec.erb'),
   }
-
 }

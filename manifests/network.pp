@@ -2,6 +2,18 @@
 #
 # @summary This psick profile manages network settings, such as interfaces and
 # routes.
+# @param bonding_mode Define bonding mode (default: active-backup)
+# @param network_template The erb template to use, only on RedHad derivatives,
+#                         for the file /etc/sysconfig/network
+# @param routes Hash of routes to pass to ::network::mroute define
+#               Note: This is not a real class parameter but a key looked up
+#               via lookup('psick::network::routes', {})
+# @param interfaces Hash of interfaces to pass to ::network::interface define
+#                   Note: This is not a real class parameter but a key looked up
+#                   via lookup('psick::network::interfaces', {})
+#                   Note that this psick automatically adds some default
+#                   options according to the interface type. You can override
+#                   them in the provided hash
 #
 # @example Include it to manage network resources
 #   include psick::network
@@ -24,12 +36,13 @@
 # @param no_noop Set noop metaparameter to false to all the resources of this class.
 #   This overrides any noop setting which might be in place.
 class psick::network (
-  Psick::Ensure   $ensure                   = 'present',
-  Boolean         $manage                   = $::psick::manage,
-  Boolean         $auto_prereq              = $::psick::auto_prereq,
-  Hash            $options_hash             = {},
-  String          $module                   = 'psick',
-  Boolean         $no_noop                  = false,
+  Psick::Ensure   $ensure               = 'present',
+  Boolean         $manage               = $psick::manage,
+  Boolean         $auto_prereq          = $psick::auto_prereq,
+  Hash            $options_hash         = {},
+  String          $module               = 'psick',
+  Boolean          $noop_manage         = $psick::noop_manage,
+  Boolean          $noop_value          = $psick::noop_value,
 
   # Legacy params now passed tp psick::network::example42
   String $bonding_mode     = 'active-backup',
@@ -45,11 +58,8 @@ class psick::network (
 
   # We declare resources only if $manage = true
   if $manage {
-
-    # If no_noop is set it's enforced, unless $::psick::noop_mode is true 
-    if !$::psick::noop_mode and $no_noop {
-      info('Forced no-noop mode in psick::network')
-      noop(false)
+    if $noop_manage {
+      noop($noop_value)
     }
 
     # Managed resources according to $module selected
@@ -63,15 +73,6 @@ class psick::network (
         $interfaces_hash.each |$i,$o| {
           ::psick::network::interface { $i:
             * => $interfaces_default_options_hash + $o,
-          }
-        }
-      }
-      'example42-network': {
-        # Class psick::network::example42 was the initial implementation
-        # of psick::network using example42-network module
-        class { 'psick::network::example42':
-          bonding_mode     => $bonding_mode, 
-          network_template => $network_template,
           }
         }
       }

@@ -11,37 +11,46 @@ class psick::mariadb (
   Hash                       $grant_hash    = {},
   Hash                       $user_hash     = {},
   Hash                       $query_hash    = {},
-) {
 
-  # Intallation management
-  case $module {
-    'psick': {
-      contain ::psick::mariadb::tp
-      contain ::psick::mariadb::root_password
-      $user_hash.each |$k,$v| {
-        psick::mariadb::user { $k:
-          * => $v,
-        }
-      }
-      $query_hash.each |$k,$v| {
-        psick::mariadb::query { $k:
-          * => $v,
-        }
-      }
-      $sqlfile_hash.each |$k,$v| {
-        psick::mariadb::sqlfile { $k:
-          * => $v,
-        }
-      }
-      $grant_hash.each |$k,$v| {
-        psick::mariadb::grant { $k:
-          * => $v,
-        }
-      }
+  Boolean             $manage               = $psick::manage,
+  Boolean             $noop_manage          = $psick::noop_manage,
+  Boolean             $noop_value           = $psick::noop_value,
+
+) {
+  if $manage {
+    if $noop_manage {
+      noop($noop_value)
     }
-    default: {
-      contain ::mariadb
+
+    # Intallation management
+    case $module {
+      'psick': {
+        contain psick::mariadb::install
+        contain psick::mariadb::root_password
+        $user_hash.each |$k,$v| {
+          psick::mariadb::user { $k:
+            * => $v,
+          }
+        }
+        $query_hash.each |$k,$v| {
+          psick::mariadb::query { $k:
+            * => $v,
+          }
+        }
+        $sqlfile_hash.each |$k,$v| {
+          psick::mariadb::sqlfile { $k:
+            * => $v,
+          }
+        }
+        $grant_hash.each |$k,$v| {
+          psick::mariadb::grant { $k:
+            * => $v,
+          }
+        }
+      }
+      default: {
+        contain mariadb
+      }
     }
   }
-
 }

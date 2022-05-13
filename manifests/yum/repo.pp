@@ -22,8 +22,7 @@ define psick::yum::repo (
   String $sslclientcert   = 'absent',
   String $sslclientkey    = 'absent',
   String $sslverify       = 'absent',
-  ) {
-
+) {
   if $protect != 'absent' {
     if ! defined(Psick::Yum::Plugin['protectbase']) {
       psick::yum::plugin { 'protectbase': }
@@ -34,7 +33,7 @@ define psick::yum::repo (
     file { "/etc/yum.repos.d/${name}.repo":
       ensure  => file,
       replace => false,
-      before  => Yumrepo[ $name ],
+      before  => Yumrepo[$name],
       mode    => '0644',
       owner   => 'root',
       group   => 0,
@@ -50,7 +49,7 @@ define psick::yum::repo (
         file { "/etc/pki/rpm-gpg/${gpgkey_real_name}":
           ensure  => file,
           replace => false,
-          before  => Yumrepo[ $name ],
+          before  => Yumrepo[$name],
           source  => $gpgkey_source,
           mode    => '0644',
           owner   => 'root',
@@ -84,7 +83,7 @@ define psick::yum::repo (
     if $autokeyimport == 'yes' and $gpgkey != '' {
       exec { "rpmkey_add_${gpgkey}":
         command     => "rpm --import ${gpgkey}",
-        before      => Yumrepo[ $name ],
+        before      => Yumrepo[$name],
         refreshonly => true,
         path        => '/sbin:/bin:/usr/sbin:/usr/bin',
       }

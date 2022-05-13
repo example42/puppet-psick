@@ -5,8 +5,7 @@ define psick::yum::plugin (
   String $source                  = '',
   Variant[String,Undef] $template = '',
   Boolean $enable                 = true
-  ) {
-
+) {
   $ensure = bool2ensure( $enable )
 
   $yum_plugins_prefix = $::facts['os']['release']['major'] ? {

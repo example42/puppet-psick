@@ -1,3 +1,4 @@
+kernel: Linux
 networking:
   dhcp: 10.0.2.2
   domain: lan
@@ -51,5 +52,5 @@ networking:
   network: 10.0.2.0
   primary: eth0
 
-# Quick workaround to fix psick::prometheus tests
+# Quick workaround to fix psick_profile::prometheus tests
 service_provider: 'systemd'

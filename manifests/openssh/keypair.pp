@@ -28,7 +28,6 @@ define psick::openssh::keypair (
   Boolean $create_ssh_dir                   = true,
 
 ) {
-
   $ssh_dir_path = $dir_path ? {
     undef   => $user ? {
       'root'  => "/${user}/.ssh",
@@ -39,36 +38,38 @@ define psick::openssh::keypair (
 
   # SSH keys management
   if $create_ssh_dir {
-    if !defined(File[$ssh_dir_path]) {
-      $dir_ensure = ::tp::ensure2dir($ensure)
-      file { $ssh_dir_path:
-        ensure => $dir_ensure,
-        owner  => pick($dir_owner,$user),
-        group  => pick($dir_group,$user),
-        mode   => $dir_mode,
-      }
+    psick::tools::create_dir { "openssh_keypair_${ssh_dir_path}_${title}":
+      path  => $ssh_dir_path,
+      owner => pick($dir_owner,$user),
+      group => pick($dir_group,$user),
     }
   }
 
   if $private_key_content or $private_key_source {
     file { "${ssh_dir_path}/${key_name}" :
       ensure  => $ensure,
-      owner   => pick($private_key_user,$user),
+      owner   => pick($private_key_owner,$user),
       group   => pick($private_key_group,$user),
       mode    => $private_key_mode,
       content => $private_key_content,
       source  => $private_key_source,
+    }
+    if $create_ssh_dir {
+      Psick::Tools::Create_dir["openssh_keypair_${ssh_dir_path}_${title}"] -> File["${ssh_dir_path}/${key_name}"]
     }
   }
 
   if $public_key_content or $public_key_source {
     file { "${ssh_dir_path}/${key_name}.pub" :
       ensure  => $ensure,
-      owner   => $public_key_user,
+      owner   => $public_key_owner,
       group   => $public_key_group,
       mode    => $public_key_mode,
       content => $public_key_content,
       source  => $public_key_source,
+    }
+    if $create_ssh_dir {
+      Psick::Tools::Create_dir["openssh_keypair_${ssh_dir_path}_${title}"] -> File["${ssh_dir_path}/${key_name}.pub"]
     }
   }
 }

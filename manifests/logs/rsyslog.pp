@@ -8,7 +8,7 @@
 # @param server_ip An array of IPs o syslog servers where to send logs
 # @param options An open hash of options to use in the provided template.
 #                Note: This variable is not a class paramenter but it's looked
-#                up with hiera_hash('psick::logs::rsyslog::options', {} )
+#                up with lookup('psick::logs::rsyslog::options', {} )
 #
 class psick::logs::rsyslog (
   Enum['present','absent'] $ensure                     = 'present',
@@ -17,10 +17,9 @@ class psick::logs::rsyslog (
   String                   $config_file_template       = '',
   Array                    $server_ip                  = [],
 ) {
-
   $options_default = {
   }
-  $options_user=hiera_hash('psick::logs::rsyslog::options', {} )
+  $options_user=lookup('psick::logs::rsyslog::options', Hash, 'deep', {})
   $options=merge($options_default,$options_user)
 
   ::tp::install { 'rsyslog':

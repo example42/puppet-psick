@@ -1,0 +1,3 @@
+---
+psick::puppet::pe_client_tools::repo_path: 'el/6/PC1/x86_64'
+psick::puppet::pe_client_tools::package_suffix: '.el6.x86_64.rpm'

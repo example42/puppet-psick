@@ -39,7 +39,7 @@ define psick::git::config (
   Optional[String]         $path         = undef,
   Hash                     $options_hash = {},
 ) {
-
+  # TODO: This can be replaced with $title as default for user param
   $user_real = $user ? {
     undef    => $title,
     default => $user,
@@ -74,5 +74,4 @@ define psick::git::config (
     content => $real_content,
     source  => $source,
   }
-
 }

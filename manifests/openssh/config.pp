@@ -42,7 +42,6 @@ define psick::openssh::config (
   Hash                     $options_hash   = {},
   Boolean                  $create_ssh_dir = false,
 ) {
-
   $user_real = $user ? {
     undef    => $title,
     default => $user,
@@ -84,7 +83,8 @@ define psick::openssh::config (
   }
 
   if $create_ssh_dir {
-    psick::tools::create_dir { $base_dir:
+    psick::tools::create_dir { "openssh_config_${base_dir}_${title}":
+      path   => $base_dir,
       owner  => $user_real,
       group  => $user_real,
       before => File[$path_real],

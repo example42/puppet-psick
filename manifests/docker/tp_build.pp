@@ -12,8 +12,8 @@ define psick::docker::tp_build (
   String                                 $username            = '',
 
   String                                 $image_name          = '',
-  String[1]                              $image_os            = downcase($::operatingsystem),
-  String[1]                              $image_osversion     = $::operatingsystemmajrelease,
+  String[1]                              $image_os            = downcase($facts['os']['name']),
+  String[1]                              $image_osversion     = $facts['os']['release']['major'],
 
   Variant[Undef,String]                  $maintainer          = undef,
   String                                 $from                = '',
@@ -33,16 +33,15 @@ define psick::docker::tp_build (
   Boolean                                $mount_log_dir       = true,
 
   Boolean                                $copy_data_on_image  = true,
-  Hash                                   $conf_hash           = { },
-  Hash                                   $dir_hash            = { },
+  Hash                                   $conf_hash           = {},
+  Hash                                   $dir_hash            = {},
 
   Hash                                   $settings_hash       = {},
 
-  String[1]       $data_module = pick($::psick::docker::data_module,'tinydata'),
+  String[1]       $data_module = pick($psick::docker::data_module,'tinydata'),
 
-  ) {
-
-  include ::psick::docker
+) {
+  include psick::docker
 
   # Settings evaluation
   $title_elements = split ($title, '::')
@@ -58,7 +57,7 @@ define psick::docker::tp_build (
   $username_prefix = $username ? {
     ''      => $::docker::username ? {
       ''      => '',
-      default => "${::docker::username}/",
+      default => "${docker::username}/",
     },
     default => "${username}/",
   }
@@ -77,7 +76,7 @@ define psick::docker::tp_build (
   exec { "mkdir -p ${basedir_path}/root":
     creates => "${basedir_path}/root",
   }
-  -> file { [ "${basedir_path}/Dockerfile" , "${basedir_path}/root/Dockerfile" ]:
+  -> file { ["${basedir_path}/Dockerfile" , "${basedir_path}/root/Dockerfile"]:
     ensure  => $ensure,
     content => template($template),
   }
@@ -100,8 +99,8 @@ define psick::docker::tp_build (
       path_parent_create  => true,
       config_file_notify  => false,
       config_file_require => false,
-      options_hash        => pick_default($conf_options['options_hash'],{ }),
-      settings_hash       => pick_default($conf_options['settings_hash'],{ } ),
+      options_hash        => pick_default($conf_options['options_hash'],{}),
+      settings_hash       => pick_default($conf_options['settings_hash'],{}),
       data_module         => pick_default($conf_options['data_module'],'tinydata'),
       notify              => Exec["docker build ${build_options} -t ${real_image_name} ${basedir_path}"],
     }
@@ -124,7 +123,7 @@ define psick::docker::tp_build (
       purge              => pick_default($dir_options['purge'],false),
       recurse            => pick_default($dir_options['recurse'],false),
       force              => pick_default($dir_options['force'],false),
-      settings_hash      => pick_default($dir_options['settings_hash'],{ } ),
+      settings_hash      => pick_default($dir_options['settings_hash'],{}),
       data_module        => pick_default($dir_options['data_module'],'tinydata'),
       notify             => Exec["docker build ${build_options} -t ${real_image_name} ${basedir_path}"],
     }
@@ -147,5 +146,4 @@ define psick::docker::tp_build (
     refreshonly => $exec_refreshonly,
     require     => $exec_require,
   }
-
 }

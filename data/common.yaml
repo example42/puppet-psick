@@ -2,7 +2,6 @@
 psick::manage: true
 psick::auto_prereq: true
 psick::auto_conf: 'none'
-psick::is_cluster: false
 psick::primary_ip_address: "%{facts.networking.ip}"
 psick::mgmt_interface: "%{facts.networking.primary}"
 
@@ -14,10 +13,10 @@ psick::tp:
   puppi_enable: false
   debug: false
   data_module: tinydata
-  config_file_notify: true  
-  config_file_require: true  
-  config_dir_notify: true  
-  config_dir_require: true  
+  config_file_notify: true
+  config_file_require: true
+  config_dir_notify: true
+  config_dir_require: true
 
 psick::settings: {}
 psick::servers: {}
@@ -26,10 +25,6 @@ psick::firewall:
   manage: false
   enable: true
   classes: {}
-
-psick::php::module_prefix: php-
-psick::php::pear_module_prefix: pear
-psick::php::devel::package: php-devel
 
 psick::monitor:
   manage: true
@@ -109,6 +104,14 @@ lookup_options:
     merge:
       strategy: deep
       knockout_prefix: "--"
+  psick::network::routes:
+    merge:
+      strategy: deep
+      knockout_prefix: "--"
+  psick::network::interfaces:
+    merge:
+      strategy: deep
+      knockout_prefix: "--"
   psick::windows::features::install:
     merge:
       strategy: deep
@@ -151,12 +154,3 @@ lookup_options:
     merge:
       strategy: deep
       knockout_prefix: "--"
-  "^psick::firewall::iptables::(.*)_rules$":
-    merge:
-      strategy: deep
-      knockout_prefix: "--"
-  "^psick::firewall::iptables::(.*)_rules_v6$":
-    merge:
-      strategy: deep
-      knockout_prefix: "--"
-

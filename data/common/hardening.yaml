@@ -1,0 +1,7 @@
+---
+# psick::hardening::packages
+psick::hardening::packages::packages_to_remove: []
+psick::hardening::packages::packages_default: []
+psick::hardening::services::services_to_remove: []
+psick::hardening::services::services_default: []
+

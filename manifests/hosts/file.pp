@@ -10,22 +10,23 @@
 class psick::hosts::file (
   String $template  = 'psick/hosts/file/hosts.erb',
 
-  Optional[Stdlib::Compat::Ip_address] $ipaddress = $::psick::primary_ip,
-  Variant[Undef,String] $domain = $::domain,
-  String $hostname              = $::hostname,
+  Optional[Stdlib::Compat::Ip_address] $ipaddress = $psick::primary_ip,
+  Variant[Undef,String] $domain = $facts['networking']['domain'],
+  String $hostname              = $facts['networking']['hostname'],
   Array $extra_hosts            = [],
 
-  Boolean $no_noop              = false,
+  Boolean $manage               = $psick::manage,
+  Boolean $noop_manage          = $psick::noop_manage,
+  Boolean $noop_value           = $psick::noop_value,
 ) {
+  if $manage {
+    if $noop_manage {
+      noop($noop_value)
+    }
 
-  if !$::psick::noop_mode and $no_noop {
-    info('Forced no-noop mode.')
-    noop(false)
+    file { '/etc/hosts':
+      ensure  => file,
+      content => template($template),
+    }
   }
-
-  file { '/etc/hosts':
-    ensure  => file,
-    content => template($template),
-  }
-
 }

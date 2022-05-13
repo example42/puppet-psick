@@ -7,8 +7,7 @@ define psick::mysql::query (
   $password       = '',
   $host           = '',
   $query_filepath = '/root/puppet-mysql'
-  ) {
-
+) {
   if ! defined(File[$query_filepath]) {
     file { $query_filepath:
       ensure => directory,
@@ -16,13 +15,13 @@ define psick::mysql::query (
   }
 
   file { "mysqlquery-${name}.sql":
-    ensure  => present,
+    ensure  => file,
     mode    => '0600',
     path    => "${query_filepath}/mysqlquery-${name}.sql",
     content => template('psick/mysql/query.erb'),
-    notify  => Exec["mysqlquery-${name}"],
   }
 
+  $exec_flagfile = "${query_filepath}/mysqlquery-${name}.sql.done"
 
   $arg_user = $user ? {
     ''      => '',
@@ -30,8 +29,8 @@ define psick::mysql::query (
   }
 
   $arg_host = $host ? {
-  ''      => '',
-  default => "-h ${host}",
+    ''      => '',
+    default => "-h ${host}",
   }
 
   $arg_password = $password ? {
@@ -39,18 +38,26 @@ define psick::mysql::query (
     default => "--password=\"${password}\"",
   }
 
-  $arg_defaults_file = $mysql::real_root_password ? {
-    ''      => '',
-    default => '--defaults-file=/root/.my.cnf',
+  if getvar('psick::mysql::root_password') {
+    $my_cnf = '--defaults-file=/root/.my.cnf'
+  } else {
+    $my_cnf = ''
   }
+
+  exec { "remove_${exec_flagfile}":
+    command     => "rm -f '${exec_flagfile}'",
+    subscribe   => File["mysqlquery-${name}.sql"],
+    path        => ['/usr/bin' , '/usr/sbin'],
+    refreshonly => true,
+    before      => Exec["mysqlquery-${name}"],
+  }
+
+  $exec_command = "mysql ${my_cnf} ${arg_user} ${arg_password} ${arg_host} < ${query_filepath}/mysqlquery-${name}.sql"
 
   exec { "mysqlquery-${name}":
-    command     => "mysql ${arg_defaults_file} \
-                    ${arg_user} ${arg_password} ${arg_host} \
-                    < ${query_filepath}/mysqlquery-${name}.sql",
-    refreshonly => true,
-    subscribe   => File["mysqlquery-${name}.sql"],
-    path        => [ '/usr/bin' , '/usr/sbin' ],
+    command   => "${exec_command} && touch ${exec_flagfile}",
+    subscribe => File["mysqlquery-${name}.sql"],
+    path      => ['/usr/bin' , '/usr/sbin'],
+    creates   => $exec_flagfile,
   }
-
 }

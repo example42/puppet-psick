@@ -25,18 +25,6 @@ describe 'psick', type: :class do
         it { is_expected.to contain_class('psick::profiles') }
       end
 
-      describe 'with auto_conf => hardened' do
-        let(:params) do
-          { auto_conf: 'hardened' }
-        end
-
-        it { is_expected.to compile.with_all_deps }
-        it { is_expected.to contain_class('psick::sysctl') }
-        it { is_expected.to contain_class('psick::update') }
-        it { is_expected.to contain_class('psick::openssh::tp') }
-        it { is_expected.to contain_class('psick::hardening') }
-      end
-
       describe 'with manage => false' do
         let(:params) do
           { manage: false }

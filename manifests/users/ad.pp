@@ -14,25 +14,34 @@ class psick::users::ad (
   String $password,
   String $machine_ou,
   Boolean $create_machine_account = true,
-) {
-  if $::kernel == 'Linux' {
-    class { '::sssd':
-      domains => $domain,
-    }
-  }
-  if $::kernel == 'Windows' {
-    $join_options = $create_machine_account ? {
-      true  => '3',
-      false => '1',
-    }
 
-    class { '::domain_membership':
-      domain       => $domain,
-      username     => $username,
-      password     => $password,
-      resetpw      => false,
-      machine_ou   => $machine_ou,
-      join_options => $join_options,
+  Boolean $manage      = $psick::manage,
+  Boolean $noop_manage = $psick::noop_manage,
+  Boolean $noop_value  = $psick::noop_value,
+) {
+  if $manage {
+    if $noop_manage {
+      noop($noop_value)
+    }
+    if $::kernel == 'Linux' {
+      class { 'sssd':
+        domains => $domain,
+      }
+    }
+    if $::kernel == 'Windows' {
+      $join_options = $create_machine_account ? {
+        true  => '3',
+        false => '1',
+      }
+
+      class { 'domain_membership':
+        domain       => $domain,
+        username     => $username,
+        password     => $password,
+        resetpw      => false,
+        machine_ou   => $machine_ou,
+        join_options => $join_options,
+      }
     }
   }
 }
