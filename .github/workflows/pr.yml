@@ -28,10 +28,10 @@ jobs:
         env:
           BUNDLE_WITHOUT: development:system_tests:release
       - name: Run unit tests on Puppet 6
-        run: /usr/local/bin/pdk bundle exec rake spec --puppet-version=6
+        run: /usr/local/bin/pdk test unit  --puppet-version=6
         env:
           BUNDLE_WITHOUT: development:system_tests:release
       - name: Run unit tests on Puppet 5
-        run: /usr/local/bin/pdk bundle exec rake spec --puppet-version=5
+        run: /usr/local/bin/pdk test unit --puppet-version=5
         env:
           BUNDLE_WITHOUT: development:system_tests:release
