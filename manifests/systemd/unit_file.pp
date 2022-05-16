@@ -49,12 +49,6 @@
 # @param restart
 #   Specify a restart command manually. If left unspecified, a standard Puppet service restart happens.
 #
-# @param hasrestart
-#   maps to the same param on the service resource. Optional in the module because it's optional in the service resource type. This param is deprecated. Set it via $service_parameters.
-#
-# @param hasstatus
-#   maps to the same param on the service resource. true in the module because it's true in the service resource type. This param is deprecated. Set it via $service_parameters.
-#
 # @param selinux_ignore_defaults
 #   maps to the same param on the file resource for the unit. false in the module because it's false in the file resource type
 #
