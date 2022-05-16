@@ -1,0 +1,14 @@
+[Unit]
+ Description=rc.local Compatibility
+ ConditionPathExists=<%= $psick::rclocal::config_file %>
+
+[Service]
+ Type=forking
+ ExecStart=<%= $psick::rclocal::config_file %> start
+ TimeoutSec=0
+ StandardOutput=tty
+ RemainAfterExit=yes
+ SysVStartPriority=99
+
+[Install]
+ WantedBy=multi-user.target

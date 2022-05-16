@@ -35,3 +35,4 @@ jobs:
         run: /usr/local/bin/pdk test unit --puppet-version=5
         env:
           BUNDLE_WITHOUT: development:system_tests:release
+        continue-on-error: true

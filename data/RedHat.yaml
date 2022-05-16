@@ -15,10 +15,4 @@ psick::ruby::buildgems::packages:
   - 'ruby-devel'
   - 'zlib-devel'
 
-psick::wordpress::php_tp_installs-:
-  - remi
-  - php80
-  - php-fpm
-  - php80-php-fpm
-
-psick::wordpress::php_modules_prefix-: php80-php-
+psick::rclocal::config_file: '/etc/rc.d/rc.local'
