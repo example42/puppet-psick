@@ -5,7 +5,7 @@ on: pull_request
 
 jobs:
   static:
-    name: 'Static code analysys'
+    name: 'Syntax validation'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     container: puppet/puppet-dev-tools:4.x
