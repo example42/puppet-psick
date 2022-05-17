@@ -1,16 +1,42 @@
 ## Changelog
 
-## Releae 1.0.0.alpha1
+## Releae 1.0.0
 
 -   Preparing for release 1, backwards incompatible.
--   Moved most app profiles to psick_profile module
 -   pdk update
--   Lint cleanup 
--   Added psick::kmod class
+-   Lint cleanups and code improvements
+-   Added GitHub and CD4PE pipelines
 -   Better psick::gitlab::cli class
 -   Updated psick profile generation script
 -   Improved psick::puppet::pe_client_tools psick::puppet::pe_agent and psick::puppet::pe_server
 -   Fixes to psick::limits
+-   Added psick::network (based on example42-network)
+-   Added psick::rclocal (based on example42-rclocal)
+-   Added psick::systemd (based on voxpupuli-systemd)
+-   Added psick::kmod
+-   Added psick::admin (based/renamed on example42 psick::ansible voxpupuli-systemd)
+-   Moved most app profiles to psick_profile module:
+  - psick::icinga2 moved to psick_profile::icinga2
+  - psick::icingaweb2 moved to psick_profile::icingaweb2
+  - psick::monitor::sar moved to psick_profile::sar
+  - psick::monitor::ganglia moved to psick_profile::ganglia
+  - psick::monitor::newrelic moved to psick_profile::newrelic
+  - psick::monitor::nrpe moved to psick_profile::nrpe
+  - psick::monitor::snmpd moved to psick_profile::snmpd
+  - psick::virtualbox moved to psick_profile::virtualbox
+  - psick::jenkinns moved to psick_profile::jenkinns
+  - psick::backup::duply moved to psick_profile::duply
+  - psick::backup::legato moved to psick_profile::legato
+  - psick::ci:octocatalog moved to psick_profile::octocatalog
+  - psick::foreman moved to psick_profile::foreman
+  - psick::grafana moved to psick_profile::grafana
+  - psick::inluxdb moved to psick_profile::influxdb
+  - psick::keepalived moved to psick_profile::keepalived
+  - psick::mongo moved to psick_profile::mongo
+  - psick::prometheus moved to psick_profile::prometheus
+  - psick::rundeck moved to psick_profile::rundeck
+  - psick::sensu moved to psick_profile::sensu
+  - psick::vagrant moved to psick_profile::vagrant
 
 ## Release 0.8.0
 
