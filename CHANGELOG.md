@@ -3,6 +3,7 @@
 ## Releae 1.0.0
 
 -   Preparing for release 1, backwards incompatible.
+-   Docs update
 -   pdk update
 -   Lint cleanups and code improvements
 -   Added GitHub and CD4PE pipelines

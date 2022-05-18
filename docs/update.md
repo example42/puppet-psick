@@ -1,4 +1,4 @@
-### psick::update - Manage packages updates
+## psick::update - Manage packages updates
 
 This class manages how and when a system should be updated, it can be included with the parameter:
 
