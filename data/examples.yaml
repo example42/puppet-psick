@@ -11,11 +11,11 @@ psick::firewall::iptables::package_name: 'iptables'
 psick::firewall::iptables::service_name: 'iptables'
 psick::firewall::iptables::config_file_path: '/etc/sysconfig/iptables'
 
-# psick::gitlab::cli
-psick::gitlab::cli::ensure: 'present'
-psick::gitlab::cli::auto_prereq: true
-psick::gitlab::cli::template: 'psick/gitlab/cli/gitlab-cli.conf.epp'
-psick::gitlab::cli::config_hash:
+# psick_profile::gitlab::cli
+psick_profile::gitlab::cli::ensure: 'present'
+psick_profile::gitlab::cli::auto_prereq: true
+psick_profile::gitlab::cli::template: 'psick/gitlab/cli/gitlab-cli.conf.epp'
+psick_profile::gitlab::cli::config_hash:
   project_id: ''
   private_token: ''
   api_endpoint: "https://gitlab.%{facts.domain}/api/v3"

@@ -96,7 +96,7 @@ lookup_options:
     merge:
       strategy: deep
       knockout_prefix: "--"
-  psick::gitlab::cli::config_hash:
+  psick_profile::gitlab::cli::config_hash:
     merge:
       strategy: deep
       knockout_prefix: "--"

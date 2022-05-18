@@ -15,7 +15,7 @@
 #
 # @example Manage common profiles classes for Linux and Windows:
 #     psick::profiles::linux_classes:
-#       webserver: '::psick::apache::tp'
+#       webserver: '::psick_profile::apache::tp'
 #     psick::profiles::windows_classes:
 #       webserver: '::iis'
 #

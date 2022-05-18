@@ -75,7 +75,7 @@ class psick::puppet::pe_code_manager (
     }
 
     # TODO Automate Upload of ssh public key to gitlab
-    #  psick::gitlab::deploy_key { :
+    #  psick_profile::gitlab::deploy_key { :
     #    sshkey => $deploy_ssh_public_key
     #  }
   }

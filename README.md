@@ -130,12 +130,12 @@ For some applications, besides standard tp profiles, there are dedicated profile
 - [psick_profile::ansible](docs/ansible.md) - Manage Ansible installation and user
 - [psick::aws](docs/aws.md) - Manage AWS client tools and infrastructures setup
 - [psick::bolt](docs/bolt.md) - Manage Bolt installation and user
-- [psick::docker](docs/docker.md) - Docker installation and build tools
+- [psick_profile::docker](docs/docker.md) - Docker installation and build tools
 - [psick_profile::foreman](docs/foreman.md) - Foreman installation
 - [psick::git](docs/git.md) - Git installation and configuration
-- [psick::gitlab](docs/gitlab.md) - GitLab installation and configuration
-- [psick::mariadb](docs/mysql.md) - Manage Mariadb
-- [psick::mysql](docs/mysql.md) - Manage Mysql
+- [psick_profile::gitlab](docs/gitlab.md) - GitLab installation and configuration
+- [psick_profile::mariadb](docs/mysql.md) - Manage Mariadb
+- [psick_profile::mysql](docs/mysql.md) - Manage Mysql
 - [psick_profile::mongo](docs/mongo.md) - Manage Mongo
 - [psick::php](docs/php.md) - Manage php and modules
 - [psick_profile::oracle](docs/oracle.md) - Manage Oracle prerequisites and installation

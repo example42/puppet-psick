@@ -8,6 +8,11 @@ the profiles imported from the psick module and the ones of the tp_profile modul
 
 This is the list of the profiles moved from psick to psick_profile module
 
+  - psick::gitlab moved to psick_profile::gitlab
+  - psick::mariadb moved to psick_profile::mariadb
+  - psick::mysql moved to psick_profile::mysql
+  - psick::docker moved to psick_profile::docker
+  - psick::apache moved to psick_profile::apache
   - psick::icinga2 moved to psick_profile::icinga2
   - psick::icingaweb2 moved to psick_profile::icingaweb2
   - psick::monitor::sar moved to psick_profile::sar

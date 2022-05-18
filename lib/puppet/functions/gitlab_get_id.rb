@@ -3,7 +3,7 @@
 #
 # This function converts a gitlab ID to the relevant name
 # of the relevant object type.
-# This requires psick::gitlab::cli to be installed and properly configured
+# This requires psick_profile::gitlab::cli to be installed and properly configured
 # on every Puppet master
 #
 require 'gitlab'

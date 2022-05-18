@@ -7,7 +7,6 @@
 -   pdk update
 -   Lint cleanups and code improvements
 -   Added GitHub and CD4PE pipelines
--   Better psick::gitlab::cli class
 -   Updated psick profile generation script
 -   Improved psick::puppet::pe_client_tools psick::puppet::pe_agent and psick::puppet::pe_server
 -   Fixes to psick::limits
@@ -38,6 +37,12 @@
   - psick::rundeck moved to psick_profile::rundeck
   - psick::sensu moved to psick_profile::sensu
   - psick::vagrant moved to psick_profile::vagrant
+  - psick::gitlab moved to psick_profile::gitlab
+  - psick::mariadb moved to psick_profile::mariadb
+  - psick::mysql moved to psick_profile::mysql
+  - psick::docker moved to psick_profile::docker
+  - psick::apache moved to psick_profile::apache
+
 
 ## Release 0.8.0
 
