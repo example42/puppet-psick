@@ -1,4 +1,4 @@
-# Class ::psick::timezone
+# Class ::psick::::timezone
 # Derived from https://github.com/example42/puppet-timezone
 #
 # This class manages the System's timezone
@@ -23,7 +23,7 @@
 #   Default is autocalculated for each supported OS
 #
 class psick::timezone (
-  String $timezone             = $psick::time::timezone,
+  String $timezone             = $psick::timezone,
   String $timezone_windows     = '',
   Boolean $hw_utc              = false,
   String $set_timezone_command = '',

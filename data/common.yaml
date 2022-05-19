@@ -70,6 +70,26 @@ psick::monitor::snmpd::extra_packages: []
 # psick::puppet::postrun
 psick::puppet::postrun::puppet_conf_path: '/etc/puppetlabs/puppet/puppet.conf'
 
+psick::archive::extract_command:
+  'tgz': 'tar -zxf'
+  'gz': 'tar -zxf'
+  'bz2': 'tar -jxf'
+  'tar': 'tar -xf'
+  'zip': 'unzip'
+
+psick::archive::download_command:
+  'command': 'wget'
+  'pre_args': ''
+  'post_args': ''
+
+psick::archive::compress_command:
+  'tgz': 'tar -zcf'
+  'gz': 'tar -zcf'
+  'bz2': 'tar -jcf'
+  'tar': 'tar -cf'
+  'zip': 'zip'
+
+
 # Deep merge lookups for the following keys:
 lookup_options:
   psick::settings:

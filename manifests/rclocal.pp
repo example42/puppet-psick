@@ -37,13 +37,13 @@ class psick::rclocal (
 
   file { '/etc/rc.local':
     ensure  => file,
-    path    => $rclocal::config_file,
-    content => epp($rclocal::template),
+    path    => $config_file,
+    content => epp($template),
   }
 
   file { '/etc/rc.local.d':
     ensure  => directory,
-    path    => $rclocal::config_dir,
+    path    => $config_dir,
     purge   => true,
     recurse => true,
   }
@@ -60,7 +60,7 @@ class psick::rclocal (
 
   psick::systemd::unit_file { $service_name:
     ensure  => 'present',
-    content => epp('psick/rclocal/systemd_rc-local.service.epp'),
+    content => epp('psick/rclocal/systemd_rc.local.service.epp'),
     enable  => true,
     active  => true,
   }

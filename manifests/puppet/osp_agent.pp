@@ -41,9 +41,11 @@ class psick::puppet::osp_agent (
       }
     }
 
-    file { '/etc/cron.d/puppet-agent':
-      ensure  => $cronjob_ensure,
-      content => "PATH=/opt/puppetlabs/puppet/bin:/usr/sbin:/usr/bin\n${cronjob_schedule} root puppet agent -t",
+    if $facts['os']['kernel'] != 'windows' {
+      file { '/etc/cron.d/puppet-agent':
+        ensure  => $cronjob_ensure,
+        content => "PATH=/opt/puppetlabs/puppet/bin:/usr/sbin:/usr/bin\n${cronjob_schedule} root puppet agent -t",
+      }
     }
   }
 }

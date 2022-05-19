@@ -5,7 +5,10 @@ require 'spec_helper'
 describe 'psick::netinstall' do
   let(:title) { 'namevar' }
   let(:params) do
-    {}
+    {
+      'url': http://example.com,
+      'destination_dir': /var/tmp,
+    }
   end
 
   on_supported_os.each do |os, os_facts|

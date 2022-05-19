@@ -5,7 +5,6 @@ fixtures:
     "reboot": "https://github.com/puppetlabs/puppetlabs-reboot.git"
     "concat": "https://github.com/puppetlabs/puppetlabs-concat.git"
     "tp": "https://github.com/example42/puppet-tp"
-    "tp_profile": "https://github.com/example42/puppet-tp_profile"
     "psick_profile": "https://github.com/example42/psick_profile.git"
     "tinydata": "https://github.com/example42/tinydata"
     "systemd": "https://github.com/camptocamp/puppet-systemd"
@@ -14,7 +13,16 @@ fixtures:
     "rbenv": "https://github.com/justindowning/puppet-rbenv"
     "hieradata": "https://github.com/example42/psick-hieradata"
     "yumrepo": "https://github.com/puppetlabs/puppetlabs-yumrepo_core"
+    "sshkeys": "https://github.com/puppetlabs/puppetlabs-sshkeys_core"
     "host": "https://github.com/puppetlabs/puppetlabs-host_core"
     "alternatives": "https://github.com/voxpupuli/puppet-alternatives"
     "archives": "https://github.com/voxpupuli/puppet-alternatives"
     "augeas": "https://github.com/puppetlabs/puppetlabs-augeas_core"
+    "inifile": "https://github.com/puppetlabs/puppetlabs-inifile"
+
+    "chocolatey": "https://github.com/puppetlabs/puppetlabs-chocolatey"
+    "homebrew": "https://github.com/michaelw/puppet-homebrew"
+    "registry": "https://github.com/puppetlabs/puppetlabs-registry"
+
+  forge_modules:
+    "r10k": 'puppet-r10k'

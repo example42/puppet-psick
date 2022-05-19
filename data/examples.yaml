@@ -14,7 +14,7 @@ psick::firewall::iptables::config_file_path: '/etc/sysconfig/iptables'
 # psick_profile::gitlab::cli
 psick_profile::gitlab::cli::ensure: 'present'
 psick_profile::gitlab::cli::auto_prereq: true
-psick_profile::gitlab::cli::template: 'psick/gitlab/cli/gitlab-cli.conf.epp'
+psick_profile::gitlab::cli::template: 'psick_profile/gitlab/cli/gitlab-cli.conf.epp'
 psick_profile::gitlab::cli::config_hash:
   project_id: ''
   private_token: ''
