@@ -13,5 +13,6 @@ define psick::puppet::module (
     command => "puppet module install ${modulename} ${arguments}",
     user    => $user,
     creates => $creates,
+    path    => $facts['path'],
   }
 }

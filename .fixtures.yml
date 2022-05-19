@@ -26,3 +26,5 @@ fixtures:
 
   forge_modules:
     "r10k": 'puppet-r10k'
+    "puppetserver": 'puppet/puppetserver'
+    "puppetserver_gem": 'puppetlabs/puppetserver_gem'

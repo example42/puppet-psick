@@ -28,6 +28,7 @@ class psick::puppet::install_ca (
       exec { 'setup ca certs':
         refreshonly => true,
         command     => $ca_setup_command,
+        path        => $facts['path'],
       }
     }
     if $ca_ssl_dir {

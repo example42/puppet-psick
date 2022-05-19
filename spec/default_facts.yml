@@ -90,3 +90,5 @@ ssh:
       sha256: SSHFP 1 2 db8e6a3e37f1f105fe46fd1f4308a579bd76e428b80983c989441a513913e8a3
     key: 1tZ3ruIK+a6VmL7oitbDr8iPQuUANxa0B4cqQaBBjwIFyHfr2dRwT/xoUfoxDnRPJm0=
     type: ssh-rsa
+
+admin_user_key: 1tZ3ruIK+a6VmL7oitbDr8iPQuUANxa0B4cqQaBBjwIFyHfr2dRwT

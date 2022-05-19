@@ -24,8 +24,8 @@ class psick::hosts::dynamic (
     }
 
     @@host { $facts['networking']['fqdn']:
-      ip           => $hosts::dynamic_ip,
-      host_aliases => $hosts::dynamic_alias,
+      ip           => $dynamic_ip,
+      host_aliases => $dynamic_alias,
       tag          => $real_tag,
     }
 

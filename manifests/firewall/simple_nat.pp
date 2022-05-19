@@ -15,7 +15,7 @@ class psick::firewall::simple_nat (
     if $noop_manage {
       noop($noop_value)
     }
-    sysctl::value { 'net/ipv4/ip_forward': value => '1' }
+    psick::sysctl::set { 'net/ipv4/ip_forward': value => '1' }
     firewall { "100 snat for network ${source_net}":
       chain  => 'POSTROUTING',
       jump   => 'MASQUERADE',

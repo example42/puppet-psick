@@ -1,5 +1,4 @@
 # This class manages /etc/resolv.conf
-# Based on ghoneycutt-dnsclient
 class psick::dns::resolver (
   Array $nameservers           = ['8.8.8.8','8.8.4.4'],
   Optional[Array] $options     = undef,

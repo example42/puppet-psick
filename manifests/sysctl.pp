@@ -37,6 +37,9 @@ class psick::sysctl (
       } else {
         $all_settings.each |$k,$v| {
           case $module {
+            'psick': {
+              psick::sysctl::set { $k: value => $v }
+            }
             'duritong': {
               sysctl::value { $k: value => $v }
             }

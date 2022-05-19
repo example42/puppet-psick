@@ -7,7 +7,7 @@
 #
 class psick::aws::sdk (
   String  $ensure              = 'present',
-  Array   $install_gems        = ['aws-sdk-core' , 'aws-sdk' , 'retries'],
+  Array   $install_gems        = [ 'aws-sdk' , 'retries'],
   Boolean $install_system_gems = true,
   Boolean $install_puppet_gems = true,
 

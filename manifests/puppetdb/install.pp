@@ -91,7 +91,7 @@
 #   setting (also from clients' puppet.conf
 #
 class psick::puppetdb::install (
-  Tp_Profile::Ensure $ensure                   = 'present',
+  Psick::Ensure $ensure                        = 'present',
   Boolean            $manage                   = true,
   Optional[Boolean]  $upstream_repo            = undef,
 
