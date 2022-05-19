@@ -33,7 +33,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: [ 'javascript', 'ruby' ]
+        language: [ 'python' , 'ruby' ]
 
     steps:
     - name: Checkout repository
