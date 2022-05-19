@@ -7,7 +7,7 @@ describe 'psick::netinstall' do
   let(:params) do
     {
       'url': 'http://example.com',
-      'destination_dir': /var/tmp
+      'destination_dir': '/var/tmp',
     }
   end
 
