@@ -42,6 +42,7 @@ class psick::puppet::install_ca (
       exec { 'update ca certs':
         refreshonly => true,
         command     => $ca_update_command,
+        path        => $facts['path'],
       }
     }
   }

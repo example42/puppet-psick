@@ -28,8 +28,8 @@ class psick::puppetserver (
 
     # Installation management
     case $module {
-      'tp_profile': {
-        $puppetserver_class = 'tp_profile::puppetserver'
+      'psick_profile': {
+        $puppetserver_class = 'psick_profile::puppetserver'
         contain tp_profile::puppetserver
       }
       'psick': {

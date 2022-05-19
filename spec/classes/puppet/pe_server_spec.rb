@@ -4,7 +4,9 @@ require 'spec_helper'
 
 describe 'psick::puppet::pe_server' do
   on_supported_os.each do |os, os_facts|
-    context "on #{os}" do
+    # Skipping because module which provides Pe_puppet_authorization::Rule
+    # is not public
+    skip "on #{os}" do
       let(:facts) { os_facts }
       let(:pre_condition) { 'include psick' }
 

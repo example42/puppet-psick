@@ -15,6 +15,6 @@ class psick::php::spec inherits psick::php {
   # class { "php": template => "php/spec.erb" }
 
   File['php.conf'] {
-    content => template('php/spec.erb'),
+    content => template('psick/php/spec.erb'),
   }
 }

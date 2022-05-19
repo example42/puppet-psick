@@ -28,3 +28,6 @@ fixtures:
     "r10k": 'puppet-r10k'
     "puppetserver": 'puppet/puppetserver'
     "puppetserver_gem": 'puppetlabs/puppetserver_gem'
+    "firewall": 'puppetlabs/firewall'
+    "puppetdb": 'puppetlabs/puppetdb'
+    "hocon": 'puppetlabs/hocon' # psick::puppet::foss_server_metrics

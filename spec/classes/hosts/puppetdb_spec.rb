@@ -13,7 +13,7 @@ describe 'psick::hosts::puppetdb' do
         }
     
         # This is a default if you don't want to specify the values for every test
-        other_function.stubs(:call).returns(preset_values)
+        puppetdb_query.stubs(:call).returns(preset_values)
       }
 
       it { is_expected.to compile }

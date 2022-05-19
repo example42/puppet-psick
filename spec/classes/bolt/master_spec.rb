@@ -13,7 +13,7 @@ describe 'psick::bolt::master' do
         }
     
         # This is a default if you don't want to specify the values for every test
-        other_function.stubs(:call).returns(preset_values)
+        puppetdb_query.stubs(:call).returns(preset_values)
       }
 
       if os.include?('windows')

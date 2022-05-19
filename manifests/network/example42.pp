@@ -1,4 +1,5 @@
-# This class manages network configurations using example42-network module
+# This class manages network configurations using defines similar and
+# compatible with example42-network module ones
 # It's declare in psick::network if you set in Hiera:
 #     psick::network::module: 'example42-network'
 #
@@ -19,14 +20,13 @@ class psick::network::example42 (
   String $bonding_mode     = 'active-backup',
   String $network_template = 'psick/network/network.erb',
 ) {
-  contain network
 
   file { '/etc/modprobe.d/bonding.conf':
     ensure => file,
   }
   $routes = hiera_hash('psick::network::routes', {})
   $routes.each |$r,$o| {
-    ::network::mroute { $r:
+    psick::network::route { $r:
       routes => $o[routes],
     }
   }
@@ -58,7 +58,7 @@ class psick::network::example42 (
     } else {
       $options = $default_options + $o
     }
-    ::network::interface { $r:
+    psick::network::interface { $r:
       * => $options,
     }
   }
