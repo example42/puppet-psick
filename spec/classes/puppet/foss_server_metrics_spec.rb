@@ -7,6 +7,9 @@ describe 'psick::puppet::foss_server_metrics' do
     context "on #{os}" do
       let(:facts) { os_facts }
       let(:pre_condition) { 'include psick' }
+      let(:params) do {
+        'graphite_server' => 'oh',
+      } end
 
       if os.include?('windows')
         it { is_expected.to compile.and_raise_error(/.*/) }

@@ -32,7 +32,7 @@ define psick::rclocal::script (
   Boolean                   $autoexec = true,
   String                    $content  = '',
 ) {
-  include rclocal
+  include psick::rclocal
 
   $safe_name = regsubst($title, '/', '_', 'G')
 

@@ -4,9 +4,9 @@ require 'spec_helper'
 
 describe 'psick::puppet::set_external_fact' do
   let(:title) { 'namevar' }
-  let(:params) do
-    {}
-  end
+  let(:params) do {
+    'value' => 'oh',
+  } end
 
   on_supported_os.each do |os, os_facts|
     context "on #{os}" do
