@@ -16,33 +16,36 @@
 -   Added psick::kmod
 -   Added psick::admin (based/renamed on example42 psick::ansible voxpupuli-systemd)
 -   Moved most app profiles to psick_profile module:
-  - psick::icinga2 moved to psick_profile::icinga2
-  - psick::icingaweb2 moved to psick_profile::icingaweb2
-  - psick::monitor::sar moved to psick_profile::sar
-  - psick::monitor::ganglia moved to psick_profile::ganglia
-  - psick::monitor::newrelic moved to psick_profile::newrelic
-  - psick::monitor::nrpe moved to psick_profile::nrpe
-  - psick::monitor::snmpd moved to psick_profile::snmpd
-  - psick::virtualbox moved to psick_profile::virtualbox
-  - psick::jenkinns moved to psick_profile::jenkinns
-  - psick::backup::duply moved to psick_profile::duply
-  - psick::backup::legato moved to psick_profile::legato
-  - psick::ci:octocatalog moved to psick_profile::octocatalog
-  - psick::foreman moved to psick_profile::foreman
-  - psick::grafana moved to psick_profile::grafana
-  - psick::inluxdb moved to psick_profile::influxdb
-  - psick::keepalived moved to psick_profile::keepalived
-  - psick::mongo moved to psick_profile::mongo
-  - psick::prometheus moved to psick_profile::prometheus
-  - psick::rundeck moved to psick_profile::rundeck
-  - psick::sensu moved to psick_profile::sensu
-  - psick::vagrant moved to psick_profile::vagrant
-  - psick::gitlab moved to psick_profile::gitlab
-  - psick::mariadb moved to psick_profile::mariadb
-  - psick::mysql moved to psick_profile::mysql
-  - psick::docker moved to psick_profile::docker
-  - psick::apache moved to psick_profile::apache
-
+-   psick::icinga2 moved to psick_profile::icinga2
+-   psick::icingaweb2 moved to psick_profile::icingaweb2
+-   psick::monitor::sar moved to psick_profile::sar
+-   psick::monitor::ganglia moved to psick_profile::ganglia
+-   psick::monitor::newrelic moved to psick_profile::newrelic
+-   psick::monitor::nrpe moved to psick_profile::nrpe
+-   psick::monitor::snmpd moved to psick_profile::snmpd
+-   psick::virtualbox moved to psick_profile::virtualbox
+-   psick::jenkinns moved to psick_profile::jenkinns
+-   psick::backup::duply moved to psick_profile::duply
+-   psick::backup::legato moved to psick_profile::legato
+-   psick::ci:octocatalog moved to psick_profile::octocatalog
+-   psick::foreman moved to psick_profile::foreman
+-   psick::grafana moved to psick_profile::grafana
+-   psick::inluxdb moved to psick_profile::influxdb
+-   psick::keepalived moved to psick_profile::keepalived
+-   psick::mongo moved to psick_profile::mongo
+-   psick::prometheus moved to psick_profile::prometheus
+-   psick::rundeck moved to psick_profile::rundeck
+-   psick::sensu moved to psick_profile::sensu
+-   psick::vagrant moved to psick_profile::vagrant
+-   psick::gitlab moved to psick_profile::gitlab
+-   psick::mariadb moved to psick_profile::mariadb
+-   psick::mysql moved to psick_profile::mysql
+-   psick::docker moved to psick_profile::docker
+-   psick::apache moved to psick_profile::apache
+-   psick::iis moved to psick_profile::iis
+-   psick::puppetserver moved to psick_profile::puppetserver
+-   psick::puppetdb moved to psick_profile::puppetdb
+-   psick::mail::postfix moved to psick_profile::postfix
 
 ## Release 0.8.0
 

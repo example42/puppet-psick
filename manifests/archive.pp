@@ -8,16 +8,16 @@ define psick::archive (
   Psick::Ensure                                $ensure = 'present',
   Enum['download','extract','compress','auto'] $action = 'auto',
 
-  Optional[String]              $source,
-  Optional[Stdlib::Absoluepath] $download_dir = undef,
-  Optional[String]              $download_command = undef,
+  Optional[String]               $source,
+  Optional[Stdlib::Absolutepath] $download_dir = undef,
+  Optional[String]               $download_command = undef,
 
-  Optional[String]              $extract_dir = undef,
-  Optional[String]              $extract_command = undef,
+  Optional[String]               $extract_dir = undef,
+  Optional[String]               $extract_command = undef,
 
-  Optional[String]              $compress_dir = undef,
-  Optional[String]              $compress_command = undef,
-  Optional[String]              $compress_output_file = undef,
+  Optional[String]               $compress_dir = undef,
+  Optional[String]               $compress_command = undef,
+  Optional[String]               $compress_output_file = undef,
 
 ) {
 

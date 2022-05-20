@@ -35,7 +35,7 @@ An example of configurations, both for Linux and Windows nodes that use all the 
       sysctl: psick::sysctl
       update: psick::update
       ssh: psick::openssh::tp
-      mail: psick::postfix::tp
+      mail: psick_profile::postfix::tp
       mail: psick::users::ad
 
     psick::pre::windows_classes:
