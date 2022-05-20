@@ -31,6 +31,7 @@ define psick::puppet::access (
     user        => $run_as_user,
     cwd         => $user_home,
     environment => ["HOME=${user_home}"],
+    path        => $facts['path'],
     #   logoutput => false,
   }
 }

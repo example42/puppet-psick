@@ -4,9 +4,9 @@ require 'spec_helper'
 
 describe 'psick::aws::cli::script' do
   let(:title) { 'namevar' }
-  let(:params) do
-    {}
-  end
+  let(:params) do {
+    'template' => 'psick/php/spec.erb',
+  } end
 
   on_supported_os.each do |os, os_facts|
     context "on #{os}" do

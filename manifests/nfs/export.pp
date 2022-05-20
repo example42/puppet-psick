@@ -50,12 +50,14 @@ define psick::nfs::export (
   if !defined(Exec['exportfs -a']) {
     exec { 'exportfs -a':
       refreshonly => true,
+      path        => $facts['path'],
     }
   }
 
   if !defined(Exec["mkdir -p ${share}"]) {
     exec { "mkdir -p ${share}":
       creates => $share,
+      path    => $facts['path'],
     }
   }
 }

@@ -4,7 +4,7 @@ require 'spec_helper'
 
 describe 'psick::bolt::master' do
   on_supported_os.each do |os, os_facts|
-    context "on #{os}" do
+    skip "on #{os}" do
       let(:facts) { os_facts }
       let(:pre_condition) { 'include psick ; include psick::bolt' }
       before(:each) {

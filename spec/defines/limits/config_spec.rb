@@ -11,6 +11,7 @@ describe 'psick::limits::config' do
   on_supported_os.each do |os, os_facts|
     context "on #{os}" do
       let(:facts) { os_facts }
+      let(:pre_condition) { 'include psick' }
 
       if os.include?('windows')
         it { is_expected.to compile.and_raise_error(/.*/) }

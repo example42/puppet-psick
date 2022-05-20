@@ -7,6 +7,7 @@ describe 'psick::profile::script' do
   let(:params) do
     {}
   end
+  let(:pre_condition) { 'include psick' }
 
   on_supported_os.each do |os, os_facts|
     context "on #{os}" do

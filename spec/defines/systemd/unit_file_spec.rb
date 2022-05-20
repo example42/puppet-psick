@@ -3,7 +3,7 @@
 require 'spec_helper'
 
 describe 'psick::systemd::unit_file' do
-  let(:title) { 'service' }
+  let(:title) { 'something.service' }
   let(:params) do
     {}
   end

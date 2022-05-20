@@ -7,6 +7,12 @@ describe 'psick::users::ad' do
     context "on #{os}" do
       let(:facts) { os_facts }
       let(:pre_condition) { 'include psick' }
+      let(:params) do {
+        'domain' => 'oh',
+        'username' => 'oh',
+        'password' => 'oh',
+        'machine_ou' => 'oh',
+      } end
 
       it { is_expected.to compile }
     end

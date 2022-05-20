@@ -78,7 +78,7 @@ class psick::puppetserver (
       default: {}
     }
 
-    if $r10k_remote_repo or $r10k_options {
+    if $r10k_remote_repo and $r10k_options != {} {
       # r10k gem is expected to be already installed
       # for example by psick::puppet::gems
       # He we configure just r10k.yaml and eventually the webhook
@@ -100,8 +100,8 @@ class psick::puppetserver (
       }
       $r10k_real_options = $r10k_default_options + $r10k_options
       if $r10k_template {
-        file { '/etc/puppetlabs/r10k':
-          ensure => directory,
+        psick::tools::create_dir { '/etc/puppetlabs/r10k':
+          before => File['/etc/puppetlabs/r10k/r10k.yaml'],
         }
         file { '/etc/puppetlabs/r10k/r10k.yaml':
           ensure  => file,

@@ -5,7 +5,7 @@ require 'spec_helper'
 describe 'psick::php::pear::config' do
   let(:title) { 'namevar' }
   let(:params) do
-    {}
+    { 'value': 'oh' }
   end
 
   on_supported_os.each do |os, os_facts|

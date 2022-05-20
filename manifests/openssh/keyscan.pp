@@ -31,6 +31,7 @@ define psick::openssh::keyscan (
     command => "ssh-keyscan ${host} >> ${known_hosts_path_real}",
     user    => $user,
     unless  => "grep ${host} ${known_hosts_path_real}",
+    path    => $facts['path'],
   }
 
   if $create_ssh_dir {

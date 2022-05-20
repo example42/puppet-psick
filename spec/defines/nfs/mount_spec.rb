@@ -5,8 +5,9 @@ require 'spec_helper'
 describe 'psick::nfs::mount' do
   let(:title) { 'namevar' }
   let(:params) do
-    {}
-  end
+  { 'server': 'oh',
+    'share': '/tmp',
+  } end
 
   on_supported_os.each do |os, os_facts|
     context "on #{os}" do

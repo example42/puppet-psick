@@ -31,3 +31,7 @@ fixtures:
     "firewall": 'puppetlabs/firewall'
     "puppetdb": 'puppetlabs/puppetdb'
     "hocon": 'puppetlabs/hocon' # psick::puppet::foss_server_metrics
+    "augeasproviders_sysctl": 'herculesteam-augeasproviders_sysctl' # psick::sysctl::set
+    "cron": 'puppetlabs/cron_core' # psick::puppet::foss_master
+    "windows_env": 'puppet/windows_env' # psick::windows::envs
+    "gpg_key": 'treydock-gpg_key' # psick::tools::gpgkey
