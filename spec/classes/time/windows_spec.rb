@@ -13,5 +13,6 @@ describe 'psick::time::windows' do
       else
         it { is_expected.to compile }
       end
+    end
   end
 end
