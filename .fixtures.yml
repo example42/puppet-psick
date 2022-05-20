@@ -19,7 +19,6 @@ fixtures:
     "archives": "https://github.com/voxpupuli/puppet-alternatives"
     "augeas": "https://github.com/puppetlabs/puppetlabs-augeas_core"
     "inifile": "https://github.com/puppetlabs/puppetlabs-inifile"
-
     "chocolatey": "https://github.com/puppetlabs/puppetlabs-chocolatey"
     "homebrew": "https://github.com/michaelw/puppet-homebrew"
     "registry": "https://github.com/puppetlabs/puppetlabs-registry"

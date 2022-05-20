@@ -60,7 +60,7 @@ define psick::network::interface (
   Boolean $restart_all_nic         = true,
   Optional[String]$reload_command  = undef,
   Optional[ResourceRef] $notify_resource = undef,
-
+  Integer $order                   = 20,
   Boolean $enable_dhcp             = false,
 
 ) {
@@ -134,6 +134,7 @@ define psick::network::interface (
             mode   => '0644',
             owner  => 'root',
             group  => 'root',
+            order  => $order,
             notify => $network_notify,
           }
         }
@@ -141,15 +142,15 @@ define psick::network::interface (
         concat::fragment { "interface-${name}":
           target  => '/etc/network/interfaces',
           content => template($template),
-          order   => $order,
+          order   => 2,
         }
       }
 
-      if ! defined(Network::Interface['lo']) {
-        network::interface { 'lo':
-          address      => '127.0.0.1',
-          method       => 'loopback',
-          manage_order => '05',
+      if ! defined(Psick::Network::Interface['lo']) {
+        psick::network::interface { 'lo':
+          address => '127.0.0.1',
+          method  => 'loopback',
+          order   => '05',
         }
       }
     }
