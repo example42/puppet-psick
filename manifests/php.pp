@@ -41,7 +41,7 @@ class psick::php (
         }
       }
       'psick': {
-        contain psick::php::install
+        contain psick::php::tp
         $module_hash.each |$k,$v| {
           psick::php::module { $k:
             * => $v,

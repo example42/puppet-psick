@@ -20,7 +20,7 @@ class psick::openssh (
         contain tp_profile::openssh
       }
       'psick': {
-        contain psick::openssh::install
+        contain psick::openssh::tp
       }
       default: {
         contain openssh
