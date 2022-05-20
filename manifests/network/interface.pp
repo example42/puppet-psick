@@ -59,7 +59,7 @@ define psick::network::interface (
   String $interface                = $title,
   Boolean $restart_all_nic         = true,
   Optional[String]$reload_command  = undef,
-  Optional[ResourceRef] $notify_resource = undef,
+  Optional[Resource] $notify_resource = undef,
   Integer $order                   = 20,
   Boolean $enable_dhcp             = false,
 

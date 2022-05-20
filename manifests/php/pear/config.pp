@@ -2,7 +2,7 @@
 #
 # @summary Configures pear using pear config-set commands
 #
-# @example 
+# @example
 # psick::php::pear::config { http_proxy: value => "myproxy:8080" }
 #
 # @param value The value of the pear setting defined in the title

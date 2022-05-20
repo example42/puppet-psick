@@ -32,7 +32,7 @@ define psick::network::route (
   Hash $routes,
   Integer $interface = $title,
   $ensure            = 'present',
-  Optional[ResourceRef] $route_notify = undef,
+  Optional[Resource] $route_notify = undef,
 ) {
   case $facts['os']['family'] {
     'RedHat': {

@@ -71,16 +71,16 @@ define psick::php::pear::module (
     'absent'  => "pear shell-test ${pear_source} > 0",
   }
 
-  $real_service = $service ? {
-    ''      => $psick::php::service,
-    default => $service,
+  $service_ref = $service ? {
+    ''      => undef,
+    default => Service[$service],
   }
 
   $real_service_autorestart = $service_autorestart ? {
-    true    => "Service[${real_service}]",
+    true    => $service_ref,
     false   => undef,
     ''      => $psick::php::service_autorestart ? {
-      true    => "Service[${real_service}]",
+      true    => $service_ref,
       false   => undef,
     }
   }
