@@ -9,7 +9,7 @@ describe 'psick::firewall::simple_nat' do
       let(:pre_condition) { 'include psick' }
 
       if os.include?('windows')
-        it { is_expected.to compile.and_raise_error(/.*/) }
+        it { is_expected.to compile }
       else
         it { is_expected.to compile }
       end
