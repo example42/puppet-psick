@@ -8,7 +8,7 @@ describe 'psick::users::ad' do
       let(:facts) { os_facts }
       let(:pre_condition) { 'include psick' }
       let(:params) do {
-        'domain' => 'oh',
+        'domain' => ['oh'],
         'username' => 'oh',
         'password' => 'oh',
         'machine_ou' => 'oh',

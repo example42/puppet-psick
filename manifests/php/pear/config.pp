@@ -12,5 +12,6 @@ define psick::php::pear::config ($value) {
     command => "pear config-set ${title} ${value}",
     unless  => "pear config-get ${title} | grep ${value}",
     require => Class['psick::php::pear'],
+    path    => $facts['path'],
   }
 }

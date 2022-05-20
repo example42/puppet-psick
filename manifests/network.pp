@@ -32,7 +32,7 @@
 # @param options_hash An custom hash of keypair which may be used in templates to
 #   manage any network setting.
 # @param module What module to use to manage network. By default psick is used.
-#   The specified module name, if different, must be added to Puppetfile. 
+#   The specified module name, if different, must be added to Puppetfile.
 # @param no_noop Set noop metaparameter to false to all the resources of this class.
 #   This overrides any noop setting which might be in place.
 class psick::network (
@@ -44,15 +44,39 @@ class psick::network (
   Boolean          $noop_manage         = $psick::noop_manage,
   Boolean          $noop_value          = $psick::noop_value,
 
-  # Legacy params now passed tp psick::network::example42
-  String $bonding_mode     = 'active-backup',
-  String $network_template = 'psick/network/network.erb',
+  Optional[String] $hostname = undef,
 
-  # Generic Hashes of resources and options
-  Hash $interfaces_hash      = {},
-  Hash $interfaces_default_options_hash = {},
+  Optional[String]                    $host_conf_template = undef,
+  Hash                                $host_conf_options  = {},
 
-  Hash $routes_hash      = {},
+  Optional[String]                $nsswitch_conf_template = undef,
+  Hash                            $nsswitch_conf_options  = {},
+
+  Boolean $use_netplan                                    = false,
+  # This "param" is looked up in code according to interfaces_merge_behaviour
+  # Optional[Hash]              $interfaces               = undef,
+  Enum['first','hash','deep'] $interfaces_merge_behaviour = 'first',
+  Hash                        $interfaces_defaults        = {},
+
+  # This "param" is looked up in code according to routes_merge_behaviour
+  # Optional[Hash]              $routes                   = undef,
+  Enum['first','hash','deep'] $routes_merge_behaviour     = 'first',
+  Hash                        $routes_defaults            = {},
+
+  # This "param" is looked up in code according to rules_merge_behaviour
+  # Optional[Hash]              $rules                    = undef,
+  Enum['first','hash','deep'] $rules_merge_behaviour      = 'first',
+  Hash                        $rules_defaults             = {},
+
+  # This "param" is looked up in code according to tables_merge_behaviour
+  # Optional[Hash]              $tables                   = undef,
+  Enum['first','hash','deep'] $tables_merge_behaviour     = 'first',
+  Hash                        $tables_defaults            = {},
+
+  String $service_restart_exec                            = 'service network restart',
+  Variant[Resource,String[0,0],Undef,Boolean] $config_file_notify  = true,
+  Variant[Resource,String[0,0],Undef,Boolean] $config_file_require = undef,
+  Boolean $config_file_per_interface                     = true,
 
 ) {
   # We declare resources only if $manage = true
@@ -61,23 +85,94 @@ class psick::network (
       noop($noop_value)
     }
 
-    # Managed resources according to $module selected
-    case $module {
-      'psick': {
-        $routes_hash.each |$r,$o| {
-          ::psick::network::route { $r:
-            * => $o,
-          }
-        }
-        $interfaces_hash.each |$i,$o| {
-          ::psick::network::interface { $i:
-            * => $interfaces_default_options_hash + $o,
-          }
-        }
+    $manage_config_file_notify = $config_file_notify ? {
+      true    => "Exec[${service_restart_exec}]",
+      false   => undef,
+      ''      => undef,
+      undef   => undef,
+      default => $config_file_notify,
+    }
+    $manage_config_file_require  = $config_file_require ? {
+      true    => undef,
+      false   => undef,
+      ''      => undef,
+      undef   => undef,
+      default => $config_file_require,
+    }
+
+    # Exec to restart interfaces
+    exec { $service_restart_exec :
+      command     => $service_restart_exec,
+      alias       => 'network_restart',
+      refreshonly => true,
+      path        => $facts['path'],
+    }
+
+    if $hostname {
+      contain '::network::hostname'
+    }
+
+    # Manage /etc/host.conf if $host_conf_template is set
+    if $host_conf_template {
+      $host_conf_template_type=$host_conf_template[-4,4]
+      $host_conf_content = $host_conf_template_type ? {
+        '.epp'  => epp($host_conf_template,{ options => $host_conf_options }),
+        '.erb'  => template($host_conf_template),
+        default => template($host_conf_template),
       }
-      default: {
-        contain $module
+      file { '/etc/host.conf':
+        ensure  => present,
+        content => $host_conf_content,
+        notify  => $manage_config_file_notify,
       }
     }
+
+    # Manage /etc/nsswitch.conf if $nsswitch_conf_template is set
+    if $nsswitch_conf_template {
+      $nsswitch_conf_template_type=$nsswitch_conf_template[-4,4]
+      $nsswitch_conf_content = $nsswitch_conf_template_type ? {
+        '.epp'  => epp($nsswitch_conf_template,{ options => $nsswitch_conf_options}),
+        '.erb'  => template($nsswitch_conf_template),
+        default => template($nsswitch_conf_template),
+      }
+      file { '/etc/nsswitch.conf':
+        ensure  => present,
+        content => $nsswitch_conf_content,
+        notify  => $manage_config_file_notify,
+      }
+    }
+
+    # Declare network interfaces based on network::interfaces
+    $interfaces = lookup('network::interfaces',Hash,$interfaces_merge_behaviour,{})
+    $interfaces.each |$k,$v| {
+      psick::network::interface { $k:
+        * => $interfaces_defaults + $v,
+      }
+    }
+
+    # Declare network routes based on network::routes
+    $routes = lookup('network::routes',Hash,$routes_merge_behaviour,{})
+    $routes.each |$k,$v| {
+      psick::network::route { $k:
+        * => $routes_defaults + $v,
+      }
+    }
+
+    # Declare network rules based on network::rules
+    $rules = lookup('network::rules',Hash,$rules_merge_behaviour,{})
+    $rules.each |$k,$v| {
+      psick::network::rule { $k:
+        * => $rules_defaults + $v,
+      }
+    }
+
+    # Declare network tables based on network::tables
+    $tables = lookup('network::tables',Hash,$tables_merge_behaviour,{})
+    $tables.each |$k,$v| {
+      psick::network::table { $k:
+        * => $tables_defaults + $v,
+      }
+    }
+
   }
 }

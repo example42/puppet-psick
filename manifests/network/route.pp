@@ -1,10 +1,12 @@
 # == Definition: psick::network::route
 #
-# Manages routes for an interface
+# Manages multiples routes on a single file
 # Configures /etc/sysconfig/networking-scripts/route-$name on Rhel
 # Adds 2 files on Debian:
 # One under /etc/network/if-up.d and
 # One in /etc/network/if-down.d
+#
+# Is based on the legacy network::mroute define of version 3 of this module.
 #
 # === Parameters:
 #
@@ -16,6 +18,31 @@
 #       '99.99.228.0/24'   => 'bond1',
 #       '100.100.244.0/22' => '174.136.107.1',
 #     }
+#   }
+#
+#   ECMP route with two gateways example (works only with RedHat and Debian):
+#
+#   psick::network::route { 'bond1':
+#     routes => {
+#       '99.99.228.0/24'   => 'bond1',
+#       '100.100.244.0/22' => ['174.136.107.1', '174.136.107.2'],
+#     }
+#   }
+#
+# [*route_up_template*]
+#   Template to use to manage route up setup. Default is defined according to
+#   $::osfamily
+#
+# [*route_down_template*]
+#   Template to use to manage route down script. Used only on Debian family.
+#
+# [*config_file_notify*]
+#   String. Optional. Default: 'class_default'
+#   Defines the notify argument of the created file.
+#   The default special value implies the same behaviour of the main class
+#   configuration file. Set to undef to remove any notify, or set
+#   the name(s) of the resources to notify
+#
 #
 # === Actions:
 #
@@ -29,54 +56,100 @@
 # Deploys the file /etc/sysconfig/network/ifroute-$name.
 #
 define psick::network::route (
-  Hash $routes,
-  Integer $interface = $title,
-  $ensure            = 'present',
-  Optional[Resource] $route_notify = undef,
+  Optional[Hash] $routes                = {},
+  Optional[Hash] $ipv6_routes           = {},
+  String $interface                     = $title,
+  Variant[Undef,Resource,String] $config_file_notify = 'class_default',
+  Enum['present','absent'] $ensure      = 'present',
+  Enum['ipv4','ipv6'] $family           = 'ipv4',
+  Optional[String] $route_up_template   = undef,
+  Optional[String] $route_down_template = undef,
 ) {
-  case $facts['os']['family'] {
+
+  include psick::network
+
+  $real_config_file_notify = $config_file_notify ? {
+    'class_default' => $psick::network::manage_config_file_notify,
+    default         => $config_file_notify,
+  }
+
+  $real_route_up_template = $route_up_template ? {
+    undef   => $::osfamily ? {
+      'RedHat' => 'psick/network/route-RedHat.erb',
+      'Debian' => 'psick/network/route_up-Debian.erb',
+      'SuSE'   => 'psick/network/route-SuSE.erb',
+    },
+    default =>  $route_up_template,
+  }
+  $real_route_down_template = $route_down_template ? {
+    undef   => $::osfamily ? {
+      'Debian' => 'psick/network/route_down-Debian.erb',
+      default  => undef,
+    },
+    default =>  $route_down_template,
+  }
+
+  if $::osfamily == 'SuSE' {
+    $networks = keys($routes)
+    psick::network::network::validate_gw { $networks:
+      routes => $routes,
+    }
+  }
+
+  case $::osfamily {
     'RedHat': {
-      file { "route-${interface}":
+      file { "route-${name}":
         ensure  => $ensure,
         mode    => '0644',
         owner   => 'root',
         group   => 'root',
-        path    => "/etc/sysconfig/network-scripts/route-${interface}",
-        content => template('psick/network/route-RedHat.erb'),
-        notify  => $route_notify,
+        path    => "/etc/sysconfig/network-scripts/route-${name}",
+        content => template($real_route_up_template),
+        notify  => $real_config_file_notify,
+      }
+      if $ipv6_routes != {} {
+        file { "route6-${name}":
+          ensure  => $ensure,
+          mode    => '0644',
+          owner   => 'root',
+          group   => 'root',
+          path    => "/etc/sysconfig/network-scripts/route6-${name}",
+          content => template('psick/network/route6-RedHat.erb'),
+          notify  => $real_config_file_notify,
+        }
       }
     }
     'Debian': {
-      file { "routeup-${interface}":
+      file { "routeup-${name}":
         ensure  => $ensure,
         mode    => '0755',
         owner   => 'root',
         group   => 'root',
-        path    => "/etc/network/if-up.d/z90-route-${interface}",
-        content => template('psick/network/route_up-Debian.erb'),
-        notify  => $route_notify,
+        path    => "/etc/network/if-up.d/z90-route-${name}",
+        content => template($real_route_up_template),
+        notify  => $real_config_file_notify,
       }
-      file { "routedown-${interface}":
+      file { "routedown-${name}":
         ensure  => $ensure,
         mode    => '0755',
         owner   => 'root',
         group   => 'root',
-        path    => "/etc/network/if-down.d/z90-route-${interface}",
-        content => template('psick/network/route_down-Debian.erb'),
-        notify  => $route_notify,
+        path    => "/etc/network/if-down.d/z90-route-${name}",
+        content => template($real_route_down_template),
+        notify  => $real_config_file_notify,
       }
     }
     'SuSE': {
-      file { "route-${interface}":
+      file { "ifroute-${name}":
         ensure  => $ensure,
         mode    => '0644',
         owner   => 'root',
         group   => 'root',
-        path    => "/etc/sysconfig/network/ifroute-${interface}",
-        content => template('psick/network/route-SuSE.erb'),
-        notify  => $route_notify,
+        path    => "/etc/sysconfig/network/ifroute-${name}",
+        content => template($real_route_up_template),
+        notify  => $real_config_file_notify,
       }
     }
-    default: { fail('Operating system not supported') }
+    default: { fail('Operating system not supported')  }
   }
 }

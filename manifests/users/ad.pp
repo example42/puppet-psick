@@ -9,7 +9,7 @@
 #   psick::users::ad::machine_ou: '$null'
 #
 class psick::users::ad (
-  String $domain,
+  Array $domain,
   String $username,
   String $password,
   String $machine_ou,
