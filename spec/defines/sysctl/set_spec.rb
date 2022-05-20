@@ -13,7 +13,7 @@ describe 'psick::sysctl::set' do
       let(:facts) { os_facts }
 
       if os.include?('windows')
-        it { is_expected.to compile.and_raise_error(/.*/) }
+        it { is_expected.to compile }
       else
         it { is_expected.to compile }
       end

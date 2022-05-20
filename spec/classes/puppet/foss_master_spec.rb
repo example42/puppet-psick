@@ -10,6 +10,8 @@ describe 'psick::puppet::foss_master' do
 
       if os.include?('windows')
         it { is_expected.to compile.and_raise_error(/.*/) }
+      elsif os.include?('SLES')
+        it { is_expected.to compile.and_raise_error(/.*/) }
       else
         it { is_expected.to compile }
       end

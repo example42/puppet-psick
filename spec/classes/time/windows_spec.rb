@@ -8,7 +8,10 @@ describe 'psick::time::windows' do
       let(:facts) { os_facts }
       let(:pre_condition) { 'include psick; include psick::time' }
 
-      it { is_expected.to compile }
-    end
+      if os.include?('windows')
+        it { is_expected.to compile }
+      else
+        it { is_expected.to fail }
+      end    end
   end
 end

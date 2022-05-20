@@ -7,6 +7,7 @@ describe 'psick::php::pear::config' do
   let(:params) do
     { 'value': 'oh' }
   end
+  let(:pre_condition) { 'include psick::php::pear' }
 
   on_supported_os.each do |os, os_facts|
     context "on #{os}" do

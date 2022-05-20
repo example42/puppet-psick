@@ -12,7 +12,12 @@ describe 'psick::puppet::set_external_fact' do
     context "on #{os}" do
       let(:facts) { os_facts }
 
-      it { is_expected.to compile }
+      #TODO Add windows support
+      if os.include?('windows')
+        it { is_expected.to compile.and_raise_error(/.*/) }
+      else
+        it { is_expected.to compile }
+      end
     end
   end
 end

@@ -32,8 +32,11 @@ fixtures:
     "puppetdb": 'puppetlabs/puppetdb'
     "hocon": 'puppetlabs/hocon' # psick::puppet::foss_server_metrics
     "augeasproviders_sysctl": 'herculesteam-augeasproviders_sysctl' # psick::sysctl::set
+    "augeasproviders_core": 'herculesteam-augeasproviders_core' # psick::sysctl::set
     "cron": 'puppetlabs/cron_core' # psick::puppet::foss_master
     "windows_env": 'puppet/windows_env' # psick::windows::envs
     "gpg_key": 'treydock-gpg_key' # psick::tools::gpgkey
     "mount_core": 'puppetlabs/mount_core' # psick::nfs::mount
     "postgresql": 'puppetlabs/postgresql' # psick::puppet::foss_master
+    "apt": 'puppetlabs/apt' # postgres -  psick::puppet::foss_master
+    "domain_membership": 'trlinkin/domain_membership' # psick::users::ad
