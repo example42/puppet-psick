@@ -59,7 +59,7 @@ define psick::network::interface (
   String $interface                = $title,
   Boolean $restart_all_nic         = true,
   Optional[String]$reload_command  = undef,
-  Optional[Optional[ResourceRef]]$notify = undef,
+  Optional[ResourceRef] $notify    = undef,
 
   Boolean $enable_dhcp             = false,
 
@@ -80,7 +80,7 @@ define psick::network::interface (
     }
     $network_notify = pick($notify,"Exec[network_restart_${name}]")
   } else {
-    $network_notify = $notify,
+    $network_notify = $notify
   }
 
   case $facts['os']['family'] {
