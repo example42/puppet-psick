@@ -8,7 +8,7 @@ describe 'psick::timezone' do
       let(:facts) { os_facts }
       let(:pre_condition) { 'class { psick: timezone => "utc" } '  }
 
-      it { is_expected.to compile }
+      it { is_expected.to compile.with_all_deps }
     end
   end
 end

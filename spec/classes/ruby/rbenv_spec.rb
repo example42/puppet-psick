@@ -5,7 +5,7 @@ describe 'psick::ruby::rbenv' do
     context "on #{os}" do
       let(:facts) { os_facts }
       let(:pre_condition) { 'include psick' }
-      it { is_expected.to compile }
+      it { is_expected.to compile.with_all_deps }
       it { is_expected.to contain_class('rbenv') }
       it { is_expected.to contain_rbenv__plugin('rbenv/ruby-build') }
       it { is_expected.to contain_rbenv__build('2.4.2') }

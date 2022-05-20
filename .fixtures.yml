@@ -39,4 +39,4 @@ fixtures:
     "postgresql": 'puppetlabs/postgresql' # psick::puppet::foss_master
     "apt": 'puppetlabs/apt' # postgres -  psick::puppet::foss_master
     "domain_membership": 'trlinkin/domain_membership' # psick::users::ad
-    "sssd": 'bodgit-sssd' # psick::users::ad
+    "sssd": 'nwaller-sssd' # psick::users::ad

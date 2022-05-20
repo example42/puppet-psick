@@ -11,7 +11,7 @@ describe 'psick::time::windows' do
       if os.include?('windows')
         it { is_expected.to compile }
       else
-        it { is_expected.to fail }
-      end    end
+        it { is_expected.not_to compile }
+      end
   end
 end

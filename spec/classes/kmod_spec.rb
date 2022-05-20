@@ -7,7 +7,7 @@ describe 'psick::kmod' do
       let(:pre_condition) { 'include psick' }
 
       describe 'with default params' do
-        it { is_expected.to compile }
+        it { is_expected.to compile.with_all_deps }
       end
     end
   end
