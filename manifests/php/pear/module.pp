@@ -31,8 +31,8 @@ define psick::php::pear::module (
   $alldeps             = false,
   $version             = 'present',
   $repository          = 'pear.php.net',
-  $service_autorestart = '',
-  $module_prefix       = '',
+  $service_autorestart = false,
+  $module_prefix        = '',
   $path                = '/usr/bin:/usr/sbin:/bin:/sbin',
   $ensure              = 'present',
   $timeout             = 300
@@ -79,11 +79,8 @@ define psick::php::pear::module (
   $real_service_autorestart = $service_autorestart ? {
     true    => $service_ref,
     false   => undef,
-    ''      => $psick::php::service_autorestart ? {
-      true    => $service_ref,
-      false   => undef,
-    }
   }
+
 
   $real_module_prefix = $module_prefix ? {
     ''      => $psick::php::pear_module_prefix,
