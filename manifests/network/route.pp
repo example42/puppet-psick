@@ -91,7 +91,7 @@ define psick::network::route (
 
   if $::osfamily == 'SuSE' {
     $networks = keys($routes)
-    psick::network::network::validate_gw { $networks:
+    psick::network::validate_gw { $networks:
       routes => $routes,
     }
   }

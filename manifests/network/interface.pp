@@ -303,8 +303,8 @@ define psick::network::interface (
     'SLES', 'OpenSuSE': {
       # Prerequisites
       if $manage_prerequisites
-      and is_hash($extra_params) {
-        if has_key($extra_params,'VLAN_ID')
+      and is_hash($extra_settings) {
+        if has_key($extra_settings,'VLAN_ID')
         and !defined(Package['vlan']) {
           package { 'vlan':
             ensure => 'present',
@@ -451,9 +451,9 @@ define psick::network::interface (
         -> Exec["create ipaddr ${title}"]
         -> File[$config_file_path]
       }
-      case $::operatingsystemmajrelease {
+      case $facts['os']['release']['major'] {
         '11','5': {
-          if $enable_dhcp {
+          if $ipv4_dhcp {
             $create_ip_command = "ipadm create-addr -T dhcp ${interface}/dhcp"
             $show_ip_command = "ipadm show-addr ${interface}/dhcp"
           } else {

@@ -6,10 +6,10 @@ describe 'psick::network::hostname' do
   on_supported_os.each do |os, os_facts|
     context "on #{os}" do
       let(:facts) { os_facts }
-      let(:pre_condition) { 'include psick::network' }
+      let(:pre_condition) { 'include psick ; include psick::network' }
 
       if os.include?('windows')
-        it { is_expected.to compile.and_raise_error(/.*/) }
+        it { is_expected.to compile }
       else
         it { is_expected.to compile.with_all_deps }
       end

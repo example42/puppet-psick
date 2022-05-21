@@ -5,13 +5,13 @@ require 'spec_helper'
 describe 'psick::network::rule' do
   let(:title) { 'namevar' }
   let(:params) do
-    {}
+    { iprule: [10]}
   end
 
   on_supported_os.each do |os, os_facts|
     context "on #{os}" do
       let(:facts) { os_facts }
-      let(:pre_condition) { 'include psick::network' }
+      let(:pre_condition) { 'include psick ; include psick::network' }
 
       if os.include?('windows')
         it { is_expected.to compile.and_raise_error(/.*/) }

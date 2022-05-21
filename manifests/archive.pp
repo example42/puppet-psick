@@ -9,22 +9,22 @@ define psick::archive (
   Enum['download','extract','compress','auto'] $action = 'auto',
 
   Optional[String]               $source = $title,
-  Optional[Stdlib::Absolutepath] $download_dir = undef,
+  Optional[Stdlib::Absolutepath] $download_dir = '/var/tmp',
   Optional[String]               $download_command = undef,
   Integer                        $download_timeout = 600,
-  Hash                           $download_exec_env = {},
+  Array                          $download_exec_env = [],
 
   Optional[String]               $extract_dir = undef,
   Optional[String]               $extract_created_dir = undef,
   Optional[String]               $extract_command = undef,
   Integer                        $extract_timeout = 600,
-  Hash                           $extract_exec_env = {},
+  Array                          $extract_exec_env = [],
 
   Optional[String]               $compress_dir = undef,
   Optional[String]               $compress_command = undef,
   Optional[String]               $compress_output_file = undef,
   Integer                        $compress_timeout = 600,
-  Hash                           $compress_exec_env = {},
+  Array                          $compress_exec_env = [],
 
 ) {
 

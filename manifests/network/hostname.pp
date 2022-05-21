@@ -11,8 +11,8 @@ class psick::network::hostname (
 ) {
 
   $hostname_default_template = $hostname_legacy ? {
-    true  => "psick/network/legacy/hostname-${::osfamily}.erb",
-    false => "psick/network/hostname-${::osfamily}.erb",
+    true  => "psick/network/legacy/hostname-${facts['os']['family']}.erb",
+    false => "psick/network/hostname-${facts['os']['family']}.erb",
   }
   $file_template = pick($hostname_file_template,$hostname_default_template)
   $manage_hostname = pick($psick::network::hostname,$::fqdn)
@@ -26,7 +26,7 @@ class psick::network::hostname (
       content => template($file_template),
       notify  => $psick::network::manage_config_file_notify,
     }
-    case $::lsbmajdistrelease {
+    case $facts['os']['release']['major'] {
       '7': {
         exec { 'sethostname':
           command => "/usr/bin/hostnamectl set-hostname ${manage_hostname}",
