@@ -5,7 +5,7 @@ require 'spec_helper'
 describe 'psick::network::validate_gw' do
   let(:title) { 'namevar' }
   let(:params) do
-    {}
+    { routes: 'one'}
   end
 
   on_supported_os.each do |os, os_facts|

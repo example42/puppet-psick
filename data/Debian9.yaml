@@ -2,3 +2,4 @@ psick::firewall::iptables::package_name: 'netfilter-persistent'
 psick::firewall::iptables::service_name: 'netfilter-persistent'
 psick::firewall::iptables::service_name_v6: ~ 
 
+psick::network::service_restart_exec: 'systemctl restart network'

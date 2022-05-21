@@ -2,14 +2,14 @@
 
 ## Releae 1.0.0
 
--   Preparing for release 1, backwards incompatible.
+-   Release 1, backwards incompatible. Read migration notes before upgrading.
 -   Docs update
 -   pdk update
 -   Lint cleanups and code improvements
 -   Added GitHub and CD4PE pipelines
 -   Updated psick profile generation script
 -   Improved psick::puppet::pe_client_tools psick::puppet::pe_agent and psick::puppet::pe_server
--   Fixes to psick::limits
+-   Fixed psick::limits
 -   Added psick::network (based on example42-network)
 -   Added psick::rclocal (based on example42-rclocal)
 -   Added psick::systemd (based on voxpupuli-systemd)

@@ -8,16 +8,23 @@ define psick::archive (
   Psick::Ensure                                $ensure = 'present',
   Enum['download','extract','compress','auto'] $action = 'auto',
 
-  Optional[String]               $source = undef,
+  Optional[String]               $source = $title,
   Optional[Stdlib::Absolutepath] $download_dir = undef,
   Optional[String]               $download_command = undef,
+  Integer                        $download_timeout = 600,
+  Hash                           $download_exec_env = {},
 
   Optional[String]               $extract_dir = undef,
+  Optional[String]               $extract_created_dir = undef,
   Optional[String]               $extract_command = undef,
+  Integer                        $extract_timeout = 600,
+  Hash                           $extract_exec_env = {},
 
   Optional[String]               $compress_dir = undef,
   Optional[String]               $compress_command = undef,
   Optional[String]               $compress_output_file = undef,
+  Integer                        $compress_timeout = 600,
+  Hash                           $compress_exec_env = {},
 
 ) {
 
@@ -29,6 +36,11 @@ define psick::archive (
   $download_command_default=lookup('psick::archive::download_command', Hash, deep, {})
   $extract_command_default=lookup('psick::archive::extract_command', Hash, deep, {})
   $compress_command_default=lookup('psick::archive::compress_command', Hash, deep, {})
+
+  $real_download_command = $download_command ? {
+    undef   => $download_command_default['command'],
+    default => $download_command,
+  }
 
   $real_extract_command = $extract_command ? {
     undef      => $source_filetype ? {
@@ -54,17 +66,50 @@ define psick::archive (
     default => $compress_command,
   }
 
+  $real_extract_created_dir = $extract_created_dir ? {
+    undef   => $source_filename,
+    default => $extract_created_dir,
+  }
+
   if $action == 'download' or $action == 'auto' {
     if $source {
-      exec { "Retrieve ${source} in ${work_dir} - ${title}":
-        cwd         => $work_dir,
-        command     => "${retrieve_command} ${retrieve_args} ${url}",
-        creates     => "${work_dir}/${source_filename}",
-        timeout     => $timeout,
-        path        => $path,
-        environment => $exec_env,
+      exec { "Download ${source} in ${download_dir}":
+        cwd         => $download_dir,
+        command     => "${real_download_command} ${download_command_default['pre_args']} ${source} ${download_command_default['post_args']}", # lint:ignore:140chars
+        creates     => "${download_dir}/${source_filename}",
+        timeout     => $download_timeout,
+        path        => $facts['path'],
+        environment => $download_exec_env,
       }
     }
   }
 
+  if $action == 'extract' or $action == 'auto' {
+    if $source {
+      exec { "Extract ${source} in ${extract_dir}":
+        cwd         => $extract_dir,
+        command     => "${real_extract_command} ${source}",
+        creates     => "${extract_dir}/${real_extract_created_dir}",
+        timeout     => $extract_timeout,
+        path        => $facts['path'],
+        environment => $extract_exec_env,
+      }
+    }
+  }
+
+  if $action == 'compress' or $action == 'auto' {
+    if $compress_output_file {
+      exec { "Compress ${compress_dir} in ${compress_output_file}":
+        command     => "${real_compress_command} ${compress_output_file} ${compress_dir}",
+        creates     => $compress_output_file,
+        timeout     => $compress_timeout,
+        path        => $facts['path'],
+        environment => $compress_exec_env,
+      }
+    } else {
+      notify { 'psick::archive compress failure':
+        message => 'You must specifiy a valid path for $compress_output_file when using the compress action in psick::archive' # lint:ignore:140chars
+      }
+    }
+  }
 }

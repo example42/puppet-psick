@@ -11,8 +11,8 @@ class psick::network::hostname (
 ) {
 
   $hostname_default_template = $hostname_legacy ? {
-    true  => "network/legacy/hostname-${::osfamily}.erb",
-    false => "network/hostname-${::osfamily}.erb",
+    true  => "psick/network/legacy/hostname-${::osfamily}.erb",
+    false => "psick/network/hostname-${::osfamily}.erb",
   }
   $file_template = pick($hostname_file_template,$hostname_default_template)
   $manage_hostname = pick($psick::network::hostname,$::fqdn)

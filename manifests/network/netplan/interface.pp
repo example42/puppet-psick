@@ -16,11 +16,11 @@ define psick::network::netplan::interface (
   String $renderer                              = 'networkd',
   Numeric $version                              = 2,
 
-  Network::NetplanDhcp $dhcp4                   = false,
-  Network::NetplanDhcp $dhcp6                   = false,
+  Psick::Network::NetplanDhcp $dhcp4            = false,
+  Psick::Network::NetplanDhcp $dhcp6            = false,
 
   Optional[Stdlib::MAC]             $macaddress = getvar("networking.interfaces.${interface_name}.mac"),
-  Variant[Undef,Network::NetplanAddresses] $addresses  = undef,
+  Variant[Undef,Psick::Network::NetplanAddresses] $addresses = undef,
   Variant[Undef,Array]              $routes     = undef,
   Optional[Stdlib::Compat::Ipv4] $gateway4      = undef,
   Optional[Stdlib::Compat::Ipv6] $gateway6      = undef,

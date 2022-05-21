@@ -1,0 +1,3 @@
+---
+psick::network::use_netplan: true
+psick::network::service_restart_exec: 'netplan apply'
