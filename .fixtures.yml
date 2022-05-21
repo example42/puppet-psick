@@ -16,7 +16,6 @@ fixtures:
     "sshkeys": "https://github.com/puppetlabs/puppetlabs-sshkeys_core"
     "host": "https://github.com/puppetlabs/puppetlabs-host_core"
     "alternatives": "https://github.com/voxpupuli/puppet-alternatives"
-    "archives": "https://github.com/voxpupuli/puppet-alternatives"
     "augeas": "https://github.com/puppetlabs/puppetlabs-augeas_core"
     "inifile": "https://github.com/puppetlabs/puppetlabs-inifile"
     "chocolatey": "https://github.com/puppetlabs/puppetlabs-chocolatey"

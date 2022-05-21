@@ -24,7 +24,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Run unit tests on current puppet
-        run: /usr/local/bin/pdk bundle exec rake spec
+#        run: /usr/local/bin/pdk bundle exec rake spec
+        run: /usr/local/bin/pdk test unit
         env:
           BUNDLE_WITHOUT: development:system_tests:release
       - name: Run unit tests on Puppet 6
