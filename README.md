@@ -134,7 +134,7 @@ For some very common applications and languages, there are dedicated profile cla
 And som from **psick_profile** module check it for details.
 
 -   [psick_profile::docker](docs/docker.md) - Docker installation and build tools
--   [psick_profile::foreman](docs/foreman.md) - Foreman installation
+-   [psick_profile::foreman::tp](docs/foreman.md) - Foreman installation
 -   [psick_profile::ansible](docs/ansible.md) - Manage Ansible installation and user
 -   [psick_profile::gitlab](docs/gitlab.md) - GitLab installation and configuration
 -   [psick_profile::mariadb](docs/mysql.md) - Manage Mariadb

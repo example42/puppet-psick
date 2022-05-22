@@ -25,7 +25,7 @@ This is the list of the profiles moved from psick to psick_profile module
 -   psick::backup::duply moved to psick_profile::duply
 -   psick::backup::legato moved to psick_profile::legato
 -   psick::ci:octocatalog moved to psick_profile::octocatalog
--   psick::foreman moved to psick_profile::foreman
+-   psick::foreman moved to psick_profile::foreman::tp
 -   psick::grafana moved to psick_profile::grafana
 -   psick::inluxdb moved to psick_profile::influxdb
 -   psick::keepalived moved to psick_profile::keepalived
@@ -38,6 +38,16 @@ This is the list of the profiles moved from psick to psick_profile module
 -   psick::puppetserver moved to psick_profile::puppetserver
 -   psick::puppetdb moved to psick_profile::puppetdb
 -   psick::mail::postfix moved to psick_profile::postfix
+
+This is a list of tp_profiles moved to psick and psick_profiles
+
+-   tp_profile::openssh moved to psick::openssh::tp
+-   tp_profile::postfix moved to psick_profiles::postfix::tp
+-   tp_profile::postgresql moved to psick_profiles::postgresql::tp
+-   tp_profile::puppetdb moved to psick_profiles::puppetdb::tp
+-   tp_profile::puppetserver moved to psick_profiles::puppetserver::tp
+-   tp_profile::rabbitmq moved to psick_profiles::rabbitmq::tp
+-   tp_profile::redis moved to psick_profiles::redis::tp
 
 ### What to do to upgrade
 
