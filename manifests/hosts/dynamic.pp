@@ -16,7 +16,7 @@ class psick::hosts::dynamic (
     if $noop_manage {
       noop($noop_value)
     }
-    $magic_tag = get_magicvar($dynamic_magicvar)
+    $magic_tag = getvar('dynamic_magicvar')
 
     $real_tag = $dynamic_exclude ? {
       true    => 'Excluded',
