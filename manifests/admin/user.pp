@@ -18,28 +18,28 @@ class psick::admin::user (
 
     include psick::admin
 
-    user { $psick::admin::user_name:
+    user { $psick::admin::user:
       ensure     => $ensure,
       comment    => 'Puppet managed admin user',
       managehome => true,
       shell      => '/bin/bash',
-      home       => "/home/${psick::admin::user_name}",
+      home       => "/home/${psick::admin::user}",
       password   => $password,
     }
 
     $dir_ensure = ::tp::ensure2dir($ensure)
 
-    file { "/home/${psick::admin::user_name}/.ssh" :
+    file { "/home/${psick::admin::user}/.ssh" :
       ensure  => $dir_ensure,
       mode    => '0700',
-      owner   => $psick::admin::user_name,
-      group   => $psick::admin::user_name,
-      require => User[$psick::admin::user_name],
+      owner   => $psick::admin::user,
+      group   => $psick::admin::user,
+      require => User[$psick::admin::user],
     }
 
     if $run_ssh_keygen and $psick::admin::master_enable {
-      psick::openssh::keygen { $psick::admin::user_name:
-        require => File["/home/${$psick::admin::user_name}/.ssh"],
+      psick::openssh::keygen { $psick::admin::user:
+        require => File["/home/${$psick::admin::user}/.ssh"],
       }
       psick::puppet::set_external_fact { 'admin_user_key.sh':
         template => 'psick/admin/admin_user_key.sh.epp',
@@ -48,12 +48,12 @@ class psick::admin::user (
     }
 
     if $configure_sudo {
-      file { "/etc/sudoers.d/${psick::admin::user_name}" :
+      file { "/etc/sudoers.d/${psick::admin::user}" :
         ensure  => file,
         mode    => '0440',
         owner   => 'root',
         group   => 'root',
-        content => "${psick::admin::user_name} ALL = NOPASSWD : ALL\n",
+        content => "${psick::admin::user} ALL = NOPASSWD : ALL\n",
       }
     }
   }

@@ -31,11 +31,12 @@ define psick::users::managed (
   Array $groups           = [],
   Boolean $manage_group   = true,
   String $membership      = 'minimum',
-  String $home            = 'absent',
+  Optional[String] $home              = undef,
   Optional[Integer] $password_max_age = undef,
   Optional[Integer] $password_min_age = undef,
   Boolean $managehome     = true,
   String $homedir_mode    = '0750',
+  Boolean $homedir_recurse = false,
   Optional[String] $homedir_source = undef,
   String $sshkey          = 'absent',
   String $authorized_keys_source = '',
@@ -51,15 +52,21 @@ define psick::users::managed (
   Array $sshkeys_content         = [],
   Boolean $generate_ssh_keypair  = false,
 ) {
-  $real_homedir = $home ? {
-    'absent' => $title ? {
-      'root'  => '/root',
-      default => "/home/${title}",
-    },
-    default  => $home
+  $default_home_base = $facts['kernel'] ? {
+    'windows' => 'C:\Users\\',
+    'Darwin'  => '/Users/',
+    default   => '/home/',
   }
 
-  $real_managehome = $facts['os']['family'] ? {
+  $real_homedir = $home ? {
+    undef  => $title ? {
+      'root'  => '/root',
+      default => "${default_home_base}${title}",
+    },
+    default => $home,
+  }
+
+  $real_managehome = $facts['kernel'] ? {
     'Darwin' => undef,
     default  => $managehome,
   }
@@ -187,10 +194,7 @@ define psick::users::managed (
         owner   => $name,
         mode    => undef,
         source  => $homedir_source,
-        recurse => $homedir_source ? {
-          undef   => undef,
-          default => true,
-        },
+        recurse => $homedir_recurse,
       }
       case $gid {
         'absent','uid': {
