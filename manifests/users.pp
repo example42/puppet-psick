@@ -94,7 +94,7 @@ class psick::users (
         } else {
           $home_real = $facts['os']['family'] ? {
             'Solaris' => "/export/home/${u}",
-            'windows' => "C:\Users\\${u}",
+            'windows' => "C:/Users//${u}",
             'Darwin'  => "/Users/${u}",
             default   => "/home/${u}",
           }
