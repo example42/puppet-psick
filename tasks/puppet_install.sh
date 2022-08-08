@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 breed=$PT_breed
-if [ $USER == 'root' ]; then
+if [ "$USER" == 'root' ]; then
   sudo_command=''
 else
   sudo_command='sudo '
 fi
 which tput >/dev/null 2>&1
-if [ "x${?}" == "x0" ]; then
+if [ "${?}" == "0" ]; then
   SETCOLOR_NORMAL=$(tput sgr0)
   SETCOLOR_TITLE=$(tput setaf 6)
   SETCOLOR_BOLD=$(tput setaf 15)
@@ -23,7 +23,7 @@ echo_title () {
 # Skip if Puppet 5 or higher is already installed
 if [ $(which puppet) ]; then
   puppet --version | grep "^[5|6|7]"
-  if [ "x$?" == "x0" ]; then
+  if [ "$?" == "0" ]; then
     echo_title "Puppet version 5 or higher present. Skipping installation."
     exit 0
   fi
@@ -175,20 +175,20 @@ setup_linux() {
       OS=$(uname -s)
       majver=$(uname -r)
   fi
-  distro=$(echo $OS | tr '[:upper:]' '[:lower:]')
+  distro=$(echo "$OS" | tr '[:upper:]' '[:lower:]')
   echo_title "Detected Linux distro: ${distro} version ${majver} on arch ${ARCH}"
   case "$distro" in
-    debian) setup_apt $majver ;;
-    ubuntu) setup_apt $majver ;;
-    redhat) setup_redhat $majver ;;
-    fedora) setup_fedora $majver ;;
-    fedorarelease) setup_fedora $majver ;;
-    centos) setup_redhat $majver ;;
-    scientific) setup_redhat $majver ;;
+    debian) setup_apt "$majver" ;;
+    ubuntu) setup_apt "$majver" ;;
+    redhat) setup_redhat "$majver" ;;
+    fedora) setup_fedora "$majver" ;;
+    fedorarelease) setup_fedora "$majver" ;;
+    centos) setup_redhat "$majver" ;;
+    scientific) setup_redhat "$majver" ;;
     amzn) setup_amazon ;;
-    sles) setup_suse $majver ;;
-    cumulus-linux) setup_apt $majver ;;
-    alpine) setup_alpine $majver ;;
+    sles) setup_suse "$majver" ;;
+    cumulus-linux) setup_apt "$majver" ;;
+    alpine) setup_alpine "$majver" ;;
     *) echo "Not supported distro: $distro" ;;
   esac
 }
@@ -209,7 +209,7 @@ os_detect() {
 echo "Going to install Puppet (and eventually cleanup old version)"
 echo "If you are not root some commands will be run via sudo"
 if [ "x$breed" != "x" ]; then
-  setup_$breed
+  setup_"$breed"
 else
   os_detect
 fi

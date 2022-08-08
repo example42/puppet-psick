@@ -1,5 +1,4 @@
 # This class manages /etc/resolv.conf
-# Based on ghoneycutt-dnsclient
 class psick::dns::resolver (
   Array $nameservers           = ['8.8.8.8','8.8.4.4'],
   Optional[Array] $options     = undef,
@@ -9,11 +8,10 @@ class psick::dns::resolver (
   String $resolver_path        = '/etc/resolv.conf',
   String $resolver_template    = 'psick/dns/resolver/resolv.conf.erb',
 
-  Boolean $manage              = $::psick::manage,
-  Boolean $noop_manage         = $::psick::noop_manage,
-  Boolean $noop_value          = $::psick::noop_value,
+  Boolean $manage              = $psick::manage,
+  Boolean $noop_manage         = $psick::noop_manage,
+  Boolean $noop_value          = $psick::noop_value,
 ) {
-
   if $manage {
     if $noop_manage {
       noop($noop_value)

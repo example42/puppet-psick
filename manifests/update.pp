@@ -7,7 +7,7 @@
 # @param update_template The erb template to use for the update_script_path
 # @param update_script_path The path of the script used for system updates
 # @param use_yum_cron If to install (only on RedHat derivatives) the yum_cron
-#                     package (via the ::psick::yum_cron class).
+#                     package (via the ::psick::yum::cron class).
 #                     If true, the other options are ignored.
 # @param manage If to actually manage any resource in this class. If false no
 #               resource is managed. Default value is taken from main psick class.
@@ -30,18 +30,17 @@ class psick::update (
   String $update_script_path   = '/usr/local/sbin/update.sh',
   Boolean $use_yum_cron        = false,
 
-  Boolean          $manage               = $::psick::manage,
-  Boolean          $noop_manage          = $::psick::noop_manage,
-  Boolean          $noop_value           = $::psick::noop_value,
+  Boolean          $manage               = $psick::manage,
+  Boolean          $noop_manage          = $psick::noop_manage,
+  Boolean          $noop_value           = $psick::noop_value,
 
 ) {
-
   if $manage {
     if $noop_manage {
       noop($noop_value)
     }
-    if $::osfamily == 'RedHat' and $use_yum_cron {
-      contain ::psick::yum_cron
+    if $facts['os']['family'] == 'RedHat' and $use_yum_cron {
+      contain psick::yum::cron
       file { '/etc/cron.d/system_update':
         ensure  => absent,
       }

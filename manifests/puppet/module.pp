@@ -4,7 +4,6 @@ define psick::puppet::module (
   String $modulename          = $title,
   Optional[String] $arguments = undef,
 ) {
-
   $split_title = split($modulename,'-')
   $creates = $user ? {
     'root'  => "/etc/puppetlabs/code/modules/${split_title}[1]",
@@ -14,5 +13,6 @@ define psick::puppet::module (
     command => "puppet module install ${modulename} ${arguments}",
     user    => $user,
     creates => $creates,
+    path    => $facts['path'],
   }
 }

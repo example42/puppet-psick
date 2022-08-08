@@ -27,7 +27,7 @@ class psick::nfs::client (
     tp::install { 'nfs-client':
       settings_hash => {
         service_enable => undef,
-      }
+      },
     }
 
     $mounts_hash.each |$k,$v| {

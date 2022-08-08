@@ -11,11 +11,11 @@ psick::firewall::iptables::package_name: 'iptables'
 psick::firewall::iptables::service_name: 'iptables'
 psick::firewall::iptables::config_file_path: '/etc/sysconfig/iptables'
 
-# psick::gitlab::cli
-psick::gitlab::cli::ensure: 'present'
-psick::gitlab::cli::auto_prereq: true
-psick::gitlab::cli::template: 'psick/gitlab/cli/gitlab-cli.conf.epp'
-psick::gitlab::cli::config_hash:
+# psick_profile::gitlab::cli
+psick_profile::gitlab::cli::ensure: 'present'
+psick_profile::gitlab::cli::auto_prereq: true
+psick_profile::gitlab::cli::template: 'psick_profile/gitlab/cli/gitlab-cli.conf.epp'
+psick_profile::gitlab::cli::config_hash:
   project_id: ''
   private_token: ''
   api_endpoint: "https://gitlab.%{facts.domain}/api/v3"
@@ -42,11 +42,6 @@ psick::hosts::resource::hosts: {}
 psick::hosts::resource::defaults: {}
 psick::hosts::resource::use_defaults: true
 
-# psick::monitor::ganglia
-psick::monitor::ganglia::packages: []
-
-# psick::monitor::snmpd
-psick::monitor::snmpd::extra_packages: []
 
 # psick::packages
 psick::packages::packages_default: []
@@ -95,7 +90,6 @@ psick::repo::generic::apt_resource: apt::source # As in puppetlabs-apt
 psick::repo::generic::zypper_resource: zypprepo # As in darin-zypprepo
         
 # psick
-psick::is_cluster: false
 psick::primary_ip_address: ''
 psick::mgmt_interface: "%{facts.networking.primary}"
 psick::timezone: ''
@@ -116,7 +110,7 @@ psick::windows::services::managed: {}
 psick::windows::services::defaults: {}
 psick::windows::services::use_defaults: true
 
-        # psick::windows::registry
+# psick::windows::registry
 psick::windows::registry::keys: {}
 psick::windows::registry::defaults: {}
 psick::windows::registry::use_defaults: true

@@ -3,9 +3,9 @@
     - psick::puppet::pe_puppetdb
     - psick::puppet::pe_console
     - psick::puppet::pe_server
-    - psick::gitlab::cli
+    - psick_profile::gitlab::cli
     - psick::puppet::pe_code_manager
-    - psick::gitlab::runner
+    - psick_profile::gitlab::runner
 
   puppet_enterprise::profile::puppetdb::allowlisted_certnames:
     - cirunner.lan
@@ -28,7 +28,7 @@
 
   # Config for the GIT Runners for Puppet deployments
   # Tokens change at every gitlab installation
-  psick::gitlab::runner::runners:
+  psick_profile::gitlab::runner::runners:
     deploy_puppet:
       url: 'https://git.lan'
       token: 'N6kddUPw-Zn2LvAaiJe1'
@@ -43,6 +43,6 @@
 
 # This is needed for the gitlab_get_id function to catch GitLab data
   # Config for gitlab cli. Tokens change at every gitlab installation
-  psick::gitlab::cli::private_token: '9C2xPzg9V22Ha3TdsQpx'
-  psick::gitlab::cli::api_endpoint: 'https://git.lan/api/v3'
+  psick_profile::gitlab::cli::private_token: '9C2xPzg9V22Ha3TdsQpx'
+  psick_profile::gitlab::cli::api_endpoint: 'https://git.lan/api/v3'
 

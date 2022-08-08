@@ -38,7 +38,7 @@
 #       hostname: psick::hostname
 #       proxy: psick::proxy
 #     psick::firstrun::linux_reboot: false # (Default value)
-# For each of these $::kernel_classes parameters, it's expected an Hash of key-values:
+# For each of these $facts['kernel']_classes parameters, it's expected an Hash of key-values:
 # Keys can have any name, and are used as markers to allow overrides,
 # exceptions management and customisations across Hiera's hierarchies.
 # Values are actual class names to include in the node's catalog only at
@@ -49,7 +49,7 @@
 #     psick::firstrun::manage: false
 #
 # @param linux_classes Hash with the list of classes to include
-#   in the first Puppet run when $::kernel is Linux. Of each key-value
+#   in the first Puppet run when $facts['kernel'] is Linux. Of each key-value
 #   of the hash, the key is used as marker to eventually override
 #   across Hiera hierarchies and the value is the name of the class
 #   to actually include. Any key name can be used, but the value
@@ -58,13 +58,13 @@
 #   is not included.
 #
 # @param windows_classes Hash with the list of classes to include
-#   in the first Puppet run when $::kernel is windows.
+#   in the first Puppet run when $facts['kernel'] is windows.
 #
 # @param solaris_classes Hash with the list of classes to include
-#   in the first Puppet run when $::kernel is Solaris.
+#   in the first Puppet run when $facts['kernel'] is Solaris.
 #
 # @param darwin_classes Hash with the list of classes to include
-#   in the first Puppet run when $::kernel is Darwin.
+#   in the first Puppet run when $facts['kernel'] is Darwin.
 #
 # @param reboot_apply The apply parameter to pass to reboot type
 # @param reboot_when The when parameter to pass to reboot type
@@ -101,18 +101,16 @@ class psick::firstrun (
   String $reboot_name     = 'Rebooting',
   Integer $reboot_timeout = 60,
 
-  Boolean          $manage               = $::psick::manage,
-  Boolean          $noop_manage          = $::psick::noop_manage,
-  Boolean          $noop_value           = $::psick::noop_value,
+  Boolean          $manage               = $psick::manage,
+  Boolean          $noop_manage          = $psick::noop_manage,
+  Boolean          $noop_value           = $psick::noop_value,
 ) {
-
   if $manage {
-
     if $noop_manage {
       noop($noop_value)
     }
 
-    if !empty($linux_classes) and $::kernel == 'Linux' {
+    if !empty($linux_classes) and $facts['kernel'] == 'Linux' {
       $linux_classes.each |$n,$c| {
         if $c != '' {
           contain $c
@@ -120,7 +118,7 @@ class psick::firstrun (
         }
       }
     }
-    if !empty($windows_classes) and $::kernel == 'windows' {
+    if !empty($windows_classes) and $facts['kernel'] == 'windows' {
       $windows_classes.each |$n,$c| {
         if $c != '' {
           contain $c
@@ -128,7 +126,7 @@ class psick::firstrun (
         }
       }
     }
-    if !empty($darwin_classes) and $::kernel == 'Darwin' {
+    if !empty($darwin_classes) and $facts['kernel'] == 'Darwin' {
       $darwin_classes.each |$n,$c| {
         if $c != '' {
           contain $c
@@ -136,7 +134,7 @@ class psick::firstrun (
         }
       }
     }
-    if !empty($solaris_classes) and $::kernel == 'Solaris' {
+    if !empty($solaris_classes) and $facts['kernel'] == 'Solaris' {
       $solaris_classes.each |$n,$c| {
         if $c != '' {
           contain $c
@@ -146,7 +144,7 @@ class psick::firstrun (
     }
 
     # Reboot
-    $kernel_down = downcase($::kernel)
+    $kernel_down = downcase($facts['kernel'])
     $reboot = getvar("${kernel_down}_reboot")
     $fact_notify = $reboot ? {
       false => undef,

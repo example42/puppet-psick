@@ -7,9 +7,9 @@ class psick::git (
   Hash                     $configs_hash        = {},
   Array                    $extra_packages_list = [],
 
-  Boolean          $manage               = $::psick::manage,
-  Boolean          $noop_manage          = $::psick::noop_manage,
-  Boolean          $noop_value           = $::psick::noop_value,
+  Boolean          $manage               = $psick::manage,
+  Boolean          $noop_manage          = $psick::noop_manage,
+  Boolean          $noop_value           = $psick::noop_value,
 
 ) {
   if $manage {

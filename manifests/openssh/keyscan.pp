@@ -17,7 +17,6 @@ define psick::openssh::keyscan (
   Optional[Stdlib::AbsolutePath] $known_hosts_path = undef,
   Boolean                        $create_ssh_dir   = false,
 ) {
-
   $known_hosts_path_real = $known_hosts_path ? {
     undef   => $user ? {
       'root'  => '/root/.ssh/known_hosts',
@@ -32,6 +31,7 @@ define psick::openssh::keyscan (
     command => "ssh-keyscan ${host} >> ${known_hosts_path_real}",
     user    => $user,
     unless  => "grep ${host} ${known_hosts_path_real}",
+    path    => $facts['path'],
   }
 
   if $create_ssh_dir {
@@ -42,4 +42,3 @@ define psick::openssh::keyscan (
     }
   }
 }
-

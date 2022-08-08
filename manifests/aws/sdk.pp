@@ -7,16 +7,15 @@
 #
 class psick::aws::sdk (
   String  $ensure              = 'present',
-  Array   $install_gems        = [ 'aws-sdk-core' , 'aws-sdk' , 'retries' ],
+  Array   $install_gems        = [ 'aws-sdk' ],
   Boolean $install_system_gems = true,
   Boolean $install_puppet_gems = true,
 
-  Boolean          $manage               = $::psick::manage,
-  Boolean          $noop_manage          = $::psick::noop_manage,
-  Boolean          $noop_value           = $::psick::noop_value,
+  Boolean          $manage               = $psick::manage,
+  Boolean          $noop_manage          = $psick::noop_manage,
+  Boolean          $noop_value           = $psick::noop_value,
 
 ) {
-
   if $manage {
     if $noop_manage {
       noop($noop_value)
@@ -25,7 +24,7 @@ class psick::aws::sdk (
     $install_gems.each | $gem | {
       if $facts['os']['family'] != 'windows' {
         if $install_system_gems {
-          contain ::psick::ruby
+          contain psick::ruby
           package { $gem:
             ensure   => $ensure,
             provider => 'gem',

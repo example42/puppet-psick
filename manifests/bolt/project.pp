@@ -60,7 +60,6 @@ define psick::bolt::project (
   Boolean $puppetfile_install = false,
 
 ) {
-
   $home_dir = pick($path, psick::get_user_home($user))
   $bolt_dir = "${home_dir}/Boltdir"
 
@@ -84,13 +83,13 @@ define psick::bolt::project (
     }
   } else {
     file { $bolt_dir:
-      ensure => tp::ensure2dir($ensure)
+      ensure => tp::ensure2dir($ensure),
     }
   }
 
   $default_config_hash = {
-    [ 'modules' , 'site-modules' ] => {
-      ensure => tp::ensure2dir($ensure)
+    ['modules' , 'site-modules'] => {
+      ensure => tp::ensure2dir($ensure),
     },
     'bolt.yaml' => {
       content => psick::template($bolt_yaml_template),
@@ -106,16 +105,16 @@ define psick::bolt::project (
       source  => $data_repo_url,
       vcsrepo => 'git',
     }
-    $data_dir_config_hash = { }
+    $data_dir_config_hash = {}
   } else {
     if $use_default_config_files_hash {
       $data_dir_config_hash = {
         'data' => {
-          ensure => tp::ensure2dir($ensure)
-        }
+          ensure => tp::ensure2dir($ensure),
+        },
       }
     } else {
-      $data_dir_config_hash = { }
+      $data_dir_config_hash = {}
     }
   }
 

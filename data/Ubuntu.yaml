@@ -9,3 +9,8 @@ psick::ruby::buildgems::packages:
   - 'g++'
   - 'ruby-dev'
   - 'zlib1g-dev'
+
+psick::firewall::iptables::service_name: 'netfilter-persistent'
+psick::firewall::iptables::service_name_v6: ~ 
+
+psick::puppet::pe_client_tools::package_separator: '_'

@@ -17,10 +17,9 @@ class psick::logs::rsyslog (
   String                   $config_file_template       = '',
   Array                    $server_ip                  = [],
 ) {
-
   $options_default = {
   }
-  $options_user=lookup('psick::logs::rsyslog::options', Hash, 'deep', {} )
+  $options_user=lookup('psick::logs::rsyslog::options', Hash, 'deep', {})
   $options=merge($options_default,$options_user)
 
   ::tp::install { 'rsyslog':

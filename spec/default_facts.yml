@@ -41,3 +41,54 @@ networking:
 icinga2_puppet_hostprivkey: /etc/puppetlabs/puppet/ssl/private_keys/lab.psick.io.pem
 icinga2_puppet_hostcert: /etc/puppetlabs/puppet/ssl/certs/lab.psick.io.pem
 icinga2_puppet_localcacert: /etc/puppetlabs/puppet/ssl/certs/ca.pem
+
+ec2_ami_id: ami-cdXXXXXX
+ec2_ami_launch-index: 0
+ec2_ami_manifest-path: myamis/lenny-XXXXXXX-x86-20101207.manifest.xml
+ec2_ancestor_ami-ids: ami-XXXXXXXX,ami-XXXXXXXXXX
+ec2_block_device-mapping_ami: sda1
+ec2_block_device-mapping_ephemeral0: sda2
+ec2_block_device-mapping_root: /dev/sda1
+ec2_block_device-mapping_swap: sda3
+ec2_hostname: ip-10-XXX-XXX-XXX.us-XXXXX-X.compute.internal
+ec2_instance_action: none
+ec2_instance_id: i-XXXXXX
+ec2_instance_type: m1.small
+ec2_kernel_id: aki-XXXXX
+ec2_local_hostname: ip-XX-XXX-XXX-XXX.us-XXX-X.compute.internal
+ec2_local_ipv4: 10.10.10.10
+ec2_placement_availability_zone: us-west-1b
+ec2_profile: default-paravirtual
+ec2_public_hostname: ec2-XX-XX-XX-XXX.us-west-1.compute.amazonaws.com
+ec2_public_ipv4: XXX.XXX.XXX.XXX
+ec2_ramdisk_id: ari-XXXXXX
+ec2_reservation_id: r-XXXX
+ec2_security_groups: default,application1,application2
+
+ssh:
+  dsa:
+    fingerprints:
+      sha1: SSHFP 2 1 081e0dd8e1f4239afe9af573caebf00ff87e06e7
+      sha256: SSHFP 2 2 fd3
+    key: AAAAB3NzaC1kc3MAAACBn5UAf/JN1nAgvHuacS
+    type: ssh-dss
+  ecdsa:
+    fingerprints:
+      sha1: SSHFP 3 1 532716146d270862036a65f850e348902840c8c2
+      sha256: SSHFP 3 2 332
+    key: AA
+    type: ecdsa-sha2-nistp256
+  ed25519:
+    fingerprints:
+      sha1: SSHFP 4 1 389f412523ad3d79339d802ee3067a53d6c979f2
+      sha256: SSHFP 4 2 55ddb5badb80593e414155ad026480ec945f087207be9bcdd1068bd6ffaffe11
+    key: AAAAC3NzaC1lZDI1NTE5AAAAIHI62zzMugeKNe7g8eXUWXvBJNNQaYtSt/ql2cjFtRAC
+    type: ssh-ed25519
+  rsa:
+    fingerprints:
+      sha1: SSHFP 1 1 a74c7ea7c9e8827819b7e1f104ad51a7f970d327
+      sha256: SSHFP 1 2 db8e6a3e37f1f105fe46fd1f4308a579bd76e428b80983c989441a513913e8a3
+    key: 1tZ3ruIK+a6VmL7oitbDr8iPQuUANxa0B4cqQaBBjwIFyHfr2dRwT/xoUfoxDnRPJm0=
+    type: ssh-rsa
+
+admin_user_key: 1tZ3ruIK+a6VmL7oitbDr8iPQuUANxa0B4cqQaBBjwIFyHfr2dRwT

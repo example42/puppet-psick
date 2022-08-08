@@ -12,22 +12,22 @@ class psick::firewall::iptables (
   String $config_file_path_v6,
   String $rules_template                 = 'psick/firewall/iptables.erb',
   String $rules_template_v6              = 'psick/firewall/iptables6.erb',
-  Array $extra_rules                     = [ ],
-  Array $extra_rules_v6                  = [ ],
-  Array $filter_rules                    = [ ],
-  Array $filter_rules_v6                 = [ ],
-  Array $nat_rules                       = [ ],
-  Array $nat_rules_v6                    = [ ],
-  Array $mangle_rules                    = [ ],
-  Array $mangle_rules_v6                 = [ ],
-  Array $allowall_interfaces             = [ ],
-  Array $allowall_interfaces_v6          = [ ],
-  Array $allow_tcp_ports                 = [ ],
-  Array $allow_tcp_ports_v6              = [ ],
-  Array $allow_udp_ports                 = [ ],
-  Array $allow_udp_ports_v6              = [ ],
-  Array $allow_ips                       = [ ],
-  Array $allow_ips_v6                    = [ ],
+  Array $extra_rules                     = [],
+  Array $extra_rules_v6                  = [],
+  Array $filter_rules                    = [],
+  Array $filter_rules_v6                 = [],
+  Array $nat_rules                       = [],
+  Array $nat_rules_v6                    = [],
+  Array $mangle_rules                    = [],
+  Array $mangle_rules_v6                 = [],
+  Array $allowall_interfaces             = [],
+  Array $allowall_interfaces_v6          = [],
+  Array $allow_tcp_ports                 = [],
+  Array $allow_tcp_ports_v6              = [],
+  Array $allow_udp_ports                 = [],
+  Array $allow_udp_ports_v6              = [],
+  Array $allow_ips                       = [],
+  Array $allow_ips_v6                    = [],
   Boolean $ssh_safe_mode                 = true,
   Boolean $ssh_safe_mode_v6              = true,
   Enum['DROP','ACCEPT'] $default_input      = 'DROP',
@@ -41,11 +41,10 @@ class psick::firewall::iptables (
   Boolean $manage_firewalld                 = true,
 
   Boolean $preserve_rules_on_restore        = false,
-  Boolean          $manage               = $::psick::manage,
-  Boolean          $noop_manage          = $::psick::noop_manage,
-  Boolean          $noop_value           = $::psick::noop_value,
+  Boolean          $manage               = $psick::manage,
+  Boolean          $noop_manage          = $psick::noop_manage,
+  Boolean          $noop_value           = $psick::noop_value,
 ) {
-
   if $manage {
     if $noop_manage {
       noop($noop_value)
@@ -79,7 +78,7 @@ class psick::firewall::iptables (
       }
     }
 
-    case $::osfamily {
+    case $facts['os']['family'] {
       'RedHat': {
         if $manage_firewalld {
           service { 'firewalld':
@@ -141,6 +140,5 @@ class psick::firewall::iptables (
     service { $service_name:
       * => $default_service_options + $os_service_options,
     }
-
   }
 }

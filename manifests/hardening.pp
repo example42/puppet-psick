@@ -45,12 +45,11 @@ class psick::hardening (
   String $securetty_class   = '',
   String $network_class     = '',
 
-  Boolean $manage           = $::psick::manage,
-  Boolean $noop_manage      = $::psick::noop_manage,
-  Boolean $noop_value       = $::psick::noop_value,
+  Boolean $manage           = $psick::manage,
+  Boolean $noop_manage      = $psick::noop_manage,
+  Boolean $noop_value       = $psick::noop_value,
 
 ) {
-
   if $manage {
     if $noop_manage {
       noop($noop_value)
@@ -87,6 +86,5 @@ class psick::hardening (
     if $network_class != '' {
       contain $network_class
     }
-
   }
 }

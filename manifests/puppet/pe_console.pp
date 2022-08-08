@@ -1,9 +1,9 @@
 # This class manages tp::test for PE Console
 #
 class psick::puppet::pe_console (
-  Boolean $manage                  = $::psick::manage,
-  Boolean $noop_manage             = $::psick::noop_manage,
-  Boolean $noop_value              = $::psick::noop_value,
+  Boolean $manage                  = $psick::manage,
+  Boolean $noop_manage             = $psick::noop_manage,
+  Boolean $noop_value              = $psick::noop_value,
 ) {
   if $manage {
     if $noop_manage {

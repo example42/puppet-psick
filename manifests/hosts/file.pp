@@ -10,14 +10,14 @@
 class psick::hosts::file (
   String $template  = 'psick/hosts/file/hosts.erb',
 
-  Optional[Stdlib::Compat::Ip_address] $ipaddress = $::psick::primary_ip,
-  Variant[Undef,String] $domain = $::domain,
-  String $hostname              = $::hostname,
+  Optional[Stdlib::Compat::Ip_address] $ipaddress = $psick::primary_ip,
+  Variant[Undef,String] $domain = $facts['networking']['domain'],
+  String $hostname              = $facts['networking']['hostname'],
   Array $extra_hosts            = [],
 
-  Boolean $manage               = $::psick::manage,
-  Boolean $noop_manage          = $::psick::noop_manage,
-  Boolean $noop_value           = $::psick::noop_value,
+  Boolean $manage               = $psick::manage,
+  Boolean $noop_manage          = $psick::noop_manage,
+  Boolean $noop_value           = $psick::noop_value,
 ) {
   if $manage {
     if $noop_manage {

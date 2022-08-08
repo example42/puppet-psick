@@ -1,0 +1,18 @@
+#!/bin/sh -e
+# File Managed by Puppet
+#
+# This script is executed at the end of each multiuser runlevel.
+# Make sure that the script will "exit 0" on success or any other
+# value on error.
+#
+# With Puppet is managed the content of <%= $psick::rclocal::config_dir %>
+
+for command in $(ls -v1 <%= $psick::rclocal::config_dir %> ) ; do
+    <%= $psick::rclocal::config_dir %>/$command
+done
+
+<% if $::facts['os']['family'] == 'RedHat' { -%>
+touch /var/lock/subsys/local
+<% } else { -%>
+exit 0
+<% } -%>

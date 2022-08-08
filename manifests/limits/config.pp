@@ -21,9 +21,9 @@ define psick::limits::config (
   Hash                     $file_params    = {},
   Hash                     $options        = {},
 ) {
-  include ::psick::limits
+  include psick::limits
 
-  $file_path = pick($path,"${::psick::limits::limits_dir_path}/${title}.conf")
+  $file_path = pick($path,"${psick::limits::limits_dir_path}/${title}.conf")
   $file_params_default = {
     owner   => 'root',
     group   => 'root',
@@ -34,6 +34,4 @@ define psick::limits::config (
   file { $file_path:
     * => $file_params_default + $file_params,
   }
-
 }
-

@@ -11,7 +11,7 @@ define psick::services::init_script (
   Optional[String] $epp = undef,
   Optional[String] $service_ensure = undef,
   Variant[Undef,Boolean,String] $service_enable = undef,
-){
+) {
   $manage_content = tp_content($content, $template, $epp)
   file { "/etc/init.d/${title}":
     ensure  => $ensure,

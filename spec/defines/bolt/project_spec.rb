@@ -10,7 +10,11 @@ describe 'psick::bolt::project' do
     context "on #{os}" do
       let(:facts) { os_facts }
 
-      it { is_expected.to compile }
+      if os.include?('windows')
+        it { is_expected.to compile.and_raise_error(/.*/) }
+      else
+        it { is_expected.to compile.with_all_deps }
+      end
     end
   end
 end

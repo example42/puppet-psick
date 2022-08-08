@@ -1,11 +1,10 @@
+---
 psick::firewall::iptables::package_name: 'iptables-services'
 
 psick::hardening::services::services_default:
   - 'avahi-daemon'
   - 'NetworkManager'
   - 'cups'
-
-psick::icingaweb2::php_fpm_name: 'rh-php71-php-fpm'
 
 psick::packages::packages_default:
   - 'lynx'
@@ -17,3 +16,5 @@ psick::packages::packages_default:
   - 'sg3_utils'
   - 'lsscsi'
 
+psick::puppet::pe_client_tools::repo_path: 'el/7/PC1/x86_64'
+psick::puppet::pe_client_tools::package_suffix: '.el7.x86_64.rpm'

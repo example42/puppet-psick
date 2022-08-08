@@ -26,14 +26,13 @@
 #   and resources are always applied.
 #
 class psick::kmod (
-  Boolean         $manage                   = $::psick::manage,
+  Boolean         $manage                   = $psick::manage,
 #  Hash            $modules                  = {},
   Enum['first','hash','deep'] $modules_merge_behaviour = 'first',
-  Boolean         $noop_manage              = $::psick::noop_manage,
-  Boolean         $noop_value               = $::psick::noop_value,
+  Boolean         $noop_manage              = $psick::noop_manage,
+  Boolean         $noop_value               = $psick::noop_value,
 
 ) {
-
   if $manage {
     if $noop_manage {
       noop($noop_value)

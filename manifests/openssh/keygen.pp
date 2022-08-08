@@ -13,7 +13,6 @@ define psick::openssh::keygen (
   Optional[String] $options  = undef,
   Boolean $create_ssh_dir    = false,
 ) {
-
   $user_real = $user ? {
     undef   => $name,
     default => $user,
@@ -63,6 +62,4 @@ define psick::openssh::keygen (
       before => Exec["ssh_keygen-${name}"],
     }
   }
-
 }
-

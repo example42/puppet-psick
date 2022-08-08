@@ -6,41 +6,41 @@ else
   declare -r pre_command=''
 fi
 
-if [[ "x${PT_git_source}" != "x" ]]; then
-  if [ -d ${PT_destination} ]; then
+if [[ "${PT_git_source}" != "" ]]; then
+  if [ -d "${PT_destination}" ]; then
     command -v git &>/dev/null || exit 1
-    cd $PT_destination
+    cd "$PT_destination"
     git pull
   else
-    git clone $PT_git_source $PT_destination
+    git clone "$PT_git_source" "$PT_destination"
   fi
 fi
 
-if [[ "x${PT_zip_source}" != "x" ]]; then
-  if [ ! -d $PT_destination ]; then
+if [[ "${PT_zip_source}" != "" ]]; then
+  if [ ! -d "$PT_destination" ]; then
     command -v wget &>/dev/null || { echo "command wget not found!" && exit 1; }
     command -v unzip &>/dev/null || { echo "command unzip not found!" && exit 1; }
-    mkdir -p $PT_destination
-    cd $PT_destination
-    TMPFILE=`mktemp`
-    wget "${PT_zip_source}" -O $TMPFILE
-    unzip -d $PT_destination $TMPFILE
-    rm -f $TMPFILE
+    mkdir -p "$PT_destination"
+    cd "$PT_destination"
+    TMPFILE=$(mktemp)
+    wget "${PT_zip_source}" -O "$TMPFILE"
+    unzip -d "$PT_destination" "$TMPFILE"
+    rm -f "$TMPFILE"
   else
     echo "${PT_destination} exists. Not changing it. Remove it to unzip ${PT_zip_source} again"
   fi
 fi
 
 if [[ "x${PT_tgz_source}" != "x" ]]; then
-  if [ ! -d $PT_destination ]; then
+  if [ ! -d "$PT_destination" ]; then
     command -v wget &>/dev/null || { echo "command wget not found!" && exit 1; }
     command -v tar &>/dev/null || { echo "command tar not found!" && exit 1; }
-    mkdir -p $PT_destination
-    cd $PT_destination
-    TMPFILE=`mktemp`
-    wget "${PT_tgz_source}" -O $TMPFILE
-    tar -zvxf $TMPFILE .
-    rm -f $TMPFILE
+    mkdir -p "$PT_destination"
+    cd "$PT_destination"
+    TMPFILE=$(mktemp)
+    wget "${PT_tgz_source}" -O "$TMPFILE"
+    tar -zvxf "$TMPFILE" .
+    rm -f "$TMPFILE"
   else
     echo "${PT_destination} exists. Not changing it. Remove it to unzip ${PT_tgz_source} again"
   fi
@@ -54,12 +54,12 @@ fi
 if [[ "x${PT_puppet_source_tgz}" != "x" ]]; then
   command -v puppet &>/dev/null || { echo "command puppet not found!" && exit 1; }
   command -v tar &>/dev/null || { echo "command tar not found!" && exit 1; }
-  TMPFILE=`mktemp`
+  TMPFILE=$(mktemp)
   puppet apply -e "file { \"${TMPFILE}\": source => \"${PT_puppet_source_tgz}\", ensure => present }"
-  mkdir -p $PT_destination
-  cd $PT_destination
-  tar -zvxf $TMPFILE .
-  rm -f $TMPFILE
+  mkdir -p "$PT_destination"
+  cd "$PT_destination"
+  tar -zvxf "$TMPFILE" .
+  rm -f "$TMPFILE"
 fi
 
 declare puppet_options
@@ -72,12 +72,12 @@ puppet_options="--detailed-exitcodes"
 [[ -n "${PT_modulepath}" ]] && puppet_options="${puppet_options} --modulepath ${PT_modulepath}"
 readonly puppet_options
 
-$pre_command /opt/puppetlabs/puppet/bin/puppet apply -t $puppet_options $PT_manifest
+$pre_command /opt/puppetlabs/puppet/bin/puppet apply -t "$puppet_options" "$PT_manifest"
 
 
 result=$?
 # Puppet exit codes 0 and 2 both imply an error less run
-if [ "x$result" == "x0" ] || [ "x$result" == "x2" ]; then
+if [ "$result" == "0" ] || [ "$result" == "2" ]; then
   exit 0
 else
   exit 1

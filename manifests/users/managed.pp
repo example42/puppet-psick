@@ -31,11 +31,12 @@ define psick::users::managed (
   Array $groups           = [],
   Boolean $manage_group   = true,
   String $membership      = 'minimum',
-  String $home            = 'absent',
+  Optional[String] $home              = undef,
   Optional[Integer] $password_max_age = undef,
   Optional[Integer] $password_min_age = undef,
   Boolean $managehome     = true,
   String $homedir_mode    = '0750',
+  Boolean $homedir_recurse = false,
   Optional[String] $homedir_source = undef,
   String $sshkey          = 'absent',
   String $authorized_keys_source = '',
@@ -50,17 +51,22 @@ define psick::users::managed (
   Hash $sshkey_content           = {},
   Array $sshkeys_content         = [],
   Boolean $generate_ssh_keypair  = false,
-){
-
-  $real_homedir = $home ? {
-    'absent' => $title ? {
-      'root'  => '/root',
-      default => "/home/${title}",
-    },
-    default  => $home
+) {
+  $default_home_base = $facts['kernel'] ? {
+    'windows' => 'C:\Users\\',
+    'Darwin'  => '/Users/',
+    default   => '/home/',
   }
 
-  $real_managehome = $::osfamily ? {
+  $real_homedir = $home ? {
+    undef  => $title ? {
+      'root'  => '/root',
+      default => "${default_home_base}${title}",
+    },
+    default => $home,
+  }
+
+  $real_managehome = $facts['kernel'] ? {
     'Darwin' => undef,
     default  => $managehome,
   }
@@ -159,7 +165,6 @@ define psick::users::managed (
     }
   }
 
-
   if $known_hosts_source != '' {
     file { "${real_homedir}/.ssh/known_hosts":
       mode   => '0600',
@@ -189,18 +194,15 @@ define psick::users::managed (
         owner   => $name,
         mode    => undef,
         source  => $homedir_source,
-        recurse => $homedir_source ? {
-          undef   => undef,
-          default => true,
-        },
+        recurse => $homedir_recurse,
       }
       case $gid {
         'absent','uid': {
           $file_group_option = {
-            group => $::osfamily ? {
+            group => $facts['os']['family'] ? {
               'Suse'  => 'users',
               default => $name,
-            }
+            },
           }
         }
         default: {
@@ -210,13 +212,13 @@ define psick::users::managed (
         }
       }
     }
-    file{ $real_homedir:
+    file { $real_homedir:
       * => $file_options + $file_group_option,
     }
   }
 
   if $uid != 'absent' {
-    User[$name]{
+    User[$name] {
       uid => $uid,
     }
   }
@@ -234,7 +236,7 @@ define psick::users::managed (
       $real_gid = $gid
     }
     if $real_gid {
-      User[$name]{
+      User[$name] {
         gid => $real_gid,
       }
     }
@@ -243,20 +245,20 @@ define psick::users::managed (
   if $name != 'root' {
     if $uid == 'absent' {
       if $manage_group and ($ensure == 'absent') {
-        group{$name:
-        ensure => absent,
+        group { $name:
+          ensure => absent,
         }
-        case $::operatingsystem {
-        'OpenBSD': {
-          Group[$name]{
-          before => User[$name],
+        case $facts['os']['name'] {
+          'OpenBSD': {
+            Group[$name] {
+              before => User[$name],
+            }
           }
-        }
-        default: {
-          Group[$name]{
-          require => User[$name],
+          default: {
+            Group[$name] {
+              require => User[$name],
+            }
           }
-        }
         }
       }
     } else {
@@ -266,26 +268,26 @@ define psick::users::managed (
           allowdupe => false,
         }
         if $real_gid {
-          Group[$name]{
+          Group[$name] {
             gid => $real_gid,
           }
         }
         if $ensure == 'absent' {
-          case $::operatingsystem {
-          'OpenBSD': {
-            Group[$name]{
-            before => User[$name],
+          case $facts['os']['name'] {
+            'OpenBSD': {
+              Group[$name] {
+                before => User[$name],
+              }
             }
-          }
-          default: {
-            Group[$name]{
-            require => User[$name],
+            default: {
+              Group[$name] {
+                require => User[$name],
+              }
             }
-          }
           }
         } else {
-          Group[$name]{
-          before => User[$name],
+          Group[$name] {
+            before => User[$name],
           }
         }
       }
@@ -293,14 +295,14 @@ define psick::users::managed (
   }
   if $ensure == 'present' {
     if $sshkey != 'absent' {
-      User[$name]{
+      User[$name] {
         before => Class[$sshkey],
       }
       include $sshkey
     }
 
     if $password != 'absent' {
-      case $::operatingsystem {
+      case $facts['os']['name'] {
         'OpenBSD': {
           exec { "setpass ${name}":
             unless  => "grep -q '^${name}:${password}:' /etc/master.passwd",
@@ -319,7 +321,7 @@ define psick::users::managed (
               fail('To use unencrypted passwords you have to define a variable \$password_salt to an 8 character salt for passwords!')
             }
           }
-          User[$name]{
+          User[$name] {
             password => $real_password,
           }
         }
@@ -327,4 +329,3 @@ define psick::users::managed (
     }
   }
 }
-

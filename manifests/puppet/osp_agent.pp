@@ -13,11 +13,10 @@ class psick::puppet::osp_agent (
   Hash $settings              = {},
   String $config_template     = 'psick/generic/inifile_with_stanzas.erb',
 
-  Boolean $manage             = $::psick::manage,
-  Boolean $noop_manage        = $::psick::noop_manage,
-  Boolean $noop_value         = $::psick::noop_value,
+  Boolean $manage             = $psick::manage,
+  Boolean $noop_manage        = $psick::noop_manage,
+  Boolean $noop_value         = $psick::noop_value,
 ) {
-
   if $manage {
     if $noop_manage {
       noop($noop_value)
@@ -42,9 +41,11 @@ class psick::puppet::osp_agent (
       }
     }
 
-    file { '/etc/cron.d/puppet-agent':
-      ensure  => $cronjob_ensure,
-      content => "PATH=/opt/puppetlabs/puppet/bin:/usr/sbin:/usr/bin\n${cronjob_schedule} root puppet agent -t"
+    if $facts['os']['kernel'] != 'windows' {
+      file { '/etc/cron.d/puppet-agent':
+        ensure  => $cronjob_ensure,
+        content => "PATH=/opt/puppetlabs/puppet/bin:/usr/sbin:/usr/bin\n${cronjob_schedule} root puppet agent -t",
+      }
     }
   }
 }

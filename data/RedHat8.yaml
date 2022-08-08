@@ -1,0 +1,10 @@
+---
+psick::ruby::buildgems::packages:
+  - 'make'
+  - 'cmake'
+  - 'gcc'
+  - 'gcc-c++'
+  - 'zlib-devel'
+
+psick::puppet::pe_client_tools::repo_path: 'el/8/PC1/x86_64'
+psick::puppet::pe_client_tools::package_suffix: '.el8.x86_64.rpm'

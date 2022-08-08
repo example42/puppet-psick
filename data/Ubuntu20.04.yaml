@@ -1,0 +1,6 @@
+---
+psick::puppet::pe_client_tools::repo_path: 'deb/focal/PC1'
+psick::puppet::pe_client_tools::package_suffix: 'focal_amd64.deb'
+
+psick::network::use_netplan: true
+psick::network::service_restart_exec: 'netplan apply'

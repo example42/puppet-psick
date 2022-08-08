@@ -50,7 +50,6 @@ define psick::php::module (
   Hash $package_options = {},
   String $prefix        = '',
 ) {
-
   $real_module_prefix = $prefix ? {
     ''      => $psick::php::module_prefix,
     default => $prefix,

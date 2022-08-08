@@ -5,7 +5,6 @@ define psick::tools::gpgkey (
   String $checksum                  = '',
   Pattern[/present|absent/] $ensure = present,
 ) {
-
   if !defined(File[$rpm_gpg_dir_path]) {
     file { $rpm_gpg_dir_path:
       ensure => directory,
@@ -36,5 +35,4 @@ define psick::tools::gpgkey (
       }
     }
   }
-
 }

@@ -1,6 +1,6 @@
-# Class ::psick::timezone
+# Class ::psick::::timezone
 # Derived from https://github.com/example42/puppet-timezone
-# 
+#
 # This class manages the System's timezone
 #
 # Parameters:
@@ -22,43 +22,42 @@
 #   The template to use for the timezone file.
 #   Default is autocalculated for each supported OS
 #
-class psick::timezone(
-  String $timezone             = $::psick::time::timezone,
+class psick::timezone (
+  String $timezone             = $psick::timezone,
   String $timezone_windows     = '',
   Boolean $hw_utc              = false,
   String $set_timezone_command = '',
-  String $template             = "psick/timezone/timezone-${::operatingsystem}",
+  String $template             = "psick/timezone/timezone-${facts['os']['name']}",
 
-  Boolean          $manage               = $::psick::manage,
-  Boolean          $noop_manage          = $::psick::noop_manage,
-  Boolean          $noop_value           = $::psick::noop_value,
+  Boolean          $manage               = $psick::manage,
+  Boolean          $noop_manage          = $psick::noop_manage,
+  Boolean          $noop_value           = $psick::noop_value,
 
 ) {
-
   if $manage {
     if $noop_manage {
       noop($noop_value)
     }
 
-    case $::osfamily {
+    case $facts['os']['family'] {
       'RedHat' : {
-        $redhat_command = $::operatingsystemmajrelease ? {
+        $redhat_command = $facts['os']['release']['major'] ? {
           /7/     => "timedatectl set-timezone ${timezone}",
           default => 'tzdata-update',
         }
       }
       'Debian' : {
-        $debian_command = $::operatingsystemmajrelease ? {
+        $debian_command = $facts['os']['release']['major'] ? {
           /(16.04|16.10|17.04|17.10|18.04|18.10)/ => "timedatectl set-timezone ${timezone}",
           /(9)/ => "ln -fs /usr/share/zoneinfo/${timezone} /etc/localtime ; dpkg-reconfigure -f noninteractive tzdata",
           default                                 => 'dpkg-reconfigure -f noninteractive tzdata',
         }
       }
-      default: { }
+      default: {}
     }
 
     $real_set_timezone_command = $set_timezone_command ? {
-      ''      => $::operatingsystem ? {
+      ''      => $facts['os']['name'] ? {
         /(?i:RedHat|Centos|Scientific|Fedora|Amazon|Linux)/ => $redhat_command,
         /(?i:Ubuntu|Debian|Mint|Raspbian)/                  => $debian_command,
         /(?i:SLES|OpenSuSE)/                                => "zic -l ${timezone}",
@@ -71,7 +70,7 @@ class psick::timezone(
       default => $set_timezone_command,
     }
 
-    $config_file = $::operatingsystem ? {
+    $config_file = $facts['os']['name'] ? {
       /(?i:RedHat|Centos|Scientific|Fedora|Amazon|Linux)/ => '/etc/sysconfig/clock',
       /(?i:Ubuntu|Debian|Mint)/                           => '/etc/timezone',
       /(?i:SLES|OpenSuSE)/                                => '/etc/sysconfig/clock',
@@ -81,7 +80,7 @@ class psick::timezone(
       default                                             => '',
     }
 
-    $config_file_group = $::operatingsystem ? {
+    $config_file_group = $facts['os']['name'] ? {
       /(?i:FreeBSD|OpenBSD|Darwin)/ => 'wheel',
       default                       => 'root',
     }
@@ -95,7 +94,7 @@ class psick::timezone(
         group   => $config_file_group,
         content => template($template),
       }
-      if $::hardwareisa != 'sparc' and $::kernel != 'SunOS' {
+      if $facts['processors']['isa'] != 'sparc' and $facts['kernel'] != 'SunOS' {
         exec { 'set-timezone':
           command     => $real_set_timezone_command,
           path        => $::path,

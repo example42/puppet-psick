@@ -8,13 +8,12 @@ class psick::puppet (
   Hash             $external_facts  = {},
 
   String           $facts_file_path = '',
-  Regexp           $facts_file_exclude_regex = /^(.*uptime.*|system_uptime|_timestamp|memoryfree.*|swapfree.*|puppet_inventory_metadata|last_run.*|load_averages.*|memory.*|mountpoints.*|physical_volumes.*|volume_groups.*)$/,
+  Regexp           $facts_file_exclude_regex = /^(.*uptime.*|system_uptime|_timestamp|memoryfree.*|swapfree.*|puppet_inventory_metadata|last_run.*|load_averages.*|memory.*|mountpoints.*|physical_volumes.*|volume_groups.*)$/, # lint:ignore:140chars
 
-  Boolean          $manage               = $::psick::manage,
-  Boolean          $noop_manage          = $::psick::noop_manage,
-  Boolean          $noop_value           = $::psick::noop_value,
+  Boolean          $manage               = $psick::manage,
+  Boolean          $noop_manage          = $psick::noop_manage,
+  Boolean          $noop_value           = $psick::noop_value,
 ) {
-
   if $manage {
     if $noop_manage {
       noop($noop_value)

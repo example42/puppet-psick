@@ -1,2 +1,5 @@
 ---
 psick::network::use_netplan: true
+psick::network::service_restart_exec: 'netplan apply'
+psick::puppet::pe_client_tools::repo_path: 'deb/bionic/PC1'
+psick::puppet::pe_client_tools::package_suffix: 'bionic_amd64.deb'

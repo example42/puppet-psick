@@ -12,9 +12,9 @@ class psick::hardening::services (
   Array $services_to_remove,
   Array $services_default,
   Boolean $remove_default_services = true,
-  Boolean $manage                  = $::psick::manage,
-  Boolean $noop_manage             = $::psick::noop_manage,
-  Boolean $noop_value              = $::psick::noop_value,
+  Boolean $manage                  = $psick::manage,
+  Boolean $noop_manage             = $psick::noop_manage,
+  Boolean $noop_value              = $psick::noop_value,
 ) {
   if $manage {
     if $noop_manage {

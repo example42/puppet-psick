@@ -5,9 +5,9 @@ class psick::puppet::pe_server (
   Boolean $remove_global_hiera_yaml  = false,
   String  $extra_environment_path    = '',
   Hash    $extra_environment_files   = {},
-  Boolean $manage                    = $::psick::manage,
-  Boolean $noop_manage               = $::psick::noop_manage,
-  Boolean $noop_value                = $::psick::noop_value,
+  Boolean $manage                    = $psick::manage,
+  Boolean $noop_manage               = $psick::noop_manage,
+  Boolean $noop_value                = $psick::noop_value,
   Hash    $extra_authorization_rules = {},
 ) {
   if $manage {

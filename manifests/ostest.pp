@@ -3,10 +3,10 @@
 #
 class psick::ostest (
   Boolean $notify_enable = false,
-  Hash $tp_profiles_hash = {},
-  Boolean $manage        = $::psick::manage,
-  Boolean $noop_manage   = $::psick::noop_manage,
-  Boolean $noop_value    = $::psick::noop_value,
+  Hash $tp_install_hash  = {},
+  Boolean $manage        = $psick::manage,
+  Boolean $noop_manage   = $psick::noop_manage,
+  Boolean $noop_value    = $psick::noop_value,
 ) {
   if $manage {
     if $noop_manage {
@@ -17,8 +17,8 @@ class psick::ostest (
       notify { 'ostest role': }
     }
 
-    $tp_profiles_hash.each |$k,$v| {
-      class { "tp_profile::${k}":
+    $tp_install_hash.each |$k,$v| {
+      tp::install { $k:
         * => $v,
       }
     }

@@ -37,16 +37,14 @@ class psick::chruby (
   Optional[String] $sources_root    = undef,
   Optional[String] $download_root   = undef,
 
-  Boolean         $manage           = $::psick::manage,
-  Boolean         $auto_prereq      = $::psick::auto_prereq,
-  Boolean         $noop_manage      = $::psick::noop_manage,
-  Boolean         $noop_value       = $::psick::noop_value,
+  Boolean         $manage           = $psick::manage,
+  Boolean         $auto_prereq      = $psick::auto_prereq,
+  Boolean         $noop_manage      = $psick::noop_manage,
+  Boolean         $noop_value       = $psick::noop_value,
 
 ) {
-
   # We declare resources only if $manage = true
   if $manage {
-
     if $noop_manage {
       noop($noop_value)
     }
@@ -73,7 +71,7 @@ class psick::chruby (
       cwd     => "${sources_dest}/chruby-${version}",
       command => 'make install',
       creates => '/usr/local/share/chruby',
-      path    => [ '/sbin', '/usr/sbin', '/bin', '/usr/bin' ],
+      path    => ['/sbin', '/usr/sbin', '/bin', '/usr/bin'],
     }
 
     file { '/etc/profile.d/chruby.sh':

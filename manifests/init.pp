@@ -33,8 +33,6 @@
 #                   If true: noop metaparamenter is set to true, resources are not applied
 #                   If false: noop metaparameter is set to false, and any eventual noop
 #                   setting is overridden: resources are always applied.
-# @param is_cluster Defines if the server is a cluster member. Some PSICK profiles
-#   may use this value.
 # @param primary_ip The server primary IP address. Default value is
 #   the value of the $::networking['ip'] fact.
 # @param mgmt_interface The management interface of the server. Default value is
@@ -63,7 +61,7 @@
 #   Consider it as a catch all way to set on Hiera any resource of any type.
 #   You can always specify for each resource type the default parameters via
 #   the psick::resources_defaults Hiera key.
-#   See below for a sample usage. 
+#   See below for a sample usage.
 #   This is not actually a class parameter, but a Hiera key looked up using the
 #   merge behaviour configured via $resources_merge_behaviour
 # @param resources_merge_behaviour Defines the lookup method to use to
@@ -117,7 +115,6 @@ class psick (
   Boolean $noop_value                              = false,
 
   # General network settings
-  Boolean $is_cluster = false,
   Optional[Stdlib::Compat::Ip_address] $primary_ip = fact('networking.ip'),
   Optional[String] $mgmt_interface                 = fact('networking.primary'),
   Optional[String] $timezone                       = undef,
@@ -144,7 +141,6 @@ class psick (
   Enum['first','hash','deep'] $osfamily_resources_defaults_merge_behaviour = 'deep',
 
 ) {
-
   if $noop_mode != undef {
     fail('psick::noop_mode parameter has been deprecated. Use $noop_manage and $noop_manage instead')
   }
@@ -192,23 +188,22 @@ class psick (
       netmask   => $facts['networking']['interfaces'][$mgmt_interface]['netmask'],
       network   => $facts['networking']['interfaces'][$mgmt_interface]['network'],
       hostname  => $facts['networking']['fqdn'],
-    }
+    },
   }
   $interfaces = deep_merge($interfaces_default, $interfaces_hash)
-
 
   # PSICK PRE, BASE CLASSES AND PROFILES + OPTIONAL FIRSTRUN MODE
   # The classes included here manage PSICK classification and
   # relevant class ordering
   if $facts['firstrun'] == 'done' or $enable_firstrun == false {
-    contain ::psick::pre
-    contain ::psick::base
-    contain ::psick::profiles
+    contain psick::pre
+    contain psick::base
+    contain psick::profiles
     if $force_ordering {
       Class['psick::pre'] -> Class['psick::base'] -> Class['psick::profiles']
     }
   } else {
-    contain ::psick::firstrun
+    contain psick::firstrun
     notify { "This catalog should be applied only at the first Puppen run\n": }
   }
 
@@ -225,12 +220,11 @@ class psick (
     create_resources( $k, $v, $resource_defaults )
   }
 
-
   # Custom Resources management
   $osfamily_resources = lookup('psick::osfamily_resources',Hash,$osfamily_resources_merge_behaviour,{})
   $osfamily_resources_defaults = lookup('psick::osfamily_resources_defaults',Hash,$osfamily_resources_defaults_merge_behaviour,{})
   $osfamily_resources.each |$k,$v| {
-    if $::osfamily == $k {
+    if $facts['os']['family'] == $k {
       if has_key($osfamily_resources_defaults, $k) {
         $os_defaults = $osfamily_resources_defaults[$k]
       } else {
@@ -240,5 +234,4 @@ class psick (
       create_resources( $k, $v, $os_defaults )
     }
   }
-
 }

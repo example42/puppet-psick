@@ -1,0 +1,7 @@
+# Interface <%= $params['interface'] %> managed by Puppet
+# <%= $params['description'] %>
+<%= $params['header'] -%>
+<% $params['settings'].each | $k,$v | { -%>
+<%= $k %>=<%= $v %>
+<% } -%>
+<%= $params['footer'] -%>

@@ -5,18 +5,37 @@ fixtures:
     "reboot": "https://github.com/puppetlabs/puppetlabs-reboot.git"
     "concat": "https://github.com/puppetlabs/puppetlabs-concat.git"
     "tp": "https://github.com/example42/puppet-tp"
-    "tp_profile": "https://github.com/example42/puppet-tp_profile"
+    "psick_profile": "https://github.com/example42/psick_profile.git"
     "tinydata": "https://github.com/example42/tinydata"
-    "prometheus": "https://github.com/voxpupuli/puppet-prometheus"
     "systemd": "https://github.com/camptocamp/puppet-systemd"
     "archive": "https://github.com/voxpupuli/puppet-archive"
     "noop": "https://github.com/trlinkin/trlinkin-noop"
     "rbenv": "https://github.com/justindowning/puppet-rbenv"
     "hieradata": "https://github.com/example42/psick-hieradata"
     "yumrepo": "https://github.com/puppetlabs/puppetlabs-yumrepo_core"
+    "sshkeys": "https://github.com/puppetlabs/puppetlabs-sshkeys_core"
     "host": "https://github.com/puppetlabs/puppetlabs-host_core"
-    "icinga2": "https://github.com/icinga/puppet-icinga2"
-    "icingaweb2": "https://github.com/icinga/puppet-icingaweb2"
     "alternatives": "https://github.com/voxpupuli/puppet-alternatives"
-    "archives": "https://github.com/voxpupuli/puppet-alternatives"
     "augeas": "https://github.com/puppetlabs/puppetlabs-augeas_core"
+    "inifile": "https://github.com/puppetlabs/puppetlabs-inifile"
+    "chocolatey": "https://github.com/puppetlabs/puppetlabs-chocolatey"
+    "homebrew": "https://github.com/michaelw/puppet-homebrew"
+    "registry": "https://github.com/puppetlabs/puppetlabs-registry"
+
+  forge_modules:
+    "r10k": 'puppet-r10k'
+    "puppetserver": 'puppet/puppetserver'
+    "puppetserver_gem": 'puppetlabs/puppetserver_gem'
+    "firewall": 'puppetlabs/firewall'
+    "puppetdb": 'puppetlabs/puppetdb'
+    "hocon": 'puppetlabs/hocon' # psick::puppet::foss_server_metrics
+    "augeasproviders_sysctl": 'herculesteam-augeasproviders_sysctl' # psick::sysctl::set
+    "augeasproviders_core": 'herculesteam-augeasproviders_core' # psick::sysctl::set
+    "cron": 'puppetlabs/cron_core' # psick::puppet::foss_master
+    "windows_env": 'puppet/windows_env' # psick::windows::envs
+    "gpg_key": 'treydock-gpg_key' # psick::tools::gpgkey
+    "mount_core": 'puppetlabs/mount_core' # psick::nfs::mount
+    "postgresql": 'puppetlabs/postgresql' # psick::puppet::foss_master
+    "apt": 'puppetlabs/apt' # postgres -  psick::puppet::foss_master
+    "domain_membership": 'trlinkin/domain_membership' # psick::users::ad
+    "sssd": 'nwaller-sssd' # psick::users::ad

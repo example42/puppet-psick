@@ -1,0 +1,6 @@
+---
+psick::rclocal::config_file: '/etc/rc.local'
+psick::rclocal::config_dir: '/etc/rc.local.d'
+psick::rclocal::template: 'psick/rclocal/rc.local.epp'
+psick::rclocal::scripts: {}
+psick::rclocal::service_name: 'rc-local.service'

@@ -28,13 +28,12 @@ class psick::proxy (
   Boolean $configure_pip           = true,
   Boolean $configure_system        = true,
   Boolean $configure_repo          = true,
-  Optional[Hash] $proxy_server     = $::psick::servers['proxy'],
+  Optional[Hash] $proxy_server     = $psick::servers['proxy'],
 
-  Boolean $manage                  = $::psick::manage,
-  Boolean $noop_manage             = $::psick::noop_manage,
-  Boolean $noop_value              = $::psick::noop_value,
+  Boolean $manage                  = $psick::manage,
+  Boolean $noop_manage             = $psick::noop_manage,
+  Boolean $noop_value              = $psick::noop_value,
 ) {
-
   if $manage {
     if $noop_manage {
       noop($noop_value)
@@ -90,7 +89,7 @@ class psick::proxy (
       }
     }
     if $configure_repo and !empty($proxy_server) {
-      case $::osfamily {
+      case $facts['os']['family'] {
         'RedHat': {
           ini_setting { 'proxy_yum':
             ensure            => $ensure,
@@ -127,7 +126,7 @@ class psick::proxy (
         }
         default: {
           notify { 'Proxy':
-            message => "No proxy configuration available for ${::osfamily} repos",
+            message => "No proxy configuration available for ${facts['os']['family']} repos",
           }
         }
       }

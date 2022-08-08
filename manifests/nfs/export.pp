@@ -14,7 +14,6 @@ define psick::nfs::export (
 
   Boolean $use_exportsd         = false,
 ) {
-
   if $options != '' {
     $auto_content = "${share} ${guest}(${options})\n"
   } else {
@@ -51,13 +50,14 @@ define psick::nfs::export (
   if !defined(Exec['exportfs -a']) {
     exec { 'exportfs -a':
       refreshonly => true,
+      path        => $facts['path'],
     }
   }
 
   if !defined(Exec["mkdir -p ${share}"]) {
     exec { "mkdir -p ${share}":
       creates => $share,
+      path    => $facts['path'],
     }
   }
-
 }

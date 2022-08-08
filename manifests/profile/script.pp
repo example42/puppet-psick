@@ -11,8 +11,8 @@ define psick::profile::script (
   String $config_dir               = '/etc/profile.d',
   String $owner                    = 'root',
   String $group                    = 'root',
-  String $mode                     = '0755' ) {
-
+  String $mode                     = '0755'
+) {
   $safe_name = regsubst($name, '/', '_', 'G')
   $manage_file_source = $source ? {
     ''        => undef,
@@ -23,6 +23,8 @@ define psick::profile::script (
     $manage_file_content = $content
   } elsif !empty($template) {
     $manage_file_content = psick::template($template)
+  } else {
+    $manage_file_content = undef
   }
 
   file { "profile_${safe_name}":
@@ -39,7 +41,7 @@ define psick::profile::script (
     exec { "profile_${safe_name}":
       command     => "sh ${config_dir}/${safe_name}.sh",
       refreshonly => true,
-      subscribe   => File[ "profile_${safe_name}" ],
+      subscribe   => File["profile_${safe_name}"],
       path        => '/usr/bin:/bin:/usr/sbin:/sbin',
     }
   }
