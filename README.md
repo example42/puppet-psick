@@ -1,16 +1,14 @@
-# PSICK: The Infrastructure Puppet module
+# PSICK: Classify and manage with style
 
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/217fe49678574788b28ef3fc71c6fa47)](https://www.codacy.com/gh/example42/puppet-psick/dashboard?utm_source=github.com&utm_medium=referral&utm_content=example42/puppet-psick&utm_campaign=Badge_Grade)
 
-This is the PSICK (Puppet Systems Infrastructure Construction Kit) module.
+This is the PSICK (Puppet Systems Infrastructure Construction Kit) module, a module than alone accomplishes a good slice of what you need to do with Puppet.
 
-An **Infrastructure module** to manage most of what you need to manage with Puppet.
+Example42's psick Puppet module provides the following features, all of which are optional:
 
-The psick module provides the following features:
-
--   [Classification](docs/classification.md) - Option to manage Puppet classification in a smart Hiera driven way.
--   A set of [base profiles](docs/profiles.md) for common systems management task on common os: Linux, MacOS, Windows. 
--   Integration with the companion **psick_profile** module to manage multiple applications
+-   [Classification](docs/classification.md) - Manage Puppet classification in a smart, staged, Hiera driven way.
+-   A set of [base profiles](docs/profiles.md) for common systems management needs on: Linux, MacOS and Windows. 
+-   Integration with the companion **psick_profile** module to manage multiple more or less common applications
 
 The module is designed to:
 
@@ -18,35 +16,25 @@ The module is designed to:
 -   Allow cherry picking of the desired functionalities and profiles
 -   Be entirely Hiera driven: In practice a DSL to configure infrastructures
 
-It can be used together with the [PSICK control-repo](https://github.com/example42/psick) or as a strandalone module, just:
+It can be used together with the [PSICK control-repo](https://github.com/example42/psick) or as a strandalone module, just classify it on your nodes:
 
     include psick
 
-This doesn't do anything at all, by default, but is enough to let you manage _everything_ via Hiera.
+By default, this doesn't do anything at all, but is enough to let you manage _everything_ via Hiera, in the psick namespace.
 
 In the following examples we will use Hiera YAML files, but any backend can be used: psick is a normal, even if somehow unusual, Puppet module, with classes (a lot of them) whose params can be set as Hiera data, defines, templates, files, fuctions, custom data types etc.
 
-Check the default [PSICK hiera data](https://github.com/example42/psick-hieradata) module for various usage examples.
-
-## Do You Speak Psick?
-
-Psick "language" has the syntax of any Hiera supported backend (here we use YAML), and the semantic you are going to discover here.
-
-The module provides 3 major features:
-
--   Structured cross-os, staged **classification**
--   Base **profiles** for common system configurations
--   Integration with **psick_profile** to manage applications
+Check the default [PSICK hiera data](https://github.com/example42/psick-hieradata) module for various real world usage examples.
 
 ### Classification
 
 Psick can manage the whole classification of the nodes of an infrastructure. It can work side by side and External Node Classifier, or it can totally replace it.
 
-When used for classification, you just need to include the psick class on all your nodes and then configure it via Hiera, considering that:
+When used for classification, you just need to include the psick class on all your nodes (typically in manifests/site.pp) and then configure it via Hiera, considering that:
 
--   Different Hiera keys are available to manage the classes to include for different OSes ans different stages of the classification
--   Psick has 4 classification stages, by default they require the previous one to be completed: First run (optional), pre, main and profile.
--   Each Hiera key used to classify, has as value an hash of key values, where keys are strings used as placeholders, and values are the classes to include.
+-   Different Hiera keys are available to manage the classes to include for different OSes at different stages of the classification
+-   Psick has 4 classification stages, by default they require the previous one to be completed: First run (optional, executed only once), pre, main and profile.
+-   Each Hiera key used to classify, has as value an hash of key values, where keys are strings used as placeholders, and values are the names of classes to include.
 
 Example of Hiera data to classifiy Linux and Windows nodes:
 
@@ -61,7 +49,7 @@ Example of Hiera data to classifiy Linux and Windows nodes:
 
     # Pre and base classes, both on Linux and Windows
     psick::pre::linux_classes:
-      puppet: ::puppet
+      puppet: puppet
       dns: psick::dns::resolver
       hostname: psick::hostname
       hosts: psick::hosts::resource
@@ -131,18 +119,7 @@ For some very common applications and languages, there are dedicated profile cla
 -   [psick::git](docs/git.md) - Git installation and configuration
 -   [psick::php](docs/php.md) - Manage php and modules
 
-And som from **psick_profile** module check it for details.
-
--   [psick_profile::docker](docs/docker.md) - Docker installation and build tools
--   [psick_profile::foreman::tp](docs/foreman.md) - Foreman installation
--   [psick_profile::ansible](docs/ansible.md) - Manage Ansible installation and user
--   [psick_profile::gitlab](docs/gitlab.md) - GitLab installation and configuration
--   [psick_profile::mariadb](docs/mysql.md) - Manage Mariadb
--   [psick_profile::mysql](docs/mysql.md) - Manage Mysql
--   [psick_profile::mongo](docs/mongo.md) - Manage Mongo
--   [psick_profile::oracle](docs/oracle.md) - Manage Oracle prerequisites and installation
--   [psick_profile::sensu](docs/sensu.md) - Manage Sensu
-
+Check the [psick_profile](https://github.com/example42/puppet-psick_profile) module for more details.
 ### Main variables and common parameters
 
 The main psick class has some parameters which are used as defaults in all the psick and psick profile classes or can contain data (in Hashes of key-values) used by all the other psick profiless
@@ -164,3 +141,15 @@ Check for more details on the [Main Parameters](docs/main_parameters.md), here t
     psick::tp: {}
     psick::firewall: {}
     psick::monitor: {}
+
+### Additional documentation
+
+Check this list of blog posts about psick module:
+
+- [Psick module version 1 coming soon!](https://blog.example42.com/2022/05/23/psick-version-one-coming-soon/) - Accouncing version 1 of Psick, with info on backwards incompatible changes.
+- [Psick profiles. Part 1 - Overview](https://blog.example42.com/2018/11/12/psick_profiles_part_1_overview/) - Overview of the base and the application profiles (at the times they were in the deprecate tp_profile module, replaced by psick_profile module in Psick 1.0)
+- [Psick profiles. Part 2 - Setting proxy server and hostname](https://blog.example42.com/2018/11/19/psick_profiles_part_2_proxy_and_hostname_settings/) - How to manage proxy and hostname with psick classes (still up to date info)
+- [Psick profiles. Part 3 - Managing OpenSSH](https://blog.example42.com/2018/12/03/psick_profiles_part_3_openssh/) - Managing ssh, configs and keys with psick (up to date).
+- [Psick profiles. Part 4 - Managing users](https://blog.example42.com/2018/12/10/psick_profiles_part_4_users/) - Managing users with psick (up to date).
+- [Psick profiles. Part 5 - Managing /etc/hosts and DNS](https://blog.example42.com/2018/12/17/psick_profiles_part_5_hosts_and_dns/) - Alternative ways to manage hosts and dns with psick (up to date).
+- [Introducing PSICK - The Infrastructure Puppet module](https://blog.example42.com/2017/10/08/introducing-psick-infrastructure-module/) - The first announcement of the psick module. Still valid info, except the old info on tp profiles
