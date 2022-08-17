@@ -64,9 +64,8 @@ define psick::network::interface (
   Boolean $enable                                   = true,
   Boolean $use_netplan                              = lookup('psick::network::use_netplan',Boolean,first,false),
 
-  String $template                                  = "psick/network/interface/${::osfamily}.epp",
+  String $template                                  = "psick/network/interface/${facts['os']['family']}.epp",
   Optional[String] $config_path                     = undef,
-
 
   String $interface                                 = $title,
   String $description                               = "Interface ${title}",
@@ -115,8 +114,7 @@ define psick::network::interface (
   Boolean $manage_prerequisites                     = true,
   Boolean $suppress_warnings                        = false,
 ) {
-
-  case fact('os.family') {
+  case $facts['os']['family'] {
     'RedHat': {
       if 'check_link_down' in $os_features {
         $os_footer = @("EOF")
@@ -221,7 +219,6 @@ define psick::network::interface (
     default: {}
   }
 
-
   # $settings variable is used in templates
   if $use_default_settings {
     $settings = delete_undef_values($os_settings + $extra_settings)
@@ -245,7 +242,7 @@ define psick::network::interface (
   $template_type=$template[-4,4]
   case $template_type {
     '.epp': {
-      $content = epp($template, { params => $params } )
+      $content = epp($template, { params => $params })
     }
     '.erb': {
       $content = template($template)
@@ -256,7 +253,7 @@ define psick::network::interface (
     }
   }
   # Configuration file path
-  case fact('os.family') {
+  case $facts['os']['family'] {
     'RedHat': {
       $config_file_path = pick($config_path,"/etc/sysconfig/network-scripts/ifcfg-${title}")
     }
@@ -264,7 +261,7 @@ define psick::network::interface (
       $config_file_path = pick($config_path,"/etc/sysconfig/network/ifcfg-${title}")
     }
     'Debian': {
-      if fact('os.name') == 'CumulusLinux' {
+      if $facts['os']['name'] == 'CumulusLinux' {
         $config_file_path = pick($config_path,"/etc/network/interfaces.d/${title}")
       } else {
         $config_file_path = pick($config_path,"/etc/network/interfaces.d/${title}.cfg")
@@ -282,12 +279,10 @@ define psick::network::interface (
     default         => $config_file_notify,
   }
 
-
   ### Manage configurations
-  case fact('os.name') {
-
+  case $facts['os']['name'] {
     # On RedHat family we manage "/etc/sysconfig/network-scripts/ifcfg-${title}"
-    'RedHat', 'CentOS', 'Scientific', 'OracleLinux','Fedora': {
+    'RedHat', 'CentOS', 'Scientific', 'OracleLinux', 'Fedora', 'AlmaLinux', 'Rocky': {
       # Configuration
       file { $config_file_path:
         ensure  => $ensure,
@@ -338,7 +333,7 @@ define psick::network::interface (
       # Prerequisites
       if $manage_prerequisites
       and has_key($settings,'vlan-raw-device')
-      and versioncmp('9.0', $::operatingsystemrelease) >= 0
+      and versioncmp('9.0', $facts['os']['release']['major']) >= 0
       and !defined(Package['vlan']) {
         package { 'vlan':
           ensure => 'present',
@@ -350,7 +345,7 @@ define psick::network::interface (
           if $ipv4_netmask {
             # TODO Handle ipv6 and multiple addresses
             $ipv4_cidr = netmask2cidr($ipv4_netmask)
-            $addressv4 = [ "${ipv4_address}/${ipv4_cidr}" ]
+            $addressv4 = ["${ipv4_address}/${ipv4_cidr}"]
           } else {
             fail('A ipv4_netmask must be set if ipv4_address is present')
           }
@@ -439,7 +434,7 @@ define psick::network::interface (
     # ipadm exec, host entry and network service
     'Solaris': {
       # Configuration
-      if $::operatingsystemrelease == '5.11' {
+      if $facts['os']['release']['major'] == '5.11' {
         if ! defined(Service['svc:/network/physical:nwam']) {
           service { 'svc:/network/physical:nwam':
             ensure => stopped,
@@ -476,10 +471,10 @@ define psick::network::interface (
         content => $content,
         require => Exec["create ipaddr ${title}"],
       }
-      host { $::fqdn:
+      host { $facts['networking']['fqdn']:
         ensure       => present,
         ip           => $ipv4_address,
-        host_aliases => [$::hostname],
+        host_aliases => [$facts['networking']['hostname']],
         require      => File[$config_file_path],
       }
       if ! defined(Service['svc:/network/physical:default']) {
@@ -495,9 +490,8 @@ define psick::network::interface (
     # Other OS not supported
     default: {
       if ! $suppress_warnings {
-        alert("${::operatingsystem} not supported. Nothing done here. Set \$suppress_warnings to true to disable this message")
+        alert("${facts['os']['name']} not supported. Nothing done here. Set \$suppress_warnings to true to disable this message")
       }
     }
   }
-
 }
