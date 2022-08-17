@@ -1,5 +1,10 @@
 ## Changelog
 
+## Release 1.0.1
+
+- Fixed psick::network class
+- Added psick::nodejs class
+
 ## Releae 1.0.0
 
 -   Release 1, backwards incompatible. Read migration notes before upgrading.
