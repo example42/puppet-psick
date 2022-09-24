@@ -94,7 +94,7 @@ class psick::puppet::gems (
       'cideploy'  => $minimal_gems + $minimal_test_gems,
       'citest'    => $minimal_gems + $minimal_test_gems,
       'integration' => $minimal_gems + $minimal_test_gems + ['beaker','beaker-rspec','beaker-puppet_install_helper'],
-      'developer' => $minimal_gems + $minimal_test_gems + ['puppet-debug','puppet-blacksmith'],
+      'developer' => $minimal_gems + $minimal_test_gems + ['puppet-debug','puppet-blacksmith','puppet-ghostbuster'],
     }
     $all_gems = $default_gems + $install_gems
     if $install_system_gems {

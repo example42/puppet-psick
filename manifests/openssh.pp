@@ -1,14 +1,14 @@
 # This class installs openssh using tp
 #
 class psick::openssh (
-  Hash                     $configs_hash   = {},
-  Hash                     $keygens_hash  = {},
-  Hash                     $keypairs_hash = {},
-  Hash                     $keyscans_hash = {},
-  String                   $module        = 'psick',
-  Boolean                  $manage        = $psick::manage,
-  Boolean                  $noop_manage   = $psick::noop_manage,
-  Boolean                  $noop_value    = $psick::noop_value,
+  Hash    $configs_hash   = {},
+  Hash    $keygens_hash  = {},
+  Hash    $keypairs_hash = {},
+  Hash    $keyscans_hash = {},
+  String  $module        = 'psick',
+  Boolean $manage        = $psick::manage,
+  Boolean $noop_manage   = $psick::noop_manage,
+  Boolean $noop_value    = $psick::noop_value,
 ) {
   if $manage {
     if $noop_manage {
@@ -22,6 +22,7 @@ class psick::openssh (
       'psick': {
         contain psick::openssh::tp
       }
+      '': {}
       default: {
         contain openssh
       }

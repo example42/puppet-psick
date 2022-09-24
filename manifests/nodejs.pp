@@ -61,7 +61,6 @@ class psick::nodejs (
   Boolean $nvm_manage          = false,
   Hash $nvm_installs           = {},
 ) {
-
   # Setup script management
   if $setup_script_manage {
     archive { $setup_script_path:
