@@ -6,13 +6,18 @@ define psick::puppet::module (
 ) {
   $split_title = split($modulename,'-')
   $creates = $user ? {
-    'root'  => "/etc/puppetlabs/code/modules/${split_title}[1]",
-    default => "/home/%{user}/.puppetlabs/etc/code/modules/${split_title}[1]",
+    'root'  => "/etc/puppetlabs/code/modules/${split_title[1]}",
+    default => "/home/${user}/.puppetlabs/etc/code/modules/${split_title[1]}",
+  }
+  $home = $user ? {
+    'root'  => '/root',
+    default => "/home/${user}",
   }
   exec { "puppet module install ${modulename}":
-    command => "puppet module install ${modulename} ${arguments}",
-    user    => $user,
-    creates => $creates,
-    path    => $facts['path'],
+    command     => "puppet module install ${modulename} ${arguments}",
+    user        => $user,
+    creates     => $creates,
+    path        => $facts['path'],
+    environment => ["HOME=${home}"],
   }
 }
