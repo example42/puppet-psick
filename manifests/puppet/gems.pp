@@ -1,6 +1,6 @@
 # This class installs the gems needed to run Puppet with this control-repo
 # It can be also be used to install any gem on any gem environment (Puppet,
-# PuppetServer, System, RBenv...).
+# PuppetServer, System, RBenv...).
 #
 # @example Install under rbenv environment gems needed for CI tests:
 #     psick::puppet::gems::default_set: citest
