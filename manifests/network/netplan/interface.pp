@@ -31,7 +31,6 @@ define psick::network::netplan::interface (
   Optional[String] $file_source                 = undef,
 
 ) {
-
   # Define how to restart network service
   if $reload_command {
     $network_notify = 'Exec[psick::network::netplan::interface reload]'
@@ -52,7 +51,7 @@ define psick::network::netplan::interface (
     default => {
       match   => {
         macaddress => $macaddress,
-      }
+      },
     }
   }
 
@@ -72,8 +71,8 @@ define psick::network::netplan::interface (
       'version'            => $version,
       "${interface_type}s" => {
         $interface_name => delete_undef_values($default_values + $match_values + $interface_options),
-      }
-    }
+      },
+    },
   }
 
   $real_file_content = $file_source ? {
@@ -86,5 +85,4 @@ define psick::network::netplan::interface (
     source  => $file_source,
     notify  => $network_notify,
   }
-
 }

@@ -99,7 +99,7 @@ Refer to the specific documentation for more details. Here is some example Hiera
       al:
         content: 'al ALL=(ALL) NOPASSWD:ALL'
 
-    # Example to manage resolver
+    # Example to manage resolver
     psick::dns::resolver::nameservers:
       - 8.8.8.8
       - 1.1.1.1

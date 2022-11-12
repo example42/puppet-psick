@@ -1,6 +1,6 @@
 # This class installs the gems needed to run Puppet with this control-repo
 # It can be also be used to install any gem on any gem environment (Puppet,
-# PuppetServer, System, RBenv...).
+# PuppetServer, System, RBenv...).
 #
 # @example Install under rbenv environment gems needed for CI tests:
 #     psick::puppet::gems::default_set: citest
@@ -94,7 +94,7 @@ class psick::puppet::gems (
       'cideploy'  => $minimal_gems + $minimal_test_gems,
       'citest'    => $minimal_gems + $minimal_test_gems,
       'integration' => $minimal_gems + $minimal_test_gems + ['beaker','beaker-rspec','beaker-puppet_install_helper'],
-      'developer' => $minimal_gems + $minimal_test_gems + ['puppet-debug','puppet-blacksmith'],
+      'developer' => $minimal_gems + $minimal_test_gems + ['puppet-debug','puppet-blacksmith','puppet-ghostbuster'],
     }
     $all_gems = $default_gems + $install_gems
     if $install_system_gems {
