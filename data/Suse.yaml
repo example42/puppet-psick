@@ -1,3 +1,4 @@
+---
 psick::backup::legato::packages:
   - lgtoclnt
   - lgtoman
@@ -7,3 +8,4 @@ psick::php::pear_module_prefix: php5-pear-
 psick::php::pear::package: php5-pear
 psick::php::devel::package: php5-devel
 
+psick::bolt::bolt_group: users

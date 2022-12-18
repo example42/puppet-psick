@@ -43,7 +43,7 @@ class psick::bolt::node (
         ensure  => $dir_ensure,
         mode    => '0700',
         owner   => $psick::bolt::ssh_user,
-        group   => $psick::bolt::ssh_user,
+        group   => $psick::bolt::ssh_group,
         require => User[$psick::bolt::ssh_user],
       }
     }

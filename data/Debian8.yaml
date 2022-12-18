@@ -1,0 +1,3 @@
+---
+psick::firewall::iptables::package_name: 'iptables-persistent'
+psick::firewall::iptables::service_name: 'netfilter-persistent'

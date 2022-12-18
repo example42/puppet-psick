@@ -91,7 +91,7 @@ class psick::bolt::master (
         ensure  => $dir_ensure,
         mode    => '0700',
         owner   => $psick::bolt::bolt_user,
-        group   => $psick::bolt::bolt_user,
+        group   => $psick::bolt::bolt_group,
         require => $ssh_dir_require,
       }
     }
@@ -124,14 +124,14 @@ class psick::bolt::master (
         ensure  => $dir_ensure,
         mode    => '0700',
         owner   => $psick::bolt::bolt_user,
-        group   => $psick::bolt::bolt_user,
+        group   => $psick::bolt::bolt_group,
         content => $psick::bolt::bolt_user_pub_key,
       }
       file { "${user_home_dir}/.ssh/id_rsa":
         ensure  => $dir_ensure,
         mode    => '0700',
         owner   => $psick::bolt::bolt_user,
-        group   => $psick::bolt::bolt_user,
+        group   => $psick::bolt::bolt_group,
         content => $psick::bolt::bolt_user_priv_key,
       }
     }
@@ -145,12 +145,12 @@ class psick::bolt::master (
       file { "${user_home_dir}/nodes":
         ensure => $dir_ensure,
         owner  => $psick::bolt::bolt_user,
-        group  => $psick::bolt::bolt_user,
+        group  => $psick::bolt::bolt_group,
       }
       $default_file_options = {
         ensure => $ensure,
         owner  => $psick::bolt::bolt_user,
-        group  => $psick::bolt::bolt_user,
+        group  => $psick::bolt::bolt_group,
       }
       $default_nodes_lists_hash = {
         'all' => {

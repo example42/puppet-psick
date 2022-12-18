@@ -1,2 +1,3 @@
 ---
 psick::network::service_restart_exec: 'systemctl restart network'
+psick::puppet::pe_agent::manage_service: false
