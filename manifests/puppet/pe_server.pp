@@ -54,7 +54,6 @@ class psick::puppet::pe_server (
     }
 
     Tp::Test {
-      cli_enable => true,
       content    => 'puppet infrastructure status',
     }
     $puppetserver_settings = {
