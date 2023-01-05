@@ -5,6 +5,9 @@ class psick::puppet (
   String           $server_class    = '',
   String           $puppetdb_class  = '',
 
+  Array $modules                    = [],
+  String $module_user               = 'root',
+
   Hash             $external_facts  = {},
 
   String           $facts_file_path = '',
@@ -43,6 +46,12 @@ class psick::puppet (
     if $facts_file_path != '' {
       file { $facts_file_path:
         content => template('psick/puppet/facts.yaml.erb'),
+      }
+    }
+
+    $modules.each | $mod | {
+      psick::puppet::module { $mod:
+        user   => $module_user,
       }
     }
   }

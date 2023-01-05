@@ -21,9 +21,6 @@ class psick::puppet::pe_puppetdb (
       '/var/log/puppetlabs/postgresql/postgresql-*.log'],
     }
 
-    Tp::Test {
-      cli_enable => true,
-    }
     tp::test { 'puppetdb': settings_hash => $puppetdb_settings }
     tp::test { 'postgresql': settings_hash => $postgresql_settings }
   }

@@ -10,10 +10,6 @@ class psick::puppet::pe_console (
       noop($noop_value)
     }
 
-    Tp::Test {
-      cli_enable => true,
-    }
-
     $nginx_settings = {
       package_name => 'pe-nginx',
       service_name => 'pe-nginx',

@@ -9,7 +9,6 @@ class psick::network::hostname (
   Boolean          $hostname_legacy        = false,
   Hash             $options                = {},
 ) {
-
   $hostname_default_template = $hostname_legacy ? {
     true  => "psick/network/legacy/hostname-${facts['os']['family']}.erb",
     false => "psick/network/hostname-${facts['os']['family']}.erb",

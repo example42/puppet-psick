@@ -8,10 +8,12 @@ class psick::bolt (
   String                  $node_class      = '::psick::bolt::node',
 
   String                  $bolt_user          = 'bolt',
+  String                  $bolt_group         = 'bolt',
   Optional[String]        $bolt_user_pub_key  = undef,
   Optional[String]        $bolt_user_priv_key = undef,
 
   String                  $ssh_user           = 'root',
+  String                  $ssh_group          = 'root',
 
   String                  $master             = '',
   Optional[Enum['storeconfigs','static']] $keyshare_method = 'storeconfigs',

@@ -109,7 +109,7 @@ class psick::network (
     }
 
     if $hostname {
-      contain 'psick::network::hostname'
+      contain ::psick::network::hostname
     }
 
     # Manage /etc/host.conf if $host_conf_template is set
