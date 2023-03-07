@@ -13,6 +13,9 @@ class psick::puppet::pe_agent (
   Enum['running','stopped'] $service_ensure = 'running',
   Boolean $service_enable     = true,
 
+  Boolean $manage_exclude_unchanged_resources  = false,
+  Boolean $exclude_unchanged_resources_setting = true,
+
   Hash $settings              = {},
   Hash $ini_settings_hash     = {},
   String $config_file_path    = '/etc/puppetlabs/puppet/puppet.conf',
@@ -67,6 +70,19 @@ class psick::puppet::pe_agent (
         notify  => $service_notify,
       }
     }
+
+    # Set exclude_unchanged_resources
+    if $manage_exclude_unchanged_resources {
+      pe_ini_setting { 'agent conf file exclude_unchanged_resources':
+        ensure  => present,
+        path    => $config_file_path,
+        section => 'main',
+        setting => 'exclude_unchanged_resources',
+        value   => $exclude_unchanged_resources_setting,
+        notify  => $service_notify,
+      }
+    }
+
 
     $default_ini_settings = {
       ensure  => present,
