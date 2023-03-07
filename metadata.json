@@ -83,7 +83,7 @@
     }
   ],
   "description": "Psick Puppet module. A single module to manage an extendable Puppet infrastructure",
-  "pdk-version": "2.4.0",
+  "pdk-version": "2.6.1",
   "template-url": "https://github.com/puppetlabs/pdk-templates#main",
-  "template-ref": "tags/2.5.0-0-g369d483"
+  "template-ref": "heads/main-0-g6e2b72d"
 }
