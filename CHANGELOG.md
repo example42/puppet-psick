@@ -1,5 +1,12 @@
 ## Changelog
 
+## Release 1.0.2
+
+- Basic Devuan support
+- Removed deprecated cli_enable param in tp::test defines
+- Added psick::netstat task
+- Added exclude_unchanged_resources params to psick::puppet::pe_agent
+
 ## Release 1.0.1
 
 - Fixed psick::network class
