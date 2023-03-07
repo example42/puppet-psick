@@ -1,0 +1,30 @@
+{
+  "description": "Run netstat on a node",
+  "supports_noop": false,
+  "parameters": {
+    "show": {
+     "description": "Specify what to show",
+     "type": "Enum['route','interfaces','statistics','groups','listening','all']",
+     "default": "all"
+    },
+    "socket": {
+      "description": "Specify what socket type to show",
+      "type": "Enum['tcp','udp','raw','unix','all']",
+      "default": "all"
+     },
+    "resolve": {
+     "description": "Specify if to resolve hostnames",
+     "type": "Boolean",
+     "default": true
+    },
+    "extend": {
+     "description": "Show extended information",
+     "type": "Boolean",
+     "default": false
+    },
+    "custom": {
+     "description": "Specify custom options (overrides other options)",
+     "type": "Optional[String]"
+    }
+  }
+}
