@@ -30,7 +30,7 @@ class psick::hostname (
               owner   => 'root',
               group   => 'root',
               mode    => '0644',
-              content => "${fqdn}\n",
+              content => "${facts['networking']['fqdn']}\n",
               notify  => Exec['apply_hostname'],
             }
 

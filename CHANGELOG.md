@@ -1,5 +1,9 @@
 ## Changelog
 
+## Release 1.0.3
+
+- Class psick::openssh::hostkeys
+
 ## Release 1.0.2
 
 - Basic Devuan support
