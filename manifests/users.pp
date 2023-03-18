@@ -115,7 +115,7 @@ class psick::users (
               uid              => $v['uid'],
               managehome       => $v['managehome'],
               homedir_source   => $v['homedir_source'],
-              *                => pick($v['extra_params'],{}),
+              *                => pick($v['extra_params'], {}),
             }
           }
           'accounts': {
@@ -129,7 +129,7 @@ class psick::users (
               shell    => $v['shell'],
               uid      => $v['uid'],
               sshkeys  => $v['sshkeys'],
-              *        => pick_default($v['extra_params'],{}),
+              *        => pick_default($v['extra_params'], {}),
             }
           }
           default: {
@@ -145,7 +145,7 @@ class psick::users (
               shell            => $v['shell'],
               uid              => $v['uid'],
               managehome       => $v['managehome'],
-              *                => pick_default($v['extra_params'],{}),
+              *                => pick_default($v['extra_params'], {}),
             }
           }
         }

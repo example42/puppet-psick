@@ -20,7 +20,6 @@ class psick::network::example42 (
   String $bonding_mode     = 'active-backup',
   String $network_template = 'psick/network/network.erb',
 ) {
-
   file { '/etc/modprobe.d/bonding.conf':
     ensure => file,
   }

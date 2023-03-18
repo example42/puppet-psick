@@ -6,7 +6,6 @@ define psick::nodejs::install (
   Boolean $set_default = false,
   Boolean $from_source = false,
 ) {
-
   if $nvm_dir == undef {
     $final_nvm_dir = $user ? {
       'root'  => '/root/.nvm',
@@ -29,7 +28,7 @@ define psick::nodejs::install (
     command     => ". ${final_nvm_dir}/nvm.sh && nvm install ${nvm_install_options} ${version}",
     user        => $user,
     unless      => ". ${final_nvm_dir}/nvm.sh && nvm which ${version}",
-    environment => [ "NVM_DIR=${final_nvm_dir}" ],
+    environment => ["NVM_DIR=${final_nvm_dir}"],
     provider    => shell,
   }
 
@@ -38,7 +37,7 @@ define psick::nodejs::install (
       cwd         => $final_nvm_dir,
       command     => ". ${final_nvm_dir}/nvm.sh && nvm alias default ${version}",
       user        => $user,
-      environment => [ "NVM_DIR=${final_nvm_dir}" ],
+      environment => ["NVM_DIR=${final_nvm_dir}"],
       unless      => ". ${final_nvm_dir}/nvm.sh && nvm which default | grep ${version}",
       provider    => shell,
       require     => Exec["nvm install node version ${version}"],

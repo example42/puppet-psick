@@ -27,7 +27,7 @@ class psick::aws::puppet::vpc (
       -> Ec2_vpc_subnet<||>
       -> Ec2_vpc<|name == $default_vpc_name|>
       #   Ec2_vpc<||>
-      #lint:endignore 
+      #lint:endignore
     }
 
     # Default resources, if enabled
@@ -57,7 +57,8 @@ class psick::aws::puppet::vpc (
             {
               destination_cidr_block => '0.0.0.0/0',
               gateway                => "${default_vpc_name}-igw",
-            },{
+            },
+            {
               destination_cidr_block => "${default_cidr_block_prefix}.0.0/16",
               gateway                => 'local'
             },

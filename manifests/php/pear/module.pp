@@ -81,7 +81,6 @@ define psick::php::pear::module (
     false   => undef,
   }
 
-
   $real_module_prefix = $module_prefix ? {
     ''      => $psick::php::pear_module_prefix,
     default => $module_prefix,

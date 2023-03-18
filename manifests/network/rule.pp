@@ -26,7 +26,6 @@ define psick::network::rule (
   Optional[Array] $family          = undef,
   Enum['present','absent'] $ensure = 'present',
 ) {
-
   include psick::network
 
   case $::osfamily {
@@ -81,6 +80,6 @@ define psick::network::rule (
         notify  => $psick::network::manage_config_file_notify,
       }
     }
-    default: { fail('Operating system not supported')  }
+    default: { fail('Operating system not supported') }
   }
 } # define network::rule

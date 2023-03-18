@@ -116,7 +116,7 @@ class psick::network (
     if $host_conf_template {
       $host_conf_template_type=$host_conf_template[-4,4]
       $host_conf_content = $host_conf_template_type ? {
-        '.epp'  => epp($host_conf_template,{ options => $host_conf_options }),
+        '.epp'  => epp($host_conf_template,{options => $host_conf_options}),
         '.erb'  => template($host_conf_template),
         default => template($host_conf_template),
       }
@@ -131,7 +131,7 @@ class psick::network (
     if $nsswitch_conf_template {
       $nsswitch_conf_template_type=$nsswitch_conf_template[-4,4]
       $nsswitch_conf_content = $nsswitch_conf_template_type ? {
-        '.epp'  => epp($nsswitch_conf_template,{ options => $nsswitch_conf_options }),
+        '.epp'  => epp($nsswitch_conf_template,{options => $nsswitch_conf_options}),
         '.erb'  => template($nsswitch_conf_template),
         default => template($nsswitch_conf_template),
       }
@@ -143,7 +143,7 @@ class psick::network (
     }
 
     # Declare network interfaces based on network::interfaces
-    $interfaces = lookup('psick::network::interfaces',Hash,$interfaces_merge_behaviour,{})
+    $interfaces = lookup('psick::network::interfaces',Hash,$interfaces_merge_behaviour, {})
     $interfaces.each |$k,$v| {
       psick::network::interface { $k:
         * => $interfaces_defaults + $v,
@@ -151,7 +151,7 @@ class psick::network (
     }
 
     # Declare network routes based on network::routes
-    $routes = lookup('psick::network::routes',Hash,$routes_merge_behaviour,{})
+    $routes = lookup('psick::network::routes',Hash,$routes_merge_behaviour, {})
     $routes.each |$k,$v| {
       psick::network::route { $k:
         * => $routes_defaults + $v,
@@ -159,7 +159,7 @@ class psick::network (
     }
 
     # Declare network rules based on network::rules
-    $rules = lookup('psick::network::rules',Hash,$rules_merge_behaviour,{})
+    $rules = lookup('psick::network::rules',Hash,$rules_merge_behaviour, {})
     $rules.each |$k,$v| {
       psick::network::rule { $k:
         * => $rules_defaults + $v,
@@ -167,7 +167,7 @@ class psick::network (
     }
 
     # Declare network tables based on network::tables
-    $tables = lookup('psick::network::tables',Hash,$tables_merge_behaviour,{})
+    $tables = lookup('psick::network::tables',Hash,$tables_merge_behaviour, {})
     $tables.each |$k,$v| {
       psick::network::table { $k:
         * => $tables_defaults + $v,

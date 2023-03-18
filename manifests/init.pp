@@ -208,8 +208,8 @@ class psick (
   }
 
   # Custom Resources management
-  $resources = lookup('psick::resources',Hash,$resources_merge_behaviour,{})
-  $resources_defaults = lookup('psick::resources_defaults',Hash,$resources_defaults_merge_behaviour,{})
+  $resources = lookup('psick::resources',Hash,$resources_merge_behaviour, {})
+  $resources_defaults = lookup('psick::resources_defaults',Hash,$resources_defaults_merge_behaviour, {})
 
   $resources.each |$k,$v| {
     if $k in keys($resources_defaults) {
@@ -221,8 +221,8 @@ class psick (
   }
 
   # Custom Resources management
-  $osfamily_resources = lookup('psick::osfamily_resources',Hash,$osfamily_resources_merge_behaviour,{})
-  $osfamily_resources_defaults = lookup('psick::osfamily_resources_defaults',Hash,$osfamily_resources_defaults_merge_behaviour,{})
+  $osfamily_resources = lookup('psick::osfamily_resources',Hash,$osfamily_resources_merge_behaviour, {})
+  $osfamily_resources_defaults = lookup('psick::osfamily_resources_defaults',Hash,$osfamily_resources_defaults_merge_behaviour, {})
   $osfamily_resources.each |$k,$v| {
     if $facts['os']['family'] == $k {
       if has_key($osfamily_resources_defaults, $k) {

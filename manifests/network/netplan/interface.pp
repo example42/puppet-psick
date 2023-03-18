@@ -11,7 +11,7 @@ define psick::network::netplan::interface (
   Hash   $interface_options                     = {},
 
   Stdlib::Absolutepath $config_dir_path         = '/etc/netplan',
-  Optional[String]$reload_command               = 'netplan apply',
+  Optional[String] $reload_command              = 'netplan apply',
 
   String $renderer                              = 'networkd',
   Numeric $version                              = 2,

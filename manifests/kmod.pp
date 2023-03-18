@@ -37,7 +37,7 @@ class psick::kmod (
     if $noop_manage {
       noop($noop_value)
     }
-    $modules = lookup('psick::kmod::modules',Hash,$modules_merge_behaviour,{})
+    $modules = lookup('psick::kmod::modules',Hash,$modules_merge_behaviour, {})
     $modules.each | $k,$v | {
       psick::kmod::module { $k:
         * => $v,

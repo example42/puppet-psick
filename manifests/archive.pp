@@ -27,7 +27,6 @@ define psick::archive (
   Array                          $compress_exec_env = [],
 
 ) {
-
   if $source {
     $source_filename = parse_url($source,'filename')
     $source_filetype = parse_url($source,'filetype')
