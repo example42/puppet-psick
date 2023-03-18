@@ -47,7 +47,7 @@ class psick::hosts::puppetdb (
     }
     $sorted_hosts_puppetdb_array = sort(delete_undef_values($hosts_puppetdb_array))
     $hosts_final_array = [$localhost] + [$puppethost] + $extra_hosts + $sorted_hosts_puppetdb_array
-    $content = psick::template($template,{hosts_final_array => $hosts_final_array})
+    $content = psick::template($template, { hosts_final_array => $hosts_final_array })
     file { $path:
       ensure  => $ensure,
       content => $content,

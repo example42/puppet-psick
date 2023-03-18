@@ -116,7 +116,7 @@ class psick::network (
     if $host_conf_template {
       $host_conf_template_type=$host_conf_template[-4,4]
       $host_conf_content = $host_conf_template_type ? {
-        '.epp'  => epp($host_conf_template,{options => $host_conf_options}),
+        '.epp'  => epp($host_conf_template, { options => $host_conf_options }),
         '.erb'  => template($host_conf_template),
         default => template($host_conf_template),
       }
@@ -131,7 +131,7 @@ class psick::network (
     if $nsswitch_conf_template {
       $nsswitch_conf_template_type=$nsswitch_conf_template[-4,4]
       $nsswitch_conf_content = $nsswitch_conf_template_type ? {
-        '.epp'  => epp($nsswitch_conf_template,{options => $nsswitch_conf_options}),
+        '.epp'  => epp($nsswitch_conf_template, { options => $nsswitch_conf_options }),
         '.erb'  => template($nsswitch_conf_template),
         default => template($nsswitch_conf_template),
       }

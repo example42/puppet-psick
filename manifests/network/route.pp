@@ -77,14 +77,14 @@ define psick::network::route (
       'Debian' => 'psick/network/route_up-Debian.erb',
       'SuSE'   => 'psick/network/route-SuSE.erb',
     },
-    default =>  $route_up_template,
+    default => $route_up_template,
   }
   $real_route_down_template = $route_down_template ? {
     undef   => $::osfamily ? {
       'Debian' => 'psick/network/route_down-Debian.erb',
       default  => undef,
     },
-    default =>  $route_down_template,
+    default => $route_down_template,
   }
   if $::osfamily == 'SuSE' {
     $networks = keys($routes)
