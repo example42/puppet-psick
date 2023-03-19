@@ -13,7 +13,6 @@ class psick::systemd (
   Hash[String[1],Hash[String[1], Any]]                $unit_files = {},
 
 ) {
-
   if $default_target {
     $target = shell_escape($default_target)
     service { $target:
@@ -33,5 +32,4 @@ class psick::systemd (
       * => $unit_file_data,
     }
   }
-
 }

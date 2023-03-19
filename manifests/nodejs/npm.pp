@@ -7,7 +7,6 @@ define psick::nodejs::npm (
   String $npm_params        = '-g',
   String $nvm_env           = 'default',
 ) {
-
   if $nvm_dir == undef {
     $final_nvm_dir = $user ? {
       'root'  => '/root',
@@ -26,7 +25,7 @@ define psick::nodejs::npm (
     cwd         => $final_nvm_dir,
     command     => ". ${final_nvm_dir}/.nvm/nvm.sh && nvm exec ${nvm_env} npm install ${full_package_name} ${npm_params}",
     user        => $user,
-    environment => [ "NVM_DIR=${final_nvm_dir}/.nvm" ],
+    environment => ["NVM_DIR=${final_nvm_dir}/.nvm"],
     unless      => ". ${final_nvm_dir}/.nvm/nvm.sh && nvm exec ${nvm_env} npm ls ${full_package_name} -g",
     provider    => shell,
   }

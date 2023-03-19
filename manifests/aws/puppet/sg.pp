@@ -28,12 +28,14 @@ class psick::aws::puppet::sg (
               'from_port' => '0',
               'to_port'   => '0',
               'protocol'  => '-1',
-            },{
+            },
+            {
               'cidr'      => '0.0.0.0/0',
               'from_port' => '22',
               'protocol'  => 'tcp',
               'to_port'   => '22',
-            },{
+            },
+            {
               'cidr'      => '0.0.0.0/0',
               'from_port' => '1194',
               'protocol'  => 'tcp',
@@ -50,7 +52,8 @@ class psick::aws::puppet::sg (
               'from_port' => '80',
               'protocol'  => 'tcp',
               'to_port'   => '80',
-            },{
+            },
+            {
               'cidr'      => '0.0.0.0/0',
               'from_port' => '443',
               'protocol'  => 'tcp',
@@ -91,7 +94,8 @@ class psick::aws::puppet::sg (
               'from_port' => '0',
               'to_port'   => '0',
               'protocol'  => '-1',
-            },{
+            },
+            {
               'cidr'      => "${default_cidr_block_prefix}.0.0/16",
               'from_port' => '22',
               'protocol'  => 'tcp',

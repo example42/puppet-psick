@@ -65,30 +65,27 @@ define psick::network::route (
   Optional[String] $route_up_template   = undef,
   Optional[String] $route_down_template = undef,
 ) {
-
   include psick::network
 
   $real_config_file_notify = $config_file_notify ? {
     'class_default' => $psick::network::manage_config_file_notify,
     default         => $config_file_notify,
   }
-
   $real_route_up_template = $route_up_template ? {
     undef   => $::osfamily ? {
       'RedHat' => 'psick/network/route-RedHat.erb',
       'Debian' => 'psick/network/route_up-Debian.erb',
       'SuSE'   => 'psick/network/route-SuSE.erb',
     },
-    default =>  $route_up_template,
+    default => $route_up_template,
   }
   $real_route_down_template = $route_down_template ? {
     undef   => $::osfamily ? {
       'Debian' => 'psick/network/route_down-Debian.erb',
       default  => undef,
     },
-    default =>  $route_down_template,
+    default => $route_down_template,
   }
-
   if $::osfamily == 'SuSE' {
     $networks = keys($routes)
     psick::network::validate_gw { $networks:
@@ -150,6 +147,6 @@ define psick::network::route (
         notify  => $real_config_file_notify,
       }
     }
-    default: { fail('Operating system not supported')  }
+    default: { fail('Operating system not supported') }
   }
 }

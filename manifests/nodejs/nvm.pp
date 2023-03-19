@@ -6,7 +6,7 @@ define psick::nodejs::nvm (
   Boolean $nvm_manage           = true,
   String $user                  = $title,
 
-  Hash $node_instances          = { },
+  Hash $node_instances          = {},
   String $node_instance_default = '8.12.0',
 
   Hash $npm_packages            = {},
@@ -47,7 +47,7 @@ define psick::nodejs::nvm (
       user        => $user,
       path        => $facts['path'],
       creates     => "${nvm_target}/.nvm/nvm.sh",
-      environment => [ "NVM_DIR=${nvm_target}/.nvm" ],
+      environment => ["NVM_DIR=${nvm_target}/.nvm"],
       provider    => shell,
     }
     file { "${nvm_target}/npm":

@@ -21,7 +21,6 @@ define psick::network::netplan (
   Optional[String] $file_source                 = undef,
 
 ) {
-
   $netplan_data = {
     'network' => {
       'version'   => $version,

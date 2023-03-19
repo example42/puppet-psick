@@ -14,7 +14,7 @@ class psick::network::hostname (
     false => "psick/network/hostname-${facts['os']['family']}.erb",
   }
   $file_template = pick($hostname_file_template,$hostname_default_template)
-  $manage_hostname = pick($psick::network::hostname,$::fqdn)
+  $manage_hostname = pick($psick::network::hostname,$facts['networking']['fqdn'])
 
   if $::osfamily == 'RedHat' {
     file { '/etc/sysconfig/network':

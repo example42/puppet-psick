@@ -83,7 +83,6 @@ class psick::puppet::pe_agent (
       }
     }
 
-
     $default_ini_settings = {
       ensure  => present,
       path    => $config_file_path,
