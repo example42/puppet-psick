@@ -16,7 +16,7 @@ function psick::get_user_home ( String[1] $user ) >> String {
     }
     'Solaris': {
       if $user == 'root' {
-        $home_dir = $operatingsystemrelease ? {
+        $home_dir = $facts['os']['release']['full'] ? {
           '5.11'  => '/root',
           default => '/',
         }

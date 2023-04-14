@@ -16,7 +16,7 @@ class psick::network::hostname (
   $file_template = pick($hostname_file_template,$hostname_default_template)
   $manage_hostname = pick($psick::network::hostname,$facts['networking']['fqdn'])
 
-  if $::osfamily == 'RedHat' {
+  if $facts['os']['family'] == 'RedHat' {
     file { '/etc/sysconfig/network':
       ensure  => present,
       mode    => '0644',
@@ -36,7 +36,7 @@ class psick::network::hostname (
     }
   }
 
-  if $::osfamily == 'Debian' {
+  if $facts['os']['family'] == 'Debian' {
     file { '/etc/hostname':
       ensure  => present,
       mode    => '0644',
@@ -47,7 +47,7 @@ class psick::network::hostname (
     }
   }
 
-  if $::osfamily == 'Suse' {
+  if $facts['os']['family'] == 'Suse' {
     file { '/etc/HOSTNAME':
       ensure  => present,
       mode    => '0644',
@@ -62,7 +62,7 @@ class psick::network::hostname (
     }
   }
 
-  if $::osfamily == 'Solaris' {
+  if $facts['os']['family'] == 'Solaris' {
     file { '/etc/nodename':
       ensure  => present,
       mode    => '0644',

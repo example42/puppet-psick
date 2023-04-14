@@ -95,16 +95,16 @@ update_linux() {
   distro=$(echo $OS | tr '[:upper:]' '[:lower:]')
   echo_title "Detected Linux distro: ${distro} version ${majver} on arch ${ARCH}"
   case "$distro" in
-    debian) update_apt $majver ;;
-    ubuntu) update_apt $majver ;;
-    redhat) update_redhat $majver ;;
-    fedora) update_fedora $majver ;;
-    centos) update_redhat $majver ;;
-    scientific) update_redhat $majver ;;
-    amazon) update_redhat $majver ;;
-    sles) update_suse $majver ;;
-    cumulus-linux) update_apt $majver ;;
-    alpine) update_alpine $majver ;;
+    debian) update_apt "${majver}" ;;
+    ubuntu) update_apt "${majver}" ;;
+    redhat) update_redhat "${majver}" ;;
+    fedora) update_fedora "${majver}" ;;
+    centos) update_redhat "${majver}" ;;
+    scientific) update_redhat "${majver}" ;;
+    amazon) update_redhat "${majver}" ;;
+    sles) update_suse "${majver}" ;;
+    cumulus-linux) update_apt "${majver}" ;;
+    alpine) update_alpine "${majver}" ;;
     *) echo "Not supported distro: $distro" ;;
   esac
 }

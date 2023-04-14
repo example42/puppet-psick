@@ -48,9 +48,9 @@ class psick::timezone (
       }
       'Debian' : {
         $debian_command = $facts['os']['release']['major'] ? {
-          /(16.04|16.10|17.04|17.10|18.04|18.10)/ => "timedatectl set-timezone ${timezone}",
-          /(9)/ => "ln -fs /usr/share/zoneinfo/${timezone} /etc/localtime ; dpkg-reconfigure -f noninteractive tzdata",
-          default                                 => 'dpkg-reconfigure -f noninteractive tzdata',
+          /(16.04|16.10|17.04|17.10|18.04|18.10|19.04|19.10|20.04|20.10|21.04|21.10|22.04|22.10|23.04|23.10)/ => "timedatectl set-timezone ${timezone}", # lint:ignore:140chars
+          /(9|10|11|12)/ => "ln -fs /usr/share/zoneinfo/${timezone} /etc/localtime ; dpkg-reconfigure -f noninteractive tzdata",
+          default        => 'dpkg-reconfigure -f noninteractive tzdata',
         }
       }
       default: {}

@@ -76,7 +76,7 @@ class psick::puppet::pe_client_tools (
     if $token {
       $puppetlabs_dir = $token_user ? {
         'root'  => '/root/.puppetlabs/',
-        default => $facts[os][osfamily] ? {
+        default => $facts[os][family] ? {
           'Darwin'  => "/Users/${token_user}/.puppetlabs/",
           'windows' => "C:/Users/${token_user}/.puppetlabs/",
           default   => "/home/${token_user}/.puppetlabs/",

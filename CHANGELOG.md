@@ -1,5 +1,11 @@
 ## Changelog
 
+## Release 1.0.4
+
+-   Updated psick::timezone to support more recent Debian derivatives
+-   Replaced legacy facts in preparation for Puppet 8
+-   Codacy lint fixes
+
 ## Release 1.0.3
 
 -   Class psick::openssh::hostkeys

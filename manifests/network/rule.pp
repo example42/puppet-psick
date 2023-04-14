@@ -28,7 +28,7 @@ define psick::network::rule (
 ) {
   include psick::network
 
-  case $::osfamily {
+  case $facts['os']['family'] {
     'RedHat': {
       file { "rule-${interface}":
         ensure  => present,

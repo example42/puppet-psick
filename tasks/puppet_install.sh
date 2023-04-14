@@ -131,7 +131,7 @@ setup_darwin() {
   echo_title "Installing Puppet Agent"
   hdiutil mount puppet-agent.dmg
   package=$(find /Volumes/puppet-agent*  | grep pkg)
-  $sudo_command installer -pkg $package -target /
+  $sudo_command installer -pkg "${package}" -target /
   hdiutil unmount /Volumes/puppet-agent*
 }
 setup_bsd() {

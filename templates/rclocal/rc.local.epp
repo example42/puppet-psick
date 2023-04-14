@@ -11,7 +11,7 @@ for command in $(ls -v1 <%= $psick::rclocal::config_dir %> ) ; do
     <%= $psick::rclocal::config_dir %>/$command
 done
 
-<% if $::facts['os']['family'] == 'RedHat' { -%>
+<% if $facts['os']['family'] == 'RedHat' { -%>
 touch /var/lock/subsys/local
 <% } else { -%>
 exit 0

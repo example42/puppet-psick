@@ -48,5 +48,3 @@ esac
 readonly options
 
 netstat $options
-
-result=$?
