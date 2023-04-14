@@ -8,7 +8,7 @@ define psick::yum::plugin (
 ) {
   $ensure = bool2ensure( $enable )
 
-  $yum_plugins_prefix = $::facts['os']['release']['major'] ? {
+  $yum_plugins_prefix = $facts['os']['release']['major'] ? {
     '5'     => 'yum',
     '6'     => 'yum-plugin',
     default => 'yum-plugin',

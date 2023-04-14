@@ -26,8 +26,8 @@ fi
 
 if [ ! -z "$(which pdk)" ]; then
   echo_title "Creating a new psick profile class with pdk"
-  cd $repo_dir
-  pdk new class $app
+  cd "${repo_dir}"
+  pdk new class "${app}"
 else
   show_help
 fi

@@ -26,7 +26,7 @@ In the following examples we will use Hiera YAML files, but any backend can be u
 
 Check the default [PSICK hiera data](https://github.com/example42/psick-hieradata) module for various real world usage examples.
 
-### Classification
+## Classification
 
 Psick can manage the whole classification of the nodes of an infrastructure. It can work side by side and External Node Classifier, or it can totally replace it.
 
@@ -78,7 +78,7 @@ Example of Hiera data to classifiy Linux and Windows nodes:
     psick::profiles::windows_classes:
       webserver: psick_profile::iis
 
-### Psick base profiles
+## Psick base profiles
 
 Psick provides ready to use profiles for many common OS configurations: users management, time, openssh, keys, cronjobs, sysctl, different languages setups (php, ruby, python...), motd, hosts file, common packages, proxy... 
 
@@ -110,7 +110,7 @@ Refer to the specific documentation for more details. Here is some example Hiera
         soft: 2048
         hard: 4096
 
-### psick_profile and applications profiles
+## psick_profile and applications profiles
 
 For some very common applications and languages, there are dedicated profile classes and defines, in the psick and the psick_profile modules. Here's a list from psick:
 
@@ -120,7 +120,7 @@ For some very common applications and languages, there are dedicated profile cla
 -   [psick::php](docs/php.md) - Manage php and modules
 
 Check the [psick_profile](https://github.com/example42/puppet-psick_profile) module for more details.
-### Main variables and common parameters
+## Main variables and common parameters
 
 The main psick class has some parameters which are used as defaults in all the psick and psick profile classes or can contain data (in Hashes of key-values) used by all the other psick profiless
 
@@ -142,14 +142,14 @@ Check for more details on the [Main Parameters](docs/main_parameters.md), here t
     psick::firewall: {}
     psick::monitor: {}
 
-### Additional documentation
+## Additional documentation
 
 Check this list of blog posts about psick module:
 
-- [Psick module version 1 coming soon!](https://blog.example42.com/2022/05/23/psick-version-one-coming-soon/) - Accouncing version 1 of Psick, with info on backwards incompatible changes.
-- [Psick profiles. Part 1 - Overview](https://blog.example42.com/2018/11/12/psick_profiles_part_1_overview/) - Overview of the base and the application profiles (at the times they were in the deprecate tp_profile module, replaced by psick_profile module in Psick 1.0)
-- [Psick profiles. Part 2 - Setting proxy server and hostname](https://blog.example42.com/2018/11/19/psick_profiles_part_2_proxy_and_hostname_settings/) - How to manage proxy and hostname with psick classes (still up to date info)
-- [Psick profiles. Part 3 - Managing OpenSSH](https://blog.example42.com/2018/12/03/psick_profiles_part_3_openssh/) - Managing ssh, configs and keys with psick (up to date).
-- [Psick profiles. Part 4 - Managing users](https://blog.example42.com/2018/12/10/psick_profiles_part_4_users/) - Managing users with psick (up to date).
-- [Psick profiles. Part 5 - Managing /etc/hosts and DNS](https://blog.example42.com/2018/12/17/psick_profiles_part_5_hosts_and_dns/) - Alternative ways to manage hosts and dns with psick (up to date).
-- [Introducing PSICK - The Infrastructure Puppet module](https://blog.example42.com/2017/10/08/introducing-psick-infrastructure-module/) - The first announcement of the psick module. Still valid info, except the old info on tp profiles
+  - [Psick module version 1 coming soon!](https://blog.example42.com/2022/05/23/psick-version-one-coming-soon/) - Accouncing version 1 of Psick, with info on backwards incompatible changes.
+  - [Psick profiles. Part 1 - Overview](https://blog.example42.com/2018/11/12/psick_profiles_part_1_overview/) - Overview of the base and the application profiles (at the times they were in the deprecate tp_profile module, replaced by psick_profile module in Psick 1.0)
+  - [Psick profiles. Part 2 - Setting proxy server and hostname](https://blog.example42.com/2018/11/19/psick_profiles_part_2_proxy_and_hostname_settings/) - How to manage proxy and hostname with psick classes (still up to date info)
+  - [Psick profiles. Part 3 - Managing OpenSSH](https://blog.example42.com/2018/12/03/psick_profiles_part_3_openssh/) - Managing ssh, configs and keys with psick (up to date).
+  - [Psick profiles. Part 4 - Managing users](https://blog.example42.com/2018/12/10/psick_profiles_part_4_users/) - Managing users with psick (up to date).
+  - [Psick profiles. Part 5 - Managing /etc/hosts and DNS](https://blog.example42.com/2018/12/17/psick_profiles_part_5_hosts_and_dns/) - Alternative ways to manage hosts and dns with psick (up to date).
+  - [Introducing PSICK - The Infrastructure Puppet module](https://blog.example42.com/2017/10/08/introducing-psick-infrastructure-module/) - The first announcement of the psick module. Still valid info, except the old info on tp profiles
