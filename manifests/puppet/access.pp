@@ -1,7 +1,7 @@
 # Run Puppet access to create an authentication token
 define psick::puppet::access (
   String $run_as_user               = 'root',
-  Optional[String] $lifetime        = '',
+  Optional[String] $lifetime        = undef,
   String $pe_user                   = $title,
   Optional[String] $pe_password     = undef,
   String $pe_console                = $servername,

@@ -2,8 +2,8 @@
 class psick::aws::cli (
   String $ensure                = 'present',
   String $region                = $psick::aws::region,
-  String $aws_access_key_id     = '',
-  String $aws_secret_access_key = '',
+  String $aws_access_key_id     = '', # lint:ignore:params_empty_string_assignment
+  String $aws_secret_access_key = '', # lint:ignore:params_empty_string_assignment
   String $config_template       = 'psick/aws/credentials.erb',
   Array $install_gems           = ['aws-sdk-core' , 'retries'],
   Boolean $install_system_gems  = true,

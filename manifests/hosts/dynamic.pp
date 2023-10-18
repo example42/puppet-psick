@@ -3,7 +3,7 @@
 # Manage /etc/hosts dynamically. Requires puppetdb
 #
 class psick::hosts::dynamic (
-  String $dynamic_magicvar = '',
+  String $dynamic_magicvar = '', # lint:ignore:params_empty_string_assignment
   Boolean $dynamic_exclude = false,
   String  $dynamic_ip      = $facts['networking']['ip'],
   Array  $dynamic_alias    = [$facts['networking']['hostname']],

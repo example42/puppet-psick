@@ -11,10 +11,10 @@
 # @param remove_ftp_user Remove or leave the local ftp user
 #
 class psick::hardening::network (
-  String $modprobe_template  = '',
-  String $netconfig_template = '',
-  String $blacklist_template = '',
-  String $services_template  = '',
+  String $modprobe_template  = '', # lint:ignore:params_empty_string_assignment
+  String $netconfig_template = '', # lint:ignore:params_empty_string_assignment
+  String $blacklist_template = '', # lint:ignore:params_empty_string_assignment
+  String $services_template  = '', # lint:ignore:params_empty_string_assignment
   Boolean $manage            = $psick::manage,
   Boolean $noop_manage       = $psick::noop_manage,
   Boolean $noop_value        = $psick::noop_value,

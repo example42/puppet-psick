@@ -3,8 +3,8 @@
 # This class provides a wrapper for psick services defines
 #
 class psick::services (
-  Optional[Hash] $init_scripts    = {},
-  Optional[Hash] $systemd_scripts = {},
+  Hash $init_scripts    = {},
+  Hash $systemd_scripts = {},
 
   Boolean $manage                 = $psick::manage,
   Boolean $noop_manage            = $psick::noop_manage,
@@ -14,7 +14,7 @@ class psick::services (
     if $noop_manage {
       noop($noop_value)
     }
-    if $::kernel == 'Linux' {
+    if $facts['kernel'] == 'Linux' {
       $init_scripts.each |$k,$v| {
         psick::services::init_script { $k:
           * => $v,

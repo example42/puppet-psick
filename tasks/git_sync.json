@@ -1,0 +1,10 @@
+{
+  "description": "Runs a git sync of the given dir",
+  "supports_noop": false,
+  "parameters": {
+    "path": {
+     "description": "The path to sync with Git. Must match a dir managed with psick::git::clone otherwise will fail",
+     "type": "String"
+     }
+  }
+}

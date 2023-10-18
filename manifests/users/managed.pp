@@ -25,7 +25,7 @@
 # sshkeys_content:  supply ssh keys via an array of 'key', 'comment' and 'type'
 define psick::users::managed (
   String $ensure          = present,
-  String $comment         = '',
+  String $comment         = '', # lint:ignore:params_empty_string_assignment
   String $uid             = 'absent',
   String $gid             = 'uid',
   Array $groups           = [],
@@ -39,15 +39,15 @@ define psick::users::managed (
   Boolean $homedir_recurse = false,
   Optional[String] $homedir_source = undef,
   String $sshkey          = 'absent',
-  String $authorized_keys_source = '',
-  String $bashprofile_source     = '',
-  String $known_hosts_source     = '',
+  String $authorized_keys_source = '', # lint:ignore:params_empty_string_assignment
+  String $bashprofile_source     = '', # lint:ignore:params_empty_string_assignment
+  String $known_hosts_source     = '', # lint:ignore:params_empty_string_assignment
   String $password               = 'absent',
   Boolean $password_crypted      = true,
-  String $password_salt          = '',
+  String $password_salt          = '', # lint:ignore:params_empty_string_assignment
   String $shell                  = '/bin/bash',
-  String $id_rsa_source          = '',
-  String $id_rsa_pub_source      = '',
+  String $id_rsa_source          = '', # lint:ignore:params_empty_string_assignment
+  String $id_rsa_pub_source      = '', # lint:ignore:params_empty_string_assignment
   Hash $sshkey_content           = {},
   Array $sshkeys_content         = [],
   Boolean $generate_ssh_keypair  = false,

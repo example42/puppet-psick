@@ -17,7 +17,7 @@ class psick::dns::resolver (
       noop($noop_value)
     }
 
-    if $::virtual != 'docker' {
+    if $facts['virtual'] != 'docker' {
       file { $resolver_path:
         ensure  => file,
         content => template($resolver_template),

@@ -1,8 +1,8 @@
 #
 define psick::tools::gpgkey (
-  String $source                    = '',
+  String $source                    = '', # lint:ignore:params_empty_string_assignment
   String $rpm_gpg_dir_path          = '/etc/pki/rpm-gpg',
-  String $checksum                  = '',
+  String $checksum                  = '', # lint:ignore:params_empty_string_assignment
   Pattern[/present|absent/] $ensure = present,
 ) {
   if !defined(File[$rpm_gpg_dir_path]) {

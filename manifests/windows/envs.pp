@@ -2,7 +2,7 @@
 # Prerequisite: mod: 'puppet-windows_env'
 #
 class psick::windows::envs (
-  Optional[Hash] $envs_hash = {},
+  Hash $envs_hash = {},
   Hash $resource_default_arguments = {},
 
   Boolean $manage      = $psick::manage,

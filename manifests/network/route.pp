@@ -56,8 +56,8 @@
 # Deploys the file /etc/sysconfig/network/ifroute-$name.
 #
 define psick::network::route (
-  Optional[Hash] $routes                = {},
-  Optional[Hash] $ipv6_routes           = {},
+  Hash $routes                = {},
+  Hash $ipv6_routes           = {},
   String $interface                     = $title,
   Variant[Undef,Resource,String] $config_file_notify = 'class_default',
   Enum['present','absent'] $ensure      = 'present',

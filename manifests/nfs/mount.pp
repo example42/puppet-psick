@@ -4,7 +4,7 @@ define psick::nfs::mount (
   String $server,
   String $share,
   Enum[present,absent] $ensure = present,
-  String $mountpoint = '',
+  String $mountpoint = '', # lint:ignore:params_empty_string_assignment
   String $client_options = 'auto',
 ) {
   $real_mountpoint = $mountpoint ? {

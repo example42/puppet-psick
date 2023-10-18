@@ -5,7 +5,7 @@ define psick::aws::cli::script (
   Boolean $autorun = true,
   String $destination_dir = '/var/tmp',
   Variant[Undef,String] $region = undef,
-  String $command = '',
+  String $command = '', # lint:ignore:params_empty_string_assignment
 ) {
   $script_path = "${destination_dir}/${title}"
   $exec_command = $command ? {

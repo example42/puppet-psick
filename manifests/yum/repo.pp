@@ -8,8 +8,8 @@ define psick::yum::repo (
   Integer $enabled        = 0,
   Integer $gpgcheck       = 0,
   String $gpgkey          = 'absent',
-  String $gpgkey_source   = '',
-  String $gpgkey_name     = '',
+  String $gpgkey_source   = '', # lint:ignore:params_empty_string_assignment
+  String $gpgkey_name     = '', # lint:ignore:params_empty_string_assignment
   String $failovermethod  = 'absent',
   Integer $priority       = 99,
   String $protect         = 'absent',

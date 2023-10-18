@@ -5,14 +5,14 @@
 # from a given $control_repo_url.
 # By default everything is cretaed in a directory called Boltdir in
 # the home passed as title. It's possible to specify a different $user
-# (using whatever title) or a different destination $path 
+# (using whatever title) or a different destination $path
 #
 # @example Create a bolt project in /home/al/Boltdir (on *nix)
-# 
+#
 #   psick::bolt::project { 'al': }
 #
 # @example Create a bolt project in /opt/admins/bolt-control-center as user admin
-#   
+#
 #   psick::bolt::project { 'control-center':
 #     user => 'admin',
 #     path => '/opt/admins/bolt-control-center',
@@ -48,7 +48,7 @@ define psick::bolt::project (
   Boolean $use_default_config_files_hash = true,
   Hash $config_files_hash                = {},
 
-  Optional[String] $bolt_yaml_template      = 'psick/bolt/project/bolt.yaml.epp',
+  String $bolt_yaml_template      = 'psick/bolt/project/bolt.yaml.epp',
   Optional[String] $inventory_yaml_template = undef,
   Hash $options_hash                        = {},
 
@@ -137,7 +137,7 @@ define psick::bolt::project (
 
   if $puppetfile_install {
     exec { 'bolt install puppetfile':
-      path    => $::path,
+      path    => $facts['path'],
       cwd     => $bolt_dir,
       creates => 'modules/stdlib', # Quick and very dirty
     }

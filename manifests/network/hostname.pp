@@ -18,7 +18,7 @@ class psick::network::hostname (
 
   if $facts['os']['family'] == 'RedHat' {
     file { '/etc/sysconfig/network':
-      ensure  => present,
+      ensure  => file,
       mode    => '0644',
       owner   => 'root',
       group   => 'root',
@@ -38,7 +38,7 @@ class psick::network::hostname (
 
   if $facts['os']['family'] == 'Debian' {
     file { '/etc/hostname':
-      ensure  => present,
+      ensure  => file,
       mode    => '0644',
       owner   => 'root',
       group   => 'root',
@@ -49,7 +49,7 @@ class psick::network::hostname (
 
   if $facts['os']['family'] == 'Suse' {
     file { '/etc/HOSTNAME':
-      ensure  => present,
+      ensure  => file,
       mode    => '0644',
       owner   => 'root',
       group   => 'root',
@@ -64,7 +64,7 @@ class psick::network::hostname (
 
   if $facts['os']['family'] == 'Solaris' {
     file { '/etc/nodename':
-      ensure  => present,
+      ensure  => file,
       mode    => '0644',
       owner   => 'root',
       group   => 'root',

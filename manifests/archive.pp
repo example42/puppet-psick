@@ -9,7 +9,7 @@ define psick::archive (
   Enum['download','extract','compress','auto'] $action = 'auto',
 
   Optional[String]               $source = $title,
-  Optional[Stdlib::Absolutepath] $download_dir = '/var/tmp',
+  Stdlib::Absolutepath           $download_dir = '/var/tmp',
   Optional[String]               $download_command = undef,
   Integer                        $download_timeout = 600,
   Array                          $download_exec_env = [],

@@ -25,9 +25,9 @@
 #     password_min_age: 7
 #
 class psick::hardening::pam (
-  String $system_auth_template   = '',
-  String $password_auth_template = '',
-  String $login_defs_template    = '',
+  String $system_auth_template   = '', # lint:ignore:params_empty_string_assignment
+  String $password_auth_template = '', # lint:ignore:params_empty_string_assignment
+  String $login_defs_template    = '', # lint:ignore:params_empty_string_assignment
   Boolean $manage                = $psick::manage,
   Boolean $noop_manage           = $psick::noop_manage,
   Boolean $noop_value            = $psick::noop_value,
@@ -76,7 +76,7 @@ class psick::hardening::pam (
         mode    => '0400',
       }
     }
-    if ( $::os['family'] == 'RedHat' and $::os['release']['major'] == '7' ) {
+    if ( $facts['os']['family'] == 'RedHat' and $facts['os']['release']['major'] == '7' ) {
       file { '/etc/pam.d/system-auth-ac':
         content => template($real_system_auth_template),
       }

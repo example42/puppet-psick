@@ -1,7 +1,7 @@
 # This class installs fabric
 #
 class psick::python::fabric (
-  $ensure = 'present',
+  String $ensure = 'present',
 
   Boolean $manage      = $psick::manage,
   Boolean $noop_manage = $psick::noop_manage,

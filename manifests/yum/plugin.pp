@@ -1,9 +1,9 @@
 # Define: psick::yum::plugin
 #
 define psick::yum::plugin (
-  String $package_name            = '',
-  String $source                  = '',
-  Variant[String,Undef] $template = '',
+  String $package_name            = '', # lint:ignore:params_empty_string_assignment
+  String $source                  = '', # lint:ignore:params_empty_string_assignment
+  Variant[String,Undef] $template = '', # lint:ignore:params_empty_string_assignment
   Boolean $enable                 = true
 ) {
   $ensure = bool2ensure( $enable )

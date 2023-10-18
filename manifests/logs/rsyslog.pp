@@ -11,11 +11,11 @@
 #                up with lookup('psick::logs::rsyslog::options', {} )
 #
 class psick::logs::rsyslog (
-  Enum['present','absent'] $ensure                     = 'present',
+  Enum['present','absent'] $ensure               = 'present',
 
-  Variant[String[1],Undef] $config_dir_source          = undef,
-  String                   $config_file_template       = '',
-  Array                    $server_ip                  = [],
+  Variant[String[1],Undef] $config_dir_source    = undef,
+  String                   $config_file_template = '', # lint:ignore:params_empty_string_assignment
+  Array                    $server_ip            = [],
 ) {
   $options_default = {
   }
@@ -39,7 +39,7 @@ class psick::logs::rsyslog (
     source => $config_dir_source,
   }
 
-  if $::os['family'] == 'RedHat' and $::os['release']['major'] == '7' {
+  if $facts['os']['family'] == 'RedHat' and $facts['os']['release']['major'] == '7' {
     ::tp::conf { 'rsyslog::20-default.conf':
       ensure       => $ensure,
       template     => 'psick/logs/rsyslog/20-default.erb',

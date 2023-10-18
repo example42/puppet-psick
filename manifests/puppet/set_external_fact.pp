@@ -15,7 +15,7 @@ define psick::puppet::set_external_fact (
     fail('You must specify either a value or a template to use')
   }
 
-  $external_facts_dir = $::kernel ? {
+  $external_facts_dir = $facts['kernel'] ? {
     'Windows' => 'C:\ProgramData\PuppetLabs\facter\facts.d',
     default   => '/etc/puppetlabs/facter/facts.d',
   }

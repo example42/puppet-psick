@@ -3,7 +3,7 @@
 #
 class psick::puppet::pe_server (
   Boolean $remove_global_hiera_yaml  = false,
-  String  $extra_environment_path    = '',
+  String  $extra_environment_path    = '', # lint:ignore:params_empty_string_assignment
   Hash    $extra_environment_files   = {},
   Boolean $manage                    = $psick::manage,
   Boolean $noop_manage               = $psick::noop_manage,

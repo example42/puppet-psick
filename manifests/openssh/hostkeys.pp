@@ -29,25 +29,25 @@ class psick::openssh::hostkeys (
     }
 
     if $hostkey_export {
-      if $::sshdsakey {
+      if getvar('facts.ssh.dsa.key') {
         @@sshkey { "${facts['networking']['fqdn']}_dsa":
           host_aliases => $hostkey_aliases,
           type         => dsa,
-          key          => $::sshdsakey,
+          key          => getvar('facts.ssh.dsa.key'),
         }
       }
-      if $::sshrsakey {
+      if getvar('facts.ssh.rsa.key') {
         @@sshkey { "${facts['networking']['fqdn']}_rsa":
           host_aliases => $hostkey_aliases,
           type         => rsa,
-          key          => $::sshrsakey,
+          key          => getvar('facts.ssh.rsa.key'),
         }
       }
-      if $::sshecdsakey {
+      if getvar('facts.ssh.ecdsa.key') {
         @@sshkey { "${facts['networking']['fqdn']}_ecdsa":
           host_aliases => $hostkey_aliases,
           type         => 'ecdsa-sha2-nistp256',
-          key          => $::sshecdsakey,
+          key          => getvar('facts.ssh.ecdsa.key'),
         }
       }
     }

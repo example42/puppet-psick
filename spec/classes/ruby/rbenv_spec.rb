@@ -7,8 +7,13 @@ describe 'psick::ruby::rbenv' do
       let(:pre_condition) { 'include psick' }
       it { is_expected.to compile.with_all_deps }
       it { is_expected.to contain_class('rbenv') }
-      it { is_expected.to contain_rbenv__plugin('rbenv/ruby-build') }
-      it { is_expected.to contain_rbenv__build('2.4.2') }
+      describe 'with manage => false' do
+        let(:params) { { 'default_ruby_version' => '2.4.2' } }
+
+        it { is_expected.to contain_rbenv__plugin('rbenv/ruby-build') }
+        it { is_expected.to contain_rbenv__build('2.4.2') }
+      end      
+
 
       describe 'with manage => false' do
         let(:params) { { 'manage' => false } }

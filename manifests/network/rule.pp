@@ -31,7 +31,7 @@ define psick::network::rule (
   case $facts['os']['family'] {
     'RedHat': {
       file { "rule-${interface}":
-        ensure  => present,
+        ensure  => file,
         owner   => root,
         group   => root,
         mode    => '0644',
@@ -40,7 +40,7 @@ define psick::network::rule (
         notify  => $psick::network::manage_config_file_notify,
       }
       file { "rule6-${interface}":
-        ensure  => present,
+        ensure  => file,
         owner   => root,
         group   => root,
         mode    => '0644',
@@ -51,7 +51,7 @@ define psick::network::rule (
     }
     'Suse': {
       file { "ifrule-${interface}":
-        ensure  => present,
+        ensure  => file,
         owner   => root,
         group   => root,
         mode    => '0644',

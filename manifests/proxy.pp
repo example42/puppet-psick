@@ -99,7 +99,7 @@ class psick::proxy (
             setting           => 'proxy',
             value             => "${proxy_server[scheme]}://${proxy_server['host']}:${proxy_server['port']}",
           }
-          if has_key($proxy_server,'user') and has_key($proxy_server,'password') {
+          if 'user' in $proxy_server and 'password' in $proxy_server {
             ini_setting { 'proxy_user_yum':
               ensure            => $ensure,
               path              => '/etc/yum.conf',

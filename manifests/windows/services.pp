@@ -1,7 +1,7 @@
 # Manages Windows services using Puppet service type
 class psick::windows::services (
-  Optional[Hash] $managed  = {},
-  Optional[Hash] $defaults = {},
+  Hash $managed  = {},
+  Hash $defaults = {},
   Boolean $use_defaults    = true,
 
   Boolean $manage      = $psick::manage,

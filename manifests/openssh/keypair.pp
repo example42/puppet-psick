@@ -11,18 +11,18 @@ define psick::openssh::keypair (
   Optional[String] $private_key_source      = undef,
   Optional[String] $private_key_owner       = undef,
   Optional[String] $private_key_group       = undef,
-  Optional[String] $private_key_mode        = '0600',
+  Stdlib::Filemode $private_key_mode        = '0600',
 
   Optional[String] $public_key_content      = undef,
   Optional[String] $public_key_source       = undef,
   Optional[String] $public_key_owner        = undef,
   Optional[String] $public_key_group        = undef,
-  Optional[String] $public_key_mode         = '0644',
+  Stdlib::Filemode $public_key_mode         = '0644',
 
   Optional[String] $dir_path                = undef,
   Optional[String] $dir_owner               = undef,
   Optional[String] $dir_group               = undef,
-  Optional[String] $dir_mode                = '0700',
+  Stdlib::Filemode $dir_mode                = '0700',
 
   String $key_name                          = 'id_rsa',
   Boolean $create_ssh_dir                   = true,

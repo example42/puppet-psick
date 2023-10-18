@@ -18,10 +18,10 @@ class psick::admin::master (
     include psick::admin
 
     if $psick::admin::keyshare_method == 'storeconfigs'
-    and ($ssh_key or $::admin_user_key) {
-      @@ssh_authorized_key { "admin_user_${psick::admin::user}_rsa-${clientcert}":
+    and ($ssh_key or getvar('facts.admin_user_key')) {
+      @@ssh_authorized_key { "admin_user_${psick::admin::user}_rsa-${facts['clientcert']}":
         ensure => $ensure,
-        key    => pick($ssh_key,$::admin_user_key),
+        key    => pick($ssh_key,getvar('facts.admin_user_key')),
         user   => $psick::admin::user,
         type   => 'rsa',
         tag    => "admin_master_${psick::admin::master}",

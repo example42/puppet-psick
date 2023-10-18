@@ -1,5 +1,14 @@
 ## Changelog
 
+## Release 1.1.0
+
+-   More updates for full Puppet 8 compatibility
+-   Added psick::puppet::facter profile to manage facter.conf
+-   pdk update
+-   Make psick::tools::create_dir windows compatible
+-   Several lints and fixes
+-   Define psick::git::clone to clone and sync a git repo
+
 ## Release 1.0.4
 
 -   Updated psick::timezone to support more recent Debian derivatives

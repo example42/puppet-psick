@@ -10,7 +10,7 @@ define psick::kmod::module (
   String $module                   = $title,
   Optional[String] $conf_source    = undef,
   Optional[String] $conf_content   = undef,
-  Optional[Hash] $conf_options     = {},
+  Hash $conf_options               = {},
   Boolean $boot_load_configure     = true,
 ) {
   if $conf_source or $conf_content {

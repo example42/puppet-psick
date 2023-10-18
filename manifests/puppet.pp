@@ -2,15 +2,15 @@
 class psick::puppet (
 
   Optional[String] $agent_class     = undef,
-  String           $server_class    = '',
-  String           $puppetdb_class  = '',
+  String           $server_class    = '', # lint:ignore:params_empty_string_assignment
+  String           $puppetdb_class  = '', # lint:ignore:params_empty_string_assignment
 
   Array $modules                    = [],
   String $module_user               = 'root',
 
   Hash             $external_facts  = {},
 
-  String           $facts_file_path = '',
+  String           $facts_file_path = '', # lint:ignore:params_empty_string_assignment
   Regexp           $facts_file_exclude_regex = /^(.*uptime.*|system_uptime|_timestamp|memoryfree.*|swapfree.*|puppet_inventory_metadata|last_run.*|load_averages.*|memory.*|mountpoints.*|physical_volumes.*|volume_groups.*)$/, # lint:ignore:140chars
 
   Boolean          $manage               = $psick::manage,
