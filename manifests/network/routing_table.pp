@@ -19,8 +19,8 @@
 #
 define psick::network::routing_table (
   String $table_id,
-  String $table = $name
-  ) {
+  String $table = $name,
+) {
   if ! defined(Concat['/etc/iproute2/rt_tables']) {
     concat { '/etc/iproute2/rt_tables':
       owner => 'root',

@@ -109,9 +109,9 @@ class psick::bolt::master (
     if $psick::bolt::keyshare_method == 'storeconfigs'
     and defined('psick::bolt::bolt_user_pub_key')
     or defined('bolt_user_key') {
-      @@ssh_authorized_key { "bolt_user_${psick::bolt::ssh_user}_rsa-${clientcert}":
+      @@ssh_authorized_key { "bolt_user_${psick::bolt::ssh_user}_rsa-${facts['clientcert']}":
         ensure => $ensure,
-        key    => pick($psick::bolt::bolt_user_pub_key,$::bolt_user_key),
+        key    => pick($psick::bolt::bolt_user_pub_key,getvar('facts.bolt_user_key')),
         user   => $psick::bolt::ssh_user,
         type   => 'rsa',
         tag    => "bolt_master_${psick::bolt::master}_${psick::bolt::bolt_user}",

@@ -1,0 +1,28 @@
+# File managed by Puppet
+facts : {
+  blocklist : <%= $blocklist %>
+  ttls : [
+  <% $ttls.each | $k | {-%>
+    <% $k.each | $kk, $vv | { -%>
+    { "<%= $kk %>" : <%= $vv %> },
+    <% } -%>
+  <% } -%>
+  ]
+}
+global : {
+<% $global_settings.each | $k,$v | { -%>
+  <%= $k %> : <%= $v %>,
+<% } -%>
+}
+cli : {
+<% $cli_settings.each | $k,$v | { -%>
+  <%= $k %> : <%= $v %>,
+<% } -%>
+}
+fact-groups : {
+<% $fact_groups.each | $k | { -%>
+  <% $k.each | $kk | { -%>
+  <%= $k %> : <%= $kk %>,
+  <% } -%>
+<% } -%>
+}

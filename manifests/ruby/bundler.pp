@@ -1,6 +1,6 @@
 #
 class psick::ruby::bundler (
-  $ensure = 'present',
+  String $ensure = 'present',
 
   Boolean $manage      = $psick::manage,
   Boolean $noop_manage = $psick::noop_manage,

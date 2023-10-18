@@ -24,18 +24,18 @@
 # psick::php::pear::module { Crypt-CHAP: }
 #
 define psick::php::pear::module (
-  $service             = '',
-  $use_package         = true,
-  $install_options     = [],
-  $preferred_state     = 'stable',
-  $alldeps             = false,
-  $version             = 'present',
-  $repository          = 'pear.php.net',
-  $service_autorestart = false,
-  $module_prefix        = '',
-  $path                = '/usr/bin:/usr/sbin:/bin:/sbin',
-  $ensure              = 'present',
-  $timeout             = 300
+  String $service              = '', # lint:ignore:params_empty_string_assignment
+  Boolean $use_package         = true,
+  Array $install_options       = [],
+  String $preferred_state      = 'stable',
+  Boolean $alldeps             = false,
+  String $version              = 'present',
+  String $repository           = 'pear.php.net',
+  Boolean $service_autorestart = false,
+  String $module_prefix        = '', # lint:ignore:params_empty_string_assignment
+  String $path                 = '/usr/bin:/usr/sbin:/bin:/sbin',
+  String $ensure               = 'present',
+  Integer $timeout             = 300
 ) {
   include psick::php::pear
 

@@ -15,8 +15,8 @@ class psick::bolt (
   String                  $ssh_user           = 'root',
   String                  $ssh_group          = 'root',
 
-  String                  $master             = '',
-  Optional[Enum['storeconfigs','static']] $keyshare_method = 'storeconfigs',
+  String                  $master             = '', # lint:ignore:params_empty_string_assignment
+  Enum['storeconfigs','static'] $keyshare_method = 'storeconfigs',
 
   Boolean                 $auto_prereq        = $psick::auto_prereq,
 

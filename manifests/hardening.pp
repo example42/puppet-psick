@@ -36,14 +36,14 @@
 #                   Default from psick class.
 class psick::hardening (
 
-  String $pam_class         = '',
-  String $packages_class    = '',
-  String $services_class    = '',
-  String $tcpwrappers_class = '',
-  String $suid_class        = '',
-  String $users_class       = '',
-  String $securetty_class   = '',
-  String $network_class     = '',
+  String $pam_class         = '', # lint:ignore:params_empty_string_assignment
+  String $packages_class    = '', # lint:ignore:params_empty_string_assignment
+  String $services_class    = '', # lint:ignore:params_empty_string_assignment
+  String $tcpwrappers_class = '', # lint:ignore:params_empty_string_assignment
+  String $suid_class        = '', # lint:ignore:params_empty_string_assignment
+  String $users_class       = '', # lint:ignore:params_empty_string_assignment
+  String $securetty_class   = '', # lint:ignore:params_empty_string_assignment
+  String $network_class     = '', # lint:ignore:params_empty_string_assignment
 
   Boolean $manage           = $psick::manage,
   Boolean $noop_manage      = $psick::noop_manage,

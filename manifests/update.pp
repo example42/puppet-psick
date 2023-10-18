@@ -24,7 +24,7 @@
 #                   Default from psick class.
 #
 class psick::update (
-  String $cron_schedule        = '',
+  Optional[String] $cron_schedule = undef,
   Boolean $reboot_after_update = false,
   String $update_template      = 'psick/update/update.sh.erb',
   String $update_script_path   = '/usr/local/sbin/update.sh',
@@ -46,7 +46,7 @@ class psick::update (
       }
     } else {
       # Custom update script
-      if $cron_schedule != '' {
+      if $cron_schedule {
         file { '/etc/cron.d/system_update':
           ensure  => file,
           content => "# File managed by Puppet\n${cron_schedule} root ${update_script_path}\n",

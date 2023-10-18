@@ -167,7 +167,7 @@ class psick::php::tp (
             settings_hash => $settings_hash,
           },
           'exec' => {
-            path => $::path,
+            path => $facts['path'],
           },
           'file' => {
             ensure        => $file_ensure,

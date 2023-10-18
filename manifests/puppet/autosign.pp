@@ -3,7 +3,7 @@
 class psick::puppet::autosign (
   Enum['on', 'off', 'policy_based'] $autosign         = 'policy_based',
   Optional[String]                  $autosign_match   = undef,
-  Optional[Array]                   $policy_based_psk = ['123456'],
+  Optional[Array]                   $policy_based_psk = undef,
   Boolean $manage                  = $psick::manage,
   Boolean $noop_manage             = $psick::noop_manage,
   Boolean $noop_value              = $psick::noop_value,

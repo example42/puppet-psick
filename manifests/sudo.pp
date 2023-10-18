@@ -12,7 +12,7 @@
 #                   with lookup('psick::sudo::directives', {})
 #
 class psick::sudo (
-  String                   $sudoers_template  = '',
+  Optional[String]         $sudoers_template  = undef,
   Array                    $admins            = [],
   Variant[String[1],Undef] $sudoers_d_source  = undef,
   String                   $sudoers_owner     = 'root',
@@ -28,7 +28,7 @@ class psick::sudo (
       noop($noop_value)
     }
 
-    if $sudoers_template != '' {
+    if $sudoers_template {
       file { '/etc/sudoers':
         ensure  => file,
         mode    => '0440',
@@ -64,7 +64,7 @@ class psick::sudo (
       }
     }
 
-    if $::virtual == 'virtualbox' and $purge_sudoers_dir {
+    if $facts['virtual'] == 'virtualbox' and $purge_sudoers_dir {
       psick::sudo::directive { 'vagrant':
         source => 'puppet:///modules/psick/sudo/vagrant',
         order  => 30,

@@ -5,9 +5,9 @@
 define psick::profile::script (
   Enum['present','absent'] $ensure = 'present',
   Boolean $autoexec                = false,
-  String $source                   = '',
-  String $content                  = '',
-  String $template                 = '',
+  String $source                   = '', # lint:ignore:params_empty_string_assignment
+  String $content                  = '', # lint:ignore:params_empty_string_assignment
+  String $template                 = '', # lint:ignore:params_empty_string_assignment
   String $config_dir               = '/etc/profile.d',
   String $owner                    = 'root',
   String $group                    = 'root',

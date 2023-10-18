@@ -1,7 +1,7 @@
 # Requires puppet/windowsfeature module
 class psick::windows::features (
-  Optional[Hash] $install  = {},
-  Optional[Hash] $defaults = {},
+  Hash $install  = {},
+  Hash $defaults = {},
   Boolean $use_defaults    = true,
 
   Boolean $manage      = $psick::manage,

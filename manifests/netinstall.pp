@@ -58,22 +58,22 @@
 #   An optional custom command to run after having extracted the file.
 #
 define psick::netinstall (
-  $url,
-  $destination_dir,
-  $extracted_dir       = '',
-  $retrieve_command    = 'wget',
-  $retrieve_args       = '',
-  $owner               = 'root',
-  $group               = 'root',
-  $timeout             = '3600',
-  $work_dir            = '/var/tmp',
-  $path                = '/bin:/sbin:/usr/bin:/usr/sbin',
-  $extract_command     = '',
-  $preextract_command  = '',
-  $postextract_command = '',
-  $postextract_cwd     = '',
-  $exec_env            = [],
-  $creates             = undef,
+  String $url,
+  Stdlib::Absolutepath $destination_dir,
+  Optional[String] $extracted_dir = undef,
+  String $retrieve_command    = 'wget',
+  String $retrieve_args       = '', # lint:ignore:params_empty_string_assignment
+  String $owner               = 'root',
+  String $group               = 'root',
+  Stdlib::Filemode $timeout   = '3600',
+  Stdlib::Absolutepath $work_dir = '/var/tmp',
+  String $path                = '/bin:/sbin:/usr/bin:/usr/sbin',
+  Variant[String,Boolean] $extract_command     = '', # lint:ignore:params_empty_string_assignment
+  Variant[String,Boolean] $preextract_command  = '', # lint:ignore:params_empty_string_assignment
+  Variant[String,Boolean] $postextract_command = '', # lint:ignore:params_empty_string_assignment
+  Optional[Stdlib::Absolutepath] $postextract_cwd = undef,
+  Array $exec_env             = [],
+  Optional[Stdlib::Absolutepath] $creates = undef,
 ) {
   $source_filename = parse_url($url,'filename')
   $source_filetype = parse_url($url,'filetype')
@@ -98,7 +98,7 @@ define psick::netinstall (
   }
 
   $real_extracted_dir = $extracted_dir ? {
-    ''      => $real_extract_command ? {
+    undef   => $real_extract_command ? {
       /(^cp.*|^rsync.*)/         => $source_filename,
       /(^tar -zxf*|^tar -jxf*)/  => regsubst($source_dirname,'.tar',''),
       default                    => $source_dirname,
@@ -107,7 +107,7 @@ define psick::netinstall (
   }
 
   $real_postextract_cwd = $postextract_cwd ? {
-    ''      => "${destination_dir}/${real_extracted_dir}",
+    undef   => "${destination_dir}/${real_extracted_dir}",
     default => $postextract_cwd,
   }
 
@@ -136,7 +136,7 @@ define psick::netinstall (
     environment => $exec_env,
   }
 
-  if $extract_command {
+  if $real_extract_command and $real_extract_command != '' {
     exec { "Extract ${source_filename} from ${work_dir} - ${title}":
       command     => "mkdir -p ${destination_dir} && cd ${destination_dir} && ${real_extract_command} ${work_dir}/${source_filename} ${extract_command_second_arg}", # lint:ignore:140chars
       unless      => "ls ${destination_dir}/${real_extracted_dir}",

@@ -11,7 +11,7 @@ define psick::network::netplan::interface (
   Hash   $interface_options                     = {},
 
   Stdlib::Absolutepath $config_dir_path         = '/etc/netplan',
-  Optional[String] $reload_command              = 'netplan apply',
+  Optional[String] $reload_command              = 'netplan apply', # lint:ignore:optional_default
 
   String $renderer                              = 'networkd',
   Numeric $version                              = 2,
@@ -22,8 +22,8 @@ define psick::network::netplan::interface (
   Optional[Stdlib::MAC]             $macaddress = getvar("networking.interfaces.${interface_name}.mac"),
   Variant[Undef,Psick::Network::NetplanAddresses] $addresses = undef,
   Variant[Undef,Array]              $routes     = undef,
-  Optional[Stdlib::Compat::Ipv4] $gateway4      = undef,
-  Optional[Stdlib::Compat::Ipv6] $gateway6      = undef,
+  Optional[Stdlib::IP::Address::V4] $gateway4      = undef,
+  Optional[Stdlib::IP::Address::V6] $gateway6      = undef,
   Optional[Hash]                   $nameservers = undef,
   Optional[Hash]                   $parameters  = undef,
 
@@ -38,7 +38,7 @@ define psick::network::netplan::interface (
       exec { 'psick::network::netplan::interface reload':
         command     => $reload_command,
         refreshonly => true,
-        path        => $::path
+        path        => $facts['path'],
       }
     }
     pick_default($reload_command, $psick::network::manage_config_file_notify)

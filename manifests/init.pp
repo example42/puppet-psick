@@ -110,12 +110,12 @@ class psick (
   Boolean $auto_prereq                             = true,
   Boolean $enable_firstrun                         = false,
 
-  Optional[Boolean] $noop_mode                     = lookup('noop_mode',Optional[Boolean],'first',undef),
+  Optional[Boolean] $noop_mode                     = lookup('noop_mode',Optional[Boolean],'first',undef), # lint:ignore:lookup_in_parameter
   Boolean $noop_manage                             = false,
   Boolean $noop_value                              = false,
 
   # General network settings
-  Optional[Stdlib::Compat::Ip_address] $primary_ip = fact('networking.ip'),
+  Optional[Stdlib::IP::Address] $primary_ip = fact('networking.ip'),
   Optional[String] $mgmt_interface                 = fact('networking.primary'),
   Optional[String] $timezone                       = undef,
   Hash $interfaces_hash                            = {},
@@ -134,7 +134,7 @@ class psick (
   Enum['first','hash','deep'] $resources_merge_behaviour          = 'deep',
   Enum['first','hash','deep'] $resources_defaults_merge_behaviour = 'deep',
 
-  # $::osfamily based resources
+  # $::os['family'] based resources
   # Hash $osfamily_resources (lookup with $osfamily_resources_merge_behaviour)                   = {},
   # Hash $osfamily_resources_defaults (lookup with $osfamily_resources_defaults_merge_behaviour) = {},
   Enum['first','hash','deep'] $osfamily_resources_merge_behaviour          = 'deep',
@@ -225,7 +225,7 @@ class psick (
   $osfamily_resources_defaults = lookup('psick::osfamily_resources_defaults',Hash,$osfamily_resources_defaults_merge_behaviour, {})
   $osfamily_resources.each |$k,$v| {
     if $facts['os']['family'] == $k {
-      if has_key($osfamily_resources_defaults, $k) {
+      if $k in $osfamily_resources_defaults {
         $os_defaults = $osfamily_resources_defaults[$k]
       } else {
         $os_defaults = {}

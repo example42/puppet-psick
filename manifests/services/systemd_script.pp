@@ -9,11 +9,11 @@ define psick::services::systemd_script (
   Optional[String] $content = undef,
   Optional[String] $template = undef,
   Optional[String] $epp = undef,
-  Optional[String] $path = "/usr/local/sbin/${title}",
+  String $path = "/usr/local/sbin/${title}",
   Optional[String] $service_ensure = undef,
   Variant[Undef,Boolean,String] $service_enable = undef,
   String $systemd_template = 'psick/services/systemd.erb',
-  Optional[String] $systemd_after    = 'network.target',
+  Optional[String] $systemd_after    = 'network.target', # lint:ignore:optional_default
   Optional[String] $systemd_before   = undef,
 ) {
   $manage_content = tp_content($content, $template, $epp)

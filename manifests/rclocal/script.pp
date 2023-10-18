@@ -30,7 +30,7 @@ define psick::rclocal::script (
   Psick::Ensure             $ensure   = 'present',
   String[1]                 $priority = '50',
   Boolean                   $autoexec = true,
-  String                    $content  = '',
+  String                    $content  = '', # lint:ignore:params_empty_string_assignment
 ) {
   include psick::rclocal
 

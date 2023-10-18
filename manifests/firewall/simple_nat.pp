@@ -6,7 +6,7 @@
 # puppetlabs/firewall
 #
 class psick::firewall::simple_nat (
-  $source_net = "${facts['networking']['network']}/${facts['networking']['netmask']}",
+  String $source_net = "${facts['networking']['network']}/${facts['networking']['netmask']}",
   Boolean          $manage               = $psick::manage,
   Boolean          $noop_manage          = $psick::noop_manage,
   Boolean          $noop_value           = $psick::noop_value,
@@ -25,7 +25,7 @@ class psick::firewall::simple_nat (
     }
     firewall { "100 forward for network ${source_net}":
       chain  => 'FORWARD',
-      action => 'accept',
+      jump   => 'ACCEPT',
       proto  => 'all',
       source => $source_net,
     }

@@ -1,6 +1,6 @@
 # Manages Windows users using Puppet user type
 class psick::windows::users (
-  Optional[Hash] $users_hash = {},
+  Hash $users_hash = {},
   Hash $resource_default_arguments = {},
 
   Boolean $manage      = $psick::manage,

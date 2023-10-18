@@ -4,3 +4,4 @@ psick::puppet::postrun::puppet_conf_path: 'c:/programdata/puppetlabs/puppet/etc/
 psick::puppet::pe_client_tools::repo_path: 'windows'
 psick::puppet::pe_client_tools::package_suffix: '-x64.msi'
 psick::puppet::pe_client_tools::package_download_dir: 'c:/tmp'
+psick::puppet::facter::config_file_dir: 'c:/programdata/puppetlabs/facter/etc'

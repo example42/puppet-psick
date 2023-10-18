@@ -28,11 +28,11 @@
 class psick::motd (
   String $motd_file_ensure    = 'present',
   String $motd_file_template  = 'psick/motd/motd.erb',
-  String $motd_extratext      = '',
+  String $motd_extratext      = '', # lint:ignore:params_empty_string_assignment
 
   String $issue_file_ensure   = 'present',
   String $issue_file_template = 'psick/motd/issue.erb',
-  String $issue_extratext     = '',
+  String $issue_extratext     = '', # lint:ignore:params_empty_string_assignment
 
   Boolean $manage             = $psick::manage,
   Boolean $noop_manage        = $psick::noop_manage,

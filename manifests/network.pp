@@ -109,7 +109,7 @@ class psick::network (
     }
 
     if $hostname {
-      contain ::psick::network::hostname
+      contain psick::network::hostname
     }
 
     # Manage /etc/host.conf if $host_conf_template is set
@@ -121,7 +121,7 @@ class psick::network (
         default => template($host_conf_template),
       }
       file { '/etc/host.conf':
-        ensure  => present,
+        ensure  => file,
         content => $host_conf_content,
         notify  => $manage_config_file_notify,
       }
@@ -136,7 +136,7 @@ class psick::network (
         default => template($nsswitch_conf_template),
       }
       file { '/etc/nsswitch.conf':
-        ensure  => present,
+        ensure  => file,
         content => $nsswitch_conf_content,
         notify  => $manage_config_file_notify,
       }

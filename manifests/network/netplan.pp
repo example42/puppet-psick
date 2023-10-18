@@ -17,8 +17,8 @@ define psick::network::netplan (
   Hash $tunnels            = {},
   Hash $vlans              = {},
 
-  Optional[String] $file_content                = undef,
-  Optional[String] $file_source                 = undef,
+  Optional[String] $file_content = undef,
+  Optional[String] $file_source  = undef,
 
 ) {
   $netplan_data = {
@@ -31,7 +31,7 @@ define psick::network::netplan (
       'bonds'     => $bonds,
       'tunnels'   => $tunnels,
       'vlans'     => $vlans,
-    }
+    },
   }
 
   $real_file_content = $file_source ? {

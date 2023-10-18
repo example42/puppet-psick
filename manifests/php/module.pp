@@ -48,7 +48,7 @@
 define psick::php::module (
   Psick::Ensure $ensure = 'present',
   Hash $package_options = {},
-  String $prefix        = '',
+  String $prefix        = '', # lint:ignore:params_empty_string_assignment
 ) {
   $real_module_prefix = $prefix ? {
     ''      => $psick::php::module_prefix,

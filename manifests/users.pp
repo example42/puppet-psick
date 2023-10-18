@@ -149,7 +149,7 @@ class psick::users (
             }
           }
         }
-        if has_key($rv,'ssh_authorized_keys') and $module != 'accounts' {
+        if 'ssh_authorized_keys' in $rv and $module != 'accounts' {
           $rv['ssh_authorized_keys'].each |$key| {
             $key_array   = split($key, ' ')
             ssh_authorized_key { "${u}_${key}":
@@ -162,14 +162,14 @@ class psick::users (
             }
           }
         }
-        if has_key($rv,'openssh_keygen') {
+        if 'openssh_keygen' in $rv {
           $rv['openssh_keygen'].each |$u,$vv| {
             psick::openssh::keygen { $u:
               * => $vv,
             }
           }
         }
-        if has_key($rv,'sudo_template') {
+        if 'sudo_template' in $rv {
           psick::sudo::directive { $u:
             template => $rv['sudo_template'],
           }

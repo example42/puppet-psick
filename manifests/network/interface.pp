@@ -17,7 +17,7 @@
 #
 # @param ensure If to create or remove the relevant configuration file.
 # @param template The epp or erb template to use for the interface configuration
-#   file. Default is automatically defined based on $::osfamily,
+#   file. Default is automatically defined based on $::os['family'],
 # @param config_path The path of the interface configuration file.
 #   Default is automatically defined based on the Operating System.
 # @param enable_dhcp If to configure the interface to use dhcp.
@@ -62,7 +62,7 @@
 define psick::network::interface (
   Enum['present','absent'] $ensure                  = 'present',
   Boolean $enable                                   = true,
-  Boolean $use_netplan                              = lookup('psick::network::use_netplan',Boolean,first,false),
+  Boolean $use_netplan                              = lookup('psick::network::use_netplan',Boolean,first,false), # lint:ignore:lookup_in_parameter
 
   String $template                                  = "psick/network/interface/${facts['os']['family']}.epp",
   Optional[String] $config_path                     = undef,
@@ -298,17 +298,15 @@ define psick::network::interface (
     'SLES', 'OpenSuSE': {
       # Prerequisites
       if $manage_prerequisites
-      and is_hash($extra_settings) {
-        if has_key($extra_settings,'VLAN_ID')
-        and !defined(Package['vlan']) {
-          package { 'vlan':
-            ensure => 'present',
-          }
-          Package['vlan'] -> File[$config_file_path]
+      and 'VLAN_ID' in $extra_settings
+      and !defined(Package['vlan']) {
+        package { 'vlan':
+          ensure => 'present',
         }
+        Package['vlan'] -> File[$config_file_path]
       }
       if $manage_prerequisites
-      and has_key($settings,'BRIDGE')
+      and 'BRIDGE' in $settings
       and !defined(Package['bridge-utils']) {
         package { 'bridge-utils':
           ensure => 'present',
@@ -332,7 +330,7 @@ define psick::network::interface (
     'Debian', 'Ubuntu', 'LinuxMint': {
       # Prerequisites
       if $manage_prerequisites
-      and has_key($settings,'vlan-raw-device')
+      and 'vlan-raw-device' in $settings
       and versioncmp('9.0', $facts['os']['release']['major']) >= 0
       and !defined(Package['vlan']) {
         package { 'vlan':

@@ -30,7 +30,7 @@ class psick::selinux (
   Enum['targeted','minimum','mls','default','src'] $type = 'targeted',
   Enum['0','1'] $setlocaldefs        = '0',
   String $selinux_file_template      = 'psick/selinux/selinux.epp',
-  String $selinux_dir_source         = '',
+  String $selinux_dir_source         = '', # lint:ignore:params_empty_string_assignment
   Boolean $selinux_dir_recurse       = true,
   Boolean $selinux_dir_force         = true,
   Boolean $selinux_dir_purge         = false,
@@ -84,7 +84,7 @@ class psick::selinux (
 
     exec { 'psick_selinux_setenforce':
       command     => "setenforce ${setenforce_status}",
-      path        => $::path,
+      path        => $facts['path'],
       refreshonly => true,
     }
 

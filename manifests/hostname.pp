@@ -21,9 +21,9 @@ class psick::hostname (
       noop($noop_value)
     }
 
-    case $::kernel {
+    case $facts['kernel'] {
       'Linux': {
-        if $::virtual != 'docker' {
+        if $facts['virtual'] != 'docker' {
           if $update_hostname {
             file { '/etc/hostname':
               ensure  => file,
@@ -43,7 +43,7 @@ class psick::hostname (
           if $update_host_entry {
             host { $host:
               ensure       => present,
-              host_aliases => $fqdn,
+              host_aliases => $facts['networking']['fqdn'],
               ip           => $ip,
             }
           }

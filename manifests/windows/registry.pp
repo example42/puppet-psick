@@ -1,7 +1,7 @@
 # Requires puppetlabs/registry module
 class psick::windows::registry (
-  Optional[Hash] $keys     = {},
-  Optional[Hash] $defaults = {},
+  Hash $keys     = {},
+  Hash $defaults = {},
   Boolean $use_defaults    = true,
 
   Boolean $manage      = $psick::manage,

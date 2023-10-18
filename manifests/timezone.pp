@@ -24,9 +24,9 @@
 #
 class psick::timezone (
   String $timezone             = $psick::timezone,
-  String $timezone_windows     = '',
+  String $timezone_windows     = '', # lint:ignore:params_empty_string_assignment
   Boolean $hw_utc              = false,
-  String $set_timezone_command = '',
+  String $set_timezone_command = '', # lint:ignore:params_empty_string_assignment
   String $template             = "psick/timezone/timezone-${facts['os']['name']}",
 
   Boolean          $manage               = $psick::manage,
@@ -85,7 +85,7 @@ class psick::timezone (
       default                       => 'root',
     }
 
-    if $::virtual != 'docker' and $config_file != '' {
+    if $facts['virtual'] != 'docker' and $config_file != '' {
       file { 'timezone':
         ensure  => file,
         path    => $config_file,
@@ -97,7 +97,7 @@ class psick::timezone (
       if $facts['processors']['isa'] != 'sparc' and $facts['kernel'] != 'SunOS' {
         exec { 'set-timezone':
           command     => $real_set_timezone_command,
-          path        => $::path,
+          path        => $facts['path'],
           require     => File['timezone'],
           subscribe   => File['timezone'],
           refreshonly => true,

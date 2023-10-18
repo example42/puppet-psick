@@ -56,7 +56,7 @@ class psick::nodejs (
   String $setup_script_url     = 'https://rpm.nodesource.com/setup_10.x',
   String $setup_script_path    = '/tmp/NodeJS',
   Hash $setup_script_params    = {},
-  String $setup_script_creates = '',
+  String $setup_script_creates = '', # lint:ignore:params_empty_string_assignment
 
   Boolean $nvm_manage          = false,
   Hash $nvm_installs           = {},
@@ -70,7 +70,7 @@ class psick::nodejs (
       checksum_type => 'none',
       cleanup       => false,
       before        => Package[$package_name],
-      notify        => Exec['nodejs setup']
+      notify        => Exec['nodejs setup'],
     }
     $setup_script_default_params = {
       command => "/bin/bash ${setup_script_path} > njs_setup.txt",

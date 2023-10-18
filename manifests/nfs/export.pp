@@ -8,9 +8,9 @@ define psick::nfs::export (
   String $share                 = '/srv/nfs',
 
   String $guest                 = '127.0.0.1',
-  String $options               = '',
+  String $options               = '', # lint:ignore:params_empty_string_assignment
 
-  String $content               = '',
+  String $content               = '', # lint:ignore:params_empty_string_assignment
 
   Boolean $use_exportsd         = false,
 ) {

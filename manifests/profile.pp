@@ -33,7 +33,7 @@
 #                   setting is overridden: resources are always applied.
 #                   Default from psick class.
 class psick::profile (
-  String $template             = '',
+  String $template             = '', # lint:ignore:params_empty_string_assignment
   Hash $options                = {},
 
   Hash $scripts_hash           = {},

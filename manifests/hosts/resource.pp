@@ -1,12 +1,12 @@
 #
 class psick::hosts::resource (
-  Optional[Hash] $hosts    = {},
-  Optional[Hash] $defaults = {},
-  Boolean $use_defaults    = true,
+  Hash    $hosts        = {},
+  Hash    $defaults     = {},
+  Boolean $use_defaults = true,
 
-  Boolean $manage          = $psick::manage,
-  Boolean $noop_manage     = $psick::noop_manage,
-  Boolean $noop_value      = $psick::noop_value,
+  Boolean $manage       = $psick::manage,
+  Boolean $noop_manage  = $psick::noop_manage,
+  Boolean $noop_value   = $psick::noop_value,
 ) {
   if $manage {
     if $noop_manage {

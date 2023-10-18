@@ -33,7 +33,7 @@ class psick::ruby::rbenv (
   Variant[Boolean,String] $ensure        = present,
   Enum['jdowning'] $module               = 'jdowning',
 
-  Optional[String] $default_ruby_version = '2.4.2',
+  Optional[String] $default_ruby_version = undef,
   Optional[String] $install_dir          = undef,
   Optional[String] $owner                = undef,
   Optional[String] $group                = undef,
@@ -63,9 +63,9 @@ class psick::ruby::rbenv (
           group       => $group,
           latest      => $latest,
         }
-        $default_gem_options = {
-          ruby_version => $default_ruby_version,
-        }
+        $default_gem_options = delete_undef_values({
+            ruby_version => $default_ruby_version,
+        })
         if $default_ruby_version and $auto_prereq {
           rbenv::plugin { 'rbenv/ruby-build': }
           rbenv::build { $default_ruby_version:

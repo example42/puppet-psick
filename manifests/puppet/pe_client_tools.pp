@@ -8,8 +8,8 @@ class psick::puppet::pe_client_tools (
   Optional[String] $package_name   = undef,
 
   String $pe_version               = '2021.5.0',
-  String $repo_path                = '',
-  String $package_suffix           = '',
+  String $repo_path                = '', # lint:ignore:params_empty_string_assignment
+  String $package_suffix           = '', # lint:ignore:params_empty_string_assignment
   String $package_separator        = '-',
   String $package_download_dir     = '/var/tmp',
 
@@ -36,7 +36,7 @@ class psick::puppet::pe_client_tools (
 
     # Madness will be
     $pe_patch = $pe_short_version ? {
-      '21.5.0' => $::kernel ? {
+      '21.5.0' => $facts['kernel'] ? {
         'windows' => '',
         default   => '-1',
       },
