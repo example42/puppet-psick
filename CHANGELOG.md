@@ -8,6 +8,7 @@
 -   Make psick::tools::create_dir windows compatible
 -   Several lints and fixes
 -   Define psick::git::clone to clone and sync a git repo
+-   psick::ruby::rbenv has no more a default ruby version
 
 ## Release 1.0.4
 
