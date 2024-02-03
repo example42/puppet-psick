@@ -12,21 +12,17 @@ define psick::tools::create_dir (
   Optional[String] $group    = undef,
   Optional[Stdlib::Filemode] $mode     = undef,
   Stdlib::AbsolutePath $path = $title,
+  Optional[String] $command_provider = undef,
 ) {
   $mkdir_command = $facts['os']['family'] ? {
     'windows' => "New-Item -ItemType Directory -Force -Path '${path}'",
     default   => "mkdir -p '${path}'",
   }
-  $command_provider = $facts['os']['family'] ? {
-    'windows' => 'powershell',
-    default   => undef,
-  }
-
   exec { "Create directory ${title}":
     command  => $mkdir_command,
     path     => $facts['path'],
     creates  => $path,
-    #provider => $command_provider,
+    provider => $command_provider,
   }
 
   if $facts['os']['family'] != 'windows' {
