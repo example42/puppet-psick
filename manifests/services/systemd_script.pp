@@ -16,7 +16,7 @@ define psick::services::systemd_script (
   Optional[String] $systemd_after    = 'network.target', # lint:ignore:optional_default
   Optional[String] $systemd_before   = undef,
 ) {
-  $manage_content = tp_content($content, $template, $epp)
+  $manage_content = tp::content($content, $template, $epp)
   file { $path:
     ensure  => $ensure,
     content => $manage_content,

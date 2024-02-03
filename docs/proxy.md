@@ -15,8 +15,8 @@ and manage proxy settings with:
         password: xxx # Optional
         no_proxy:
           - localhost
-          - "%{::domain}"
-          - "%{::fqdn}"
+          - "%{facts.networking.domain}"
+          - "%{facts.networking.fqdn}"
         scheme: http
 
 You can customise the components for which proxy should be configured, here are the default params:

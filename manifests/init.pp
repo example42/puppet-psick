@@ -82,7 +82,7 @@
 #         password: xxx # Optional
 #         no_proxy:
 #           - localhost
-#           - "%{::domain}"
+#           - "%{facts.networking.domain}"
 #         scheme: http
 #
 # @example Define arbitrary resources, with some defaults

@@ -26,7 +26,7 @@ define psick::tools::create_dir (
     command  => $mkdir_command,
     path     => $facts['path'],
     creates  => $path,
-    provider => $command_provider,
+    #provider => $command_provider,
   }
 
   if $facts['os']['family'] != 'windows' {
