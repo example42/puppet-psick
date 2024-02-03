@@ -21,7 +21,7 @@ class psick::puppet::postrun (
       noop($noop_value)
     }
 
-    $manage_content = tp_content($content, $template, $epp)
+    $manage_content = tp::content($content, $template, $epp)
 
     File {
       owner => 'root',
