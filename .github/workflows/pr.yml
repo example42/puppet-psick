@@ -39,7 +39,7 @@ jobs:
     name: 'Unit tests Legacy Puppet'
     runs-on: ubuntu-latest
     timeout-minutes: 60
-    container: puppet/puppet-dev-tools:4.x
+    container: puppet/pdk:3.4.0.1.55.g4519dd0
     steps:
       - uses: actions/checkout@v4
       - name: Run unit tests on Puppet 6
