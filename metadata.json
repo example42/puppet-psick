@@ -1,6 +1,6 @@
 {
   "name": "example42-psick",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "author": "Example42",
   "summary": "Psick: the infrastructure module.",
   "license": "Apache-2.0",
@@ -29,25 +29,25 @@
     {
       "operatingsystem": "RedHat",
       "operatingsystemrelease": [
-        "6",
         "7",
-        "8"
+        "8",
+        "9"
       ]
     },
     {
       "operatingsystem": "CentOS",
       "operatingsystemrelease": [
-        "6",
         "7",
-        "8"
+        "8",
+        "9"
       ]
     },
     {
       "operatingsystem": "OracleLinux",
       "operatingsystemrelease": [
-        "6",
         "7",
-        "8"
+        "8",
+        "9"
       ]
     },
     {
@@ -60,8 +60,6 @@
     {
       "operatingsystem": "Debian",
       "operatingsystemrelease": [
-        "8",
-        "9",
         "10",
         "11",
         "12"
@@ -73,7 +71,8 @@
         "16.04",
         "18.04",
         "20.04",
-        "22.04"
+        "22.04",
+        "24.04"
       ]
     },
     {
@@ -90,9 +89,12 @@
     {
       "name": "puppet",
       "version_requirement": ">= 4.5.0 < 9.0.0"
+    },
+    {
+      "name": "openvox",
+      "version_requirement": ">= 7.0.0 < 9.0.0"
     }
   ],
-  "description": "Psick Puppet module. A single module to manage an extendable Puppet infrastructure",
   "pdk-version": "3.0.0",
   "template-url": "https://github.com/puppetlabs/pdk-templates#main",
   "template-ref": "heads/main-0-g1cc0d22"
