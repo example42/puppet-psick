@@ -1,5 +1,10 @@
 ## Changelog
 
+## Release 1.1.1
+
+-   A few more puppet 8 fixes
+-   Actions updates
+
 ## Release 1.1.0
 
 -   More updates for full Puppet 8 compatibility
