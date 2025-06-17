@@ -26,7 +26,7 @@ class psick::admin::master (
       if $from {
         $options = "from=\"${from}\""
       } else {
-        $options = undef,
+        $options = undef
       }
 
       @@ssh_authorized_key { "admin_user_${psick::admin::user}_rsa-${facts['clientcert']}":
