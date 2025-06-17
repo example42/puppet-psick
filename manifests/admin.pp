@@ -63,6 +63,7 @@ class psick::admin (
   String                  $node_class      = '::psick::admin::node',
 
   String                  $user            = 'admin',
+  String                  $group           = 'admin',
 
   String                  $master          = '', # lint:ignore:params_empty_string_assignment
   Variant[Undef,String]   $keyshare_method = 'storeconfigs',
@@ -75,13 +76,16 @@ class psick::admin (
   Boolean                 $manage          = $psick::manage,
   Boolean                 $noop_manage     = $psick::noop_manage,
   Boolean                 $noop_value      = $psick::noop_value,
+
+  Boolean                 $notify_changed_user = true,
+  Boolean                 $manage_host_key     = true,
 ) {
   if $manage {
     if $noop_manage {
       noop($noop_value)
     }
 
-    if $user != 'admin' {
+    if $user != 'admin' and $notify_changed_user {
       notify { 'admin user warning':
         message => 'If you change the default admin user name change psick/facts.d/admin_user_key.sh or set $::psick::admin::master::ssh_key', # lint:ignore:140chars
       }

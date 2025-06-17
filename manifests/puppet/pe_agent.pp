@@ -89,7 +89,7 @@ class psick::puppet::pe_agent (
       notify  => $service_notify,
     }
     $ini_settings_hash.each | $k,$v | {
-      $k.each | $kk,$vv | {
+      $v.each | $kk,$vv | {
         $ini_settings = {
           section => $k,
           setting => $kk,

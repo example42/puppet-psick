@@ -1,0 +1,2 @@
+# File managed by Puppet
+<%= $psick::admin::user %> ALL = NOPASSWD : ALL

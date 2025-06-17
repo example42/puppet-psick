@@ -4,11 +4,14 @@ class psick::admin::user (
   Variant[Boolean,String] $ensure           = pick($psick::admin::ensure, 'present'),
   Optional[String]        $password         = undef,
   Boolean                 $configure_sudo   = true,
+  String                  $sudo_template    = 'psick/admin/sudo.epp',
+
   Boolean                 $run_ssh_keygen   = true,
 
   Boolean             $manage               = $psick::manage,
   Boolean             $noop_manage          = $psick::noop_manage,
   Boolean             $noop_value           = $psick::noop_value,
+
 
 ) {
   if $manage {
@@ -33,7 +36,7 @@ class psick::admin::user (
       ensure  => $dir_ensure,
       mode    => '0700',
       owner   => $psick::admin::user,
-      group   => $psick::admin::user,
+      group   => $psick::admin::group,
       require => User[$psick::admin::user],
     }
 
@@ -53,7 +56,7 @@ class psick::admin::user (
         mode    => '0440',
         owner   => 'root',
         group   => 'root',
-        content => "${psick::admin::user} ALL = NOPASSWD : ALL\n",
+        content => $sudo_template,
       }
     }
   }
