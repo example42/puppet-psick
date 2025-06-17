@@ -24,13 +24,11 @@ class psick::admin::master (
     if $psick::admin::keyshare_method == 'storeconfigs'
     and ($ssh_key or getvar('facts.admin_user_key')) {
       if $from {
-        $options = {}
-
+        $options = "from=\"${from}\""
       } else {
-        $options = [from]
-          from => $from,
-        }
+        $options = undef,
       }
+
       @@ssh_authorized_key { "admin_user_${psick::admin::user}_rsa-${facts['clientcert']}":
         ensure  => $ensure,
         key     => pick($ssh_key,getvar('facts.admin_user_key')),
