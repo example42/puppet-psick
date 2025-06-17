@@ -1,5 +1,10 @@
 ## Changelog
 
+## Release 1.1.2
+
+-   Improvements to psick::admin class
+-   Fix to psick::puppet::pe_agent settings
+
 ## Release 1.1.1
 
 -   A few more puppet 8 fixes
