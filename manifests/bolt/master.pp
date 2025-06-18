@@ -129,7 +129,7 @@ class psick::bolt::master (
 
     if $psick::bolt::bolt_user_pub_key {
       file { "${user_home_dir}/.ssh/id_rsa.pub":
-        ensure  => $dir_ensure,
+        ensure  => $ensure,
         mode    => '0600',
         owner   => $psick::bolt::bolt_user,
         group   => $psick::bolt::bolt_group,
@@ -139,7 +139,7 @@ class psick::bolt::master (
 
     if $psick::bolt::bolt_user_priv_key {
       file { "${user_home_dir}/.ssh/id_rsa":
-        ensure  => $dir_ensure,
+        ensure  => $ensure,
         mode    => '0600',
         owner   => $psick::bolt::bolt_user,
         group   => $psick::bolt::bolt_group,
