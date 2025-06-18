@@ -8,7 +8,7 @@ class psick::bolt::node (
   Boolean                 $configure_sudo  = true,
   String                  $sudo_template   = 'psick/bolt/user/sudo.erb',
 
-  Boolean                 $manage_host_key     = true,
+  Boolean                 $manage_host_key = $psick::bolt::manage_host_key,
 
   Boolean            $manage               = $psick::manage,
   Boolean            $noop_manage          = $psick::noop_manage,

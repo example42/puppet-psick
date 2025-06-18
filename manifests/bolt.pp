@@ -18,6 +18,8 @@ class psick::bolt (
   String                  $master             = '', # lint:ignore:params_empty_string_assignment
   Enum['storeconfigs','static'] $keyshare_method = 'storeconfigs',
 
+  Boolean                 $manage_host_key     = true,
+
   Boolean                 $auto_prereq        = $psick::auto_prereq,
 
   Boolean                 $is_master          = false,
