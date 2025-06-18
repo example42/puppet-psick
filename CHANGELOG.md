@@ -3,6 +3,8 @@
 ## Release 1.1.2
 
 -   Improvements to psick::admin class
+-   Improvements to psick::bolt class
+-   Lints
 -   Fix to psick::puppet::pe_agent settings
 
 ## Release 1.1.1
