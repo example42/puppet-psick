@@ -14,6 +14,7 @@ class psick::bolt (
 
   String                  $ssh_user           = 'root',
   String                  $ssh_group          = 'root',
+  String                  $ssh_key_type       = 'rsa',
 
   String                  $master             = '', # lint:ignore:params_empty_string_assignment
   Enum['storeconfigs','static'] $keyshare_method = 'storeconfigs',

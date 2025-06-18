@@ -118,7 +118,7 @@ class psick::bolt::master (
         ensure  => $ensure,
         key     => pick($psick::bolt::bolt_user_pub_key,getvar('facts.bolt_user_key')),
         user    => $psick::bolt::ssh_user,
-        type    => 'rsa',
+        type    => $psick::bolt::ssh_key_type,
         tag     => "bolt_master_${psick::bolt::master}_${psick::bolt::bolt_user}",
         options => $psick::bolt::ssh_auth_key_options,
       }
