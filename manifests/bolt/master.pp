@@ -115,28 +115,32 @@ class psick::bolt::master (
     and defined('psick::bolt::bolt_user_pub_key')
     or defined('bolt_user_key') {
       @@ssh_authorized_key { "bolt_user_${psick::bolt::ssh_user}_rsa-${facts['clientcert']}":
-        ensure => $ensure,
-        key    => pick($psick::bolt::bolt_user_pub_key,getvar('facts.bolt_user_key')),
-        user   => $psick::bolt::ssh_user,
-        type   => 'rsa',
-        tag    => "bolt_master_${psick::bolt::master}_${psick::bolt::bolt_user}",
+        ensure  => $ensure,
+        key     => pick($psick::bolt::bolt_user_pub_key,getvar('facts.bolt_user_key')),
+        user    => $psick::bolt::ssh_user,
+        type    => 'rsa',
+        tag     => "bolt_master_${psick::bolt::master}_${psick::bolt::bolt_user}",
+        options => $psick::bolt::ssh_auth_key_options,
       }
       if $manage_host_key {
         Sshkey <<| tag == "bolt_node_${psick::bolt::master}_rsa" |>>
       }
     }
 
-    if $psick::bolt::bolt_user_pub_key and $psick::bolt::bolt_user_priv_key {
+    if $psick::bolt::bolt_user_pub_key {
       file { "${user_home_dir}/.ssh/id_rsa.pub":
         ensure  => $dir_ensure,
-        mode    => '0700',
+        mode    => '0600',
         owner   => $psick::bolt::bolt_user,
         group   => $psick::bolt::bolt_group,
         content => $psick::bolt::bolt_user_pub_key,
       }
+    }
+
+    if $psick::bolt::bolt_user_priv_key {
       file { "${user_home_dir}/.ssh/id_rsa":
         ensure  => $dir_ensure,
-        mode    => '0700',
+        mode    => '0600',
         owner   => $psick::bolt::bolt_user,
         group   => $psick::bolt::bolt_group,
         content => $psick::bolt::bolt_user_priv_key,

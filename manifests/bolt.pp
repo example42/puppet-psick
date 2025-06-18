@@ -18,7 +18,9 @@ class psick::bolt (
   String                  $master             = '', # lint:ignore:params_empty_string_assignment
   Enum['storeconfigs','static'] $keyshare_method = 'storeconfigs',
 
-  Boolean                 $manage_host_key     = true,
+  Variant[Undef,String]   $from               = undef,
+
+  Boolean                 $manage_host_key    = true,
 
   Boolean                 $auto_prereq        = $psick::auto_prereq,
 
@@ -35,6 +37,12 @@ class psick::bolt (
   if $manage {
     if $noop_manage {
       noop($noop_value)
+    }
+
+    if $from {
+      $ssh_auth_key_options = "from=\"${from}\""
+    } else {
+      $ssh_auth_key_options = undef
     }
 
     if $is_node {
