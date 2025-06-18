@@ -16,6 +16,7 @@ class psick::bolt::master (
   Boolean                 $create_bolt_user = true,
   Boolean                 $run_ssh_keygen   = true,
   String                  $fact_template    = 'psick/bolt/bolt_user_key.sh.erb',
+  Boolean                 $manage_ssh_dir   = true,
 
   # Management of hostkeys
   Boolean                 $manage_host_key = $psick::bolt::manage_host_key,
@@ -89,7 +90,8 @@ class psick::bolt::master (
       false => undef,
     }
 
-    if $run_ssh_keygen or $psick::bolt::bolt_user_pub_key {
+    if ($run_ssh_keygen or $psick::bolt::bolt_user_pub_key)
+       and $manage_ssh_dir {
       file { "${user_home_dir}/.ssh" :
         ensure  => $dir_ensure,
         mode    => '0700',

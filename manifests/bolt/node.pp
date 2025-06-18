@@ -9,6 +9,7 @@ class psick::bolt::node (
   String                  $sudo_template   = 'psick/bolt/user/sudo.erb',
 
   Boolean                 $manage_host_key = $psick::bolt::manage_host_key,
+  Boolean                 $manage_ssh_dir  = true,
 
   Boolean            $manage               = $psick::manage,
   Boolean            $noop_manage          = $psick::noop_manage,
@@ -41,12 +42,14 @@ class psick::bolt::node (
         password   => $user_password,
       }
 
-      file { "${user_home_dir}/.ssh" :
-        ensure  => $dir_ensure,
-        mode    => '0700',
-        owner   => $psick::bolt::ssh_user,
-        group   => $psick::bolt::ssh_group,
-        require => User[$psick::bolt::ssh_user],
+      if $manage_ssh_dir {
+        file { "${user_home_dir}/.ssh" :
+          ensure  => $dir_ensure,
+          mode    => '0700',
+          owner   => $psick::bolt::ssh_user,
+          group   => $psick::bolt::ssh_group,
+          require => User[$psick::bolt::ssh_user],
+        }
       }
     }
 
