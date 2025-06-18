@@ -42,7 +42,7 @@ class psick::update (
     if $facts['os']['family'] == 'RedHat' and $use_yum_cron {
       contain psick::yum::cron
       file { '/etc/cron.d/system_update':
-        ensure  => absent,
+        ensure => absent,
       }
     } else {
       # Custom update script
@@ -53,7 +53,7 @@ class psick::update (
         }
       } else {
         file { '/etc/cron.d/system_update':
-          ensure  => absent,
+          ensure => absent,
         }
       }
 

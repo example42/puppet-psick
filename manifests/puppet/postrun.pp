@@ -36,7 +36,7 @@ class psick::puppet::postrun (
     }
     if $command {
       ini_setting { 'puppet_postrun_command':
-        value  => $command,
+        value => $command,
       }
     }
     if $path {

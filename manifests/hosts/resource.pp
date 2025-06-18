@@ -20,7 +20,7 @@ class psick::hosts::resource (
 
     $all_hosts.each |$k,$v| {
       host { $k:
-        *    => $v,
+        * => $v,
       }
     }
   }

@@ -21,7 +21,7 @@ define psick::tools::gpgkey (
 
   $short_title = regsubst($title,'RPM-GPG-KEY-','')
   gpg_key { $short_title:
-    path   => "${rpm_gpg_dir_path}/${title}",
+    path => "${rpm_gpg_dir_path}/${title}",
   }
 
   if $checksum != '' {

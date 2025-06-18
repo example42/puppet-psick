@@ -57,7 +57,7 @@ class psick::puppet::ci (
     if $modules != [] {
       $modules.each | $m | {
         psick::puppet::module { $m:
-          user   => $modules_user,
+          user => $modules_user,
         }
       }
     }

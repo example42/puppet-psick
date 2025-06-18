@@ -83,7 +83,7 @@ define psick::git::clone (
     }
   } else {
     file { "/etc/cron.d/sync_${cron_safe_path}":
-      ensure  => absent,
+      ensure => absent,
     }
   }
 
