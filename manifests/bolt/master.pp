@@ -18,7 +18,7 @@ class psick::bolt::master (
   String                  $fact_template    = 'psick/bolt/bolt_user_key.sh.erb',
 
   # Management of hostkeys
-  Boolean                 $manage_host_key     = true,
+  Boolean                 $manage_host_key = $psick::bolt::manage_host_key,
 
   # Management of automatic host list files used by bolt command
   Variant[Undef,String]   $inventory_epp = undef,
