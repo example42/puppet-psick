@@ -8,6 +8,8 @@ class psick::bolt::node (
   Boolean                 $configure_sudo  = true,
   String                  $sudo_template   = 'psick/bolt/user/sudo.erb',
 
+  Boolean                 $manage_host_key     = true,
+
   Boolean            $manage               = $psick::manage,
   Boolean            $noop_manage          = $psick::noop_manage,
   Boolean            $noop_value           = $psick::noop_value,
@@ -59,12 +61,14 @@ class psick::bolt::node (
     }
 
     if $psick::bolt::keyshare_method == 'storeconfigs' {
-      @@sshkey { "bolt_${facts['networking']['fqdn']}_rsa":
-        ensure       => $ensure,
-        host_aliases => [$facts['networking']['fqdn'], $facts['networking']['hostname'], $facts['networking']['ip']],
-        type         => 'ssh-rsa',
-        key          => $facts['ssh']['rsa']['key'],
-        tag          => "bolt_node_${psick::bolt::master}_rsa",
+      if $manage_host_key {
+        @@sshkey { "bolt_${facts['networking']['fqdn']}_rsa":
+          ensure       => $ensure,
+          host_aliases => [$facts['networking']['fqdn'], $facts['networking']['hostname'], $facts['networking']['ip']],
+          type         => 'ssh-rsa',
+          key          => $facts['ssh']['rsa']['key'],
+          tag          => "bolt_node_${psick::bolt::master}_rsa",
+        }
       }
       # Authorize master host bolt user ssh key for remote connection
       Ssh_authorized_key <<| tag == "bolt_master_${psick::bolt::master}_${psick::bolt::bolt_user}" |>>

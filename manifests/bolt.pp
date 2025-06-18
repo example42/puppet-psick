@@ -4,8 +4,8 @@ class psick::bolt (
 
   Variant[Boolean,String] $ensure          = present,
 
-  String                  $master_class    = '::psick::bolt::master',
-  String                  $node_class      = '::psick::bolt::node',
+  String                  $master_class    = 'psick::bolt::master',
+  String                  $node_class      = 'psick::bolt::node',
 
   String                  $bolt_user          = 'bolt',
   String                  $bolt_group         = 'bolt',

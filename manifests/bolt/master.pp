@@ -17,6 +17,9 @@ class psick::bolt::master (
   Boolean                 $run_ssh_keygen   = true,
   String                  $fact_template    = 'psick/bolt/bolt_user_key.sh.erb',
 
+  # Management of hostkeys
+  Boolean                 $manage_host_key     = true,
+
   # Management of automatic host list files used by bolt command
   Variant[Undef,String]   $inventory_epp = undef,
   Boolean $generate_nodes_list           = true,
@@ -116,7 +119,9 @@ class psick::bolt::master (
         type   => 'rsa',
         tag    => "bolt_master_${psick::bolt::master}_${psick::bolt::bolt_user}",
       }
-      Sshkey <<| tag == "bolt_node_${psick::bolt::master}_rsa" |>>
+      if $manage_host_key {
+        Sshkey <<| tag == "bolt_node_${psick::bolt::master}_rsa" |>>
+      }
     }
 
     if $psick::bolt::bolt_user_pub_key and $psick::bolt::bolt_user_priv_key {
