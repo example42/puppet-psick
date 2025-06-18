@@ -61,14 +61,14 @@ class psick::bolt::master (
 
     if $install_package {
       package { 'puppet-bolt':
-        ensure   => $ensure,
+        ensure => $ensure,
       }
     }
 
     # Management of the user running bolt
     $user_home_dir = $user_home ? {
       undef   => $psick::bolt::bolt_user ? {
-        'root'    => '/root',
+        'root'  => '/root',
         default => "/home/${psick::bolt::bolt_user}",
       },
       default => $user_home
@@ -91,7 +91,7 @@ class psick::bolt::master (
     }
 
     if ($run_ssh_keygen or $psick::bolt::bolt_user_pub_key)
-       and $manage_ssh_dir {
+    and $manage_ssh_dir {
       file { "${user_home_dir}/.ssh" :
         ensure  => $dir_ensure,
         mode    => '0700',

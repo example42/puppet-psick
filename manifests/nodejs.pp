@@ -87,7 +87,7 @@ class psick::nodejs (
       ensure => $ensure,
     }
     package { $package_name:
-      *      => $package_defaults + $package_params,
+      * => $package_defaults + $package_params,
     }
   }
 

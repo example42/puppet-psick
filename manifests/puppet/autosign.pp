@@ -25,7 +25,7 @@ class psick::puppet::autosign (
     case $autosign {
       'off', default: {
         ini_setting { 'puppet_server_autosign_off':
-          ensure  => absent,
+          ensure => absent,
         }
       }
       'on': {
