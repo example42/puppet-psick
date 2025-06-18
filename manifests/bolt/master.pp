@@ -60,7 +60,7 @@ class psick::bolt::master (
     }
 
     if $install_package {
-      package { 'bolt':
+      package { 'puppet-bolt':
         ensure   => $ensure,
       }
     }
